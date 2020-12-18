@@ -124,7 +124,7 @@ def issue_command():
         if request.form['dest'] == 'FF FF':
             CP.send_data_broadcast(pkt)
         else:
-            dest = XBee64BitAddress.from_hex_string(request.form['dest'])
+            dest = CP.node_dict[request.form['dest']]._64bit_addr
             CP.send_data(dest, pkt)
 
     return redirect(url_for('node_admin'))
