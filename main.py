@@ -1,14 +1,13 @@
 """
 BALLAHACK POINT CONTROL
+
 @Author: Brandon Zoss, Dustin Kuchenbecker
 @Date:   October, 2020
+
 Setup and run on any Raspberry Pi model.
-This code proves the minimum viable functions of an
-NFC reader and LoRa radio combination to act as a
+This code proves the minimum viable functions of a
 nodes from which complex realworld gaming scenarios
 can be launched and validated.
-Adafruit's libraries have been very helpful in the
-overall proof of concept.
 """
 
 from flask import Flask, render_template, flash, request, redirect, url_for
@@ -17,26 +16,18 @@ from datetime import datetime
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
 import sqlite_functions as SQL
+from controller import CONTROL_POINT, END_NODE
 
 application = Flask(__name__)
 
-#import board
-#from node import node, controller
-from controller import CONTROL_POINT, END_NODE
 
 serial = '/dev/ttyUSB0'
 baud   = 115200
 CP = CONTROL_POINT(serial, baud)
 
-#node_kwargs = {'RADIO_pin':board.CE1,
-#               'address':0x00,
-#               'dest':0x01,
-#               'tx_power':21}
 
-#node = controller(**node_kwargs)
-#node.daemon = True
-
-db_link = 'database.sqlite'
+SET_LOCATION = 0xFF
+BROADCAST    = "FFFF"
 
 @application.route('/')
 @application.route('/index')
@@ -44,12 +35,18 @@ def main_page():
     """
     Establish main page.
     """
-    conn = SQL.create_connection(db_link)
+    conn = SQL.create_connection(CP.DB_NAME)
 
     reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
-    colors = {1:'#FF0000',2:'#0000FF',3:'#FFFF00',4:'#008000',5:'#3333CC'}
+    colors = {
+                1:'#FF0000',
+                2:'#0000FF',
+                3:'#FFFF00',
+                4:'#008000',
+                5:'#3333CC'
+             }
 
     node_status, centers = dict(), dict()
 
@@ -58,18 +55,11 @@ def main_page():
     for n in CP.node_dict:
 
         status = SQL._get_node_status(conn, n)
-        print(status)
 
         if status:
             node_status[n] = status
             centers[n] = CP.node_dict[n].location
 
-    # for key in CP.node_dict.keys():
-
-        # stability = 1 or CP.node_dict[key].node_status
-        # node_status[key] = (0, CP.node_dict[key].owner, stability)
-        #
-        # centers[key] = CP.node_dict[key].location
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Ballahack | Swamp Sniper",
@@ -86,6 +76,8 @@ def main_page():
 
     return render_template('index.html', **kwargs)
 
+
+
 @application.route('/node_admin')
 def node_admin():
 
@@ -95,8 +87,12 @@ def node_admin():
     return render_template('node_admin.html', **kwargs)
 
 
+
 @application.route('/issue_command', methods=['POST','GET'])
 def issue_command():
+
+    dest = request.form['dest']
+    args = request.form['args']
 
     if request.method == 'POST':
 
@@ -105,54 +101,53 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(request.form['conf'], 16)
 
-        if pkt[1] == 255 and request.form['dest'] != 'FF FF':
 
-            CP.node_dict[request.form['dest']].location = eval(request.form['args'])
+        if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
+            CP.node_dict[dest].location = eval(args)
             return redirect(url_for('node_admin'))
 
-        pkt[2] = int(request.form['args'], 16)
 
-        if pkt[1] == CP.DISCOVERY and request.form['dest'] == 'FF FF':
+        elif pkt[1] == CP.DISCOVERY:
 
             CP.find_nodes()
-
             return redirect(url_for('node_admin'))
 
-        # TODO: Add check for command in node_dict otherwise do something else
-        if request.form['dest'] == 'FF FF':
+
+        pkt[2] = int(args, 16)
+        if dest == BROADCAST:
+
             CP.send_data_broadcast(pkt)
+
         else:
-            dest = CP.node_dict[request.form['dest']]._64bit_addr
-            CP.transmit_pkt(dest, pkt)
+
+            CP.transmit_pkt(CP.node_dict[dest]._64bit_addr, pkt)
 
     return redirect(url_for('node_admin'))
+
+
+
 
 @application.route('/players')
 def players():
 
-    conn = SQL.create_connection(db_link)
+    conn = SQL.create_connection(CP.DB_NAME)
 
     kwargs = {'t_sc_cols'  : ['team', 'points'],
               'team_score' : SQL._score_by_team(conn),
-              'p_sc_cols'  : ['player', 'team', 'points'],
+              'p_sc_cols'  : ['player', 'points'],
               'plyr_score' : SQL._score_by_uid(conn)}
 
-    #kwargs = {'cols_team':SQL.get_col_names(conn,'team'),
-    #          'data_team':SQL._get_table(conn,'team'),
-    #          'datetime'   :   datetime,
-    #          'time_fmt'   :   controller.control_point.TIME_FMTR,
-    #          'time_disp'  :   controller.control_point.TIME_DISP,
-    #         }
-
-    conn.close() #My functions close connections
+    conn.close()
 
     return render_template('players.html', **kwargs)
+
+
 
 @application.route('/comms')
 def comms_log():
 
-    conn = SQL.create_connection(db_link)
+    conn = SQL.create_connection(CP.DB_NAME)
 
     kwargs = {'cols_data'  :   SQL.get_col_names(conn,'data'),
               'data_data'  :   SQL._get_table(conn,'data'),
@@ -161,30 +156,23 @@ def comms_log():
               'time_disp'  :   CP.TIME_DISP,
              }
 
-    conn.close() #My functions close connections
+    conn.close()
 
     return render_template('comms.html', **kwargs)
 
-# Run the app when this script executes.
+
+
+
 if __name__ == '__main__':
 
     print("Initializing host controller")
 
-    # local_host = controller.configure_host_controller(serial)
-    # battle_net = local_host.get_network()
-    # controller.control_point.battlefield_network = battle_net
-    # controller.control_point.battlefield_network.add_network_modified_callback(
-                                      # controller.cb_network_modified)
-    # local_host.add_data_received_callback(controller.my_data_received_callback)
-    # CP.set_node_controller(local_host)
-
     print("Finding nodes in the network")
     while not CP.node_dict.keys():
-
         CP.find_nodes()
 
     print("Network:")
-    print(CP.node_dict)
+    print(CP.XB_net.get_devices())
 
     # Configure and start the flask application
     application.jinja_env.auto_reload = True
