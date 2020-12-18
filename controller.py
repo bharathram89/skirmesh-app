@@ -20,7 +20,7 @@ class END_NODE(RemoteXBeeDevice):
 
     def __init__(self, host, device):
 
-        super().__init__(host, device)
+        RemoteXBeeDevice.__init__(self, host, device)
 
         self.host = host
 
