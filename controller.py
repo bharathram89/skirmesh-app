@@ -246,8 +246,6 @@ class CONTROL_POINT(XBeeDevice):
 
     def data_received_callback(self, xb_msg):
 
-        self.DB = SQL.create_connection(CONTROL_POINT.DB_NAME)
-
         payload = xb_msg.data
         sender = xb_msg.remote_device
 
@@ -270,7 +268,6 @@ class CONTROL_POINT(XBeeDevice):
 
             if pkt: self.transmit_pkt(sender, pkt)
 
-        self.DB.close()
 
 
     @property

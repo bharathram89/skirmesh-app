@@ -107,8 +107,7 @@ def issue_command():
 
         if pkt[1] == 255 and request.form['dest'] != 'FF FF':
 
-            dest = XBee64BitAddress.from_hex_string(request.form['dest'])
-            CP.node_dict[str(dest)].location = eval(request.form['args'])
+            CP.node_dict[request.form['dest']].location = eval(request.form['args'])
 
             return redirect(url_for('node_admin'))
 
@@ -125,7 +124,7 @@ def issue_command():
             CP.send_data_broadcast(pkt)
         else:
             dest = CP.node_dict[request.form['dest']]._64bit_addr
-            CP.send_data(dest, pkt)
+            CP.transmit_pkt(dest, pkt)
 
     return redirect(url_for('node_admin'))
 

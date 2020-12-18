@@ -18,8 +18,8 @@
 
               <div class="form_field">
                   <label for="dest"> Destination Node </label> <br>
-                  <select name="dest" id="dest" placeholder="Destination Node" onclick="">
-                      <option value="FF FF">BROADCAST</option>
+                  <select name="dest" id="dest" placeholder="Destination Node" onchange="update_cmd_opts()">
+                      <option value="FFFF">BROADCAST</option>
                       {% for i in node_dict %}
                       <option value="{{ i }}">{{ i }}</option>
                       {% endfor %}
@@ -35,7 +35,7 @@
                             <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
                           {% endif %}
                       {% endfor %}
-                      <option value="FF">SET LOCATION</option>
+                      <option value="FF" id="set_loc">SET LOCATION</option>
                   </select>
               </div>
 
