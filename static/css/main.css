@@ -1,0 +1,364 @@
+/* html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video  */
+
+:root {
+  --button_color: #808080;
+  --button_color_hover: #F00000;
+  --RED: #FF0000;
+  --LIGHT_RED: #FFF0F0;
+  --BLUE: #0000FF;
+  --LIGHT_BLUE: #F0F0FF;
+  --BLACK: #000000;
+  --table_bg: #FFFFFF;
+}
+
+html {
+    min-height: 100%;
+    min-width: 100%;
+}
+
+body {
+    padding: 0;
+    vertical-align: top;
+    text-align: left;
+}
+
+header{
+    border-radius: 0.1em;
+    color: rgba(255,255,255,0.70);
+    text-align: center;
+    vertical-align: center;
+    background-color: var(--BLACK);
+    background-image: url('../img/logo.png');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 10%;
+    font-size: 350%;
+    padding: 1em;
+}
+
+
+h1{
+    border-radius: 0.1em;
+    color: rgba(255,255,255,0.70);
+    text-align: center;
+    vertical-align: center;
+    background-color: var(--BLACK);
+    font-size: 150%;
+    padding: 0.5em;
+    text-transform: capitalize;
+}
+h1:hover, header:hover{
+    color: var(--RED);
+}
+
+
+h2 {
+    text-align: center;
+    font-size: 100%
+}
+
+
+#main-nav {
+    margin: 0;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    padding-inline-start: 0;
+}
+#main-nav li {
+    display: table-cell;
+    text-align: center;
+    padding-left: 1em;
+    text-transform: uppercase;
+}
+#main-nav li:first-child {
+    padding-left: 0;
+}
+#main-nav li a {
+    width: 100%;
+    display: block;
+    height: 100%;
+    line-height: 3em;
+    text-decoration: none;
+    background-color: var(--button_color);
+    font-size: 125%;
+    border-radius: 0.1em;
+    color: #FFFFFF;
+}
+#main-nav li a:hover {
+    background-color: var(--button_color_hover);
+}
+
+.grid_container {
+    margin: 0;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    padding-inline-start: 0;
+}
+
+.grid_element {
+    display: table-cell;
+    text-align: center;
+    vertical-align: top;
+}
+
+.grid_element.middle {
+    width: 60%;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
+}
+
+
+form {
+    padding: 1em;
+    vertical-align: middle;
+    text-align: left;
+    width: 75%;
+}
+
+.form_field {
+    text-align: left;
+    padding: 1em;
+    display: inline-block;
+}
+
+legend {
+    padding: 1em;
+    text-align: center;
+}
+
+input {
+    padding: 1em;
+    width: 100%;
+    margin: 0.5em;
+}
+
+button, .button {
+    transition: all .5s ease-in-out;
+    padding: 1em;
+    border-radius: 0.2em;
+    text-transform: capitalize;
+    width: 100%;
+}
+button:hover, .button:hover {background-color: var(--RED)}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 1em;
+  width: 100%;
+}
+
+option {
+  padding: 1em;
+  width: 100%;
+}
+
+fieldset {
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  align-items: center;
+  float: center;
+}
+
+.scrollable {
+    height: 40em;
+    overflow: auto;
+    width: 80%;
+}
+
+.header {
+  color: #FFFFFF;
+  border-bottom: 1px solid #000000;
+  padding: 1em;
+  text-align: center;
+  background-color: var(--BLACK);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.row {
+  border-bottom: 1px solid var(--BLACK);
+  background-color: var(--table_bg)
+  padding: 1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+tr:hover {background-color: var(--RED);}
+
+td {
+  padding: 1em;
+  width: 25%;
+}
+
+
+.team1 {
+    background-color: var(--LIGHT_RED);
+}
+.team2 {
+    background-color: var(--LIGHT_BLUE);
+}
+.team3 {
+    background-color: #FFFFF0;
+}
+.team4 {
+    background-color: #F0FFF0;
+}
+.team5 {
+    background-color: #F0F0FF;
+}
+
+.team1:hover {
+    background-color: var(--RED);
+    color: #FFFFFF;
+    font-weight: bold;
+}
+.team2:hover {
+    background-color: var(--BLUE);
+    color: #FFFFFF;
+    font-weight: bold;
+}
+.team3:hover {
+    background-color: #FFFF00;
+    /* color: #FFFFFF; */
+    font-weight: bold;
+}
+.team4:hover {
+    background-color: #008000;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+.team5:hover {
+    background-color: #3333CC;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+
+.beacon-container {
+  position: relative;
+  padding: 0;
+}
+
+.beacon {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 10px;
+  border-radius: 50%;
+  position: absolute;
+  /* top: 50%;
+  left: 50%; */
+  animation: pulsate infinite 1.5s;
+}
+
+@keyframes pulsate {
+  from {transform: scale(0.2);
+      opacity: 1;
+  }
+  to {transform: scale(2.5);
+        opacity: 0;
+  }
+}
+
+
+div.table-wrapper {
+    border: 1px solid var(--BLACK));
+    max-height: 40em;
+    width: 100%;
+    overflow-y: auto;
+ }
+
+
+div.team-leaderboard {
+    border: 1px solid var(--BLACK));
+    width: 100%;
+}
+
+div.player-leaderboard {
+    border: 1px solid var(--BLACK));
+    max-height: 30em;
+    width: 100%;
+    overflow-y: auto;
+}
+
+table {
+   width: 100%;
+   border: 1px solid var(--BLACK));
+ }
+
+thead th {
+   position: sticky;
+   top: 0px;
+ }
+
+table thead tr th {
+  position: sticky;
+}
+
+.form_field {
+    padding: 2em;
+    width: 10em;
+}
+
+#fields {
+    display: flex;
+    justify-content: space-between;
+}
+
+#form_submit_button {
+    border-radius: 0.2em;
+    padding: 1em;
+    font-size: 2em;
+    text-transform: uppercase;
+    vertical-align: center;
+    width: 80%;
+    background-color: var(--button_color);
+    color: #FFFFFF;
+}
+
+#form_submit_button:hover {background-color: var(--button_color_hover)}
+
+#mbr_search {
+  background-image: url('../img/ss.jpg');
+  background-size: contain;
+  background-position: right center;
+  background-repeat: no-repeat;
+  float: right;
+  width: 40%;
+  font-size: 1em;
+  padding: 1em;
+  border: 1px solid var(--button_color);
+  border-radius: 0.2em;
+}
+
+a:link { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover { text-decoration: none; }
+a:active { text-decoration: none; }
+a { text-decoration: none; }
+
+
+footer {
+    padding: 3em;
+}

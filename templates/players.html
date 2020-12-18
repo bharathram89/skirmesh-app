@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="display:inline-block; width:100%;">
+<input type="text"
+       id="mbr_search"
+       onkeyup="search(event)"
+       placeholder="search...">
+</input>
+</div>
+
+<h1> team leaderboard </h1>
+
+<div class="team-leaderboard">
+  <table id="table">
+    <thead>
+      <tr>
+          {% for col in t_sc_cols %}
+            <th class="header"> {{col | safe}} </th>
+          {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+        {% for dat in team_score %}
+        <tr class="row">
+            {% for col in t_sc_cols %}
+                <td> {{ dat[col] | safe }} </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<br>
+<h1> player leaderboard </h1>
+<div class="player-leaderboard">
+  <table id="table">
+    <thead>
+      <tr>
+          {% for col in p_sc_cols %}
+            <th class="header"> {{col | safe}} </th>
+          {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+        {% for dat in plyr_score %}
+        <tr class="row">
+            {% for col in p_sc_cols %}
+                <td> {{ dat[col] | safe }} </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<script src="../static/js/script.js"></script>
+
+<link rel="icon" href="../static/img/logo.ico">
+<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+
+<head>
+
+  <title> Ballahack Battlefield </title>
+  <meta charset="UTF-8">
+  <meta name={{ author }}
+        content="Results earned here.">
+
+</head>
+
+<header>
+    <bold> Welcome to <br> <em style="font-size:110%; text-transform: uppercase"> Ballahack Battlefield </em> </bold>
+
+</header>
+
+<br>
+
+    <ul id="main-nav">
+        <li><a href="/index">Home</a></li>
+        <li><a href="/players">Leaderboard</a></li>
+        <li><a href="/node_admin">Node Admin</a></li>
+        <li><a href="/comms">Comms Log</a></li>
+    </ul>
+
+<br>
+
+<body>
+  <h2> We manage your stats, so you can get back to things that matter. </h2>
+  <center> {% block content %}{% endblock %} </center>
+</body>
+
+<br>
+
+<center>
+    <footer style="align:center;">
+        &copy; Copyright 2019
+        <script>new Date().getFullYear()>2019&&document.write("- " + new Date().getFullYear());</script>
+        Ballhack-Battlefield
+
+        <br> <br>
+
+        <a href="https://www.ballahackairsoft.com">
+        <img src="{{ url_for('static', filename='img/logo.png') }}"
+             style="max-width: 15%; padding:2em;"
+             align="middle">
+        </a>
+
+        <a href="https://www.youtube.com/channel/UCB74I2EiE5dC0CAeDXbBjfA">
+        <img src="{{ url_for('static', filename='img/ss.jpg') }}"
+             style="max-width: 15%; padding:2em;"
+             align="middle">
+        </a>
+
+    </footer>
+</center>
+
+</html>

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="grid_container">
+
+<div class="grid_element">
+
+    {% for team in teams[0::2] %}
+    {% set team_i = reg_teams[(loop.index-1)*2] %}
+
+        <table id="table">
+        <thead>
+          <tr>
+                <th class="header"> {{team_cmap[team_i] | safe}} Team ({{team | length}})</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for dat in team %}
+            <tr class="row">
+                {% for col in team_col %}
+                    <td class="team{{team_i | safe}}"> {{ dat[col] | safe }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+
+    {% endfor %}
+
+</div>
+
+<div class="grid_element middle">
+    <div class="beacon-container">
+      <img src="{{ url_for('static', filename='img/field.png') }}"
+           style="width: 100%; border: 1px solid #000000;"
+           align="middle">
+           {% for n in node_status %}
+              <div class="beacon"
+                   style="border-color:{{colors[node_status[n][1]]}};
+                          top: calc({{centers[n][0]}}% - 11px);
+                          left: calc({{centers[n][1]}}% - 11px);
+                          border-style: {{ 'dashed' if node_status[n][2] else 'double' }};
+                          background: {{ colors[node_status[n][1]] if node_status[n][2] else '' }}">
+              </div>
+           {% endfor %}
+    </div>
+</div>
+
+<div class="grid_element">
+
+    {% for team in teams[1::2] %}
+    {% set team_i = reg_teams[loop.index*2 - 1] %}
+
+        <table id="table">
+        <thead>
+          <tr>
+                <th class="header"> {{team_cmap[team_i] | safe}} Team ({{team | length}})</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for dat in team %}
+            <tr class="row">
+                {% for col in team_col %}
+                    <td class="team{{team_i | safe}}"> {{ dat[col] | safe }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+
+    {% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

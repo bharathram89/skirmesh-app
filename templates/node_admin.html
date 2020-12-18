@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <body onload="update_cmd_args()">
+
+    <form id="configuration_control"
+          name="Member_Data"
+          action="/issue_command"
+          method="post"
+          style="float:center">
+
+      <fieldset id="fieldset">
+
+          <legend> Configuration Control </legend>
+
+          <div id="fields">
+
+              <div class="form_field">
+                  <label for="dest"> Destination Node </label> <br>
+                  <select name="dest" id="dest" placeholder="Destination Node" onclick="">
+                      <option value="FF FF">BROADCAST</option>
+                      {% for i in node_dict %}
+                      <option value="{{ i }}">{{ i }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+
+              <div class="form_field">
+                  <br>
+                  <select name="conf" id="conf" placeholder="Configuration" onchange="update_cmd_args()">
+                      {% for key in cmd_dict %}
+                          {% if cmd_dict[key] == 'CONFIGURE' %}
+                          {% else %}
+                            <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
+                          {% endif %}
+                      {% endfor %}
+                      <option value="FF">SET LOCATION</option>
+                  </select>
+              </div>
+
+              <div class="form_field">
+                  <label for="args"> Command Argument </label> <br>
+                  <select name="args" id="args" placeholder="Command Argument" onclick="">
+
+                          "<option value='00'>--select--</option>"
+
+                  </select>
+              </div>
+
+          </div>
+
+          <br>
+
+          <center>
+
+          <input class="button" id="form_submit_button" type="submit" name="action" value="Issue Command"></input>
+
+          </center>
+
+      </fieldset>
+
+    </form>
+
+    </body>
+
+{% endblock %}
