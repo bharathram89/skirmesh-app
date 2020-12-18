@@ -125,7 +125,7 @@ def issue_command():
             CP.send_data_broadcast(pkt)
         else:
             dest = XBee64BitAddress.from_hex_string(request.form['dest'])
-            CP.transmit_pkt(dest, pkt)
+            CP.send_data(dest, pkt)
 
     return redirect(url_for('node_admin'))
 
