@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/Coding/Ballahack
+cd ~/Projects/battlefield
 
 sudo apt-get update -y
 sudo apt-get upgrade -y
