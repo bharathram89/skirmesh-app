@@ -276,7 +276,8 @@ class CONTROL_POINT(XBeeDevice):
         msg_dict = {CONTROL_POINT.REGISTER  : self.__register,
                     CONTROL_POINT.CAPTURE   : self.__capture,
                     CONTROL_POINT.MEDIC     : self.__medic,
-                    CONTROL_POINT.QUERY     : self.__query}
+                    CONTROL_POINT.QUERY     : self.__query,
+                    CONTROL_POINT.ND_STATUS : self.__status}
 
         return msg_dict
 
