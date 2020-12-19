@@ -289,7 +289,7 @@ def _get_owning(conn):
     return cur.fetchone()
 
 
-def _get_node_status(conn, node):
+def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM node_status
                  WHERE date(timestamp) = date('now') AND node = (?)

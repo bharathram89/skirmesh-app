@@ -300,7 +300,7 @@ class CONTROL_POINT(XBeeDevice):
     def __capture(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        owning = self.exec_sql(SQL._get_node_status, node)
+        owning = self.exec_sql(SQL._get_capture_status, node)
 
         if len(payload[1:5]) == 1 and owning:
             # If the payload does not contain a UID, it's passing the status
@@ -432,7 +432,7 @@ class CONTROL_POINT(XBeeDevice):
     def __status(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        status = self.exec_sql(SQL._get_node_status, node)
+        status = self.exec_sql(SQL._get_capture_status, node)
 
         if not status: return None
 
