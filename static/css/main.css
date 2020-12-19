@@ -264,9 +264,10 @@ td {
 .beacon {
   content: '';
   display: block;
-  width: 22px;
-  height: 22px;
-  border: 10px;
+  width: 4%;
+  height: 0;
+  padding-bottom: calc(4%);
+  border: 1vw;
   border-radius: 50%;
   position: absolute;
   /* top: 50%;
