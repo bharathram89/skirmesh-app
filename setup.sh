@@ -23,7 +23,7 @@ venv/bin/pip3 install --upgrade setuptools
 venv/bin/pip3 install -r requirements.txt
 
 echo "Generating service file at /etc/systemd/system/battlefield.service"
-sudo cat > /etc/systemd/system/battlefield.service <<EOF
+sudo cat > battlefield.service <<EOF
 [Unit]
 Description=Battlefield Init Service
 
@@ -39,6 +39,8 @@ RestartSec=15
 WantedBy=multi-user.target
 Alias=battlefield.service
 EOF
+
+sudo cp battlefield.service /etc/systemd/system/battlefield.service
 
 echo "enabling /etc/systemd/system/battlefield.service"
 sudo systemctl enable battlefield.service
