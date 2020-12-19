@@ -428,6 +428,21 @@ class CONTROL_POINT(XBeeDevice):
         return pkt
 
 
+    def __status(self, sender, payload):
+
+        node = str(sender.get_64bit_addr())
+        status = self.exec_sql(SQL._get_node_status, node)
+
+        if not status: return None
+
+        cmd    = bytearray([node.ND_STATUS])
+        uid    = bytearray.fromhex(status[0])
+        team   = bytearray([status[1]])
+        stable = bytearray([status[2]])
+
+        return cmd + uid + team + stable
+
+
     def uid_handler(self, uid):
 
         print(f'NFC Reader found: {bytearray(uid).hex(): <20}')
