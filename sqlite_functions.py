@@ -252,11 +252,11 @@ def _score_by_uid(conn):
 
 def _score_by_team(conn):
 
-    sql_arg = """SELECT team, SUM(points) as points
-                 FROM score WHERE date(timestamp) = date('now')
-                 GROUP BY team
-                 ORDER BY SUM(points) DESC;
-              """
+    sql_arg = f"""SELECT {TEAM_MAP}, SUM(points) as points
+                  FROM score WHERE date(timestamp) = date('now')
+                  GROUP BY team
+                  ORDER BY SUM(points) DESC;
+               """
 
     conn.row_factory = sqlite3.Row
     data = conn.cursor().execute(sql_arg).fetchall()
