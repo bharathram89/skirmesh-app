@@ -42,6 +42,6 @@ EOF
 
 echo "enabling /etc/systemd/system/battlefield.service"
 sudo systemctl enable battlefield.service
-sudo systemctl enable battlefield.service
+sudo systemctl start battlefield.service
 
 echo "Battlefield Gaming Systems is fully enabled."
