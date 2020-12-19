@@ -9,8 +9,8 @@ sudo apt autoremove -y
 echo "Installing required dependencies (git, pip3, etc.)"
 sudo apt-get install git python3-pip python3-venv -y
 
-echo "Creating Virtual Environment at ./VENV"
-python3 -m venv ./VENV
+echo "Creating Virtual Environment at venv"
+python3 -m venv ./venv
 
-./VENV/bin/pip3 install --upgrade setuptools
-./VENV/bin/pip3 install -r requirements.txt
+venv/bin/pip3 install --upgrade setuptools
+venv/bin/pip3 install -r requirements.txt
