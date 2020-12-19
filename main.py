@@ -54,7 +54,7 @@ def main_page():
 
     for n in CP.node_dict:
 
-        status = SQL._get_node_status(conn, n)
+        status = SQL._get_capture_status(conn, n)
 
         if status:
             node_status[n] = status
