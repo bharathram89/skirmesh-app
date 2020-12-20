@@ -14,7 +14,26 @@ class END_NODE(RemoteXBeeDevice):
         self.host = host
 
         self.location = (50,50)
+        self.__loc_name = None
 
+
+    @property
+    def location(self):
+        return self.__location
+
+    @location.setter
+    def location(self, loc):
+
+        self.__location = loc
+
+        for key in CONTROL_POINT._NODE_LOC_DICT:
+            if CONTROL_POINT._NODE_LOC_DICT[key] == loc:
+                self.__loc_name = key
+
+
+    @property
+    def loc_name(self):
+        return self.__loc_name
 
 
 
@@ -253,23 +272,27 @@ class CONTROL_POINT(XBeeDevice):
     def __capture(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        owning = self.exec_sql(SQL._get_capture_status, node)
+        cap_status = self.exec_sql(SQL._get_capture_status, node)
 
-        if len(payload[1:5]) == 1 and owning:
+        if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
             # byte to indicate that capture is complete
             # Get the most recent team interaction with the node and set the
             # node as stable with the prosecuting team as owning
-            stable = payload[1]
+            stable   = payload[1]
 
-            data = {'node':node, 'tag':owning[0], 'team':owning[1], 'stable':stable}
-            self.exec_sql(SQL.add_row, 'node_status', data)
+            own_uid, own_team, cap_stable, cap_time = cap_status
+
+            data = {'node':node, 'tag':own_uid, 'team':own_team, 'stable':stable}
+            self.exec_sql(SQL.add_row, 'capture_status', data)
 
             orig_captor = self.exec_sql(SQL._get_last_captor)
 
             if orig_captor:
 
-                data = {'tag':orig_captor[0], 'team':orig_captor[1],'points':2, 'action':'CAPTURE COMPLETE'}
+                orig_uid, orig_team = orig_captor
+
+                data = {'tag':orig_uid, 'team':orig_team,'points':2, 'action':'CAPTURE COMPLETE'}
                 self.exec_sql(SQL.add_row, 'score', data)
 
         if len(payload[1:5]) == 4:
@@ -279,15 +302,31 @@ class CONTROL_POINT(XBeeDevice):
 
             if team:
 
-                print(f'Team {team[0]} is prosecuting Node_{node}')
+                team = team[0]
+                print(f'Team {team} is prosecuting Node_{node}')
 
-                data = {'tag':uid, 'team':team[0]}
+                data = {'tag':uid, 'team':team}
 
-                if owning:
+                if cap_status:
+
+                    own_uid, own_team, cap_stable, cap_time = cap_status
                     # If no one owns the node, the attacker captures immediately
                     # If his teams was already there, he only assists
-                    data['action'] = 'CAPTURE' if team[0] != owning[1] else 'ASSIST'
-                    data['points'] = 2 if team[0] != owning[1] else 1
+                    data['action'] = 'CAPTURE' if team != own_team else 'ASSIST'
+                    data['points'] = 2 if team != own_team else 1
+
+                    if data['action'] == 'CAPTURE':
+
+                        begin = self.exec_sql(SQL._get_time_capture_complete)
+
+                        if begin:
+
+                            begin = datetime.strptime(begin[0], CONTROL_POINT.TIME_FMTR)
+                            lost  = datetime.utcnow()
+                            held  = int((lost - begin).total_seconds())
+
+                            tdat = {'team':own_team,'time_held':held,'action':node}
+                            self.exec_sql(SQL.add_row, 'score', tdat)
 
                 else:
 
@@ -296,14 +335,14 @@ class CONTROL_POINT(XBeeDevice):
 
                 self.exec_sql(SQL.add_row, 'score', data)
 
-                data = {'node':node, 'tag':uid, 'team':team[0]}
+                data = {'node':node, 'tag':uid, 'team':team}
                 # If the node is not currently owned, then it's immediately stable
                 # If the prosecuting team is the same team, keep it stable
-                data['stable'] = 1 if not owning else 0
+                data['stable'] = 1 if not cap_status else 0
 
-                self.exec_sql(SQL.add_row, 'node_status', data)
+                self.exec_sql(SQL.add_row, 'capture_status', data)
 
-                return bytearray([CONTROL_POINT.CAPTURE, team[0]])
+                return bytearray([CONTROL_POINT.CAPTURE, team])
 
             print(f'{uid} is not registered to a team')
 
