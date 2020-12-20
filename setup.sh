@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "Navigating to home directory - creating ~/Coding/battlefield"
-cd ~/
-mkdir Coding
-cd Coding
-mkdir /battlefield
+#echo "Navigating to home directory - creating ~/Coding/battlefield"
+#cd ~/
+#mkdir Coding
+#cd Coding
+#mkdir /battlefield
 
-echo "Navigating to ~/Coding/battlefield"
-cd ~/Coding/battlefield
+echo "Navigating to ~/Projects/battlefield"
+cd ~/Projects/battlefield
 
 sudo apt-get update -y
 sudo apt-get upgrade -y
