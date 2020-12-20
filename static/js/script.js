@@ -161,3 +161,17 @@ function update_cmd_args() {
         document.getElementById("args").innerHTML = "<option value='00'>--select--</option>";
     }
 }
+
+function update_cmd_opts() {
+
+    var dest = document.getElementById("dest");
+    var option = document.getElementById("set_loc");
+
+    if (dest.value == "FFFF") {
+        option.style.display = "none";
+    }
+    else {
+        option.style.display = "";
+    }
+
+}

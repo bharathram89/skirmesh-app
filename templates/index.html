@@ -38,8 +38,8 @@
            {% for n in node_status %}
               <div class="beacon"
                    style="border-color:{{colors[node_status[n][1]]}};
-                          top: calc({{centers[n][0]}}% - 11px);
-                          left: calc({{centers[n][1]}}% - 11px);
+                          top: calc({{centers[n][0]}}% - 2%);
+                          left: calc({{centers[n][1]}}% - 2%);
                           border-style: {{ 'dashed' if node_status[n][2] else 'double' }};
                           background: {{ colors[node_status[n][1]] if node_status[n][2] else '' }}">
               </div>

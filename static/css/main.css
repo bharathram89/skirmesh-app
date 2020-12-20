@@ -175,9 +175,8 @@ fieldset {
 
 table {
   border-collapse: collapse;
-  width: 80%;
   align-items: center;
-  float: center;
+  width: 100%;
 }
 
 .scrollable {
@@ -207,7 +206,6 @@ tr:hover {background-color: var(--RED);}
 
 td {
   padding: 1em;
-  width: 25%;
 }
 
 
@@ -225,6 +223,10 @@ td {
 }
 .team5 {
     background-color: #F0F0FF;
+}
+
+.team1, .team2, .team3, .team4, .team5 {
+    padding: 0.5em;
 }
 
 .team1:hover {
@@ -262,9 +264,10 @@ td {
 .beacon {
   content: '';
   display: block;
-  width: 22px;
-  height: 22px;
-  border: 10px;
+  width: 4%;
+  height: 0;
+  padding-bottom: calc(4%);
+  border: 1vw;
   border-radius: 50%;
   position: absolute;
   /* top: 50%;

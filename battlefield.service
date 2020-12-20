@@ -1,0 +1,14 @@
+[Unit]
+Description=Battlefield Init Service
+
+[Service]
+WorkingDirectory=/home/pi/Coding/battlefield/
+ExecStart=/home/pi/Coding/battlefield/venv/bin/python main.py
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
+Alias=battlefield.service

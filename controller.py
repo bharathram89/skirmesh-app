@@ -6,17 +6,6 @@ from datetime import datetime
 
 class END_NODE(RemoteXBeeDevice):
 
-    #transition states
-    STABLE    = 0
-    CAPTURE   = 1
-    RECAPTURE = 2
-
-    #Node CONFIGURATION values
-    CAPTURE_POINT = 0
-    TEAM_REGISTER = 1
-    QUERY_STATION = 2
-
-
 
     def __init__(self, host, device):
 
@@ -24,47 +13,7 @@ class END_NODE(RemoteXBeeDevice):
 
         self.host = host
 
-        self.configuration = END_NODE.CAPTURE_POINT
-        self.owner         = None
-        self.attacker      = None
-
-        self.initiator     = None
-        self.status        = None
-
         self.location = (50,50)
-        self.name = None
-
-
-    def stabilize(self):
-
-        self.initiator = None
-        self.owner     = self.attacker or None
-        self.attacker  = None
-        self.defender  = None
-        self.status    = END_NODE.STABLE
-
-
-    def initiate_capture(self, uid, attacking_team):
-
-        self.status    = END_NODE.CAPTURE
-        self.attacker  = attacking_team
-
-        self.initiator = uid
-
-
-    def reset(self, config, owner = None):
-
-        if (config == CONTROL_POINT.SET_REGISTER or
-            config == CONTROL_POINT.SET_CAPTURE or
-            config == CONTROL_POINT.SET_TEAM or
-            config == CONTROL_POINT.SET_QUERY):
-
-            self.owner    = owner
-            self.attacker = None
-
-            self.status   = END_NODE.STABLE
-
-
 
 
 
@@ -83,6 +32,7 @@ class CONTROL_POINT(XBeeDevice):
     QUERY     = 0x02
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
+    BOMB      = 0xBB
     DISCOVERY = 0xDD
     ND_STATUS = 0x53
 
@@ -97,6 +47,7 @@ class CONTROL_POINT(XBeeDevice):
                 CAPTURE   : 'CAPTURE',
                 MEDIC     : 'MEDIC',
                 DISCOVERY : 'DISCOVERY',
+                BOMB      : 'BOMB',
                 # ND_STATUS : 'NODE STATUS'
                 }
 
@@ -161,6 +112,8 @@ class CONTROL_POINT(XBeeDevice):
         self.set_parameter('NI', bytearray('CONTROLLER', 'utf8'))
         self.set_parameter('CE', bytearray([0x01]))
         self.set_parameter('NJ', bytearray([0xFF]))
+        self.apply_changes()
+        self.write_changes()
 
         self.XB_net = self.get_network()
 
@@ -246,8 +199,6 @@ class CONTROL_POINT(XBeeDevice):
 
     def data_received_callback(self, xb_msg):
 
-        self.DB = SQL.create_connection(CONTROL_POINT.DB_NAME)
-
         payload = xb_msg.data
         sender = xb_msg.remote_device
 
@@ -270,7 +221,6 @@ class CONTROL_POINT(XBeeDevice):
 
             if pkt: self.transmit_pkt(sender, pkt)
 
-        self.DB.close()
 
 
     @property
@@ -279,7 +229,8 @@ class CONTROL_POINT(XBeeDevice):
         msg_dict = {CONTROL_POINT.REGISTER  : self.__register,
                     CONTROL_POINT.CAPTURE   : self.__capture,
                     CONTROL_POINT.MEDIC     : self.__medic,
-                    CONTROL_POINT.QUERY     : self.__query}
+                    CONTROL_POINT.QUERY     : self.__query,
+                    CONTROL_POINT.ND_STATUS : self.__status}
 
         return msg_dict
 
@@ -302,7 +253,7 @@ class CONTROL_POINT(XBeeDevice):
     def __capture(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        owning = self.exec_sql(SQL._get_node_status, node)
+        owning = self.exec_sql(SQL._get_capture_status, node)
 
         if len(payload[1:5]) == 1 and owning:
             # If the payload does not contain a UID, it's passing the status
@@ -429,6 +380,21 @@ class CONTROL_POINT(XBeeDevice):
         else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00])
 
         return pkt
+
+
+    def __status(self, sender, payload):
+
+        node = str(sender.get_64bit_addr())
+        status = self.exec_sql(SQL._get_capture_status, node)
+
+        if not status: return None
+
+        cmd    = bytearray([node.ND_STATUS])
+        uid    = bytearray.fromhex(status[0])
+        team   = bytearray([status[1]])
+        stable = bytearray([status[2]])
+
+        return cmd + uid + team + stable
 
 
     def uid_handler(self, uid):
