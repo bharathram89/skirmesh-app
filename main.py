@@ -12,6 +12,7 @@ can be launched and validated.
 
 from flask import Flask, render_template, flash, request, redirect, url_for
 from datetime import datetime
+import time
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
@@ -50,8 +51,6 @@ def main_page():
 
     node_status, centers = dict(), dict()
 
-    print(CP.node_dict)
-
     for n in CP.node_dict:
 
         status = SQL._get_capture_status(conn, n)
@@ -81,8 +80,10 @@ def main_page():
 @application.route('/node_admin')
 def node_admin():
 
-    kwargs = {'node_dict' : CP.node_dict,
-              'cmd_dict'  : CP.CMD_DICT}
+    kwargs = {
+             'node_dict':CP.node_dict,
+             'cmd_dict' :CP.CMD_DICT if CP.node_dict else {CP.DISCOVERY:'DISCOVERY'}
+             }
 
     return render_template('node_admin.html', **kwargs)
 
@@ -168,7 +169,8 @@ if __name__ == '__main__':
     print("Initializing host controller")
 
     print("Finding nodes in the network")
-    while not CP.node_dict.keys():
+    t = time.monotonic()
+    while not CP.node_dict and (time.monotonic() - t) < 10:
         CP.find_nodes()
 
     print("Network:")

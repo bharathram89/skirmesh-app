@@ -6,17 +6,6 @@ from datetime import datetime
 
 class END_NODE(RemoteXBeeDevice):
 
-    #transition states
-    STABLE    = 0
-    CAPTURE   = 1
-    RECAPTURE = 2
-
-    #Node CONFIGURATION values
-    CAPTURE_POINT = 0
-    TEAM_REGISTER = 1
-    QUERY_STATION = 2
-
-
 
     def __init__(self, host, device):
 
@@ -24,47 +13,7 @@ class END_NODE(RemoteXBeeDevice):
 
         self.host = host
 
-        self.configuration = END_NODE.CAPTURE_POINT
-        self.owner         = None
-        self.attacker      = None
-
-        self.initiator     = None
-        self.status        = None
-
         self.location = (50,50)
-        self.name = None
-
-
-    def stabilize(self):
-
-        self.initiator = None
-        self.owner     = self.attacker or None
-        self.attacker  = None
-        self.defender  = None
-        self.status    = END_NODE.STABLE
-
-
-    def initiate_capture(self, uid, attacking_team):
-
-        self.status    = END_NODE.CAPTURE
-        self.attacker  = attacking_team
-
-        self.initiator = uid
-
-
-    def reset(self, config, owner = None):
-
-        if (config == CONTROL_POINT.SET_REGISTER or
-            config == CONTROL_POINT.SET_CAPTURE or
-            config == CONTROL_POINT.SET_TEAM or
-            config == CONTROL_POINT.SET_QUERY):
-
-            self.owner    = owner
-            self.attacker = None
-
-            self.status   = END_NODE.STABLE
-
-
 
 
 
@@ -163,6 +112,8 @@ class CONTROL_POINT(XBeeDevice):
         self.set_parameter('NI', bytearray('CONTROLLER', 'utf8'))
         self.set_parameter('CE', bytearray([0x01]))
         self.set_parameter('NJ', bytearray([0xFF]))
+        self.apply_changes()
+        self.write_changes()
 
         self.XB_net = self.get_network()
 
