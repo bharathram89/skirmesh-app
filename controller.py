@@ -16,7 +16,6 @@ class END_NODE(RemoteXBeeDevice):
         self.capture_status   = None
 
 
-
 class CONTROL_POINT(XBeeDevice):
     """
     This class will be the interface to the contoller
