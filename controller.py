@@ -13,27 +13,9 @@ class END_NODE(RemoteXBeeDevice):
 
         self.host = host
 
-        self.location   = (50,50)
-        self.__loc_name = None
+        self.location = (50,50)
+        self.loc_name = None
 
-
-    @property
-    def location(self):
-        return self.__location
-
-    @location.setter
-    def location(self, loc):
-
-        self.__location = loc
-
-        for key in CONTROL_POINT._NODE_LOC_DICT:
-            if CONTROL_POINT._NODE_LOC_DICT[key] == loc:
-                self.__loc_name = key
-
-
-    @property
-    def loc_name(self):
-        return self.__loc_name
 
 
 

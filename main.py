@@ -28,10 +28,12 @@ CP = CONTROL_POINT(serial, baud)
 
 # Load location data
 LOCATION_DATA = {'SET LOCATIONS':json.load(open("locations.json"))}
-CP._NODE_LOC_DICT = dict()
+_NODE_LOC_DICT, _NODE_NAME_DICT = dict(), dict()
+
 for loc in LOCATION_DATA['SET LOCATIONS']:
     loc['value'] = eval(loc['value'])
-    CP._NODE_LOC_DICT[loc['text']] = loc['value']
+    _NODE_LOC_DICT[loc['text']] = loc['value']
+    _NODE_NAME_DICT[loc['value']] = loc['text']
 
 TEAM_DATA = {'REGISTER':json.load(open("teams.json"))}
 
@@ -70,7 +72,7 @@ def main_page():
     for n in CP.node_dict:
 
         status = SQL._get_capture_status(conn, n)
-
+        
         if status:
             node_status[n] = status
             centers[n] = CP.node_dict[n].location
@@ -119,11 +121,14 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(request.form['conf'], 16)
 
+        print(request.form['action'])
+
         if pkt[1] == SET_LOCATION:
 
             if dest != BROADCAST:
 
                 CP.node_dict[dest].location = eval(args)
+                CP.node_dict[dest].loc_name = _NODE_NAME_DICT[eval(args)]
                 return redirect(url_for('node_admin'))
 
         elif request.form['action'] == 'Issue Command':
