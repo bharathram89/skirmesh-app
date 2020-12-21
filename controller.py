@@ -6,7 +6,6 @@ from datetime import datetime
 
 class END_NODE(RemoteXBeeDevice):
 
-
     def __init__(self, host, device):
 
         RemoteXBeeDevice.__init__(self, host, device)
@@ -34,7 +33,6 @@ class END_NODE(RemoteXBeeDevice):
     @property
     def loc_name(self):
         return self.__loc_name
-
 
 
 class CONTROL_POINT(XBeeDevice):
