@@ -29,13 +29,23 @@
               <div class="form_field">
                   <br>
                   <select name="conf" id="conf" placeholder="Configuration" onchange="update_cmd_args()">
+                      {% if cmd_dict %}
+
                       {% for key in cmd_dict %}
                           {% if cmd_dict[key] == 'CONFIGURE' %}
                           {% else %}
                             <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
                           {% endif %}
                       {% endfor %}
+
                       <option value="FF" id="set_loc" style="display:none">SET LOCATION</option>
+
+                      {% else %}
+
+                      <option value="FF" id="set_loc" style="display:none">--select--</option>
+
+                      {% endif %}
+
                   </select>
               </div>
 
@@ -54,7 +64,39 @@
 
           <center>
 
-          <input class="button" id="form_submit_button" type="submit" name="action" value="Issue Command"></input>
+          <input class="button"
+                 id="form_submit_button"
+                 type="submit"
+                 name="action"
+                 value="Issue Command"
+                 {% if not cmd_dict %}
+                 style="display:none"
+                 {% endif %}>
+                 </input>
+
+          <br>
+
+          <input class="button"
+                 id="end_game_button"
+                 type="submit"
+                 name="action"
+                 value="End Game"
+                 {% if not cmd_dict %}
+                 style="display:none"
+                 {% endif %}>
+                 </input>
+
+          <br>
+
+          <input class="button"
+                 id="discover_network_button"
+                 type="submit"
+                 name="action"
+                 value="Discover Network"
+                 {% if cmd_dict %}
+                 style="display:none"
+                 {% endif %}>
+                 </input>
 
           </center>
 

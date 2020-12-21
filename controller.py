@@ -52,7 +52,7 @@ class CONTROL_POINT(XBeeDevice):
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
-    DISCOVERY = 0xDD
+    # DISCOVERY = 0xDD
     ND_STATUS = 0x53
 
     # Addressing
@@ -65,7 +65,7 @@ class CONTROL_POINT(XBeeDevice):
                 QUERY     : 'QUERY',
                 CAPTURE   : 'CAPTURE',
                 MEDIC     : 'MEDIC',
-                DISCOVERY : 'DISCOVERY',
+                # DISCOVERY : 'DISCOVERY',
                 BOMB      : 'BOMB',
                 # ND_STATUS : 'NODE STATUS'
                 }
