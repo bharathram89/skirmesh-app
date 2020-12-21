@@ -18,7 +18,8 @@ import time, json
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
 import sqlite_functions as SQL
-from controller import CONTROL_POINT, END_NODE
+#from controller import CONTROL_POINT, END_NODE
+from t_node import CONTROL_POINT, END_NODE
 
 application = Flask(__name__)
 
@@ -90,12 +91,13 @@ def main_page():
 
     for n in CP.end_nodes:
 
-        status = SQL._get_capture_status(conn, n)
+        #status = SQL._get_capture_status(conn, n)
+        status = True
 
         if status:
-            node_status[n] = status
-            CP.end_nodes[n].status = status
-            centers[n] = CP.end_nodes[n].location
+            #node_status[n] = status
+            node_status[n] = (0,2,1)
+            centers[n] = CP.node_dict[n].location
 
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
@@ -256,8 +258,8 @@ if __name__ == '__main__':
     while not CP.end_nodes and (time.monotonic() - t) < 10:
         CP.find_nodes()
 
-    print("Network:")
-    print(CP.XB_net.get_devices())
+    #print("Network:")
+    #print(CP.XB_net.get_devices())
 
     # Configure and start the flask application
     application.jinja_env.auto_reload = True
