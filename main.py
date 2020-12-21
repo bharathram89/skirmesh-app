@@ -216,7 +216,6 @@ if __name__ == '__main__':
 
     print("Initializing host controller")
 
-    print("Finding nodes in the network")
     t = time.monotonic()
     while not CP.node_dict and (time.monotonic() - t) < 10:
         CP.find_nodes()

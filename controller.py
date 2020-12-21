@@ -155,6 +155,8 @@ class CONTROL_POINT(XBeeDevice):
 
     def find_nodes(self):
 
+        print("Finding nodes in the network")
+
         self.XB_net.start_discovery_process()
 
         while self.XB_net.is_discovery_running():
