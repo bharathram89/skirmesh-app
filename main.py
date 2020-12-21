@@ -111,7 +111,9 @@ def issue_command():
                 CP.node_dict[dest].location = eval(args)
                 return redirect(url_for('node_admin'))
 
-        elif pkt[1] == CP.DISCOVERY:
+        elif request.form['action'] == 'Issue Command':
+
+            pkt[2] = int(args, 16)
 
             if dest == BROADCAST: CP.send_data_broadcast(pkt)
 
