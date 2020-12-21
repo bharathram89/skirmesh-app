@@ -33,7 +33,7 @@
             {% for col in t_sc_cols %}
 
                 {% if col == 'time' %}
-                <td> {{ team_times[dat['team']]//60 }} </td>
+                <td> {{ team_times[dat['team']]//60 if team_times[dat['team']] else 0 }} </td>
                 {% else %}
                 <td> {{ dat[col] | safe }} </td>
                 {% endif %}
