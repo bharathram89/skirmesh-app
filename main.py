@@ -128,16 +128,30 @@ def issue_command():
 
 
 
-
 @application.route('/players')
 def players():
 
     conn = SQL.create_connection(CP.DB_NAME)
 
-    kwargs = {'t_sc_cols'  : ['team', 'points'],
+    reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
+
+    tm_times = SQL._get_time_held_by_team(conn)
+    team_times = {tt['team']:tt['time'] for tt in tm_times}
+
+    node_times = dict()
+    for n in CP.node_dict:
+
+        times = SQL._get_time_held_for_node(conn, n)
+        node_times[n] = times if times else None
+
+    kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : SQL._score_by_team(conn),
               'p_sc_cols'  : ['player', 'points'],
-              'plyr_score' : SQL._score_by_uid(conn)}
+              'plyr_score' : SQL._score_by_uid(conn),
+              'nodes'      : CP.node_dict.keys(),
+              't_tm_cols'  : ['team', 'time'],
+              'team_times' : team_times,
+              'node_times' : node_times}
 
     conn.close()
 

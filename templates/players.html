@@ -17,7 +17,13 @@
     <thead>
       <tr>
           {% for col in t_sc_cols %}
+
+            {% if col == 'time' %}
+            <th class="header"> {{col | safe}} (min) </th>
+            {% else %}
             <th class="header"> {{col | safe}} </th>
+            {% endif %}
+
           {% endfor %}
       </tr>
     </thead>
@@ -25,13 +31,21 @@
         {% for dat in team_score %}
         <tr class="row">
             {% for col in t_sc_cols %}
+
+                {% if col == 'time' %}
+                <td> {{ team_times[dat['team']]//60 }} </td>
+                {% else %}
                 <td> {{ dat[col] | safe }} </td>
+                {% endif %}
+
             {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
   </table>
 </div>
+
+
 
 <br>
 <h1> player leaderboard </h1>

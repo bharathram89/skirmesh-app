@@ -64,20 +64,21 @@ def init_score_table(conn):
     """
     sql_arg = """CREATE TABLE IF NOT EXISTS score (
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                 tag TEXT NOT NULL,
+                 tag TEXT,
                  team INTEGER NOT NULL,
                  action TEXT,
-                 points INTEGER NOT NULL,
+                 points INTEGER,
+                 time_held INTEGER,
                  timestamp DEFAULT CURRENT_TIMESTAMP);
               """
     conn.cursor().execute(sql_arg)
     conn.commit()
 
-def init_node_status_table(conn):
+def init_capture_status_table(conn):
     """
     Initialize node status table
     """
-    sql_arg = """CREATE TABLE IF NOT EXISTS node_status (
+    sql_arg = """CREATE TABLE IF NOT EXISTS capture_status (
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  node INTEGER NOT NULL,
                  tag TEXT NOT NULL,
@@ -94,7 +95,7 @@ def init_tables(conn):
     init_medic_table(conn)
     init_team_table(conn)
     init_score_table(conn)
-    init_node_status_table(conn)
+    init_capture_status_table(conn)
 
 def add_row(conn, table, data):
     """
@@ -239,7 +240,7 @@ def _get_registered_teams(conn):
 def _score_by_uid(conn):
 
     sql_arg = """SELECT tag as player, team, SUM(points) as points
-                 FROM score WHERE date(timestamp) = date('now')
+                 FROM score WHERE date(timestamp) = date('now') AND tag IS NOT NULL
                  GROUP BY tag
                  ORDER BY SUM(points) DESC;
               """
@@ -264,6 +265,40 @@ def _score_by_team(conn):
     return [dict(i) for i in data]
 
 
+def _get_time_held_by_team(conn):
+
+    sql_arg = f"""SELECT {TEAM_MAP}, SUM(time_held) as time
+                  FROM score WHERE date(timestamp) = date('now')
+                  GROUP BY team
+                  ORDER BY SUM(time_held) DESC;
+               """
+
+    conn.row_factory = sqlite3.Row
+    data = conn.cursor().execute(sql_arg).fetchall()
+
+    return [dict(i) for i in data]
+
+
+def _get_time_held_for_node(conn, node):
+
+    sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time_held, action
+                  FROM score
+                  WHERE date(timestamp) = date('now') AND action = (?)
+		          AND EXISTS(
+						     SELECT node
+                             FROM capture_status
+                             WHERE node = action
+							 )
+                  GROUP BY team
+                  ORDER BY time_held DESC
+               """
+
+    conn.row_factory = sqlite3.Row
+    data = conn.cursor().execute(sql_arg, (node,)).fetchall()
+
+    return [dict(i) for i in data]
+
+
 def _get_last_captor(conn):
 
     sql_arg = """SELECT tag,team FROM score
@@ -276,9 +311,21 @@ def _get_last_captor(conn):
     return cur.fetchone()
 
 
+def _get_time_capture_complete(conn):
+
+    sql_arg = """SELECT timestamp FROM score
+                 WHERE date(timestamp) = date('now') AND action = 'CAPTURE COMPLETE'
+                 ORDER BY timestamp DESC LIMIT 1;
+              """
+    cur = conn.cursor()
+    cur.execute(sql_arg)
+
+    return cur.fetchone()
+
+
 def _get_owning(conn):
 
-    sql_arg = """SELECT tag,team FROM node_status
+    sql_arg = """SELECT tag,team,timestamp FROM capture_status
                  WHERE date(timestamp) = date('now')
                  ORDER BY timestamp DESC LIMIT 1;
               """
@@ -291,7 +338,7 @@ def _get_owning(conn):
 
 def _get_capture_status(conn, node):
 
-    sql_arg = """SELECT tag,team,stable,timestamp FROM node_status
+    sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
                  WHERE date(timestamp) = date('now') AND node = (?)
                  ORDER BY timestamp DESC LIMIT 1;
               """
