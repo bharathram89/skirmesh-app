@@ -108,8 +108,13 @@ def node_admin():
 
 
     kwargs = {
+<<<<<<< HEAD
              'node_dict':CP.end_nodes,
              'cmd_dict' :CP.CMD_DICT if CP.end_nodes else None,
+=======
+             'node_dict':CP.node_dict,
+             'cmd_dict' :CP.CMD_DICT if CP.node_dict else None,
+>>>>>>> c66d052... move cmd args out to files - load them with json.load
              'cmd_args' :CMD_ARGS
              }
 
