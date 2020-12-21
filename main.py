@@ -85,7 +85,7 @@ def node_admin():
 
     kwargs = {
              'node_dict':CP.node_dict,
-             'cmd_dict' :CP.CMD_DICT if CP.node_dict else {CP.DISCOVERY:'DISCOVERY'}
+             'cmd_dict' :CP.CMD_DICT if CP.node_dict else None
              }
 
     return render_template('node_admin.html', **kwargs)
@@ -95,36 +95,36 @@ def node_admin():
 @application.route('/issue_command', methods=['POST','GET'])
 def issue_command():
 
-    dest = request.form['dest']
-    args = request.form['args']
-
     if request.method == 'POST':
 
-        pkt = bytearray(3)
+        dest = request.form['dest']
+        args = request.form['args']
 
+        pkt = bytearray(3)
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(request.form['conf'], 16)
 
+        if pkt[1] == SET_LOCATION:
 
-        if pkt[1] == SET_LOCATION and dest != BROADCAST:
+            if dest != BROADCAST:
 
-            CP.node_dict[dest].location = eval(args)
-            return redirect(url_for('node_admin'))
+                CP.node_dict[dest].location = eval(args)
+                return redirect(url_for('node_admin'))
 
         elif pkt[1] == CP.DISCOVERY:
 
+            if dest == BROADCAST: CP.send_data_broadcast(pkt)
+
+            else: CP.transmit_pkt(CP.node_dict[dest]._64bit_addr, pkt)
+
+        elif request.form['action'] == 'End Game':
+
+            pass
+
+        elif request.form['action'] == 'Discover Network':
+
             CP.find_nodes()
             return redirect(url_for('node_admin'))
-
-
-        pkt[2] = int(args, 16)
-        if dest == BROADCAST:
-
-            CP.send_data_broadcast(pkt)
-
-        else:
-
-            CP.transmit_pkt(CP.node_dict[dest]._64bit_addr, pkt)
 
     return redirect(url_for('node_admin'))
 
