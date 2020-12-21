@@ -86,27 +86,6 @@ class CONTROL_POINT(XBeeDevice):
                          'SP': 0x1F4,
                          }
 
-    _NODE_LOC_DICT = {'KINGDOM'             :(10.6,69.3),
-                      'NORTH FIREBASE'      :(23,52),
-                      'MOSES TRAIL'         :(27.5,35.1),
-                      'NORTH SAM SITE'      :(32.4,69.6),
-                      'HALFBACK'            :(42,71.4),
-                      'RANGE'               :(45.1,60.6),
-                      'NORTH POND TRAIL'    :(47.7,44.3),
-                      'BAT HOUSE'           :(52.9,42.7),
-                      'BLACK THORN RAVINES' :(57.7,22),
-                      'SAAB'                :(53.5,61.3),
-                      'RIGHT HOOK TRAIL'    :(52.7,84.6),
-                      'BARRIER WOODS'       :(63.4,52.8),
-                      'CANNIBAL VILLAGE'    :(64.3,14.9),
-                      'CUT THROAT TRAILS'   :(72.6,53.6),
-                      'TOWN'                :(65.3,64),
-                      'SOUTH BUNKER'        :(76.9,61.6),
-                      'AMMO DEPOT'          :(91.2,18),
-                      'THE LZ'              :(88.1,56.8),
-                      'BIG DIP'             :(96,55.1),
-                      'POND'                :(55.8,37.3)}
-
     DB_NAME = "database.sqlite"
 
 
