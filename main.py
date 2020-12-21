@@ -119,7 +119,22 @@ def issue_command():
 
         elif request.form['action'] == 'End Game':
 
-            pass
+            for node in CP.node_dict:
+
+                own_uid, own_team, cap_stable, cap_time = CP.exec_sql(SQL._get_capture_status, node)
+
+                if cap_stable:
+
+                    begin = CP.exec_sql(SQL._get_time_capture_complete)
+
+                    if begin:
+
+                        begin = datetime.strptime(begin[0], CP.TIME_FMTR)
+                        lost  = datetime.utcnow()
+                        held  = int((lost - begin).total_seconds())
+
+                        tdat = {'team':own_team,'time_held':held,'action':node}
+                        CP.exec_sql(SQL.add_row, 'score', tdat)
 
         elif request.form['action'] == 'Discover Network':
 
