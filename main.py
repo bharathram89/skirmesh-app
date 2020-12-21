@@ -18,7 +18,8 @@ import time, json
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
 import sqlite_functions as SQL
-from controller import CONTROL_POINT, END_NODE
+#from controller import CONTROL_POINT, END_NODE
+from t_node import CONTROL_POINT, END_NODE
 
 application = Flask(__name__)
 
@@ -230,8 +231,8 @@ if __name__ == '__main__':
     while not CP.end_nodes and (time.monotonic() - t) < 10:
         CP.find_nodes()
 
-    print("Network:")
-    print(CP.XB_net.get_devices())
+    #print("Network:")
+    #print(CP.XB_net.get_devices())
 
     # Configure and start the flask application
     application.jinja_env.auto_reload = True
