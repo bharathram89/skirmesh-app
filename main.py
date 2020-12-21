@@ -12,7 +12,7 @@ can be launched and validated.
 
 from flask import Flask, render_template, flash, request, redirect, url_for
 from datetime import datetime
-import time
+import time, json
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
@@ -26,6 +26,22 @@ application = Flask(__name__)
 serial = '/dev/ttyUSB0'
 baud   = 115200
 CP = CONTROL_POINT(serial, baud)
+
+# Load location data
+LOCATION_DATA = {'SET LOCATIONS':json.load(open("locations.json"))}
+
+for loc in LOCATION_DATA['SET LOCATIONS']:
+    loc['value'] = eval(loc['value'])
+    CP._NODE_LOC_DICT[loc['text']] = loc['value']
+
+TEAM_DATA = {'REGISTER':json.load(open("teams.json"))}
+
+CMD_ARGS = {
+            'REGISTER'    : TEAM_DATA['REGISTER'],
+            'SET LOCATION': LOCATION_DATA['SET LOCATIONS']
+            }
+
+# print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
 
 SET_LOCATION = 0xFF
@@ -83,9 +99,11 @@ def main_page():
 @application.route('/node_admin')
 def node_admin():
 
+
     kwargs = {
              'node_dict':CP.node_dict,
-             'cmd_dict' :CP.CMD_DICT if CP.node_dict else None
+             'cmd_dict' :CP.CMD_DICT if CP.node_dict else None,
+             'cmd_args' :CMD_ARGS
              }
 
     return render_template('node_admin.html', **kwargs)
