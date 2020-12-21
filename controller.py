@@ -13,7 +13,7 @@ class END_NODE(RemoteXBeeDevice):
 
         self.host = host
 
-        self.location = (50,50)
+        self.location   = (50,50)
         self.__loc_name = None
 
 
@@ -43,7 +43,7 @@ class CONTROL_POINT(XBeeDevice):
     """
 
 
-    TIME_FMTR  = '%Y-%m-%d %H:%M:%S'
+    TIME_FMTR = '%Y-%m-%d %H:%M:%S'
     TIME_DISP = '%d %b %Y  %H:%M:%S'
 
     CONFIGURE = 0x00
@@ -184,7 +184,6 @@ class CONTROL_POINT(XBeeDevice):
         for node in self.XB_net.get_devices():
 
             self.node_dict[str(node.get_64bit_addr())] = END_NODE(self, node)
-
 
 
     def transmit_pkt(self, dest, pkt):
@@ -428,7 +427,7 @@ class CONTROL_POINT(XBeeDevice):
 
         if not status: return None
 
-        cmd    = bytearray([node.ND_STATUS])
+        cmd    = bytearray([CONTROL_POINT.ND_STATUS])
         uid    = bytearray.fromhex(status[0])
         team   = bytearray([status[1]])
         stable = bytearray([status[2]])
