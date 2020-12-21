@@ -28,7 +28,7 @@ CP = CONTROL_POINT(serial, baud)
 
 # Load location data
 LOCATION_DATA = {'SET LOCATIONS':json.load(open("locations.json"))}
-
+CP._NODE_LOC_DICT = dict()
 for loc in LOCATION_DATA['SET LOCATIONS']:
     loc['value'] = eval(loc['value'])
     CP._NODE_LOC_DICT[loc['text']] = loc['value']
