@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <body onload="update_cmd_args()">
+    <body onload="update_cmd_args({{ cmd_args | safe }})">
 
     <form id="configuration_control"
           name="Member_Data"
@@ -28,7 +28,7 @@
 
               <div class="form_field">
                   <br>
-                  <select name="conf" id="conf" placeholder="Configuration" onchange="update_cmd_args()">
+                  <select name="conf" id="conf" placeholder="Configuration" onchange="update_cmd_args({{ cmd_args | safe }})">
                       {% if cmd_dict %}
 
                       {% for key in cmd_dict %}
