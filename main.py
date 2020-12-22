@@ -120,8 +120,6 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(request.form['conf'], 16)
 
-        print(request.form['action'])
-
         if pkt[1] == SET_LOCATION:
 
             if dest != BROADCAST:
@@ -133,6 +131,10 @@ def issue_command():
         elif request.form['action'] == 'Issue Command':
 
             pkt[2] = int(args, 16)
+
+            # Shift the pkt left to remove reconfigure command byte when
+            # setting attributes like timers
+            if CP.CAPT_TIME <= pkt[1] <= CP.MED_TIME: pkt.pop(0)
 
             if dest == BROADCAST: CP.send_data_broadcast(pkt)
 
