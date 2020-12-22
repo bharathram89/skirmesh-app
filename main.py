@@ -126,7 +126,8 @@ def issue_command():
             if dest != BROADCAST:
 
                 CP.node_dict[dest].location = eval(args)
-                CP.node_dict[dest].loc_name = _NODE_NAME_DICT[args]
+                # TODO: I don't know why this doesn't work.....
+                # CP.node_dict[dest].loc_name = _NODE_NAME_DICT[args]
 
                 return redirect(url_for('node_admin'))
 
