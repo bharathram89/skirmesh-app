@@ -31,7 +31,6 @@ LOCATION_DATA = json.load(open("locations.json"))
 _NODE_LOC_DICT, _NODE_NAME_DICT = dict(), dict()
 
 for loc in LOCATION_DATA:
-    loc['value'] = eval(loc['value'])
     _NODE_LOC_DICT[loc['text']] = loc['value']
     _NODE_NAME_DICT[loc['value']] = loc['text']
 
@@ -42,7 +41,6 @@ CMD_ARGS = {
             }
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
-
 
 SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
@@ -125,7 +123,8 @@ def issue_command():
             if dest != BROADCAST:
 
                 CP.node_dict[dest].location = eval(args)
-                CP.node_dict[dest].loc_name = _NODE_NAME_DICT[eval(args)]
+                CP.node_dict[dest].loc_name = _NODE_NAME_DICT[args]
+                
                 return redirect(url_for('node_admin'))
 
         elif request.form['action'] == 'Issue Command':
@@ -139,7 +138,7 @@ def issue_command():
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
             if pkt[0] == CP.MED_TIME:
-                
+
                 CONTROL_POINT.MEDIC_TIME = int(pkt[1]*10)
                 dest = BROADCAST
 
