@@ -124,7 +124,7 @@ def issue_command():
 
                 CP.node_dict[dest].location = eval(args)
                 CP.node_dict[dest].loc_name = _NODE_NAME_DICT[args]
-                
+
                 return redirect(url_for('node_admin'))
 
         elif request.form['action'] == 'Issue Command':
@@ -184,11 +184,7 @@ def players():
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
 
-    node_times = dict()
-    for n in CP.node_dict:
-
-        times = SQL._get_time_held_for_node(conn, n)
-        node_times[n] = times if times else None
+    nd_times = {CP.node_dict[n].loc_name: SQL._get_times_for_node(conn, n) for n in CP.node_dict}
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : SQL._score_by_team(conn),
@@ -197,7 +193,8 @@ def players():
               'nodes'      : CP.node_dict.keys(),
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
-              'node_times' : node_times}
+              'nd_tm_cols' : ['team', 'time'],
+              'node_times' : nd_times}
 
     conn.close()
 

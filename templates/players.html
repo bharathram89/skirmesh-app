@@ -43,9 +43,41 @@
         {% endfor %}
     </tbody>
   </table>
+
+
+{% for nd in node_times %}
+<h1> {{ nd if nd else node_times[nd][0]['action'] }} </h1>
+<table id="table">
+  <thead>
+    <tr>
+        {% for col in nd_tm_cols %}
+
+          {% if col == 'time' %}
+          <th class="header"> {{col | safe}} (min) </th>
+          {% else %}
+          <th class="header"> {{col | safe}} </th>
+          {% endif %}
+
+        {% endfor %}
+    </tr>
+  </thead>
+<tbody>
+
+    {% for dat in node_times[nd] %}
+    <tr class="row">
+
+            <td> {{ dat['team'] | safe }} </td>
+            <td> {{ dat['time']//60 }} </td>
+
+    </tr>
+    {% endfor %}
+
+</tbody>
+</table>
+
+{% endfor %}
+
 </div>
-
-
 
 <br>
 <h1> player leaderboard </h1>
