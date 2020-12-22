@@ -27,19 +27,18 @@ baud   = 115200
 CP = CONTROL_POINT(serial, baud)
 
 # Load location data
-LOCATION_DATA = {'SET LOCATIONS':json.load(open("locations.json"))}
+LOCATION_DATA = json.load(open("locations.json"))
 _NODE_LOC_DICT, _NODE_NAME_DICT = dict(), dict()
 
-for loc in LOCATION_DATA['SET LOCATIONS']:
+for loc in LOCATION_DATA:
     loc['value'] = eval(loc['value'])
     _NODE_LOC_DICT[loc['text']] = loc['value']
     _NODE_NAME_DICT[loc['value']] = loc['text']
 
-TEAM_DATA = {'REGISTER':json.load(open("teams.json"))}
-
 CMD_ARGS = {
-            'REGISTER'    : TEAM_DATA['REGISTER'],
-            'SET LOCATION': LOCATION_DATA['SET LOCATIONS']
+            'REGISTER'    : json.load(open("teams.json")),
+            'SET LOCATION': LOCATION_DATA,
+            'TIME DATA'   : json.load(open("timer_values.json"))
             }
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
@@ -72,7 +71,7 @@ def main_page():
     for n in CP.node_dict:
 
         status = SQL._get_capture_status(conn, n)
-        
+
         if status:
             node_status[n] = status
             centers[n] = CP.node_dict[n].location

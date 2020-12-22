@@ -35,12 +35,18 @@ function search(event) {
 function update_cmd_args(cmd_arg_list) {
 
     var cmd_sel = document.getElementById("conf");
-    var cmd_txt = cmd_sel.options[cmd_sel.selectedIndex].text;
+    var cmd_txt = cmd_sel.options[cmd_sel.selectedIndex].text.toUpperCase();
     var cmd_val = cmd_sel.value;
 
     var new_options = "";
 
-    if (cmd_txt in cmd_arg_list) {
+    // Look for the argument in the index unless it's a timer, then just match
+    if ((cmd_txt in cmd_arg_list) || (cmd_txt.indexOf('TIME') > -1)){
+
+        // Set all time indexes to the timer list
+        if (cmd_txt.indexOf('TIME') > -1) {
+          cmd_txt = 'TIME DATA'
+        }
 
         for (var i = 0; i < cmd_arg_list[cmd_txt.toUpperCase()].length; i++) {
 

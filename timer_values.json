@@ -1,0 +1,242 @@
+[
+    {
+        "text": "10 (sec)",
+        "value": "0x1"
+    },
+    {
+        "text": "20 (sec)",
+        "value": "0x2"
+    },
+    {
+        "text": "30 (sec)",
+        "value": "0x3"
+    },
+    {
+        "text": "40 (sec)",
+        "value": "0x4"
+    },
+    {
+        "text": "50 (sec)",
+        "value": "0x5"
+    },
+    {
+        "text": "60 (sec)",
+        "value": "0x6"
+    },
+    {
+        "text": "70 (sec)",
+        "value": "0x7"
+    },
+    {
+        "text": "80 (sec)",
+        "value": "0x8"
+    },
+    {
+        "text": "90 (sec)",
+        "value": "0x9"
+    },
+    {
+        "text": "100 (sec)",
+        "value": "0xa"
+    },
+    {
+        "text": "110 (sec)",
+        "value": "0xb"
+    },
+    {
+        "text": "120 (sec)",
+        "value": "0xc"
+    },
+    {
+        "text": "130 (sec)",
+        "value": "0xd"
+    },
+    {
+        "text": "140 (sec)",
+        "value": "0xe"
+    },
+    {
+        "text": "150 (sec)",
+        "value": "0xf"
+    },
+    {
+        "text": "160 (sec)",
+        "value": "0x10"
+    },
+    {
+        "text": "170 (sec)",
+        "value": "0x11"
+    },
+    {
+        "text": "180 (sec)",
+        "value": "0x12"
+    },
+    {
+        "text": "190 (sec)",
+        "value": "0x13"
+    },
+    {
+        "text": "200 (sec)",
+        "value": "0x14"
+    },
+    {
+        "text": "210 (sec)",
+        "value": "0x15"
+    },
+    {
+        "text": "220 (sec)",
+        "value": "0x16"
+    },
+    {
+        "text": "230 (sec)",
+        "value": "0x17"
+    },
+    {
+        "text": "240 (sec)",
+        "value": "0x18"
+    },
+    {
+        "text": "250 (sec)",
+        "value": "0x19"
+    },
+    {
+        "text": "260 (sec)",
+        "value": "0x1a"
+    },
+    {
+        "text": "270 (sec)",
+        "value": "0x1b"
+    },
+    {
+        "text": "280 (sec)",
+        "value": "0x1c"
+    },
+    {
+        "text": "290 (sec)",
+        "value": "0x1d"
+    },
+    {
+        "text": "300 (sec)",
+        "value": "0x1e"
+    },
+    {
+        "text": "310 (sec)",
+        "value": "0x1f"
+    },
+    {
+        "text": "320 (sec)",
+        "value": "0x20"
+    },
+    {
+        "text": "330 (sec)",
+        "value": "0x21"
+    },
+    {
+        "text": "340 (sec)",
+        "value": "0x22"
+    },
+    {
+        "text": "350 (sec)",
+        "value": "0x23"
+    },
+    {
+        "text": "360 (sec)",
+        "value": "0x24"
+    },
+    {
+        "text": "370 (sec)",
+        "value": "0x25"
+    },
+    {
+        "text": "380 (sec)",
+        "value": "0x26"
+    },
+    {
+        "text": "390 (sec)",
+        "value": "0x27"
+    },
+    {
+        "text": "400 (sec)",
+        "value": "0x28"
+    },
+    {
+        "text": "410 (sec)",
+        "value": "0x29"
+    },
+    {
+        "text": "420 (sec)",
+        "value": "0x2a"
+    },
+    {
+        "text": "430 (sec)",
+        "value": "0x2b"
+    },
+    {
+        "text": "440 (sec)",
+        "value": "0x2c"
+    },
+    {
+        "text": "450 (sec)",
+        "value": "0x2d"
+    },
+    {
+        "text": "460 (sec)",
+        "value": "0x2e"
+    },
+    {
+        "text": "470 (sec)",
+        "value": "0x2f"
+    },
+    {
+        "text": "480 (sec)",
+        "value": "0x30"
+    },
+    {
+        "text": "490 (sec)",
+        "value": "0x31"
+    },
+    {
+        "text": "500 (sec)",
+        "value": "0x32"
+    },
+    {
+        "text": "510 (sec)",
+        "value": "0x33"
+    },
+    {
+        "text": "520 (sec)",
+        "value": "0x34"
+    },
+    {
+        "text": "530 (sec)",
+        "value": "0x35"
+    },
+    {
+        "text": "540 (sec)",
+        "value": "0x36"
+    },
+    {
+        "text": "550 (sec)",
+        "value": "0x37"
+    },
+    {
+        "text": "560 (sec)",
+        "value": "0x38"
+    },
+    {
+        "text": "570 (sec)",
+        "value": "0x39"
+    },
+    {
+        "text": "580 (sec)",
+        "value": "0x3a"
+    },
+    {
+        "text": "590 (sec)",
+        "value": "0x3b"
+    },
+    {
+        "text": "600 (sec)",
+        "value": "0x3c"
+    }
+]

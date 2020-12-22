@@ -34,8 +34,12 @@ class CONTROL_POINT(XBeeDevice):
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
-    # DISCOVERY = 0xDD
+
     ND_STATUS = 0x53
+
+    CAPT_TIME = 0x8A
+    BOMB_TIME = 0x8B
+    MED_TIME  = 0x8E
 
     # Addressing
     BROADCAST  = 0xFF
@@ -47,9 +51,10 @@ class CONTROL_POINT(XBeeDevice):
                 QUERY     : 'QUERY',
                 CAPTURE   : 'CAPTURE',
                 MEDIC     : 'MEDIC',
-                # DISCOVERY : 'DISCOVERY',
                 BOMB      : 'BOMB',
-                # ND_STATUS : 'NODE STATUS'
+                CAPT_TIME : 'SET CAPTURE TIME',
+                BOMB_TIME : 'SET BOMB TIMER',
+                MED_TIME  : 'SET MEDIC TIME',
                 }
 
     TEAM_CMAP = {0x01:'red',
