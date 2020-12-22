@@ -24,7 +24,6 @@ class CONTROL_POINT(XBeeDevice):
     This class will be the interface to each individual control point
     """
 
-
     TIME_FMTR = '%Y-%m-%d %H:%M:%S'
     TIME_DISP = '%d %b %Y  %H:%M:%S'
 
