@@ -136,6 +136,12 @@ def issue_command():
             # setting attributes like timers
             if CP.CAPT_TIME <= pkt[1] <= CP.MED_TIME: pkt.pop(0)
 
+            # Set medic times globally, because all nodes are handled the
+            # same at the controller level
+            if pkt[0] == CP.MED_TIME:
+                CP.MEDIC_TIME = int(pkt[1]*10)
+                dest = BROADCAST
+
             if dest == BROADCAST: CP.send_data_broadcast(pkt)
 
             else: CP.transmit_pkt(CP.node_dict[dest]._64bit_addr, pkt)
