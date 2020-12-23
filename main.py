@@ -97,7 +97,7 @@ def main_page():
         if status:
             #node_status[n] = status
             node_status[n] = (0,2,1)
-            centers[n] = CP.node_dict[n].location
+            centers[n] = CP.end_nodes[n].location
 
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
