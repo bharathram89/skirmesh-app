@@ -12,7 +12,7 @@
         <table id="table">
         <thead>
           <tr>
-                <th class="header"> {{team_cmap[team_i] | safe}} Team ({{team | length}})</th>
+                <th class="header"> {{team_name[team_i] | safe}} Team ({{team | length}})</th>
           </tr>
         </thead>
         <tbody>
@@ -37,11 +37,11 @@
            align="middle">
            {% for n in node_status %}
               <div class="beacon"
-                   style="border-color:{{colors[node_status[n][1]]}};
+                   style="border-color:{{team_cmap[node_status[n][1]]}};
                           top: calc({{centers[n][0]}}% - 2%);
                           left: calc({{centers[n][1]}}% - 2%);
                           border-style: {{ 'dashed' if node_status[n][2] else 'double' }};
-                          background: {{ colors[node_status[n][1]] if node_status[n][2] else '' }}">
+                          background: {{ team_cmap[node_status[n][1]] if node_status[n][2] else '' }}">
               </div>
            {% endfor %}
     </div>
@@ -55,7 +55,7 @@
         <table id="table">
         <thead>
           <tr>
-                <th class="header"> {{team_cmap[team_i] | safe}} Team ({{team | length}})</th>
+                <th class="header"> {{team_name[team_i] | safe}} Team ({{team | length}})</th>
           </tr>
         </thead>
         <tbody>

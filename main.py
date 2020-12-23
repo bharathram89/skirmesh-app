@@ -57,17 +57,9 @@ def main_page():
     reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
-    colors = {
-                1:'#FF0000',
-                2:'#0000FF',
-                3:'#FFFF00',
-                4:'#008000',
-                5:'#3333CC'
-             }
-
     node_status, centers = dict(), dict()
 
-    for n in CP.node_dict:
+    for n in CP.end_nodes:
 
         #status = SQL._get_capture_status(conn, n)
         status = True
@@ -84,9 +76,9 @@ def main_page():
               'reg_teams'  : reg_teams,
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
+              'team_name'  : CP.TEAM_NAME,
               'node_status': node_status,
               'centers'    : centers,
-              'colors'     : colors,
                }
 
     conn.close() #My functions close connections
@@ -100,8 +92,8 @@ def node_admin():
 
 
     kwargs = {
-             'node_dict':CP.node_dict,
-             'cmd_dict' :CP.CMD_DICT if CP.node_dict else None,
+             'node_dict':CP.end_nodes,
+             'cmd_dict' :CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args' :CMD_ARGS
              }
 
@@ -148,11 +140,11 @@ def issue_command():
 
             if dest == BROADCAST: CP.send_data_broadcast(pkt)
 
-            else: CP.transmit_pkt(CP.node_dict[dest]._64bit_addr, pkt)
+            else: CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
 
         elif request.form['action'] == 'End Game':
 
-            for node in CP.node_dict:
+            for node in CP.end_nodes:
 
                 own_uid, own_team, cap_stable, cap_time = CP.exec_sql(SQL._get_capture_status, node)
 
@@ -188,13 +180,13 @@ def players():
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
 
-    nd_times = {CP.node_dict[n].loc_name: SQL._get_times_for_node(conn, n) for n in CP.node_dict}
+    nd_times = {CP.end_nodes[n].loc_name: SQL._get_times_for_node(conn, n) for n in CP.end_nodes}
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : SQL._score_by_team(conn),
               'p_sc_cols'  : ['player', 'points'],
               'plyr_score' : SQL._score_by_uid(conn),
-              'nodes'      : CP.node_dict.keys(),
+              'nodes'      : CP.end_nodes.keys(),
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
@@ -230,7 +222,7 @@ if __name__ == '__main__':
     print("Initializing host controller")
 
     t = time.monotonic()
-    while not CP.node_dict and (time.monotonic() - t) < 10:
+    while not CP.end_nodes and (time.monotonic() - t) < 10:
         CP.find_nodes()
 
     #print("Network:")

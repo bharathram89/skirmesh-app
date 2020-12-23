@@ -18,12 +18,14 @@ class END_NODE(RemoteXBeeDevice):
 
 class CONTROL_POINT(XBeeDevice):
     """
-    This class will be the interface to each individual control point
+    This class will be the interface to the contoller
     """
 
+    # Some import string conversions for the datetime object
     TIME_FMTR = '%Y-%m-%d %H:%M:%S'
     TIME_DISP = '%d %b %Y  %H:%M:%S'
 
+    # Configuration codes
     CONFIGURE = 0x00
     REGISTER  = 0x01
     QUERY     = 0x02
@@ -31,16 +33,36 @@ class CONTROL_POINT(XBeeDevice):
     MEDIC     = 0x0E
     BOMB      = 0xBB
 
+    # Status requests
     ND_STATUS = 0x53
 
+    # Time setters
     CAPT_TIME = 0x8A
     BOMB_TIME = 0x8B
     MED_TIME  = 0x8E
 
-    # Addressing
-    BROADCAST  = 0xFF
-    CONTROLLER = 0x00
+    # Color assignments
+    RED    = 0x01
+    BLUE   = 0x02
+    YELLOW = 0x03
+    GREEN  = 0x04
+    PURPLE = 0x05
 
+    # Define teams by color, but this could change...
+    TEAM_CMAP = {RED    : '#FF0000',
+                 BLUE   : '#00FF00',
+                 YELLOW : '#FFFF00',
+                 GREEN  : '#008000',
+                 PURPLE : '#3333CC'}
+
+    TEAM_NAME = {RED    : 'RED',
+                 BLUE   : 'BLUE',
+                 YELLOW : 'YELLOW',
+                 GREEN  : 'GREEN',
+                 PURPLE : 'PURPLE'}
+
+    # This is primarly used to set the menu options in
+    # the node configuration page
     CMD_DICT = {
                 CONFIGURE : 'CONFIGURE',
                 REGISTER  : 'REGISTER',
@@ -52,22 +74,6 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB_TIME : 'SET BOMB TIMER',
                 MED_TIME  : 'SET MEDIC TIME',
                 }
-
-    TEAM_CMAP = {0x01:'red',
-                 0x02:'blue',
-                 0x03:'yellow',
-                 0x04:'green',
-                 0x05:'purple'}
-
-    CAPTURE_GRACE_PERIOD = int(60)
-    MEDIC_TIME           = int(60)
-
-
-    CONTROLLER_CONFIG = {'ID': [0x05,0x45],  # TODO: What is this?
-                         'CE': 1,
-                         'NI': 'CONTROLLER',
-                         'SP': 0x1F4,
-                         }
 
     DB_NAME = "database.sqlite"
 
@@ -82,7 +88,7 @@ class CONTROL_POINT(XBeeDevice):
 
         self.DB = None
 
-        self.node_dict = {}
+        self.end_nodes = {}
         self.configure_XB()
 
 
@@ -147,7 +153,7 @@ class CONTROL_POINT(XBeeDevice):
 
         for node in self.XB_net.get_devices():
 
-            self.node_dict[str(node.get_64bit_addr())] = END_NODE(self, node)
+            self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
 
 
     def transmit_pkt(self, dest, pkt):
