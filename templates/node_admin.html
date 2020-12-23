@@ -21,7 +21,7 @@
                   <select name="dest" id="dest" placeholder="Destination Node" onchange="update_cmd_opts()">
                       <option value="FFFF">BROADCAST</option>
                       {% for i in node_dict %}
-                      <option value="{{ i }}">{{ i }}</option>
+                      <option value="{{ i }}">{{ node_dict[i].loc_name if node_dict[i].loc_name else i }}</option>
                       {% endfor %}
                   </select>
               </div>
