@@ -262,7 +262,18 @@ def register_user():
     while not CP.user_reg:
         pass
 
-    uid = CP.user_reg.pop()
+@application.route('/user_reg')
+def user_reg():
+
+    return render_template('user_reg.html')
+
+@application.route('/register_user', methods=['POST','GET'])
+def register_user():
+
+    if request.method == 'POST':
+        pass
+
+    return redirect(url_for('user_reg'))
 
     return redirect(url_for('user_reg',uid=uid))
 
