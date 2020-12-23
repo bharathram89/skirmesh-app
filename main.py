@@ -28,11 +28,7 @@ CP = CONTROL_POINT(serial, baud)
 
 # Load location data
 LOCATION_DATA = json.load(open("locations.json"))
-_NODE_LOC_DICT, _NODE_NAME_DICT = dict(), dict()
-
-for loc in LOCATION_DATA:
-    _NODE_LOC_DICT[loc['text']] = loc['value']
-    _NODE_NAME_DICT[loc['value']] = loc['text']
+_LOC_NAMES = {loc['value'] : loc['text'] for loc in LOCATION_DATA}
 
 CMD_ARGS = {
             'REGISTER'    : json.load(open("teams.json")),
@@ -68,7 +64,7 @@ def main_page():
 
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
-              'name'       : "Ballahack | Swamp Sniper",
+              'name'       : "Battlefield Gaming Systems",
               'team_col'   : ['player'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
@@ -115,7 +111,7 @@ def issue_command():
             if dest != BROADCAST:
 
                 CP.end_nodes[dest].location = eval(args)
-                CP.end_nodes[dest].loc_name = _NODE_NAME_DICT[args]
+                CP.end_nodes[dest].loc_name = _LOC_NAMES[args]
 
                 return redirect(url_for('node_admin'))
 
