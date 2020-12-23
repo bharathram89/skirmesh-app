@@ -221,6 +221,18 @@ def comms_log():
     return render_template('comms.html', **kwargs)
 
 
+@application.route('/user_reg')
+def user_reg():
+
+    return render_template('user_reg.html')
+
+@application.route('/register_user', methods=['POST','GET'])
+def register_user():
+
+    if request.method == 'POST':
+        pass
+
+    return redirect(url_for('user_reg'))
 
 
 if __name__ == '__main__':
