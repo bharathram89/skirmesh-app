@@ -67,7 +67,7 @@ def main_page():
         if status:
             #node_status[n] = status
             node_status[n] = (0,2,1)
-            centers[n] = CP.node_dict[n].location
+            centers[n] = CP.end_nodes[n].location
 
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
@@ -117,9 +117,9 @@ def issue_command():
 
             if dest != BROADCAST:
 
-                CP.node_dict[dest].location = eval(args)
+                CP.end_nodes[dest].location = eval(args)
                 # TODO: I don't know why this doesn't work.....
-                # CP.node_dict[dest].loc_name = _NODE_NAME_DICT[args]
+                # CP.end_nodes[dest].loc_name = _NODE_NAME_DICT[args]
 
                 return redirect(url_for('node_admin'))
 
