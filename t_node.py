@@ -105,7 +105,7 @@ class CONTROL_POINT():
 
         self.DB = None
 
-        self.node_dict = {}
+        self.end_nodes = {}
 
     def send_data_broadcast(self, pkt):
 
@@ -119,6 +119,4 @@ class CONTROL_POINT():
 
         for node in range(5):
 
-            self.node_dict[str(node)] = END_NODE(self, node)
-
-
+            self.end_nodes[str(node)] = END_NODE(self, node)
