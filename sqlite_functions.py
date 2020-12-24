@@ -89,6 +89,19 @@ def init_capture_status_table(conn):
     conn.cursor().execute(sql_arg)
     conn.commit()
 
+def init_player_table(conn):
+
+    sql_arg = """CREATE TABLE IF NOT EXISTS player (
+                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                 fname TEXT NOT NULL,
+                 lname TEXT NOT NULL,
+                 uid TEXT
+                 timestamp DEFAULT CURRENT_TIMESTAMP);
+              """
+
+    conn.cursor().execute(sql_arg)
+    conn.commit()
+
 def init_tables(conn):
 
     init_data_table(conn)
@@ -96,6 +109,7 @@ def init_tables(conn):
     init_team_table(conn)
     init_score_table(conn)
     init_capture_status_table(conn)
+    init_player_table(conn)
 
 def add_row(conn, table, data):
     """
@@ -107,7 +121,6 @@ def add_row(conn, table, data):
 
     conn.cursor().execute(sql_arg,[data[k] for k in data])
     conn.commit()
-
 
 def edit_row(conn, table, data):
     """
@@ -225,13 +238,23 @@ def _get_team_members(conn, team):
 
     return [dict(i) for i in data]
 
+def _get_player_names(conn):
+    sql_arg = """SELECT * FROM player
+                 ORDER BY lname ASC
+              """
+
+    conn.row_factory = sqlite3.Row
+    data = conn.cursor().execute(sql_arg).fetchall()
+
+    return [dict(i) for i in data]
+
 def _get_registered_teams(conn):
 
     sql_arg = """SELECT DISTINCT team
                  FROM
                      (SELECT id, uid, team, MAX(timestamp) AS max_ts
                       FROM team
-     				  GROUP BY uid)
+     	              GROUP BY uid)
                  ORDER BY team ASC
               """
 
