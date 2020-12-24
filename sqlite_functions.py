@@ -279,9 +279,9 @@ def _get_time_held_by_team(conn):
     return [dict(i) for i in data]
 
 
-def _get_time_held_for_node(conn, node):
+def _get_times_for_node(conn, node):
 
-    sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time_held, action
+    sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time, action
                   FROM score
                   WHERE date(timestamp) = date('now') AND action = (?)
 		          AND EXISTS(
@@ -290,7 +290,7 @@ def _get_time_held_for_node(conn, node):
                              WHERE node = action
 							 )
                   GROUP BY team
-                  ORDER BY time_held DESC
+                  ORDER BY time DESC
                """
 
     conn.row_factory = sqlite3.Row

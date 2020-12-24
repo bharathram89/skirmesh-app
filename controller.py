@@ -12,98 +12,68 @@ class END_NODE(RemoteXBeeDevice):
 
         self.host = host
 
-        self.location   = (50,50)
-        self.__loc_name = None
-
-
-    @property
-    def location(self):
-        return self.__location
-
-    @location.setter
-    def location(self, loc):
-
-        self.__location = loc
-
-        for key in CONTROL_POINT._NODE_LOC_DICT:
-            if CONTROL_POINT._NODE_LOC_DICT[key] == loc:
-                self.__loc_name = key
-
-
-    @property
-    def loc_name(self):
-        return self.__loc_name
+        self.location = (50,50)
+        self.loc_name = None
 
 
 class CONTROL_POINT(XBeeDevice):
     """
-    This class will be the interface to each individual control point
+    This class will be the interface to the contoller
     """
 
-
+    # Some import string conversions for the datetime object
     TIME_FMTR = '%Y-%m-%d %H:%M:%S'
     TIME_DISP = '%d %b %Y  %H:%M:%S'
 
+    # Configuration codes
     CONFIGURE = 0x00
     REGISTER  = 0x01
     QUERY     = 0x02
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
-    # DISCOVERY = 0xDD
+
+    # Status requests
     ND_STATUS = 0x53
 
-    # Addressing
-    BROADCAST  = 0xFF
-    CONTROLLER = 0x00
+    # Time setters
+    CAPT_TIME = 0x8A
+    BOMB_TIME = 0x8B
+    MED_TIME  = 0x8E
 
+    # Color assignments
+    RED    = 0x01
+    BLUE   = 0x02
+    YELLOW = 0x03
+    GREEN  = 0x04
+    PURPLE = 0x05
+
+    # Define teams by color, but this could change...
+    TEAM_CMAP = {RED    : '#FF0000',
+                 BLUE   : '#00FF00',
+                 YELLOW : '#FFFF00',
+                 GREEN  : '#008000',
+                 PURPLE : '#3333CC'}
+
+    TEAM_NAME = {RED    : 'RED',
+                 BLUE   : 'BLUE',
+                 YELLOW : 'YELLOW',
+                 GREEN  : 'GREEN',
+                 PURPLE : 'PURPLE'}
+
+    # This is primarly used to set the menu options in
+    # the node configuration page
     CMD_DICT = {
                 CONFIGURE : 'CONFIGURE',
                 REGISTER  : 'REGISTER',
                 QUERY     : 'QUERY',
                 CAPTURE   : 'CAPTURE',
                 MEDIC     : 'MEDIC',
-                # DISCOVERY : 'DISCOVERY',
                 BOMB      : 'BOMB',
-                # ND_STATUS : 'NODE STATUS'
+                CAPT_TIME : 'SET CAPTURE TIME',
+                BOMB_TIME : 'SET BOMB TIMER',
+                MED_TIME  : 'SET MEDIC TIME',
                 }
-
-    TEAM_CMAP = {0x01:'red',
-                 0x02:'blue',
-                 0x03:'yellow',
-                 0x04:'green',
-                 0x05:'purple'}
-
-    CAPTURE_GRACE_PERIOD = int(60)
-    MEDIC_TIME           = int(60)
-
-
-    CONTROLLER_CONFIG = {'ID': [0x05,0x45],  # TODO: What is this?
-                         'CE': 1,
-                         'NI': 'CONTROLLER',
-                         'SP': 0x1F4,
-                         }
-
-    _NODE_LOC_DICT = {'KINGDOM'             :(10.6,69.3),
-                      'NORTH FIREBASE'      :(23,52),
-                      'MOSES TRAIL'         :(27.5,35.1),
-                      'NORTH SAM SITE'      :(32.4,69.6),
-                      'HALFBACK'            :(42,71.4),
-                      'RANGE'               :(45.1,60.6),
-                      'NORTH POND TRAIL'    :(47.7,44.3),
-                      'BAT HOUSE'           :(52.9,42.7),
-                      'BLACK THORN RAVINES' :(57.7,22),
-                      'SAAB'                :(53.5,61.3),
-                      'RIGHT HOOK TRAIL'    :(52.7,84.6),
-                      'BARRIER WOODS'       :(63.4,52.8),
-                      'CANNIBAL VILLAGE'    :(64.3,14.9),
-                      'CUT THROAT TRAILS'   :(72.6,53.6),
-                      'TOWN'                :(65.3,64),
-                      'SOUTH BUNKER'        :(76.9,61.6),
-                      'AMMO DEPOT'          :(91.2,18),
-                      'THE LZ'              :(88.1,56.8),
-                      'BIG DIP'             :(96,55.1),
-                      'POND'                :(55.8,37.3)}
 
     DB_NAME = "database.sqlite"
 
@@ -118,7 +88,7 @@ class CONTROL_POINT(XBeeDevice):
 
         self.DB = None
 
-        self.node_dict = {}
+        self.end_nodes = {}
         self.configure_XB()
 
 
@@ -174,6 +144,8 @@ class CONTROL_POINT(XBeeDevice):
 
     def find_nodes(self):
 
+        print("Finding nodes in the network")
+
         self.XB_net.start_discovery_process()
 
         while self.XB_net.is_discovery_running():
@@ -181,7 +153,7 @@ class CONTROL_POINT(XBeeDevice):
 
         for node in self.XB_net.get_devices():
 
-            self.node_dict[str(node.get_64bit_addr())] = END_NODE(self, node)
+            self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
 
 
     def transmit_pkt(self, dest, pkt):
