@@ -216,8 +216,6 @@ class CONTROL_POINT(XBeeDevice):
 
             if pkt: self.transmit_pkt(sender, pkt)
 
-
-
     @property
     def parse_message(self):
 

@@ -102,6 +102,19 @@ def init_player_table(conn):
     conn.cursor().execute(sql_arg)
     conn.commit()
 
+def init_player_table(conn):
+
+    sql_arg = """CREATE TABLE IF NOT EXISTS player (
+                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                 fname TEXT NOT NULL,
+                 lname TEXT NOT NULL,
+                 uid TEXT
+                 timestamp DEFAULT CURRENT_TIMESTAMP);
+              """
+
+    conn.cursor().execute(sql_arg)
+    conn.commit()
+
 def init_tables(conn):
 
     init_data_table(conn)

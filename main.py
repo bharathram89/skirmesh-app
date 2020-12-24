@@ -262,20 +262,38 @@ def register_user():
     while not CP.user_reg:
         pass
 
-@application.route('/user_reg')
+@application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg():
 
-    return render_template('user_reg.html')
+    form = RegistrationForm(request.form)
+
+    conn = SQL.create_connection(CP.DB_NAME)
+
+    players = SQL._get_player_names(conn)
+    print(players)
+
+    if request.method == "POST" and form.validate():
+        fname = form.fname.data
+        lname = form.lname.data
+
+        print("First name is: ", fname.upper())
+        print("Last name is: ", lname.upper())
+
+
+        data = {'fname':fname.upper(),
+                'lname':lname.upper(),
+               }
+
+        SQL.add_row(conn, 'player', data)
+
+    conn.close()
+
+    return render_template('user_reg.html', form=form, Players=players)
 
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
 
-    if request.method == 'POST':
-        pass
-
     return redirect(url_for('user_reg'))
-
-    return redirect(url_for('user_reg',uid=uid))
 
 if __name__ == '__main__':
 
