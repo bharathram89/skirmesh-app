@@ -2,22 +2,28 @@
 
 {% block content %}
 
+
+    {% from "_formhelpers.html" import render_field %}
     <form id="user registration"
           name="Member_Data"
-          action="/user_registration"
+          action="/user_reg"
           method="post"
           style="float:center">
 
-      <fieldset id="userfieldset">
-        <label for="fname"> First Name: </label><br>
-        <input type="text" id="fname" name="fname"><br>
-
-        <label for="lname"> Last Name: </label><br>
-        <input type="text" id="lname" name="lname"><br>
+        <dl>
+          {{render_field(form.fname)}}
+          {{render_field(form.lname)}}
+        </dl>
 
         <input type="submit" value="Submit">
         
-        
     </form>
         
+    <select name="Players" id="players">
+        {% for player in Players %}
+        <option value={{player['id']}}>{{player['lname']}},
+        {{player['fname']}}</option>
+        {% endfor %}
+    </select>
+
 {% endblock %}

@@ -11,6 +11,7 @@ can be launched and validated.
 """
 
 from flask import Flask, render_template, flash, request, redirect, url_for
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime
 import time, json
 
@@ -20,8 +21,11 @@ import sqlite_functions as SQL
 #from controller import CONTROL_POINT, END_NODE
 from t_node import CONTROL_POINT, END_NODE
 
-application = Flask(__name__)
+class RegistrationForm(Form):
+    fname = TextField('First Name', [validators.Length(min=2, max=20)])
+    lname = TextField('Last Name', [validators.Length(min=2, max=20)])
 
+application = Flask(__name__)
 
 serial = '/dev/ttyUSB0'
 baud   = 115200
@@ -197,7 +201,6 @@ def players():
     return render_template('players.html', **kwargs)
 
 
-
 @application.route('/comms')
 def comms_log():
 
@@ -215,19 +218,38 @@ def comms_log():
     return render_template('comms.html', **kwargs)
 
 
-@application.route('/user_reg')
+@application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg():
 
-    return render_template('user_reg.html')
+    form = RegistrationForm(request.form)
+
+    conn = SQL.create_connection(CP.DB_NAME)
+
+    players = SQL._get_player_names(conn)
+    print(players)
+
+    if request.method == "POST" and form.validate():
+        fname = form.fname.data
+        lname = form.lname.data
+
+        print("First name is: ", fname.upper())
+        print("Last name is: ", lname.upper())
+
+
+        data = {'fname':fname.upper(),
+                'lname':lname.upper(),
+               }
+
+        SQL.add_row(conn, 'player', data)
+
+    conn.close()
+
+    return render_template('user_reg.html', form=form, Players=players)
 
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
 
-    if request.method == 'POST':
-        pass
-
     return redirect(url_for('user_reg'))
-
 
 if __name__ == '__main__':
 
