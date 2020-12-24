@@ -57,6 +57,7 @@ h1, h3{
     padding: 0.5em;
     /* text-transform: capitalize; */
     text-transform: uppercase;
+    margin: 0px;
 }
 h1 {
     font-size: 175%;
