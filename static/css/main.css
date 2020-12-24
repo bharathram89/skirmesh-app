@@ -135,19 +135,26 @@ form {
     padding: 1em;
     vertical-align: middle;
     text-align: left;
-    width: 75%;
+    width: 80%;
 }
 
 .form_field {
     text-align: left;
     padding: 1em;
     display: inline-block;
+    width: 30%
 }
 
 legend {
     padding: 1em;
     text-align: center;
+    font-size: 125%;
 }
+label, select{
+    font-size: 110%;
+    background-color: #FFFFFF;
+}
+
 
 input {
     padding: 1em;
@@ -324,11 +331,6 @@ thead th {
 
 table thead tr th {
   position: sticky;
-}
-
-.form_field {
-    padding: 2em;
-    width: 10em;
 }
 
 #fields {
