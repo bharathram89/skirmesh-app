@@ -216,8 +216,6 @@ class CONTROL_POINT(XBeeDevice):
 
             if pkt: self.transmit_pkt(sender, pkt)
 
-
-
     @property
     def parse_message(self):
 
@@ -410,7 +408,6 @@ class CONTROL_POINT(XBeeDevice):
         stable = bytearray([status[2]])
 
         return cmd + uid + team + stable
-
 
     def uid_handler(self, uid):
 
