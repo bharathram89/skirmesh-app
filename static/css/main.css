@@ -340,7 +340,7 @@ table thead tr th {
 #form_submit_button:hover {background-color: var(--button_color_hover)}
 
 #mbr_search {
-  background-image: url('../img/ss.jpg');
+  background-image: url('../img/ss.png');
   background-size: contain;
   background-position: right center;
   background-repeat: no-repeat;

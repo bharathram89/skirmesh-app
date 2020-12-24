@@ -10,7 +10,7 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-from flask import Flask, render_template, flash, request, redirect, url_for
+from flask import Flask, render_template, flash, jsonify, request, redirect, url_for
 from datetime import datetime
 import time, json
 
@@ -41,6 +41,43 @@ CMD_ARGS = {
 SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
 
+@application.route('/index/is_change', methods=['POST','GET'])
+def is_change():
+
+    if request.method == 'GET':
+
+        conn = SQL.create_connection(CP.DB_NAME)
+
+        change = False
+        to_update = dict()
+
+        for n in CP.end_nodes:
+
+            status = SQL._get_capture_status(conn, n)
+            change = True if CP.end_nodes[n].status != status else False
+            CP.end_nodes[n].status = status
+
+            if change:
+
+                to_update[n] = {
+                                'color' : CP.TEAM_CMAP[status[1]],
+                                'stable': status[2]
+                                }
+
+        conn.close()
+
+        if to_update:
+
+            return jsonify(to_update)
+
+        else:
+
+            return jsonify("")
+
+    return redirect(url_for('index'))
+
+
+
 @application.route('/')
 @application.route('/index')
 def main_page():
@@ -60,6 +97,7 @@ def main_page():
 
         if status:
             node_status[n] = status
+            CP.end_nodes[n].status = status
             centers[n] = CP.end_nodes[n].location
 
 

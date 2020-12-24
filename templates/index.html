@@ -2,6 +2,38 @@
 
 {% block content %}
 
+<script type="text/javascript">
+
+  setInterval(
+
+    function(){                            //Periodically
+
+    fetch('/index/is_change')
+        .then(function (response) {
+            return response.json();
+        }).then(function (data) {
+
+            for (var node in data) {
+
+              var ele = document.getElementById("beacon_" + node);
+
+              if (data[node].stable){
+                ele.style.border = "1vw dashed " + data[node].color;
+                ele.style.background = data[node].color;
+              }
+              else{
+                ele.style.border = "1vw double " + data[node].color;
+                ele.style.background = "";
+              }
+
+            }
+        });
+      },
+
+    5000); // Happen every 5 seconds (5000 milliseconds)
+
+</script>
+
 <div class="grid_container">
 
 <div class="grid_element">
@@ -36,7 +68,7 @@
            style="width: 100%; border: 1px solid #000000;"
            align="middle">
            {% for n in node_status %}
-              <div class="beacon"
+              <div class="beacon" id="beacon_{{n}}"
                    style="border-color:{{team_cmap[node_status[n][1]]}};
                           top: calc({{centers[n][0]}}% - 2%);
                           left: calc({{centers[n][1]}}% - 2%);
@@ -74,5 +106,7 @@
 </div>
 
 </div>
+
+<script type=text/javascript src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 {% endblock %}

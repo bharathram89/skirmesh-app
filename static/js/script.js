@@ -75,3 +75,33 @@ function update_cmd_opts() {
     }
 
 }
+
+
+// setInterval(
+//
+//   function(){                            //Periodically
+//
+//   fetch('/index/is_change')
+//       .then(function (response) {
+//           return response.json();
+//       }).then(function (data) {
+//
+//           for (var node in data) {
+//
+//             console.log(node);
+//             console.log(data[node].color);
+//             var ele = document.getElementById("beacon_" + node);
+// 
+//             if (data[node].stable){
+//               ele.style.border = "1vw dashed " + data[node].color
+//               ele.style.background = data[node].color
+//             }
+//             else{
+//               ele.style.border = "1vw double " + data[node].color
+//               ele.style.background = ""
+//             }
+//
+//           }
+//       });
+//     },
+//   2000);
