@@ -6,7 +6,7 @@
 
     <form id="configuration_control"
           name="Member_Data"
-          action="/issue_command"
+          action=""
           method="post"
           style="float:center">
 
@@ -66,9 +66,10 @@
 
           <input class="button"
                  id="form_submit_button"
-                 type="submit"
+                 type="button"
                  name="action"
                  value="Issue Command"
+                 onclick="form_submit(this.value)"
                  {% if not cmd_dict %}
                  style="display:none"
                  {% endif %}>
@@ -76,9 +77,10 @@
 
           <input class="button"
                  id="end_game_button"
-                 type="submit"
+                 type="button"
                  name="action"
                  value="End Game"
+                 onclick="form_submit(this.value)"
                  {% if not cmd_dict %}
                  style="display:none"
                  {% endif %}>
@@ -86,9 +88,10 @@
 
           <input class="button"
                  id="discover_network_button"
-                 type="submit"
+                 type="button"
                  name="action"
                  value="Discover Network"
+                 onclick="form_submit(this.value)"
                  {% if cmd_dict %}
                  style="display:none"
                  {% endif %}>

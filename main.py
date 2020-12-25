@@ -10,7 +10,8 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-from flask import Flask, render_template, flash, jsonify, request, redirect, url_for
+from flask import Flask, render_template, flash, jsonify
+from flask import request, redirect, url_for, make_response
 from datetime import datetime
 import time, json
 
@@ -132,28 +133,28 @@ def node_admin():
 
 
 
-@application.route('/issue_command', methods=['POST','GET'])
+@application.route('/node_admin/issue_command', methods=['POST','GET'])
 def issue_command():
+
+    data = json.loads(request.data)
 
     if request.method == 'POST':
 
-        dest = request.form['dest']
-        args = request.form['args']
+        dest   = data['dest']
+        config = data['conf']
+        args   = data['args']
+        button = data['button']
 
         pkt = bytearray(3)
         pkt[0] = CP.CONFIGURE
-        pkt[1] = int(request.form['conf'], 16)
+        pkt[1] = int(config, 16)
 
-        if pkt[1] == SET_LOCATION:
+        if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
-            if dest != BROADCAST:
+            CP.end_nodes[dest].location = eval(args)
+            CP.end_nodes[dest].loc_name = _LOC_NAMES[args]
 
-                CP.end_nodes[dest].location = eval(args)
-                CP.end_nodes[dest].loc_name = _LOC_NAMES[args]
-
-                return redirect(url_for('node_admin'))
-
-        elif request.form['action'] == 'Issue Command':
+        elif button == 'Issue Command':
 
             pkt[2] = int(args, 16)
 
@@ -172,7 +173,7 @@ def issue_command():
 
             else: CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
 
-        elif request.form['action'] == 'End Game':
+        elif button == 'End Game':
 
             for node in CP.end_nodes:
 
@@ -191,12 +192,11 @@ def issue_command():
                         tdat = {'team':own_team,'time_held':held,'action':node}
                         CP.exec_sql(SQL.add_row, 'score', tdat)
 
-        elif request.form['action'] == 'Discover Network':
+        elif button == 'Discover Network':
 
             CP.find_nodes()
-            return redirect(url_for('node_admin'))
 
-    return redirect(url_for('node_admin'))
+    return make_response(jsonify({"message": "OK"}), 200)
 
 
 

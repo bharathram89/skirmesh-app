@@ -77,6 +77,41 @@ function update_cmd_opts() {
 }
 
 
+function form_submit(button) {
+
+    var dest = document.getElementById("dest");
+    var conf = document.getElementById("conf");
+    var args = document.getElementById("args");
+
+    var data = {
+                'args'   : args.value,
+                'dest'   : dest.value,
+                'conf'   : conf.value,
+                'button' : button,
+               };
+
+    // console.log(data)
+
+    fetch("/node_admin/issue_command", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log(`Looks like there was a problem. Status code: ${response.status}`);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+}
+
 // setInterval(
 //
 //   function(){                            //Periodically
@@ -91,7 +126,7 @@ function update_cmd_opts() {
 //             console.log(node);
 //             console.log(data[node].color);
 //             var ele = document.getElementById("beacon_" + node);
-// 
+//
 //             if (data[node].stable){
 //               ele.style.border = "1vw dashed " + data[node].color
 //               ele.style.background = data[node].color
