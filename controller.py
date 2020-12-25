@@ -6,6 +6,7 @@ from datetime import datetime
 
 class END_NODE(RemoteXBeeDevice):
 
+
     def __init__(self, host, device):
 
         RemoteXBeeDevice.__init__(self, host, device)
@@ -215,6 +216,8 @@ class CONTROL_POINT(XBeeDevice):
             pkt = self.parse_message[cmd](sender, payload)
 
             if pkt: self.transmit_pkt(sender, pkt)
+
+
 
     @property
     def parse_message(self):
