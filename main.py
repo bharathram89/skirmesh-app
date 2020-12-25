@@ -199,8 +199,6 @@ def issue_command():
 
     return make_response(jsonify({"message": "OK"}), 200)
 
-
-
 @application.route('/players')
 def players():
 
@@ -232,7 +230,6 @@ def players():
 
     return render_template('players.html', **kwargs)
 
-
 @application.route('/comms')
 def comms_log():
 
@@ -249,9 +246,8 @@ def comms_log():
 
     return render_template('comms.html', **kwargs)
 
-
 @application.route('/user_reg', methods=['POST', 'GET'])
-def user_reg():
+def user_reg(uid=None):
 
     form = RegistrationForm(request.form)
 
@@ -267,7 +263,6 @@ def user_reg():
         print("First name is: ", fname.upper())
         print("Last name is: ", lname.upper())
 
-
         data = {'fname':fname.upper(),
                 'lname':lname.upper(),
                }
@@ -276,12 +271,20 @@ def user_reg():
 
     conn.close()
 
-    return render_template('user_reg.html', form=form, Players=players)
+    return render_template('user_reg.html',
+                           form=form,
+                           Players=players,
+                           uid=uid)
 
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
 
-    return redirect(url_for('user_reg'))
+    while not CP.user_reg:
+        pass
+
+    uid = CP.user_reg.pop()
+
+    return redirect(url_for('user_reg',uid=uid))
 
 if __name__ == '__main__':
 

@@ -6,6 +6,7 @@ from datetime import datetime
 
 class END_NODE(RemoteXBeeDevice):
 
+
     def __init__(self, host, device):
 
         RemoteXBeeDevice.__init__(self, host, device)
@@ -29,7 +30,8 @@ class CONTROL_POINT(XBeeDevice):
     # Configuration codes
     CONFIGURE = 0x00
     REGISTER  = 0x01
-    QUERY     = 0x02
+    USER_REG  = 0x02
+    QUERY     = 0x03
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
@@ -91,6 +93,7 @@ class CONTROL_POINT(XBeeDevice):
         self.DB = None
 
         self.end_nodes = {}
+        self.reg_players = []
         self.configure_XB()
 
 
@@ -216,6 +219,8 @@ class CONTROL_POINT(XBeeDevice):
 
             if pkt: self.transmit_pkt(sender, pkt)
 
+
+
     @property
     def parse_message(self):
 
@@ -223,7 +228,8 @@ class CONTROL_POINT(XBeeDevice):
                     CONTROL_POINT.CAPTURE   : self.__capture,
                     CONTROL_POINT.MEDIC     : self.__medic,
                     CONTROL_POINT.QUERY     : self.__query,
-                    CONTROL_POINT.ND_STATUS : self.__status}
+                    CONTROL_POINT.ND_STATUS : self.__status,
+                    CONTROL_POINT.USER_REG  : self.__user_reg}
 
         return msg_dict
 
@@ -408,6 +414,15 @@ class CONTROL_POINT(XBeeDevice):
         stable = bytearray([status[2]])
 
         return cmd + uid + team + stable
+
+    def __user_reg(self, sender, payload):
+
+        uid = payload[1:5].hex()
+
+        if uid not in self.reg_players:
+            self.reg_players.append(uid)
+
+        return None
 
     def uid_handler(self, uid):
 
