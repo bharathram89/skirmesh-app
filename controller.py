@@ -157,7 +157,9 @@ class CONTROL_POINT(XBeeDevice):
 
         for node in self.XB_net.get_devices():
 
-            self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
+            if node not in self.end_nodes:
+                
+                self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
 
 
     def transmit_pkt(self, dest, pkt):
@@ -195,6 +197,9 @@ class CONTROL_POINT(XBeeDevice):
         sender = xb_msg.remote_device
 
         print(f'Received (payload): {payload}')
+
+        if str(sender.get_64bit_addr()) not in self.end_nodes:
+            self.find_nodes()
 
         data = {
                 'sender'     :str(sender.get_64bit_addr()),
