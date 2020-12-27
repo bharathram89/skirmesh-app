@@ -150,7 +150,7 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
-            if dest != BROADCAST:
+        if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
             CP.end_nodes[dest].location = eval(args)
             CP.end_nodes[dest].loc_name = data['location']
