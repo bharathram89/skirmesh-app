@@ -15,7 +15,8 @@ class END_NODE(RemoteXBeeDevice):
 
         self.location = (50,50)
         self.loc_name = None
-        self.status   = None
+        
+        self.capture_status   = None
 
 
 

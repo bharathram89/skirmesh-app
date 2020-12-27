@@ -51,8 +51,8 @@ def is_change():
         for n in CP.end_nodes:
 
             status = SQL._get_capture_status(conn, n)
-            change = True if CP.end_nodes[n].status != status else False
-            CP.end_nodes[n].status = status
+            change = True if CP.end_nodes[n].capture_status != status else False
+            CP.end_nodes[n].capture_status = status
 
             if change:
 
@@ -94,7 +94,7 @@ def main_page():
 
         if status:
             node_status[n] = status
-            CP.end_nodes[n].status = status
+            CP.end_nodes[n].capture_status = status
             centers[n] = CP.end_nodes[n].location
 
 
