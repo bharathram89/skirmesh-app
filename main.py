@@ -141,8 +141,6 @@ def issue_command():
         args   = data['args']
         button = data['button']
 
-        print(data)
-
         pkt = bytearray(3)
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
@@ -212,7 +210,7 @@ def players():
     for n in CP.end_nodes:
         times = SQL._get_times_for_node(conn, n)
         if times: nd_times[CP.end_nodes[n].loc_name] = times
-        
+
     print(nd_times)
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
