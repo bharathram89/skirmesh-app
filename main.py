@@ -27,14 +27,10 @@ serial = '/dev/ttyUSB0'
 baud   = 115200
 CP = CONTROL_POINT(serial, baud)
 
-# Load location data
-LOCATION_DATA = json.load(open("locations.json"))
-_LOC_NAMES = {loc['value'] : loc['text'] for loc in LOCATION_DATA}
-
 CMD_ARGS = {
-            'REGISTER'    : json.load(open("teams.json")),
-            'SET LOCATION': LOCATION_DATA,
-            'TIME DATA'   : json.load(open("timer_values.json"))
+            'REGISTER'    : json.load(open("json/teams.json")),
+            'SET LOCATION': json.load(open("json/locations.json")),
+            'TIME DATA'   : json.load(open("json/timer_values.json"))
             }
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
@@ -42,7 +38,7 @@ CMD_ARGS = {
 SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
 
-@application.route('/index/is_change', methods=['POST','GET'])
+@application.route('/index/is_change', methods=['GET'])
 def is_change():
 
     if request.method == 'GET':
@@ -75,7 +71,7 @@ def is_change():
 
             return jsonify("")
 
-    return redirect(url_for('index'))
+    return make_response(jsonify({"message": "OK"}), 200) #redirect(url_for('index'))
 
 
 
@@ -113,7 +109,7 @@ def main_page():
               'centers'    : centers,
                }
 
-    conn.close() #My functions close connections
+    conn.close()
 
     return render_template('index.html', **kwargs)
 
@@ -133,7 +129,7 @@ def node_admin():
 
 
 
-@application.route('/node_admin/issue_command', methods=['POST','GET'])
+@application.route('/node_admin/issue_command', methods=['POST'])
 def issue_command():
 
     data = json.loads(request.data)
@@ -145,6 +141,8 @@ def issue_command():
         args   = data['args']
         button = data['button']
 
+        print(data)
+
         pkt = bytearray(3)
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
@@ -152,7 +150,7 @@ def issue_command():
         if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
             CP.end_nodes[dest].location = eval(args)
-            CP.end_nodes[dest].loc_name = _LOC_NAMES[args]
+            CP.end_nodes[dest].loc_name = data['location']
 
         elif button == 'Issue Command':
 

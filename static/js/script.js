@@ -45,7 +45,7 @@ function update_cmd_args(cmd_arg_list) {
 
         // Set all time indexes to the timer list
         if (cmd_txt.indexOf('TIME') > -1) {
-          cmd_txt = 'TIME DATA'
+          cmd_txt = 'TIME DATA';
         }
 
         for (var i = 0; i < cmd_arg_list[cmd_txt.toUpperCase()].length; i++) {
@@ -84,10 +84,11 @@ function form_submit(button) {
     var args = document.getElementById("args");
 
     var data = {
-                'args'   : args.value,
-                'dest'   : dest.value,
-                'conf'   : conf.value,
-                'button' : button,
+                'args'     : args.value,
+                'dest'     : dest.value,
+                'conf'     : conf.value,
+                'button'   : button,
+                'location' : args.options[args.selectedIndex].text,
                };
 
     // console.log(data)
@@ -99,7 +100,7 @@ function form_submit(button) {
     })
       .then(function (response) {
         if (response.status !== 200) {
-          console.log(`Looks like there was a problem. Status code: ${response.status}`);
+          console.log('Looks like there was a problem. Status code: ' + response.status);
           return;
         }
         response.json().then(function (data) {
@@ -116,7 +117,10 @@ function form_submit(button) {
 //
 //   function(){                            //Periodically
 //
-//   fetch('/index/is_change')
+//   fetch('/index/is_change',  {
+        //   method: "GET",
+        //   cache: "no-cache",
+        // })
 //       .then(function (response) {
 //           return response.json();
 //       }).then(function (data) {
