@@ -208,7 +208,12 @@ def players():
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
 
-    nd_times = {CP.end_nodes[n].loc_name: SQL._get_times_for_node(conn, n) for n in CP.end_nodes}
+    nd_times = dict()
+    for n in CP.end_nodes:
+        times = SQL._get_times_for_node(conn, n)
+        if times: nd_times[CP.end_nodes[n].loc_name] = times
+        
+    print(nd_times)
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : SQL._score_by_team(conn),
