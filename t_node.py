@@ -12,9 +12,15 @@ class END_NODE():
         self.__64bit_addr = node
         self.__loc_name = None
 
+        self.location = (50,50)
+        self.loc_name = None
+        self.status   = None
+
     @property
     def _get_64bit_addr(self):
         return self.__64bit_addr
+
+
 
 class CONTROL_POINT():
 
@@ -72,7 +78,8 @@ class CONTROL_POINT():
                 MED_TIME  : 'SET MEDIC TIME',
                 }
 
-    DB_NAME = "database.sqlite"
+    DB_NAME    = "database.sqlite"
+    MEDIC_TIME = int(60)
 
     def __init__(self, serial, baud):
 
