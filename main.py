@@ -57,6 +57,8 @@ def is_change():
             if change:
 
                 to_update[n] = {
+                                'id'    : CP.end_nodes[n].loc_name,
+                                'team'  : status[1],
                                 'color' : CP.TEAM_CMAP[status[1]],
                                 'stable': status[2]
                                 }
@@ -105,13 +107,13 @@ def main_page():
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
               'team_name'  : CP.TEAM_NAME,
-              'node_status': node_status,
+              'node_status': {}, #node_status,
               'centers'    : centers,
                }
 
     conn.close()
 
-    return render_template('index.html', **kwargs)
+    return render_template('field.html', **kwargs)
 
 
 
