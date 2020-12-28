@@ -20,7 +20,7 @@
 
                 var ele = document.getElementById(data[node].id);
 
-                if (data[node].stable){
+                if (data[node].stable && ele){
 
                     ele.setAttribute("fill", data[node].color);
                     ele.setAttribute("opacity", "0.5");
@@ -35,7 +35,7 @@
         });
       },
 
-    5000); // Happen every 5 seconds (5000 milliseconds)
+    1000); // Happen every 5 seconds (5000 milliseconds)
 
 </script>
 

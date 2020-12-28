@@ -65,9 +65,9 @@ def is_change():
 
         conn.close()
 
-        if to_update: return jsonify(to_update)
+        if to_update: return make_response(jsonify(to_update), 200)
 
-    return make_response(jsonify({"message": "OK"}), 200)
+    return make_response(jsonify(""), 200)
 
 
 @application.route('/')
