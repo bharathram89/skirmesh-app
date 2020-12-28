@@ -20,8 +20,8 @@
                   <label for="dest"> Destination Node </label> <br>
                   <select name="dest" id="dest" placeholder="Destination Node" onchange="update_cmd_opts()">
                       <option value="FFFF">BROADCAST</option>
-                      {% for i in node_dict %}
-                      <option value="{{ i }}">{{ node_dict[i].loc_name if node_dict[i].loc_name else i }}</option>
+                      {% for n in node_dict %}
+                      <option value="{{ n }}">{{ node_dict[n].location if node_dict[n].location else n }}</option>
                       {% endfor %}
                   </select>
               </div>

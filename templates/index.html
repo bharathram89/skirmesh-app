@@ -73,21 +73,6 @@
         {% block SVG %}
         {% endblock %}
 
-      <!-- <img src="{{ url_for('static', filename='img/field.svg') }}"
-           style="width: 100%; border: 0px solid #000000; background:url({{ url_for('static', filename='img/field.png') }}); background-size: cover;"
-           align="middle"
-           opacity="0.2"> -->
-
-
-           {% for n in node_status %}
-              <div class="beacon" id="beacon_{{n}}"
-                   style="border-color:{{team_cmap[node_status[n][1]]}};
-                          top: calc({{centers[n][0]}}% - 2%);
-                          left: calc({{centers[n][1]}}% - 2%);
-                          border-style: {{ 'dashed' if node_status[n][2] else 'double' }};
-                          background: {{ team_cmap[node_status[n][1]] if node_status[n][2] else '' }}">
-              </div>
-           {% endfor %}
     </div>
 </div>
 
