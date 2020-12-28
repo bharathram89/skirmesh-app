@@ -54,10 +54,10 @@ def is_change():
             change = True if CP.end_nodes[n].capture_status != status else False
             CP.end_nodes[n].capture_status = status
 
-            if change:
+            if change and CP.end_nodes[n].location:
 
                 to_update[n] = {
-                                'id'    : CP.end_nodes[n].loc_name,
+                                'id'    : CP.end_nodes[n].location,
                                 'team'  : status[1],
                                 'color' : CP.TEAM_CMAP[status[1]],
                                 'stable': status[2]
@@ -65,16 +65,9 @@ def is_change():
 
         conn.close()
 
-        if to_update:
+        if to_update: return jsonify(to_update)
 
-            return jsonify(to_update)
-
-        else:
-
-            return jsonify("")
-
-    return make_response(jsonify({"message": "OK"}), 200) #redirect(url_for('index'))
-
+    return make_response(jsonify({"message": "OK"}), 200)
 
 
 @application.route('/')
@@ -88,18 +81,6 @@ def main_page():
     reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
-    node_status, centers = dict(), dict()
-
-    for n in CP.end_nodes:
-
-        status = SQL._get_capture_status(conn, n)
-
-        if status:
-            node_status[n] = status
-            CP.end_nodes[n].capture_status = status
-            centers[n] = CP.end_nodes[n].location
-
-
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
               'team_col'   : ['player'],
@@ -107,8 +88,6 @@ def main_page():
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
               'team_name'  : CP.TEAM_NAME,
-              'node_status': {}, #node_status,
-              'centers'    : centers,
                }
 
     conn.close()
@@ -149,8 +128,7 @@ def issue_command():
 
         if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
-            CP.end_nodes[dest].location = eval(args)
-            CP.end_nodes[dest].loc_name = data['location']
+            CP.end_nodes[dest].location = data['location']
 
         elif button == 'Issue Command':
 
@@ -211,7 +189,7 @@ def players():
     nd_times = dict()
     for n in CP.end_nodes:
         times = SQL._get_times_for_node(conn, n)
-        if times: nd_times[CP.end_nodes[n].loc_name] = times
+        if times: nd_times[CP.end_nodes[n].location] = times
 
     print(nd_times)
 

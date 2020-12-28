@@ -6,7 +6,7 @@
 
   setInterval(
 
-    function(){                            //Periodically
+    function(){
 
     fetch('/index/is_change',  {
                                 method: "GET",
@@ -16,32 +16,17 @@
             return response.json();
         }).then(function (data) {
 
-            console.log(data)
-
             for (var node in data) {
 
                 var ele = document.getElementById(data[node].id);
 
-                console.log("beacon team" + data[node].team)
-
-                ele.setAttribute("class", "beacon");
-
-                // var cls = document.getElementByClassName("team" + data[node].team)
-
-
-                console.log(ele.className)
-
                 if (data[node].stable){
-                    // ele.style.border = "1vw dashed " + data[node].color;
-                    // ele.style.background = data[node].color;
+
                     ele.setAttribute("fill", data[node].color);
                     ele.setAttribute("opacity", "0.5");
                     ele.setAttribute("class", "owned");
                 }
                 else{
-                    // ele.style.border = "1vw double " + data[node].color;
-                    // ele.style.background = "";
-                    // ele.setAttribute("stroke", data[node].color);
                     ele.setAttribute("fill", data[node].color);
                     ele.setAttribute("class", "beacon");
                 }
