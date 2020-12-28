@@ -78,6 +78,7 @@ class CONTROL_POINT():
                 MED_TIME  : 'SET MEDIC TIME',
                 }
 
+    user_reg = ['05ABC3D4','test1', 'test2']
     DB_NAME    = "database.sqlite"
     MEDIC_TIME = int(60)
 

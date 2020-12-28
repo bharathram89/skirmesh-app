@@ -113,6 +113,18 @@ function form_submit(button) {
 
 }
 
+function get_uid(button) {
+
+    var uid_block = document.getElementById("uidblock")
+
+    fetch("/user_reg/get_uid", {
+        method: "POST",
+        cache: "no-cache"
+    })
+        .then(response.json().then(function (text) {
+        console.log(text);
+    });
+}
 // setInterval(
 //
 //   function(){                            //Periodically

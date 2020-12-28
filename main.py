@@ -11,7 +11,7 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = False
+web_dev = True
 
 from flask import Flask, render_template, flash, jsonify
 from flask import Flask, render_template, flash, request, redirect, url_for, jsonify, make_response
@@ -287,15 +287,17 @@ def user_reg(uid=None):
                            Players=players,
                            uid=uid)
 
-@application.route('/register_user', methods=['POST','GET'])
-def register_user():
+@application.route('/user_reg/get_uid', methods=['POST'])
+def get_uid():
 
     while not CP.user_reg:
         pass
 
     uid = CP.user_reg.pop()
 
-    return redirect(url_for('user_reg',uid=uid))
+    print('popped the uid')
+
+    return make_response(jsonify({"message": "OK", "uid": uid}), 200)
 
 if __name__ == '__main__':
 

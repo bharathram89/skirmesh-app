@@ -25,6 +25,15 @@
         {% endfor %}
     </select>
 
-    <button type="button" name="Get UID" formaction="/register_user">
+    <input class="button"
+           id="get_tag_button"
+           type="button"
+           name="action"
+           value="Get UID"
+           onclick="get_uid(this.value)"
+           >
+           </input>
     <!-- put some shit in here about where to put the uid >
+    <!-->
+    <h1>UID Goes Here</h1>
 {% endblock %}
