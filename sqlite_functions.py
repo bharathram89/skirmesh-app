@@ -240,7 +240,7 @@ def _get_registered_teams(conn):
 def _score_by_uid(conn):
 
     sql_arg = """SELECT tag as player, team, SUM(points) as points
-                 FROM score WHERE date(timestamp) = date('now') AND tag IS NOT NULL
+                 FROM score WHERE date(timestamp) = date('now', 'localtime') AND tag IS NOT NULL
                  GROUP BY tag
                  ORDER BY SUM(points) DESC;
               """
@@ -254,7 +254,7 @@ def _score_by_uid(conn):
 def _score_by_team(conn):
 
     sql_arg = f"""SELECT {TEAM_MAP}, SUM(points) as points
-                  FROM score WHERE date(timestamp) = date('now')
+                  FROM score WHERE date(timestamp) = date('now', 'localtime')
                   GROUP BY team
                   ORDER BY SUM(points) DESC;
                """
@@ -268,7 +268,7 @@ def _score_by_team(conn):
 def _get_time_held_by_team(conn):
 
     sql_arg = f"""SELECT {TEAM_MAP}, SUM(time_held) as time
-                  FROM score WHERE date(timestamp) = date('now')
+                  FROM score WHERE date(timestamp) = date('now', 'localtime')
                   GROUP BY team
                   ORDER BY SUM(time_held) DESC;
                """
@@ -283,7 +283,7 @@ def _get_times_for_node(conn, node):
 
     sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time, action
                   FROM score
-                  WHERE date(timestamp) = date('now') AND action = (?)
+                  WHERE date(timestamp) = date('now', 'localtime') AND action = (?)
 		          AND EXISTS(
 						     SELECT node
                              FROM capture_status
@@ -302,7 +302,7 @@ def _get_times_for_node(conn, node):
 def _get_last_captor(conn):
 
     sql_arg = """SELECT tag,team FROM score
-                 WHERE date(timestamp) = date('now') AND action = 'CAPTURE'
+                 WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE'
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
     cur = conn.cursor()
@@ -314,7 +314,7 @@ def _get_last_captor(conn):
 def _get_time_capture_complete(conn):
 
     sql_arg = """SELECT timestamp FROM score
-                 WHERE date(timestamp) = date('now') AND action = 'CAPTURE COMPLETE'
+                 WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE COMPLETE'
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
     cur = conn.cursor()
@@ -326,7 +326,7 @@ def _get_time_capture_complete(conn):
 def _get_owning(conn):
 
     sql_arg = """SELECT tag,team,timestamp FROM capture_status
-                 WHERE date(timestamp) = date('now')
+                 WHERE date(timestamp) = date('now', 'localtime')
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
 
@@ -339,7 +339,7 @@ def _get_owning(conn):
 def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
-                 WHERE date(timestamp) = date('now') AND node = (?)
+                 WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
 
