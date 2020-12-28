@@ -11,10 +11,10 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = True
+web_dev = False
 
 from flask import Flask, render_template, flash, jsonify
-from flask import request, redirect, url_for, make_response
+from flask import Flask, render_template, flash, request, redirect, url_for, jsonify, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime
 import time, json
@@ -115,8 +115,6 @@ def main_page():
                 node_status[n] = status
                 CP.end_nodes[n].capture_status = status
                 centers[n] = CP.end_nodes[n].location
-
-
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
