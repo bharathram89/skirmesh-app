@@ -10,6 +10,9 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
+#to use fake nodes set web_dev to TRUE
+web_dev = True
+
 from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
@@ -19,8 +22,11 @@ import time, json
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
 import sqlite_functions as SQL
-#from controller import CONTROL_POINT, END_NODE
-from t_node import CONTROL_POINT, END_NODE
+
+if web_dev:
+    from t_node import CONTROL_POINT, END_NODE
+else:
+    from controller import CONTROL_POINT, END_NODE
 
 class RegistrationForm(Form):
     fname = TextField('First Name', [validators.Length(min=2, max=20)])
@@ -95,14 +101,21 @@ def main_page():
 
     for n in CP.end_nodes:
 
-        #status = SQL._get_capture_status(conn, n)
-        status = True
+        if web_dev:
+            status = True
+        else:
+            status = SQL._get_capture_status(conn, n)
 
         if status:
-            #node_status[n] = status
-            node_status[n] = (0,2,1)
-            #CP.end_nodes[n].capture_status = status
-            centers[n] = CP.end_nodes[n].location
+
+            if web_dev:
+                node_status[n] = (0,2,1)
+                centers[n] = CP.end_nodes[n].location
+            else:
+                node_status[n] = status
+                CP.end_nodes[n].capture_status = status
+                centers[n] = CP.end_nodes[n].location
+
 
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
