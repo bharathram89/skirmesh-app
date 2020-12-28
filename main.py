@@ -10,7 +10,11 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-from flask import Flask, render_template, flash, request, redirect, url_for, jsonify, make_response
+#to use fake nodes set web_dev to TRUE
+web_dev = True
+
+from flask import Flask, render_template, flash, jsonify
+from flask import request, redirect, url_for, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime
 import time, json
@@ -18,8 +22,11 @@ import time, json
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
 import sqlite_functions as SQL
-#from controller import CONTROL_POINT, END_NODE
-from t_node import CONTROL_POINT, END_NODE
+
+if web_dev:
+    from t_node import CONTROL_POINT, END_NODE
+else:
+    from controller import CONTROL_POINT, END_NODE
 
 class RegistrationForm(Form):
     fname = TextField('First Name', [validators.Length(min=2, max=20)])
