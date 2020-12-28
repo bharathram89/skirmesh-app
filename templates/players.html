@@ -10,9 +10,11 @@
 </input>
 </div>
 
-<h1> team leaderboard </h1>
 
-<div class="team-leaderboard">
+<div class="leaderboard">
+
+  <h1> team leaderboard </h1>
+
   <table id="table">
     <thead>
       <tr>
@@ -46,7 +48,7 @@
 
 
 {% for nd in node_times %}
-<h1> {{ nd if nd else node_times[nd][0]['action'] }} </h1>
+<h3> {{ nd if nd else node_times[nd][0]['action'] }} </h3>
 <table id="table">
   <thead>
     <tr>
@@ -80,8 +82,11 @@
 </div>
 
 <br>
-<h1> player leaderboard </h1>
-<div class="player-leaderboard">
+
+<div class="leaderboard">
+
+  <h1> player leaderboard </h1>
+
   <table id="table">
     <thead>
       <tr>

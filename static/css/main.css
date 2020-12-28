@@ -49,17 +49,23 @@ header{
 }
 
 
-h1{
-    border-radius: 0.1em;
-    color: rgba(255,255,255,0.70);
+h1, h3{
+    /* border-radius: 0.1em; */
+    color: rgba(255,255,255); /* ,alpha); */
     text-align: center;
-    vertical-align: center;
     background-color: var(--BLACK);
-    font-size: 150%;
     padding: 0.5em;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
+    text-transform: uppercase;
+    margin: 0px;
 }
-h1:hover, header:hover{
+h1 {
+    font-size: 175%;
+}
+h3 {
+    font-size: 125%;
+}
+h1:hover, h3:hover, header:hover{
     color: var(--RED);
 }
 
@@ -121,24 +127,34 @@ h2 {
     padding-right: 0.5%;
 }
 
+/* .leaderboard{
+    border: 1px #800000;
+} */
 
 form {
     padding: 1em;
     vertical-align: middle;
     text-align: left;
-    width: 75%;
+    width: 80%;
 }
 
 .form_field {
     text-align: left;
     padding: 1em;
     display: inline-block;
+    width: 30%
 }
 
 legend {
     padding: 1em;
     text-align: center;
+    font-size: 125%;
 }
+label, select{
+    font-size: 110%;
+    background-color: #FFFFFF;
+}
+
 
 input {
     padding: 1em;
@@ -317,11 +333,6 @@ table thead tr th {
   position: sticky;
 }
 
-.form_field {
-    padding: 2em;
-    width: 10em;
-}
-
 #fields {
     display: flex;
     justify-content: space-between;
@@ -340,7 +351,7 @@ table thead tr th {
 #form_submit_button:hover {background-color: var(--button_color_hover)}
 
 #mbr_search {
-  background-image: url('../img/ss.jpg');
+  background-image: url('../img/ss.png');
   background-size: contain;
   background-position: right center;
   background-repeat: no-repeat;

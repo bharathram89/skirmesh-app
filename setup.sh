@@ -28,6 +28,7 @@ sudo cat > battlefield.service <<EOF
 Description=Battlefield Init Service
 
 [Service]
+User=pi
 WorkingDirectory=/home/pi/Coding/battlefield/
 ExecStart=/home/pi/Coding/battlefield/venv/bin/python main.py
 StandardOutput=inherit

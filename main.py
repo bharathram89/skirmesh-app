@@ -10,7 +10,8 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-from flask import Flask, render_template, flash, request, redirect, url_for
+from flask import Flask, render_template, flash, jsonify
+from flask import request, redirect, url_for, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime
 import time, json
@@ -31,24 +32,53 @@ serial = '/dev/ttyUSB0'
 baud   = 115200
 CP = CONTROL_POINT(serial, baud)
 
-# Load location data
-LOCATION_DATA = json.load(open("locations.json"))
-_NODE_LOC_DICT, _NODE_NAME_DICT = dict(), dict()
-
-for loc in LOCATION_DATA:
-    _NODE_LOC_DICT[loc['text']] = loc['value']
-    _NODE_NAME_DICT[loc['value']] = loc['text']
-
 CMD_ARGS = {
-            'REGISTER'    : json.load(open("teams.json")),
-            'SET LOCATION': LOCATION_DATA,
-            'TIME DATA'   : json.load(open("timer_values.json"))
+            'REGISTER'    : json.load(open("json/teams.json")),
+            'SET LOCATION': json.load(open("json/locations.json")),
+            'TIME DATA'   : json.load(open("json/timer_values.json"))
             }
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
 SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
+
+@application.route('/index/is_change', methods=['GET'])
+def is_change():
+
+    if request.method == 'GET':
+
+        conn = SQL.create_connection(CP.DB_NAME)
+
+        change = False
+        to_update = dict()
+
+        for n in CP.end_nodes:
+
+            status = SQL._get_capture_status(conn, n)
+            change = True if CP.end_nodes[n].capture_status != status else False
+            CP.end_nodes[n].capture_status = status
+
+            if change:
+
+                to_update[n] = {
+                                'color' : CP.TEAM_CMAP[status[1]],
+                                'stable': status[2]
+                                }
+
+        conn.close()
+
+        if to_update:
+
+            return jsonify(to_update)
+
+        else:
+
+            return jsonify("")
+
+    return make_response(jsonify({"message": "OK"}), 200) #redirect(url_for('index'))
+
+
 
 @application.route('/')
 @application.route('/index')
@@ -71,11 +101,12 @@ def main_page():
         if status:
             #node_status[n] = status
             node_status[n] = (0,2,1)
+            #CP.end_nodes[n].capture_status = status
             centers[n] = CP.end_nodes[n].location
 
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
-              'name'       : "Ballahack | Swamp Sniper",
+              'name'       : "Battlefield Gaming Systems",
               'team_col'   : ['player'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
@@ -85,7 +116,7 @@ def main_page():
               'centers'    : centers,
                }
 
-    conn.close() #My functions close connections
+    conn.close()
 
     return render_template('index.html', **kwargs)
 
@@ -103,29 +134,28 @@ def node_admin():
 
     return render_template('node_admin.html', **kwargs)
 
-@application.route('/issue_command', methods=['POST','GET'])
+@application.route('/node_admin/issue_command', methods=['POST'])
 def issue_command():
+
+    data = json.loads(request.data)
 
     if request.method == 'POST':
 
-        dest = request.form['dest']
-        args = request.form['args']
+        dest   = data['dest']
+        config = data['conf']
+        args   = data['args']
+        button = data['button']
 
         pkt = bytearray(3)
         pkt[0] = CP.CONFIGURE
-        pkt[1] = int(request.form['conf'], 16)
+        pkt[1] = int(config, 16)
 
-        if pkt[1] == SET_LOCATION:
+        if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
-            if dest != BROADCAST:
+            CP.end_nodes[dest].location = eval(args)
+            CP.end_nodes[dest].loc_name = data['location']
 
-                CP.end_nodes[dest].location = eval(args)
-                # TODO: I don't know why this doesn't work.....
-                # CP.end_nodes[dest].loc_name = _NODE_NAME_DICT[args]
-
-                return redirect(url_for('node_admin'))
-
-        elif request.form['action'] == 'Issue Command':
+        elif button == 'Issue Command':
 
             pkt[2] = int(args, 16)
 
@@ -144,7 +174,7 @@ def issue_command():
 
             else: CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
 
-        elif request.form['action'] == 'End Game':
+        elif button == 'End Game':
 
             for node in CP.end_nodes:
 
@@ -163,12 +193,11 @@ def issue_command():
                         tdat = {'team':own_team,'time_held':held,'action':node}
                         CP.exec_sql(SQL.add_row, 'score', tdat)
 
-        elif request.form['action'] == 'Discover Network':
+        elif button == 'Discover Network':
 
             CP.find_nodes()
-            return redirect(url_for('node_admin'))
 
-    return redirect(url_for('node_admin'))
+    return make_response(jsonify({"message": "OK"}), 200)
 
 @application.route('/players')
 def players():
@@ -180,7 +209,12 @@ def players():
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
 
-    nd_times = {CP.end_nodes[n].loc_name: SQL._get_times_for_node(conn, n) for n in CP.end_nodes}
+    nd_times = dict()
+    for n in CP.end_nodes:
+        times = SQL._get_times_for_node(conn, n)
+        if times: nd_times[CP.end_nodes[n].loc_name] = times
+
+    print(nd_times)
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : SQL._score_by_team(conn),
