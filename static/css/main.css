@@ -290,12 +290,33 @@ td {
 }
 
 @keyframes pulsate {
-  from {transform: scale(0.2);
+  from {transform: scale(0.8);
       opacity: 1;
   }
-  to {transform: scale(2.5);
+  to {transform: scale(1.2);
         opacity: 0;
   }
+}
+
+svg {
+    background-image: url('../img/field.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+path {
+    opacity: 0;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+path:hover {
+    fill: #FFFFFF;
+    opacity: 0.25;
+    transform: scale(1.1);
+}
+
+path.owned {
+    opacity: 0.5;
 }
 
 
