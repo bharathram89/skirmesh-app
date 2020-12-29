@@ -108,7 +108,8 @@ def init_player_table(conn):
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  fname TEXT NOT NULL,
                  lname TEXT NOT NULL,
-                 uid TEXT
+                 outfit TEXT,
+                 uid TEXT,
                  timestamp DEFAULT CURRENT_TIMESTAMP);
               """
 
@@ -286,7 +287,6 @@ def _score_by_uid(conn):
 
     return [dict(i) for i in data]
 
-
 def _score_by_team(conn):
 
     sql_arg = f"""SELECT {TEAM_MAP}, SUM(points) as points
@@ -299,7 +299,6 @@ def _score_by_team(conn):
     data = conn.cursor().execute(sql_arg).fetchall()
 
     return [dict(i) for i in data]
-
 
 def _get_time_held_by_team(conn):
 
@@ -383,7 +382,6 @@ def _get_capture_status(conn, node):
     cur.execute(sql_arg, (node,))
 
     return cur.fetchone()
-
 
 if __name__ == "__main__":
 

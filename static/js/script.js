@@ -127,7 +127,7 @@ function get_uid(button) {
     });
 }
 
-function assing_uid(button) {
+function assign_uid(button) {
 
     var player = document.getElementById("Players");
     var uid    = document.getElementById("uidblock");
