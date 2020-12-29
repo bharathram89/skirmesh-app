@@ -141,7 +141,7 @@ def edit_row(conn, table, data):
     Edit row of data to standard table.
     """
     id = data.pop('id')
-    keys, data = [], []
+    keys, vals = [], []
     for k in data:
         keys.append(k)
         vals.append(data[k])
