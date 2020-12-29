@@ -28,8 +28,8 @@ class CONTROL_POINT(XBeeDevice):
     # Configuration codes
     CONFIGURE = 0x00
     REGISTER  = 0x01
-    USER_REG  = 0x02
-    QUERY     = 0x03
+    QUERY     = 0x02
+    USER_REG  = 0x03
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
@@ -91,7 +91,7 @@ class CONTROL_POINT(XBeeDevice):
         self.DB = None
 
         self.end_nodes = {}
-        self.reg_players = []
+        self.reg_player = None
         self.configure_XB()
 
 
@@ -417,10 +417,10 @@ class CONTROL_POINT(XBeeDevice):
 
         uid = payload[1:5].hex()
 
-        if uid not in self.reg_players:
-            self.reg_players.append(uid)
-
-        return None
+            if self.user_reg:
+                return None
+            else:
+                self.user_reg = uid
 
     def uid_handler(self, uid):
 

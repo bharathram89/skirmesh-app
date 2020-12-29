@@ -304,6 +304,25 @@ def register_user():
 
     return make_response(jsonify({"message": "OK", "uid": uid}), 200)
 
+@appliation.route('/user_reg/assign_uid', methods=['POST', 'GET'])
+def assign_uid():
+
+    data = json.loads(request.data)
+
+    if request.method == 'POST':
+
+        player = data['players']
+        uid = data['uidblock']
+        button = data['button']
+
+    conn = SQL.create_connection(CP.DB_NAME)
+
+    data = {'player' : player,
+            'uid'    : uid,
+           }
+
+    conn.close()
+
 if __name__ == '__main__':
 
     print("Initializing host controller")
