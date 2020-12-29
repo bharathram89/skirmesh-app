@@ -113,6 +113,51 @@ function form_submit(button) {
 
 }
 
+function get_uid(button) {
+
+    var uid_block = document.getElementById("uidblock");
+    console.log("fuuuuuuuck");
+
+    fetch("/user_reg/get_uid").then(function(response) {
+        response.json().then(function(data) {
+            console.log(data);
+            uid_block.innerHTML = data.uid
+            uid_block.value = data.uid
+        });
+    });
+}
+
+function assing_uid(button) {
+
+    var player = document.getElementById("Players");
+    var uid    = document.getElementById("uidblock");
+
+    var data = {
+                'player'   : player.value,
+                'uid'      : uid.value,
+                'button'   : button,
+               };
+
+    // console.log(data)
+
+    fetch("/node_admin/issue_command", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status code: ' + response.status);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+}
 // setInterval(
 //
 //   function(){                            //Periodically
