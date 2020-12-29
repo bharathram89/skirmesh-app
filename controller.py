@@ -92,7 +92,7 @@ class CONTROL_POINT(XBeeDevice):
         self.DB = None
 
         self.end_nodes = {}
-        self.reg_player = None
+        self.user_reg = None
         self.configure_XB()
 
 
