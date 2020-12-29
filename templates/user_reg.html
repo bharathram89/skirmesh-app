@@ -20,8 +20,8 @@
 
     <select name="Players" id="players">
         {% for player in Players %}
-        <option value={{player['id']}}>{{player['lname']}},
-        {{player['fname']}}</option>
+        <option value={{  player['id']  }}>{{  player['lname']  }},
+        {{  player['fname']  }}</option>
         {% endfor %}
     </select>
 
@@ -36,4 +36,14 @@
     <!-- put some shit in here about where to put the uid >
     <!-->
     <h1 id="uidblock">UID Goes Here</h1>
+
+    <input class="button"
+           id="assign_uid_button"
+           type="button"
+           name="action"
+           value="Assign UID"
+           onclick="assign_uid(this.value)"
+           >
+           </input>
+
 {% endblock %}
