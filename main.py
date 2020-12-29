@@ -11,7 +11,7 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = True
+web_dev = False
 
 from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
