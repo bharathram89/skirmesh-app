@@ -97,6 +97,18 @@ To compile micropython files, run:
 
     for file in *.py; do python3 -m mpy_cross -mno-unicode -msmall-int-bits=31 $file; done
     
+## TimeLapse video commands for ffmpeg
 
+    mkdir images
+
+Take a bunch of screenshots with:
+
+    ffmpeg -f (avfoundation on OSX || x11grab for Linux) -i "1" -r 1 images/out%06d.jpg
+    
+Put those together into a timelapse with:
+
+    ffmpeg -f image2 -i out%06d.jpg -pix_fmt yuv420p out.mov       
+
+    
     
     
