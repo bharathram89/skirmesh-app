@@ -32,6 +32,7 @@ class CONTROL_POINT():
     CONFIGURE = 0x00
     REGISTER  = 0x01
     QUERY     = 0x02
+    USER_REG  = 0x03
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
@@ -74,6 +75,7 @@ class CONTROL_POINT():
                 MEDIC     : 'MEDIC',
                 BOMB      : 'BOMB',
                 CAPT_TIME : 'SET CAPTURE TIME',
+                USER_REG  : 'REGISTER PLAYERS',
                 BOMB_TIME : 'SET BOMB TIMER',
                 MED_TIME  : 'SET MEDIC TIME',
                 }

@@ -74,6 +74,7 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB      : 'BOMB',
                 CAPT_TIME : 'SET CAPTURE TIME',
                 BOMB_TIME : 'SET BOMB TIMER',
+                USER_REG  : 'REGISTER PLAYERS',
                 MED_TIME  : 'SET MEDIC TIME',
                 }
 
@@ -416,10 +417,10 @@ class CONTROL_POINT(XBeeDevice):
 
         uid = payload[1:5].hex()
 
-            if self.user_reg:
-                return None
-            else:
-                self.user_reg = uid
+        if self.user_reg:
+            return None
+        else:
+            self.user_reg = uid
 
     def uid_handler(self, uid):
 
