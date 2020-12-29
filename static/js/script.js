@@ -129,18 +129,18 @@ function get_uid(button) {
 
 function assign_uid(button) {
 
-    var player = document.getElementById("Players");
+    var player = document.getElementById("players");
     var uid    = document.getElementById("uidblock");
 
     var data = {
                 'player'   : player.value,
-                'uid'      : uid.value,
+                'uid'      : uid.innerHTML,
                 'button'   : button,
                };
 
     // console.log(data)
 
-    fetch("/node_admin/issue_command", {
+    fetch("/user_reg/assign_uid", {
       method: "POST",
       body: JSON.stringify(data),
       cache: "no-cache",
@@ -150,9 +150,6 @@ function assign_uid(button) {
           console.log('Looks like there was a problem. Status code: ' + response.status);
           return;
         }
-        response.json().then(function (data) {
-          // console.log(data);
-        });
       })
       .catch(function (error) {
         console.log("Fetch error: " + error);

@@ -305,8 +305,8 @@ def assign_uid():
 
     if request.method == 'POST':
 
-        player = data['players']
-        uid = data['uidblock']
+        player = data['player']
+        uid = data['uid']
         button = data['button']
 
     conn = SQL.create_connection(CP.DB_NAME)
@@ -320,7 +320,7 @@ def assign_uid():
 
     conn.close()
 
-    make_response(jsonify({"message": "OK"}), 200)
+    #make_response(jsonify({"message": "OK"}), 200)
 
     return redirect(url_for('user_reg'))
 
