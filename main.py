@@ -298,7 +298,7 @@ def get_uid():
 
     return make_response(jsonify({"message": "OK", "uid": uid}), 200)
 
-@appliation.route('/user_reg/assign_uid', methods=['POST', 'GET'])
+@application.route('/user_reg/assign_uid', methods=['POST', 'GET'])
 def assign_uid():
 
     data = json.loads(request.data)
@@ -311,11 +311,18 @@ def assign_uid():
 
     conn = SQL.create_connection(CP.DB_NAME)
 
-    data = {'player' : player,
-            'uid'    : uid,
+    data = {'id'  : player,
+            'uid' : uid,
            }
 
+    #put the SQL statement in here
+    CP.exec_sql(SQL.edit_row, 'player', data)
+
     conn.close()
+
+    make_response(jsonify({"message": "OK"}), 200)
+
+    return redirect(url_for('user_reg'))
 
 if __name__ == '__main__':
 
