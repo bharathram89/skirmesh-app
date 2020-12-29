@@ -115,14 +115,14 @@ function form_submit(button) {
 
 function get_uid(button) {
 
-    var uid_block = document.getElementById("uidblock")
+    var uid_block = document.getElementById("uidblock");
+    console.log("fuuuuuuuck");
 
-    fetch("/user_reg/get_uid", {
-        method: "POST",
-        cache: "no-cache"
-    })
-        .then(response.json().then(function (text) {
-        console.log(text);
+    fetch("/user_reg/get_uid").then(function(response) {
+        response.json().then(function(data) {
+            console.log(data);
+            uid_block.innerHTML = data.uid
+        });
     });
 }
 // setInterval(

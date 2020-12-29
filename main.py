@@ -256,7 +256,7 @@ def user_reg(uid=None):
                            Players=players,
                            uid=uid)
 
-@application.route('/user_reg/get_uid', methods=['POST'])
+@application.route('/user_reg/get_uid', methods=['POST','GET'])
 def get_uid():
 
     while not CP.user_reg:
@@ -300,7 +300,7 @@ def register_user():
 
     uid = CP.user_reg.pop()
 
-    print('popped the uid')
+    #print(uid)
 
     return make_response(jsonify({"message": "OK", "uid": uid}), 200)
 
