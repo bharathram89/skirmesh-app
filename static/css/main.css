@@ -398,22 +398,21 @@ footer {
 
 dd, dt {
     margin-inline-start: 0;
-    width: 50%;
+}
+
+
+#get_tag_button.button, #assign_uid_button.button, #uidblock, #reg_form_submit, #fname, #lname, dl {
+    margin: 0.5em 0;
 }
 
 #players.select {
-    width: 50%;
-}
-
-#get_tag_button.button, #assign_uid_button.button, #uidblock, #reg_form_submit, #players {
-    width: 50%;
-    margin: 0.5em;
+    width: 100%;
 }
 
 #user_registration {
-    text-align: inherit;
+    width: 70%;
 }
 
-#fname.input, #lname.input {
-    width: 90%;
+#fname, #lname {
+    box-sizing: border-box;
 }
