@@ -3,7 +3,7 @@
 {% block content %}
 
     {% from "_formhelpers.html" import render_field %}
-    <form id="user registration"
+    <form id="user_registration"
           name="Member_Data"
           action=""
           method="post"
@@ -14,9 +14,8 @@
           {{render_field(form.lname)}}
         </dl>
 
-        <input type="submit" value="Submit">
+        <input id="reg_form_submit" type="submit" value="Submit">
 
-    </form>
 
     <select name="Players" id="players">
         {% for player in Players %}
@@ -45,5 +44,8 @@
            onclick="assign_uid(this.value)"
            >
            </input>
+
+
+   </form>
 
 {% endblock %}
