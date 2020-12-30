@@ -227,7 +227,7 @@ def comms_log():
     return render_template('comms.html', **kwargs)
 
 @application.route('/user_reg', methods=['POST', 'GET'])
-def user_reg(uid=None):
+def user_reg():
 
     form = RegistrationForm(request.form)
 
@@ -249,12 +249,16 @@ def user_reg(uid=None):
 
         SQL.add_row(conn, 'player', data)
 
+        conn.close()
+
+        return redirect(url_for('user_reg'))
+
     conn.close()
 
     return render_template('user_reg.html',
                            form=form,
                            Players=players,
-                           uid=uid)
+                          )
 
 @application.route('/user_reg/get_uid', methods=['POST','GET'])
 def get_uid():
@@ -304,7 +308,7 @@ def register_user():
 
     return make_response(jsonify({"message": "OK", "uid": uid}), 200)
 
-@application.route('/user_reg/assign_uid', methods=['POST', 'GET'])
+@application.route('/user_reg/assign_uid', methods=['POST'])
 def assign_uid():
 
     data = json.loads(request.data)
