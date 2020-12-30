@@ -300,7 +300,7 @@ class CONTROL_POINT(XBeeDevice):
                         if begin:
 
                             begin = datetime.strptime(begin[0], CONTROL_POINT.TIME_FMTR)
-                            lost  = datetime.utcnow()
+                            lost  = datetime.now()
                             held  = int((lost - begin).total_seconds())
 
                             tdat = {'team':own_team,'time_held':held,'action':node}
@@ -339,7 +339,7 @@ class CONTROL_POINT(XBeeDevice):
 
             id, __uid__, alive, timestamp = row
             timestamp = datetime.strptime(timestamp, CONTROL_POINT.TIME_FMTR)
-            d_t = datetime.utcnow() - timestamp
+            d_t = datetime.now() - timestamp
 
             if not alive and d_t.total_seconds() >= CONTROL_POINT.MEDIC_TIME:
                 # If he was dead and has waited the correct amount of time,

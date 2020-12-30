@@ -27,7 +27,7 @@ def init_data_table(conn):
                  destination TEXT NOT NULL,
                  command TEXT NOT NULL,
                  payload TEXT NOT NULL,
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
               """
     conn.cursor().execute(sql_arg)
     conn.commit()
@@ -40,7 +40,7 @@ def init_team_table(conn):
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  uid TEXT NOT NULL,
                  team INTEGER NOT NULL,
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
               """
     conn.cursor().execute(sql_arg)
     conn.commit()
@@ -53,7 +53,7 @@ def init_medic_table(conn):
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  uid TEXT NOT NULL,
                  alive INTEGER NOT NULL,
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
               """
     conn.cursor().execute(sql_arg)
     conn.commit()
@@ -69,7 +69,7 @@ def init_score_table(conn):
                  action TEXT,
                  points INTEGER,
                  time_held INTEGER,
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
               """
     conn.cursor().execute(sql_arg)
     conn.commit()
@@ -84,7 +84,7 @@ def init_capture_status_table(conn):
                  tag TEXT NOT NULL,
                  team INTEGER NOT NULL,
                  stable INTEGER NOT NULL,
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
               """
     conn.cursor().execute(sql_arg)
     conn.commit()

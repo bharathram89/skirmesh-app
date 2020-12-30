@@ -44,17 +44,13 @@ def is_change():
     if request.method == 'GET':
 
         conn = SQL.create_connection(CP.DB_NAME)
-
-        change = False
         to_update = dict()
 
         for n in CP.end_nodes:
 
             status = SQL._get_capture_status(conn, n)
-            change = True if CP.end_nodes[n].capture_status != status else False
-            CP.end_nodes[n].capture_status = status
 
-            if change and CP.end_nodes[n].location:
+            if CP.end_nodes[n].location:
 
                 to_update[n] = {
                                 'id'    : CP.end_nodes[n].location,
@@ -162,7 +158,7 @@ def issue_command():
                     if begin:
 
                         begin = datetime.strptime(begin[0], CP.TIME_FMTR)
-                        lost  = datetime.utcnow()
+                        lost  = datetime.now()
                         held  = int((lost - begin).total_seconds())
 
                         tdat = {'team':own_team,'time_held':held,'action':node}
@@ -190,8 +186,6 @@ def players():
     for n in CP.end_nodes:
         times = SQL._get_times_for_node(conn, n)
         if times: nd_times[CP.end_nodes[n].location] = times
-
-    print(nd_times)
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : SQL._score_by_team(conn),
