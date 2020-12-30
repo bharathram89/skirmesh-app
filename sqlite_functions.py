@@ -240,13 +240,22 @@ def _get_team(conn, uid):
 
 def _get_team_members(conn, team):
 
-    sql_arg = """SELECT uid AS player, team, max_ts
-                 FROM
-                    (SELECT id, uid, team, MAX(timestamp) AS max_ts
-                     FROM team
-                     GROUP BY uid)
+    #sql_arg = """SELECT uid AS player, team, max_ts
+    #             FROM
+    #                (SELECT id, uid, team, MAX(timestamp) AS max_ts
+    #                 FROM team
+    #                 GROUP BY uid)
+    #             WHERE team=(?)
+    #             GROUP BY uid
+    #          """
+    sql_arg = """SELECT fname, lname, team, max_ts
+                 FROM (SELECT player.fname AS fname,
+                       player.lname AS lname,
+                       team.team AS team, MAX(team.timestamp) AS max_ts
+                       FROM player
+                       INNER JOIN team ON player.uid=team.uid
+                       GROUP BY player.fname)
                  WHERE team=(?)
-                 GROUP BY uid
               """
 
     conn.row_factory = sqlite3.Row
