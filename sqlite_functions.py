@@ -95,9 +95,11 @@ def init_player_table(conn):
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  fname TEXT NOT NULL,
                  lname TEXT NOT NULL,
+                 callsign TEXT,
                  outfit TEXT,
-                 uid TEXT,
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
+                 uid TEXT UNIQUE,
+                 timestamp DEFAULT CURRENT_TIMESTAMP,
+                 UNIQUE(fname, lname));
               """
 
     conn.cursor().execute(sql_arg)
