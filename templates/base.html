@@ -33,6 +33,15 @@
 
 <body>
   <h2> We manage your stats, so you can get back to things that matter. </h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <h1 class="error messages" role="alert"> {{ message }} </h1>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
   <center> {% block content %}{% endblock %} </center>
 </body>
 

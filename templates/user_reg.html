@@ -21,7 +21,7 @@
     <select name="Players" id="players">
         {% for player in Players %}
         <option value={{  player['id']  }}>{{  player['lname']  }},
-        {{  player['fname']  }}</option>
+        {{  player['fname']  }}, uid: {{ player['uid'] }}</option>
         {% endfor %}
     </select>
 

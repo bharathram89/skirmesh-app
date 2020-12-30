@@ -33,6 +33,7 @@ class RegistrationForm(Form):
     lname = TextField('Last Name', [validators.Length(min=2, max=20)])
 
 application = Flask(__name__)
+application.secret_key = 'a secret'
 
 serial = '/dev/ttyUSB0'
 baud   = 115200
@@ -100,8 +101,6 @@ def main_page():
     conn.close()
 
     return render_template('field.html', **kwargs)
-
-
 
 @application.route('/node_admin')
 def node_admin():
@@ -234,20 +233,28 @@ def user_reg():
     conn = SQL.create_connection(CP.DB_NAME)
 
     players = SQL._get_player_names(conn)
-    print(players)
 
     if request.method == "POST" and form.validate():
         fname = form.fname.data
         lname = form.lname.data
 
-        print("First name is: ", fname.upper())
-        print("Last name is: ", lname.upper())
+        #print("First name is: ", fname.upper())
+        #print("Last name is: ", lname.upper())
 
         data = {'fname':fname.upper(),
                 'lname':lname.upper(),
                }
 
-        SQL.add_row(conn, 'player', data)
+        try:
+
+            SQL.add_row(conn, 'player', data)
+
+        except:
+
+            print('Name already exists in database')
+            flash('Name already exists in database')
+            conn.close()
+            return redirect(url_for('user_reg'))
 
         conn.close()
 
@@ -317,7 +324,6 @@ def assign_uid():
 
         player = data['player']
         uid = data['uid']
-        button = data['button']
 
     conn = SQL.create_connection(CP.DB_NAME)
 
@@ -325,12 +331,14 @@ def assign_uid():
             'uid' : uid,
            }
 
-    #put the SQL statement in here
-    CP.exec_sql(SQL.edit_row, 'player', data)
+    try:
+        CP.exec_sql(SQL.edit_row, 'player', data)
+    except:
+        print('UID already assigned to player')
+        conn.close()
+        return redirect(url_for('user_reg'))
 
     conn.close()
-
-    #make_response(jsonify({"message": "OK"}), 200)
 
     return redirect(url_for('user_reg'))
 
