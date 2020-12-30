@@ -114,9 +114,11 @@ def main_page():
                 CP.end_nodes[n].capture_status = status
                 centers[n] = CP.end_nodes[n].location
 
+    print(teams)
+
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
-              'team_col'   : ['player'],
+              'team_col'   : ['fname','lname','uid'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
