@@ -133,7 +133,6 @@ h2 {
 
 form {
     padding: 1em;
-    vertical-align: middle;
     text-align: left;
     width: 80%;
 }
@@ -393,4 +392,28 @@ a { text-decoration: none; }
 
 footer {
     padding: 3em;
+}
+
+/* Player Registration Form */
+
+dd, dt {
+    margin-inline-start: 0;
+    width: 50%;
+}
+
+#players.select {
+    width: 50%;
+}
+
+#get_tag_button.button, #assign_uid_button.button, #uidblock, #reg_form_submit, #players {
+    width: 50%;
+    margin: 0.5em;
+}
+
+#user_registration {
+    text-align: inherit;
+}
+
+#fname.input, #lname.input {
+    width: 90%;
 }
