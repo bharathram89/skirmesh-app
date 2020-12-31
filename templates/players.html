@@ -99,7 +99,11 @@
         {% for dat in plyr_score %}
         <tr class="row">
             {% for col in p_sc_cols %}
+                {% if col.lower() == 'player' %}
+                <td> {{ players[dat[col]]['lname'] if dat[col] in players else dat[col] | safe }} </td>
+                {% else %}
                 <td> {{ dat[col] | safe }} </td>
+                {% endif %}
             {% endfor %}
         </tr>
         {% endfor %}

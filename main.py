@@ -195,6 +195,9 @@ def players():
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
 
+    _players_ = SQL._get_player_names(conn)
+    players = {p.pop('uid'):p for p in _players_ if p.get('uid')}
+
     nd_times = dict()
     for n in CP.end_nodes:
         times = SQL._get_times_for_node(conn, n)
@@ -208,7 +211,8 @@ def players():
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
-              'node_times' : nd_times}
+              'node_times' : nd_times,
+              'players'    : players}
 
     conn.close()
 
