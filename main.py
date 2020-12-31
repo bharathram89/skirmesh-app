@@ -92,6 +92,15 @@ def main_page():
     _players_ = SQL._get_player_names(conn)
     players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
 
+            if web_dev:
+                node_status[n] = (0,2,1)
+                centers[n] = CP.end_nodes[n].location
+            else:
+                node_status[n] = status
+                CP.end_nodes[n].capture_status = status
+                centers[n] = CP.end_nodes[n].location
+
+    print(teams)
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
@@ -119,8 +128,6 @@ def node_admin():
 
     return render_template('node_admin.html', **kwargs)
 
-
-
 @application.route('/node_admin/issue_command', methods=['POST'])
 def issue_command():
 
@@ -137,7 +144,7 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
-        if dest != BROADCAST:
+        if pkt[1] == SET_LOCATION and dest != BROADCAST::
 
             CP.end_nodes[dest].location = data['location']
 

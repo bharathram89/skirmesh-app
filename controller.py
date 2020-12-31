@@ -80,7 +80,6 @@ class CONTROL_POINT(XBeeDevice):
     DB_NAME    = "database.sqlite"
     MEDIC_TIME = int(60)
 
-
     def __init__(self, serial, baud ):
 
         XBeeDevice.__init__(self, serial, baud)
@@ -160,7 +159,6 @@ class CONTROL_POINT(XBeeDevice):
             if node not in self.end_nodes:
 
                 self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
-
 
     def transmit_pkt(self, dest, pkt):
 
