@@ -49,14 +49,14 @@
         <table id="table">
         <thead>
           <tr>
-                <th class="header" colspan="3"> {{team_name[team_i] | safe}} Team ({{team | length}})</th>
+                <th class="header"> {{team_name[team_i] | safe}} Team ({{team | length}})</th>
           </tr>
         </thead>
         <tbody>
             {% for dat in team %}
             <tr class="row">
                 {% for col in team_col %}
-                    <td class="team{{team_i | safe}}"> {{ dat[col] | safe }} </td>
+                    <td class="team{{team_i | safe}}"> {{ players[dat[col]]['lname'] if dat[col] in players else dat[col] | safe }} </td>
                 {% endfor %}
             </tr>
             {% endfor %}
@@ -84,14 +84,14 @@
         <table id="table">
         <thead>
           <tr>
-              <th class="header" colspan="3"> {{team_name[team_i] | safe}} Team ({{team | length}})</th>
+              <th class="header"> {{team_name[team_i] | safe}} Team ({{team | length}})</th>
           </tr>
         </thead>
         <tbody>
             {% for dat in team %}
             <tr class="row">
                 {% for col in team_col %}
-                    <td class="team{{team_i | safe}}"> {{ dat[col] | safe }} </td>
+                    <td class="team{{team_i | safe}}"> {{ players[dat[col]]['lname'] if dat[col] in players else dat[col] | safe }} </td>
                 {% endfor %}
             </tr>
             {% endfor %}

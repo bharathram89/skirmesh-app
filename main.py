@@ -11,7 +11,7 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = False
+web_dev = True
 
 from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
@@ -89,13 +89,18 @@ def main_page():
     reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
+    _players_ = SQL._get_player_names(conn)
+    players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
+
+
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
-              'team_col'   : ['fname','lname','uid'],
+              'team_col'   : ['player'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
               'team_name'  : CP.TEAM_NAME,
+              'players'    : players,
                }
 
     conn.close()
