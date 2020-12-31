@@ -11,7 +11,7 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = False
+web_dev = True 
 
 from flask import Flask, render_template, flash, request, redirect, url_for, jsonify, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
@@ -95,6 +95,14 @@ def main_page():
     reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
+    _players_ = SQL._get_player_names(conn)
+
+    print(_players_)
+
+    players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
+
+    print(players)
+
     node_status, centers = dict(), dict()
 
     for n in CP.end_nodes:
@@ -118,13 +126,14 @@ def main_page():
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
-              'team_col'   : ['fname','lname','uid'],
+              'team_col'   : ['player'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
               'team_name'  : CP.TEAM_NAME,
               'node_status': node_status,
               'centers'    : centers,
+              'players'    : players,
                }
 
     conn.close()
