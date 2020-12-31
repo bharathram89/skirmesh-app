@@ -11,7 +11,7 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = True
+web_dev = False
 
 from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
@@ -62,7 +62,7 @@ def is_change():
 
             status = SQL._get_capture_status(conn, n)
 
-            if CP.end_nodes[n].location:
+            if status and CP.end_nodes[n].location:
 
                 to_update[n] = {
                                 'id'    : CP.end_nodes[n].location,
@@ -91,16 +91,6 @@ def main_page():
 
     _players_ = SQL._get_player_names(conn)
     players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
-
-            if web_dev:
-                node_status[n] = (0,2,1)
-                centers[n] = CP.end_nodes[n].location
-            else:
-                node_status[n] = status
-                CP.end_nodes[n].capture_status = status
-                centers[n] = CP.end_nodes[n].location
-
-    print(teams)
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
@@ -144,7 +134,7 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
-        if pkt[1] == SET_LOCATION and dest != BROADCAST::
+        if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
             CP.end_nodes[dest].location = data['location']
 
@@ -241,21 +231,34 @@ def comms_log():
 
     return render_template('comms.html', **kwargs)
 
+
+@application.route('/user_reg/get_uid', methods=['POST','GET'])
+def get_uid():
+
+    while not CP.user_reg:
+        pass
+
+    uid = CP.user_reg
+    CP.user_reg = None
+
+    return make_response(jsonify({"uid": uid}), 200)
+
 @application.route('/user_reg', methods=['POST', 'GET'])
-def user_reg():
+def user_reg(uid=None):
 
     form = RegistrationForm(request.form)
 
     conn = SQL.create_connection(CP.DB_NAME)
 
     players = SQL._get_player_names(conn)
+    print(players)
 
     if request.method == "POST" and form.validate():
         fname = form.fname.data
         lname = form.lname.data
 
-        #print("First name is: ", fname.upper())
-        #print("Last name is: ", lname.upper())
+        print("First name is: ", fname.upper())
+        print("Last name is: ", lname.upper())
 
         data = {'fname':fname.upper(),
                 'lname':lname.upper(),
@@ -283,42 +286,6 @@ def user_reg():
                            Players=players,
                           )
 
-@application.route('/user_reg/get_uid', methods=['POST','GET'])
-def get_uid():
-
-    while not CP.user_reg:
-        pass
-
-@application.route('/user_reg', methods=['POST', 'GET'])
-def user_reg(uid=None):
-
-    form = RegistrationForm(request.form)
-
-    conn = SQL.create_connection(CP.DB_NAME)
-
-    players = SQL._get_player_names(conn)
-    print(players)
-
-    if request.method == "POST" and form.validate():
-        fname = form.fname.data
-        lname = form.lname.data
-
-        print("First name is: ", fname.upper())
-        print("Last name is: ", lname.upper())
-
-        data = {'fname':fname.upper(),
-                'lname':lname.upper(),
-               }
-
-        SQL.add_row(conn, 'player', data)
-
-    conn.close()
-
-    return render_template('user_reg.html',
-                           form=form,
-                           Players=players,
-                           uid=uid)
-
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
 
@@ -327,9 +294,7 @@ def register_user():
 
     uid = CP.user_reg.pop()
 
-    #print(uid)
-
-    return make_response(jsonify({"message": "OK", "uid": uid}), 200)
+    return make_response(jsonify({"uid": uid}), 200)
 
 @application.route('/user_reg/assign_uid', methods=['POST'])
 def assign_uid():

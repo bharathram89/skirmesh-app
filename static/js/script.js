@@ -121,8 +121,8 @@ function get_uid(button) {
     fetch("/user_reg/get_uid").then(function(response) {
         response.json().then(function(data) {
             console.log(data);
-            uid_block.innerHTML = data.uid
-            uid_block.value = data.uid
+            uid_block.innerHTML = data.uid;
+            uid_block.value = data.uid;
         });
     });
 }
