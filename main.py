@@ -11,7 +11,7 @@ can be launched and validated.
 """
 
 #to use fake nodes set web_dev to TRUE
-web_dev = True 
+web_dev = True
 
 from flask import Flask, render_template, flash, request, redirect, url_for, jsonify, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
@@ -96,12 +96,7 @@ def main_page():
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
     _players_ = SQL._get_player_names(conn)
-
-    print(_players_)
-
-    players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
-
-    print(players)
+    players = {p.pop('uid'):p for p in _players_ if p.get('uid')}
 
     node_status, centers = dict(), dict()
 
@@ -227,6 +222,9 @@ def players():
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
 
+    _players_ = SQL._get_player_names(conn)
+    players = {p.pop('uid'):p for p in _players_ if p.get('uid')}
+
     nd_times = dict()
     for n in CP.end_nodes:
         times = SQL._get_times_for_node(conn, n)
@@ -242,7 +240,8 @@ def players():
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
-              'node_times' : nd_times}
+              'node_times' : nd_times,
+              'players'    : players}
 
     conn.close()
 
