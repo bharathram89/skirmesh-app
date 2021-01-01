@@ -76,7 +76,7 @@ def init_score_table(conn):
 
 def init_capture_status_table(conn):
     """
-    Initialize node status table
+    Initialize capture status table
     """
     sql_arg = """CREATE TABLE IF NOT EXISTS capture_status (
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -89,6 +89,20 @@ def init_capture_status_table(conn):
     conn.cursor().execute(sql_arg)
     conn.commit()
 
+def init_node_status_table(conn):
+    """
+    Initialize node status table
+    """
+    sql_arg = """CREATE TABLE IF NOT EXISTS node_status (
+                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                 node INTEGER NOT NULL,
+                 location TEXT,
+                 config INTEGER,
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
+              """
+    conn.cursor().execute(sql_arg)
+    conn.commit()
+
 def init_tables(conn):
 
     init_data_table(conn)
@@ -96,6 +110,7 @@ def init_tables(conn):
     init_team_table(conn)
     init_score_table(conn)
     init_capture_status_table(conn)
+    init_node_status_table(conn)
 
 def add_row(conn, table, data):
     """
@@ -339,6 +354,19 @@ def _get_owning(conn):
 def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
+                 WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
+                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+              """
+
+    cur = conn.cursor()
+    cur.execute(sql_arg, (node,))
+
+    return cur.fetchone()
+
+
+def _get_node_status(conn, node):
+
+    sql_arg = """SELECT location, config FROM node_status
                  WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """

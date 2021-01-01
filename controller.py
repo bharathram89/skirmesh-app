@@ -11,11 +11,9 @@ class END_NODE(RemoteXBeeDevice):
 
         RemoteXBeeDevice.__init__(self, host, device)
 
-        self.host = host
-
-        self.location         = None
-        self.capture_status   = None
-
+        self.location       = None
+        self.configuration  = None
+        self.capture_status = None
 
 
 
@@ -77,6 +75,12 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB_TIME : 'SET BOMB TIMER',
                 MED_TIME  : 'SET MEDIC TIME',
                 }
+
+    CONFIGURATIONS = [REGISTER,
+                      QUERY,
+                      CAPTURE,
+                      MEDIC,
+                      BOMB]
 
     DB_NAME    = "database.sqlite"
     MEDIC_TIME = int(60)
@@ -159,7 +163,21 @@ class CONTROL_POINT(XBeeDevice):
 
             if node not in self.end_nodes:
 
-                self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
+                end_node = END_NODE(self, node)
+                node_addr = str(node.get_64bit_addr())
+
+                nd_status = self.exec_sql(SQL._get_node_status, node_addr)
+
+                if nd_status:
+
+                    end_node.location      = nd_status[0]
+                    end_node.configuration = nd_status[1]
+
+                    if nd_status[1] == CONTROL_POINT.CAPTURE:
+
+                        end_node.capture_status = self.exec_sql(SQL._get_capture_status, node_addr)
+
+                self.end_nodes[node_addr] = end_node
 
 
     def transmit_pkt(self, dest, pkt):

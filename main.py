@@ -122,13 +122,28 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
+
         if pkt[1] == SET_LOCATION and dest != BROADCAST:
 
             CP.end_nodes[dest].location = data['location']
+            
+            data = {'location': CP.end_nodes[dest].location,
+                    'config'  : CP.end_nodes[dest].configuration,
+                    'node'    : dest}
+            CP.exec_sql(SQL.add_row, 'node_status', data)
+
 
         elif button == 'Issue Command':
 
             pkt[2] = int(args, 16)
+
+            if pkt[1] in CP.CONFIGURATIONS:
+
+                data = {'location': CP.end_nodes[dest].location,
+                        'config'  : pkt[1],
+                        'node'    : dest}
+                CP.exec_sql(SQL.add_row, 'node_status', data)
+
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
@@ -143,7 +158,10 @@ def issue_command():
 
             if dest == BROADCAST: CP.send_data_broadcast(pkt)
 
-            else: CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+            else:
+
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+
 
         elif button == 'End Game':
 
@@ -164,9 +182,11 @@ def issue_command():
                         tdat = {'team':own_team,'time_held':held,'action':node}
                         CP.exec_sql(SQL.add_row, 'score', tdat)
 
+
         elif button == 'Discover Network':
 
             CP.find_nodes()
+
 
     return make_response(jsonify({"message": "OK"}), 200)
 
