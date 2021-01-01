@@ -50,7 +50,7 @@ def is_change():
 
             status = SQL._get_capture_status(conn, n)
 
-            if CP.end_nodes[n].location:
+            if CP.end_nodes[n].location and status:
 
                 to_update[n] = {
                                 'id'    : CP.end_nodes[n].location,
