@@ -51,13 +51,13 @@ class CONTROL_POINT(XBeeDevice):
     # Define teams by color, but this could change...
     TEAM_CMAP = {RED    : '#FF0000',
                  BLUE   : '#0000FF',
-                 YELLOW : '#FFFF00',
+                 YELLOW : 'D2B48C',      #'#FFFF00',
                  GREEN  : '#008000',
                  PURPLE : '#3333CC'}
 
     TEAM_NAME = {RED    : 'RED',
                  BLUE   : 'BLUE',
-                 YELLOW : 'CLEARSKY',   #'YELLOW',
+                 YELLOW : 'CLEARSKY',    #'YELLOW',
                  GREEN  : 'SALINIAN',    #'GREEN',
                  PURPLE : 'PURPLE'}
 
