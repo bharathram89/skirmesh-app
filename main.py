@@ -62,7 +62,7 @@ def is_change():
 
             status = SQL._get_capture_status(conn, n)
 
-            if status and CP.end_nodes[n].location:
+            if CP.end_nodes[n].location and status:
 
                 to_update[n] = {
                                 'id'    : CP.end_nodes[n].location,
@@ -130,32 +130,61 @@ def issue_command():
         args   = data['args']
         button = data['button']
 
-        pkt = bytearray(3)
+        pkt    = bytearray(3)
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
-        if pkt[1] == SET_LOCATION and dest != BROADCAST:
+
+        if int(config, 16) == SET_LOCATION and dest != BROADCAST:
+
+            print(f"Setting {dest} Location to: {data['location']}")
 
             CP.end_nodes[dest].location = data['location']
+
+            data = {'location': CP.end_nodes[dest].location,
+                    'config'  : CP.end_nodes[dest].configuration,
+                    'node'    : dest}
+
+            CP.exec_sql(SQL.add_row, 'node_status', data)
+
 
         elif button == 'Issue Command':
 
             pkt[2] = int(args, 16)
 
+            if int(config, 16) in CP.CONFIGURATIONS and dest in CP.end_nodes:
+
+                data = {'location': CP.end_nodes[dest].location,
+                        'config'  : config,
+                        'node'    : dest}
+
+                CP.exec_sql(SQL.add_row, 'node_status', data)
+
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
-            if CP.CAPT_TIME <= pkt[1] <= CP.MED_TIME: pkt.pop(0)
+            if CP.CAPT_TIME <= int(config, 16) <= CP.MED_TIME: pkt.pop(0)
 
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
-            if pkt[0] == CP.MED_TIME:
+            if int(config, 16) == CP.MED_TIME:
+
+                print(f"Updating MEDIC TIME to {pkt[1]*10} seconds")
 
                 CONTROL_POINT.MEDIC_TIME = int(pkt[1]*10)
                 dest = BROADCAST
 
-            if dest == BROADCAST: CP.send_data_broadcast(pkt)
+            if dest == BROADCAST:
 
-            else: CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+                print(f"BROADCASTING: ", *pkt)
+
+                CP.send_data_broadcast(pkt)
+
+            else:
+
+                print(f"Sending {dest}:", *pkt)
+
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+
 
         elif button == 'End Game':
 
@@ -176,9 +205,11 @@ def issue_command():
                         tdat = {'team':own_team,'time_held':held,'action':node}
                         CP.exec_sql(SQL.add_row, 'score', tdat)
 
+
         elif button == 'Discover Network':
 
             CP.find_nodes()
+
 
     return make_response(jsonify({"message": "OK"}), 200)
 

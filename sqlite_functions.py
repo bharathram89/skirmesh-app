@@ -6,14 +6,17 @@ from datetime import datetime
 packet::bytearray([0x00,0x01,...,0xFF])
 timestamp::datetime.now() #Convert with datetime.fromtimestamp(timestamp)
 """
-TEAM_MAP = """REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(team,
-              1,'RED'),
-              2,'BLUE'),
-              3,'YELLOW'),
-              4,'GREEN'),
-              5,'PURPLE')
-              AS team
-           """
+TEAM_MAP = (
+            "REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(team,"
+            "1,'RED'),"
+            "2,'BLUE'),"
+            "3,'CLEARSKY'),"  #"3,'YELLOW'),"
+            "4,'SALINIAN'),"   #"4,'GREEN'),"
+            "5,'PURPLE')"
+            " AS team"
+           )
+
+
 def create_connection(db):
     return sqlite3.connect(db)
 
@@ -76,7 +79,7 @@ def init_score_table(conn):
 
 def init_capture_status_table(conn):
     """
-    Initialize node status table
+    Initialize capture status table
     """
     sql_arg = """CREATE TABLE IF NOT EXISTS capture_status (
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -95,19 +98,6 @@ def init_player_table(conn):
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  fname TEXT NOT NULL,
                  lname TEXT NOT NULL,
-                 uid TEXT
-                 timestamp DEFAULT CURRENT_TIMESTAMP);
-              """
-
-    conn.cursor().execute(sql_arg)
-    conn.commit()
-
-def init_player_table(conn):
-
-    sql_arg = """CREATE TABLE IF NOT EXISTS player (
-                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                 fname TEXT NOT NULL,
-                 lname TEXT NOT NULL,
                  callsign TEXT,
                  outfit TEXT,
                  uid TEXT UNIQUE,
@@ -115,22 +105,17 @@ def init_player_table(conn):
                  UNIQUE(fname, lname));
               """
 
-    conn.cursor().execute(sql_arg)
-    conn.commit()
-
-def init_player_table(conn):
-
-    sql_arg = """CREATE TABLE IF NOT EXISTS player (
+def init_node_status_table(conn):
+    """
+    Initialize node status table
+    """
+    sql_arg = """CREATE TABLE IF NOT EXISTS node_status (
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                 fname TEXT NOT NULL,
-                 lname TEXT NOT NULL,
-                 callsign TEXT,
-                 outfit TEXT,
-                 uid TEXT UNIQUE,
-                 timestamp DEFAULT CURRENT_TIMESTAMP,
-                 UNIQUE(fname, lname));
+                 node INTEGER NOT NULL,
+                 location TEXT,
+                 config INTEGER,
+                 timestamp DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')) );
               """
-
     conn.cursor().execute(sql_arg)
     conn.commit()
 
@@ -142,6 +127,7 @@ def init_tables(conn):
     init_score_table(conn)
     init_capture_status_table(conn)
     init_player_table(conn)
+    init_node_status_table(conn)
 
 def add_row(conn, table, data):
     """
@@ -340,7 +326,6 @@ def _get_time_held_by_team(conn):
 
     return [dict(i) for i in data]
 
-
 def _get_times_for_node(conn, node):
 
     sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time, action
@@ -360,7 +345,6 @@ def _get_times_for_node(conn, node):
 
     return [dict(i) for i in data]
 
-
 def _get_last_captor(conn):
 
     sql_arg = """SELECT tag,team FROM score
@@ -372,7 +356,6 @@ def _get_last_captor(conn):
 
     return cur.fetchone()
 
-
 def _get_time_capture_complete(conn):
 
     sql_arg = """SELECT timestamp FROM score
@@ -383,7 +366,6 @@ def _get_time_capture_complete(conn):
     cur.execute(sql_arg)
 
     return cur.fetchone()
-
 
 def _get_owning(conn):
 
@@ -397,10 +379,21 @@ def _get_owning(conn):
 
     return cur.fetchone()
 
-
 def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
+                 WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
+                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+              """
+
+    cur = conn.cursor()
+    cur.execute(sql_arg, (node,))
+
+    return cur.fetchone()
+
+def _get_node_status(conn, node):
+
+    sql_arg = """SELECT location, config FROM node_status
                  WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """

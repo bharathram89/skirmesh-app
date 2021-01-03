@@ -11,10 +11,9 @@ class END_NODE(RemoteXBeeDevice):
 
         RemoteXBeeDevice.__init__(self, host, device)
 
-        self.host = host
-
-        self.location         = None
-        self.capture_status   = None
+        self.location       = None
+        self.configuration  = None
+        self.capture_status = None
 
 class CONTROL_POINT(XBeeDevice):
     """
@@ -58,8 +57,8 @@ class CONTROL_POINT(XBeeDevice):
 
     TEAM_NAME = {RED    : 'RED',
                  BLUE   : 'BLUE',
-                 YELLOW : 'YELLOW',
-                 GREEN  : 'GREEN',
+                 YELLOW : 'CLEARSKY',   #'YELLOW',
+                 GREEN  : 'SALINIAN',    #'GREEN',
                  PURPLE : 'PURPLE'}
 
     # This is primarly used to set the menu options in
@@ -76,6 +75,12 @@ class CONTROL_POINT(XBeeDevice):
                 USER_REG  : 'REGISTER PLAYERS',
                 MED_TIME  : 'SET MEDIC TIME',
                 }
+
+    CONFIGURATIONS = [REGISTER,
+                      QUERY,
+                      CAPTURE,
+                      MEDIC,
+                      BOMB]
 
     DB_NAME    = "database.sqlite"
     MEDIC_TIME = int(60)
@@ -158,7 +163,21 @@ class CONTROL_POINT(XBeeDevice):
 
             if node not in self.end_nodes:
 
-                self.end_nodes[str(node.get_64bit_addr())] = END_NODE(self, node)
+                end_node = END_NODE(self, node)
+                node_addr = str(node.get_64bit_addr())
+
+                nd_status = self.exec_sql(SQL._get_node_status, node_addr)
+
+                if nd_status:
+
+                    end_node.location      = nd_status[0]
+                    end_node.configuration = nd_status[1]
+
+                    if nd_status[1] == CONTROL_POINT.CAPTURE:
+
+                        end_node.capture_status = self.exec_sql(SQL._get_capture_status, node_addr)
+
+                self.end_nodes[node_addr] = end_node
 
     def transmit_pkt(self, dest, pkt):
 
@@ -315,7 +334,7 @@ class CONTROL_POINT(XBeeDevice):
                 data = {'node':node, 'tag':uid, 'team':team}
                 # If the node is not currently owned, then it's immediately stable
                 # If the prosecuting team is the same team, keep it stable
-                data['stable'] = 1 if not cap_status else 0
+                data['stable'] = 1 if not cap_status or team == own_team else 0
 
                 self.exec_sql(SQL.add_row, 'capture_status', data)
 

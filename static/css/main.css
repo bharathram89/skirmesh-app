@@ -192,11 +192,11 @@ table {
   width: 100%;
 }
 
-.scrollable {
+/* .scrollable {
     height: 40em;
     overflow: auto;
     width: 80%;
-}
+} */
 
 .header {
   color: #FFFFFF;
@@ -336,6 +336,11 @@ div.player-leaderboard {
     border: 1px solid var(--BLACK));
     max-height: 30em;
     width: 100%;
+    overflow-y: auto;
+}
+
+div.roster {
+    max-height: 20em;
     overflow-y: auto;
 }
 
