@@ -17,9 +17,14 @@ from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime
+from bs4 import BeautifulSoup as SOUP
 import time, json
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
+
+soup = SOUP(open('templates/field.html'), 'html.parser')
+paths = soup.find_all('path')
+loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
 
 import sqlite_functions as SQL
 
@@ -41,7 +46,7 @@ CP = CONTROL_POINT(serial, baud)
 
 CMD_ARGS = {
             'REGISTER'    : json.load(open("json/teams.json")),
-            'SET LOCATION': json.load(open("json/locations.json")),
+            'SET LOCATION': json.loads(loc_json),
             'TIME DATA'   : json.load(open("json/timer_values.json"))
             }
 
