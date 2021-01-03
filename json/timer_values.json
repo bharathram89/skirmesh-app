@@ -1,9 +1,5 @@
 [
     {
-        "text": "0 (sec)",
-        "value": "0x0"
-    },
-    {
         "text": "10 (sec)",
         "value": "0x1"
     },
@@ -52,32 +48,64 @@
         "value": "0xc"
     },
     {
-        "text": "3 (min)",
+        "text": "2.5 (min)",
+        "value": "0xf"
+    },
+    {
+        "text": "3.0 (min)",
         "value": "0x12"
     },
     {
-        "text": "4 (min)",
+        "text": "3.5 (min)",
+        "value": "0x15"
+    },
+    {
+        "text": "4.0 (min)",
         "value": "0x18"
     },
     {
-        "text": "5 (min)",
+        "text": "4.5 (min)",
+        "value": "0x1b"
+    },
+    {
+        "text": "5.0 (min)",
         "value": "0x1e"
     },
     {
-        "text": "6 (min)",
+        "text": "5.5 (min)",
+        "value": "0x21"
+    },
+    {
+        "text": "6.0 (min)",
         "value": "0x24"
     },
     {
-        "text": "7 (min)",
+        "text": "6.5 (min)",
+        "value": "0x27"
+    },
+    {
+        "text": "7.0 (min)",
         "value": "0x2a"
     },
     {
-        "text": "8 (min)",
+        "text": "7.5 (min)",
+        "value": "0x2d"
+    },
+    {
+        "text": "8.0 (min)",
         "value": "0x30"
     },
     {
-        "text": "9 (min)",
+        "text": "8.5 (min)",
+        "value": "0x33"
+    },
+    {
+        "text": "9.0 (min)",
         "value": "0x36"
+    },
+    {
+        "text": "9.5 (min)",
+        "value": "0x39"
     },
     {
         "text": "10 (min)",
