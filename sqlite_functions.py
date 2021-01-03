@@ -10,8 +10,8 @@ TEAM_MAP = (
             "REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(team,"
             "1,'RED'),"
             "2,'BLUE'),"
-            "3,'CLEARSKY'),"  #"3,'YELLOW'),"
-            "4,'SALINIAN'),"   #"4,'GREEN'),"
+            "3,'YELLOW'),"
+            "4,'GREEN'),"
             "5,'PURPLE')"
             " AS team"
            )
