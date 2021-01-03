@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% from "_formhelpers.html" import render_field %}
+    <form id="user_registration"
+          name="Member_Data"
+          action=""
+          method="post"
+          style="float:center">
+
+        <dl>
+          {{render_field(form.fname)}}
+          {{render_field(form.lname)}}
+        </dl>
+
+        <input id="reg_form_submit" type="submit" value="Submit">
+
+
+    <select name="Players" id="players">
+        {% for player in Players %}
+        <option value={{  player['id']  }}>{{  player['lname']  }},
+        {{  player['fname']  }}, uid: {{ player['uid'] }}</option>
+        {% endfor %}
+    </select>
+
+    <input class="button"
+           id="get_tag_button"
+           type="button"
+           name="action"
+           value="Get UID"
+           onclick="get_uid(this.value)"
+           >
+           </input>
+    <!-- put some shit in here about where to put the uid >
+    <!-->
+    <h1 id="uidblock" value="">UID Goes Here</h1>
+
+    <input class="button"
+           id="assign_uid_button"
+           type="button"
+           name="action"
+           value="Assign UID"
+           onclick="assign_uid(this.value)"
+           >
+           </input>
+
+
+   </form>
+
+{% endblock %}

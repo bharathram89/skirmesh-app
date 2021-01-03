@@ -92,6 +92,19 @@ def init_capture_status_table(conn):
     conn.cursor().execute(sql_arg)
     conn.commit()
 
+def init_player_table(conn):
+
+    sql_arg = """CREATE TABLE IF NOT EXISTS player (
+                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                 fname TEXT NOT NULL,
+                 lname TEXT NOT NULL,
+                 callsign TEXT,
+                 outfit TEXT,
+                 uid TEXT UNIQUE,
+                 timestamp DEFAULT CURRENT_TIMESTAMP,
+                 UNIQUE(fname, lname));
+              """
+
 def init_node_status_table(conn):
     """
     Initialize node status table
@@ -113,6 +126,7 @@ def init_tables(conn):
     init_team_table(conn)
     init_score_table(conn)
     init_capture_status_table(conn)
+    init_player_table(conn)
     init_node_status_table(conn)
 
 def add_row(conn, table, data):
@@ -126,13 +140,12 @@ def add_row(conn, table, data):
     conn.cursor().execute(sql_arg,[data[k] for k in data])
     conn.commit()
 
-
 def edit_row(conn, table, data):
     """
     Edit row of data to standard table.
     """
     id = data.pop('id')
-    keys, data = [], []
+    keys, vals = [], []
     for k in data:
         keys.append(k)
         vals.append(data[k])
@@ -237,9 +250,28 @@ def _get_team_members(conn, team):
                  WHERE team=(?)
                  GROUP BY uid
               """
+    #sql_arg = """SELECT fname, lname, team, max_ts
+    #             FROM (SELECT player.fname AS fname,
+    #                   player.lname AS lname,
+    #                   team.team AS team, MAX(team.timestamp) AS max_ts
+    #                   FROM player
+    #                   INNER JOIN team ON player.uid=team.uid
+    #                   GROUP BY player.fname)
+    #             WHERE team=(?)
+    #          """
 
     conn.row_factory = sqlite3.Row
     data = conn.cursor().execute(sql_arg, (team,)).fetchall()
+
+    return [dict(i) for i in data]
+
+def _get_player_names(conn):
+    sql_arg = """SELECT * FROM player
+                 ORDER BY lname ASC
+              """
+
+    conn.row_factory = sqlite3.Row
+    data = conn.cursor().execute(sql_arg).fetchall()
 
     return [dict(i) for i in data]
 
@@ -249,7 +281,7 @@ def _get_registered_teams(conn):
                  FROM
                      (SELECT id, uid, team, MAX(timestamp) AS max_ts
                       FROM team
-     				  GROUP BY uid)
+     	              GROUP BY uid)
                  ORDER BY team ASC
               """
 
@@ -268,7 +300,6 @@ def _score_by_uid(conn):
 
     return [dict(i) for i in data]
 
-
 def _score_by_team(conn):
 
     sql_arg = f"""SELECT {TEAM_MAP}, SUM(points) as points
@@ -282,7 +313,6 @@ def _score_by_team(conn):
 
     return [dict(i) for i in data]
 
-
 def _get_time_held_by_team(conn):
 
     sql_arg = f"""SELECT {TEAM_MAP}, SUM(time_held) as time
@@ -295,7 +325,6 @@ def _get_time_held_by_team(conn):
     data = conn.cursor().execute(sql_arg).fetchall()
 
     return [dict(i) for i in data]
-
 
 def _get_times_for_node(conn, node):
 
@@ -316,7 +345,6 @@ def _get_times_for_node(conn, node):
 
     return [dict(i) for i in data]
 
-
 def _get_last_captor(conn):
 
     sql_arg = """SELECT tag,team FROM score
@@ -328,7 +356,6 @@ def _get_last_captor(conn):
 
     return cur.fetchone()
 
-
 def _get_time_capture_complete(conn):
 
     sql_arg = """SELECT timestamp FROM score
@@ -339,7 +366,6 @@ def _get_time_capture_complete(conn):
     cur.execute(sql_arg)
 
     return cur.fetchone()
-
 
 def _get_owning(conn):
 
@@ -353,7 +379,6 @@ def _get_owning(conn):
 
     return cur.fetchone()
 
-
 def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
@@ -366,7 +391,6 @@ def _get_capture_status(conn, node):
 
     return cur.fetchone()
 
-
 def _get_node_status(conn, node):
 
     sql_arg = """SELECT location, config FROM node_status
@@ -378,7 +402,6 @@ def _get_node_status(conn, node):
     cur.execute(sql_arg, (node,))
 
     return cur.fetchone()
-
 
 if __name__ == "__main__":
 

@@ -10,18 +10,30 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
+#to use fake nodes set web_dev to TRUE
+web_dev = False
+
 from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from datetime import datetime
 import time, json
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress
 
 import sqlite_functions as SQL
-from controller import CONTROL_POINT, END_NODE
+
+if web_dev:
+    from t_node import CONTROL_POINT, END_NODE
+else:
+    from controller import CONTROL_POINT, END_NODE
+
+class RegistrationForm(Form):
+    fname = TextField('First Name', [validators.Length(min=2, max=20)])
+    lname = TextField('Last Name', [validators.Length(min=2, max=20)])
 
 application = Flask(__name__)
-
+application.secret_key = 'a secret'
 
 serial = '/dev/ttyUSB0'
 baud   = 115200
@@ -77,6 +89,9 @@ def main_page():
     reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     teams = [SQL._get_team_members(conn, t) for t in reg_teams]
 
+    _players_ = SQL._get_player_names(conn)
+    players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
+
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
               'team_col'   : ['player'],
@@ -84,13 +99,12 @@ def main_page():
               'teams'      : teams,
               'team_cmap'  : CP.TEAM_CMAP,
               'team_name'  : CP.TEAM_NAME,
+              'players'    : players,
                }
 
     conn.close()
 
     return render_template('field.html', **kwargs)
-
-
 
 @application.route('/node_admin')
 def node_admin():
@@ -103,8 +117,6 @@ def node_admin():
              }
 
     return render_template('node_admin.html', **kwargs)
-
-
 
 @application.route('/node_admin/issue_command', methods=['POST'])
 def issue_command():
@@ -201,8 +213,6 @@ def issue_command():
 
     return make_response(jsonify({"message": "OK"}), 200)
 
-
-
 @application.route('/players')
 def players():
 
@@ -212,6 +222,9 @@ def players():
 
     tm_times = SQL._get_time_held_by_team(conn)
     team_times = {tt['team']:tt['time'] for tt in tm_times}
+
+    _players_ = SQL._get_player_names(conn)
+    players = {p.pop('uid'):p for p in _players_ if p.get('uid')}
 
     nd_times = dict()
     for n in CP.end_nodes:
@@ -226,13 +239,12 @@ def players():
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
-              'node_times' : nd_times}
+              'node_times' : nd_times,
+              'players'    : players}
 
     conn.close()
 
     return render_template('players.html', **kwargs)
-
-
 
 @application.route('/comms')
 def comms_log():
@@ -251,7 +263,96 @@ def comms_log():
     return render_template('comms.html', **kwargs)
 
 
+@application.route('/user_reg/get_uid', methods=['POST','GET'])
+def get_uid():
 
+    while not CP.user_reg:
+        pass
+
+    uid = CP.user_reg
+    CP.user_reg = None
+
+    return make_response(jsonify({"uid": uid}), 200)
+
+@application.route('/user_reg', methods=['POST', 'GET'])
+def user_reg(uid=None):
+
+    form = RegistrationForm(request.form)
+
+    conn = SQL.create_connection(CP.DB_NAME)
+
+    players = SQL._get_player_names(conn)
+    print(players)
+
+    if request.method == "POST" and form.validate():
+        fname = form.fname.data
+        lname = form.lname.data
+
+        print("First name is: ", fname.upper())
+        print("Last name is: ", lname.upper())
+
+        data = {'fname':fname.upper(),
+                'lname':lname.upper(),
+               }
+
+        try:
+
+            SQL.add_row(conn, 'player', data)
+
+        except:
+
+            print('Name already exists in database')
+            flash('Name already exists in database')
+            conn.close()
+            return redirect(url_for('user_reg'))
+
+        conn.close()
+
+        return redirect(url_for('user_reg'))
+
+    conn.close()
+
+    return render_template('user_reg.html',
+                           form=form,
+                           Players=players,
+                          )
+
+@application.route('/register_user', methods=['POST','GET'])
+def register_user():
+
+    while not CP.user_reg:
+        pass
+
+    uid = CP.user_reg.pop()
+
+    return make_response(jsonify({"uid": uid}), 200)
+
+@application.route('/user_reg/assign_uid', methods=['POST'])
+def assign_uid():
+
+    data = json.loads(request.data)
+
+    if request.method == 'POST':
+
+        player = data['player']
+        uid = data['uid']
+
+    conn = SQL.create_connection(CP.DB_NAME)
+
+    data = {'id'  : player,
+            'uid' : uid,
+           }
+
+    try:
+        CP.exec_sql(SQL.edit_row, 'player', data)
+    except:
+        print('UID already assigned to player')
+        conn.close()
+        return redirect(url_for('user_reg'))
+
+    conn.close()
+
+    return redirect(url_for('user_reg'))
 
 if __name__ == '__main__':
 
@@ -261,8 +362,8 @@ if __name__ == '__main__':
     while not CP.end_nodes and (time.monotonic() - t) < 10:
         CP.find_nodes()
 
-    print("Network:")
-    print(CP.XB_net.get_devices())
+    #print("Network:")
+    #print(CP.XB_net.get_devices())
 
     # Configure and start the flask application
     application.jinja_env.auto_reload = True

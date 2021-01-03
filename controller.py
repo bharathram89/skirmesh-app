@@ -15,8 +15,6 @@ class END_NODE(RemoteXBeeDevice):
         self.configuration  = None
         self.capture_status = None
 
-
-
 class CONTROL_POINT(XBeeDevice):
     """
     This class will be the interface to the contoller
@@ -30,6 +28,7 @@ class CONTROL_POINT(XBeeDevice):
     CONFIGURE = 0x00
     REGISTER  = 0x01
     QUERY     = 0x02
+    USER_REG  = 0x03
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
@@ -73,6 +72,7 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB      : 'BOMB',
                 CAPT_TIME : 'SET CAPTURE TIME',
                 BOMB_TIME : 'SET BOMB TIMER',
+                USER_REG  : 'REGISTER PLAYERS',
                 MED_TIME  : 'SET MEDIC TIME',
                 }
 
@@ -85,7 +85,6 @@ class CONTROL_POINT(XBeeDevice):
     DB_NAME    = "database.sqlite"
     MEDIC_TIME = int(60)
 
-
     def __init__(self, serial, baud ):
 
         XBeeDevice.__init__(self, serial, baud)
@@ -97,6 +96,7 @@ class CONTROL_POINT(XBeeDevice):
         self.DB = None
 
         self.end_nodes = {}
+        self.user_reg = None
         self.configure_XB()
 
 
@@ -179,7 +179,6 @@ class CONTROL_POINT(XBeeDevice):
 
                 self.end_nodes[node_addr] = end_node
 
-
     def transmit_pkt(self, dest, pkt):
 
         self.log_comm(dest, pkt)
@@ -245,7 +244,8 @@ class CONTROL_POINT(XBeeDevice):
                     CONTROL_POINT.CAPTURE   : self.__capture,
                     CONTROL_POINT.MEDIC     : self.__medic,
                     CONTROL_POINT.QUERY     : self.__query,
-                    CONTROL_POINT.ND_STATUS : self.__status}
+                    CONTROL_POINT.ND_STATUS : self.__status,
+                    CONTROL_POINT.USER_REG  : self.__user_reg}
 
         return msg_dict
 
@@ -431,6 +431,14 @@ class CONTROL_POINT(XBeeDevice):
 
         return cmd + uid + team + stable
 
+    def __user_reg(self, sender, payload):
+
+        uid = payload[1:5].hex()
+
+        if self.user_reg:
+            return None
+        else:
+            self.user_reg = uid
 
     def uid_handler(self, uid):
 
