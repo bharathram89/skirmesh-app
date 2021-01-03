@@ -38,6 +38,7 @@ function update_cmd_args(cmd_arg_list) {
     var cmd_txt = cmd_sel.options[cmd_sel.selectedIndex].text.toUpperCase();
     var cmd_val = cmd_sel.value;
 
+    var nodes = Array.from(document.getElementById("dest").options).map(elem => elem.text);
     var new_options = "";
 
     // Look for the argument in the index unless it's a timer, then just match
@@ -50,8 +51,11 @@ function update_cmd_args(cmd_arg_list) {
 
         for (var i = 0; i < cmd_arg_list[cmd_txt.toUpperCase()].length; i++) {
 
-          new_options += "<option value=" + cmd_arg_list[cmd_txt.toUpperCase()][i].value + "> ";
-          new_options += cmd_arg_list[cmd_txt.toUpperCase()][i].text + "</option>";
+                if (!nodes.includes(cmd_arg_list[cmd_txt.toUpperCase()][i].text)) {
+
+                  new_options += "<option value=" + cmd_arg_list[cmd_txt.toUpperCase()][i].value + "> ";
+                  new_options += cmd_arg_list[cmd_txt.toUpperCase()][i].text + "</option>";
+                }
         }
 
         document.getElementById("args").innerHTML = new_options;
