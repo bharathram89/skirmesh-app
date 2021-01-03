@@ -6,14 +6,17 @@ from datetime import datetime
 packet::bytearray([0x00,0x01,...,0xFF])
 timestamp::datetime.now() #Convert with datetime.fromtimestamp(timestamp)
 """
-TEAM_MAP = """REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(team,
-              1,'RED'),
-              2,'BLUE'),
-              3,'YELLOW'),
-              4,'GREEN'),
-              5,'PURPLE')
-              AS team
-           """
+TEAM_MAP = (
+            "REPLACE( REPLACE( REPLACE( REPLACE( REPLACE(team,"
+            "1,'RED'),"
+            "2,'BLUE'),"
+            "3,'CLEARSKY'),"  #"3,'YELLOW'),"
+            "4,'SALINIAN'),"   #"4,'GREEN'),"
+            "5,'PURPLE')"
+            " AS team"
+           )
+
+
 def create_connection(db):
     return sqlite3.connect(db)
 

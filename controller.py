@@ -58,8 +58,8 @@ class CONTROL_POINT(XBeeDevice):
 
     TEAM_NAME = {RED    : 'RED',
                  BLUE   : 'BLUE',
-                 YELLOW : 'YELLOW',
-                 GREEN  : 'GREEN',
+                 YELLOW : 'CLEARSKY',   #'YELLOW',
+                 GREEN  : 'SALINIAN',    #'GREEN',
                  PURPLE : 'PURPLE'}
 
     # This is primarly used to set the menu options in
