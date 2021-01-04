@@ -10,9 +10,6 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-#to use fake nodes set web_dev to TRUE
-web_dev = False
-
 from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
@@ -27,11 +24,7 @@ paths = soup.find_all('path')
 loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
 
 import sqlite_functions as SQL
-
-if web_dev:
-    from t_node import CONTROL_POINT, END_NODE
-else:
-    from controller import CONTROL_POINT, END_NODE
+from controller import CONTROL_POINT, END_NODE
 
 class RegistrationForm(Form):
     fname = TextField('First Name', [validators.Length(min=2, max=20)])
@@ -54,6 +47,7 @@ CMD_ARGS = {
 
 SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
+
 
 @application.route('/index/is_change', methods=['GET'])
 def is_change():
@@ -111,6 +105,7 @@ def main_page():
 
     return render_template('field.html', **kwargs)
 
+
 @application.route('/node_admin')
 def node_admin():
 
@@ -122,6 +117,7 @@ def node_admin():
              }
 
     return render_template('node_admin.html', **kwargs)
+
 
 @application.route('/node_admin/issue_command', methods=['POST'])
 def issue_command():
@@ -199,24 +195,28 @@ def issue_command():
 
                 if cap_status and cap_status[2]:
 
-                    begin = CP.exec_sql(SQL._get_time_capture_complete)
+                    begin = CP.exec_sql(SQL._get_time_capture_complete, node)
+                    open = CP.exec_sql(SQL._is_capture_open, node)
 
-                    if begin:
+                    if begin and open:
 
                         begin = datetime.strptime(begin[0], CP.TIME_FMTR)
                         lost  = datetime.now()
                         held  = int((lost - begin).total_seconds())
 
-                        tdat = {'team':cap_status[1],'time_held':held,'action':node}
+                        tdat = {'node':node,'team':cap_status[1],'time_held':held,'action':'END GAME'}
                         CP.exec_sql(SQL.add_row, 'score', tdat)
+
+                        print(f"Ended timer count for {node}")
 
 
         elif button == 'Discover Network':
 
+            print("Discovering Network")
             CP.find_nodes()
 
-
     return make_response(jsonify({"message": "OK"}), 200)
+
 
 @application.route('/players')
 def players():
@@ -251,6 +251,7 @@ def players():
 
     return render_template('players.html', **kwargs)
 
+
 @application.route('/comms')
 def comms_log():
 
@@ -278,6 +279,7 @@ def get_uid():
     CP.user_reg = None
 
     return make_response(jsonify({"uid": uid}), 200)
+
 
 @application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg(uid=None):
@@ -322,6 +324,7 @@ def user_reg(uid=None):
                            Players=players,
                           )
 
+
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
 
@@ -331,6 +334,7 @@ def register_user():
     uid = CP.user_reg.pop()
 
     return make_response(jsonify({"uid": uid}), 200)
+
 
 @application.route('/user_reg/assign_uid', methods=['POST'])
 def assign_uid():
@@ -358,6 +362,9 @@ def assign_uid():
     conn.close()
 
     return redirect(url_for('user_reg'))
+
+
+
 
 if __name__ == '__main__':
 

@@ -68,6 +68,7 @@ def init_score_table(conn):
     sql_arg = """CREATE TABLE IF NOT EXISTS score (
                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                  tag TEXT,
+                 node TEXT NOT NULL,
                  team INTEGER NOT NULL,
                  action TEXT,
                  points INTEGER,
@@ -104,6 +105,8 @@ def init_player_table(conn):
                  timestamp DEFAULT CURRENT_TIMESTAMP,
                  UNIQUE(fname, lname));
               """
+    conn.cursor().execute(sql_arg)
+    conn.commit()
 
 def init_node_status_table(conn):
     """
@@ -129,6 +132,7 @@ def init_tables(conn):
     init_player_table(conn)
     init_node_status_table(conn)
 
+
 def add_row(conn, table, data):
     """
     Add row of data to standard table.
@@ -139,6 +143,7 @@ def add_row(conn, table, data):
 
     conn.cursor().execute(sql_arg,[data[k] for k in data])
     conn.commit()
+
 
 def edit_row(conn, table, data):
     """
@@ -158,6 +163,7 @@ def edit_row(conn, table, data):
     conn.cursor().execute(sql_arg, vals)
     conn.commit()
 
+
 def get_row(conn, table, id):
     """
     Return row contents for standard table.
@@ -168,6 +174,7 @@ def get_row(conn, table, id):
     dat = cur.fetchall()
 
     return dat.pop(0)
+
 
 def get_col_names(conn, table):
     """
@@ -180,6 +187,7 @@ def get_col_names(conn, table):
 
     return col
 
+
 def get_table_names(conn):
     """
     Return table names.
@@ -189,6 +197,7 @@ def get_table_names(conn):
     cur.execute(sql_arg)
 
     return cur.fetchall()[1:]
+
 
 def _get_table(conn, table):
     """
@@ -201,11 +210,13 @@ def _get_table(conn, table):
 
     return [dict(i) for i in data]
 
+
 def save_to_JSON(conn, table):
 
     data = _get_table(conn, table)
     with open("db.json", 'w') as f:
         json.dump(data, f, indent=4)
+
 
 def del_row(conn, table, id):
     """
@@ -215,6 +226,7 @@ def del_row(conn, table, id):
 
     conn.cursor().execute(sql_arg, [id])
     conn.commit()
+
 
 def _get_is_alive(conn, uid):
 
@@ -228,6 +240,7 @@ def _get_is_alive(conn, uid):
 
     return cur.fetchone()
 
+
 def _get_team(conn, uid):
 
     sql_arg = """SELECT team FROM team
@@ -239,6 +252,7 @@ def _get_team(conn, uid):
     cur.execute(sql_arg, (uid,))
 
     return cur.fetchone()
+
 
 def _get_team_members(conn, team):
 
@@ -265,6 +279,7 @@ def _get_team_members(conn, team):
 
     return [dict(i) for i in data]
 
+
 def _get_player_names(conn):
     sql_arg = """SELECT * FROM player
                  ORDER BY lname ASC
@@ -274,6 +289,7 @@ def _get_player_names(conn):
     data = conn.cursor().execute(sql_arg).fetchall()
 
     return [dict(i) for i in data]
+
 
 def _get_registered_teams(conn):
 
@@ -286,6 +302,7 @@ def _get_registered_teams(conn):
               """
 
     return conn.cursor().execute(sql_arg).fetchall()
+
 
 def _score_by_uid(conn):
 
@@ -300,6 +317,7 @@ def _score_by_uid(conn):
 
     return [dict(i) for i in data]
 
+
 def _score_by_team(conn):
 
     sql_arg = f"""SELECT {TEAM_MAP}, SUM(points) as points
@@ -312,6 +330,7 @@ def _score_by_team(conn):
     data = conn.cursor().execute(sql_arg).fetchall()
 
     return [dict(i) for i in data]
+
 
 def _get_time_held_by_team(conn):
 
@@ -326,15 +345,16 @@ def _get_time_held_by_team(conn):
 
     return [dict(i) for i in data]
 
+
 def _get_times_for_node(conn, node):
 
-    sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time, action
+    sql_arg = f"""SELECT {TEAM_MAP}, sum(time_held) AS time, node, action
                   FROM score
-                  WHERE date(timestamp) = date('now', 'localtime') AND action = (?)
+                  WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
 		          AND EXISTS(
 						     SELECT node
                              FROM capture_status
-                             WHERE node = action
+                             WHERE node = node
 							 )
                   GROUP BY team
                   ORDER BY time DESC
@@ -345,27 +365,46 @@ def _get_times_for_node(conn, node):
 
     return [dict(i) for i in data]
 
-def _get_last_captor(conn):
+
+def _get_last_captor(conn, node):
 
     sql_arg = """SELECT tag,team FROM score
-                 WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE'
+                 WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE' AND node = (?)
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
     cur = conn.cursor()
-    cur.execute(sql_arg)
+    cur.execute(sql_arg, (node,))
 
     return cur.fetchone()
 
-def _get_time_capture_complete(conn):
+
+def _get_time_capture_complete(conn, node):
 
     sql_arg = """SELECT timestamp FROM score
-                 WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE COMPLETE'
+                 WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE COMPLETE' AND node = (?)
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
     cur = conn.cursor()
-    cur.execute(sql_arg)
+    cur.execute(sql_arg, (node,))
 
     return cur.fetchone()
+
+
+def _is_capture_open(conn, node):
+
+    sql_arg = """SELECT time_held FROM
+                    (
+                    SELECT time_held FROM score
+                    WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
+                    ORDER BY timestamp DESC, id DESC LIMIT 1
+                    )
+                 WHERE time_held IS NULL;
+              """
+    cur = conn.cursor()
+    cur.execute(sql_arg, (node,))
+
+    return cur.fetchone()
+
 
 def _get_owning(conn):
 
@@ -379,6 +418,7 @@ def _get_owning(conn):
 
     return cur.fetchone()
 
+
 def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
@@ -391,6 +431,7 @@ def _get_capture_status(conn, node):
 
     return cur.fetchone()
 
+
 def _get_node_status(conn, node):
 
     sql_arg = """SELECT location, config FROM node_status
@@ -402,6 +443,9 @@ def _get_node_status(conn, node):
     cur.execute(sql_arg, (node,))
 
     return cur.fetchone()
+
+
+
 
 if __name__ == "__main__":
 

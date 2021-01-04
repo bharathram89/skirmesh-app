@@ -282,13 +282,17 @@ class CONTROL_POINT(XBeeDevice):
             data = {'node':node, 'tag':own_uid, 'team':own_team, 'stable':stable}
             self.exec_sql(SQL.add_row, 'capture_status', data)
 
-            orig_captor = self.exec_sql(SQL._get_last_captor)
+            orig_captor = self.exec_sql(SQL._get_last_captor, node)
 
             if orig_captor:
 
                 orig_uid, orig_team = orig_captor
 
-                data = {'tag':orig_uid, 'team':orig_team,'points':2, 'action':'CAPTURE COMPLETE'}
+                data = {'node':node,
+                        'tag':orig_uid,
+                        'team':orig_team,
+                        'points':2,
+                        'action':'CAPTURE COMPLETE'}
                 self.exec_sql(SQL.add_row, 'score', data)
 
         if len(payload[1:5]) == 4:
@@ -301,7 +305,7 @@ class CONTROL_POINT(XBeeDevice):
                 team = team[0]
                 print(f'Team {team} is prosecuting Node_{node}')
 
-                data = {'tag':uid, 'team':team}
+                data = {'tag':uid, 'team':team, 'node':node}
 
                 if cap_status:
 
@@ -313,7 +317,7 @@ class CONTROL_POINT(XBeeDevice):
 
                     if data['action'] == 'CAPTURE':
 
-                        begin = self.exec_sql(SQL._get_time_capture_complete)
+                        begin = self.exec_sql(SQL._get_time_capture_complete, node)
 
                         if begin:
 
@@ -321,7 +325,7 @@ class CONTROL_POINT(XBeeDevice):
                             lost  = datetime.now()
                             held  = int((lost - begin).total_seconds())
 
-                            tdat = {'team':own_team,'time_held':held,'action':node}
+                            tdat = {'node':node,'team':own_team,'time_held':held,'action':'LOST CONTROL'}
                             self.exec_sql(SQL.add_row, 'score', tdat)
 
                 else:
