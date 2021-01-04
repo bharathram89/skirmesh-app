@@ -336,9 +336,10 @@ class CONTROL_POINT(XBeeDevice):
                 self.exec_sql(SQL.add_row, 'score', data)
 
                 data = {'node':node, 'tag':uid, 'team':team}
+
                 # If the node is not currently owned, then it's immediately stable
                 # If the prosecuting team is the same team, keep it stable
-                data['stable'] = 1 if not cap_status or team == own_team else 0
+                data['stable'] = 1 if not cap_status or (cap_status[2] and team == own_team) else 0
 
                 self.exec_sql(SQL.add_row, 'capture_status', data)
 
