@@ -195,9 +195,9 @@ def issue_command():
 
             for node in CP.end_nodes:
 
-                own_uid, own_team, cap_stable, cap_time = CP.exec_sql(SQL._get_capture_status, node)
+                cap_status = CP.exec_sql(SQL._get_capture_status, node)
 
-                if cap_stable:
+                if cap_status and cap_status[2]:
 
                     begin = CP.exec_sql(SQL._get_time_capture_complete)
 
@@ -207,7 +207,7 @@ def issue_command():
                         lost  = datetime.now()
                         held  = int((lost - begin).total_seconds())
 
-                        tdat = {'team':own_team,'time_held':held,'action':node}
+                        tdat = {'team':cap_status[1],'time_held':held,'action':node}
                         CP.exec_sql(SQL.add_row, 'score', tdat)
 
 
