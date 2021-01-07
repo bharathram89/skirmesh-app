@@ -244,7 +244,7 @@ def _get_is_alive(conn, uid):
 def _get_team(conn, uid):
 
     sql_arg = """SELECT team FROM team
-                 WHERE uid=(?)
+                 WHERE date(timestamp) = date('now', 'localtime') AND uid=(?)
                  ORDER BY timestamp DESC, id DESC LIMIT 1;
               """
 
@@ -260,6 +260,7 @@ def _get_team_members(conn, team):
                  FROM
                     (SELECT id, uid, team, MAX(timestamp) AS max_ts
                      FROM team
+                     WHERE date(timestamp) = date('now', 'localtime')
                      GROUP BY uid)
                  WHERE team=(?)
                  GROUP BY uid
@@ -297,6 +298,7 @@ def _get_registered_teams(conn):
                  FROM
                      (SELECT id, uid, team, MAX(timestamp) AS max_ts
                       FROM team
+                      WHERE date(timestamp) = date('now', 'localtime')
      	              GROUP BY uid)
                  ORDER BY team ASC
               """
