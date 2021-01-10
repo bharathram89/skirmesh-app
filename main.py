@@ -156,6 +156,7 @@ def issue_command():
 
             pkt[2] = int(args, 16)
 
+            # If just setting the configuration for one node
             if int(config, 16) in CP.CONFIGURATIONS and dest in CP.end_nodes:
 
                 data = {'location': CP.end_nodes[dest].location,
@@ -163,6 +164,17 @@ def issue_command():
                         'node'    : dest}
 
                 CP.exec_sql(SQL.add_row, 'node_status', data)
+
+            # If setting a BROADCAST configuration - apply to all nodes
+            if int(config, 16) in CP.CONFIGURATIONS and dest == BROADCAST:
+
+                for n in CP.end_nodes:
+
+                    data = {'location': CP.end_nodes[n].location,
+                            'config'  : config,
+                            'node'    : dest}
+
+                    CP.exec_sql(SQL.add_row, 'node_status', data)
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
