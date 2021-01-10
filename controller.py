@@ -333,7 +333,12 @@ class CONTROL_POINT(XBeeDevice):
                     data['action'] = 'CAPTURE'
                     data['points'] = 2
 
-                self.exec_sql(SQL.add_row, 'score', data)
+                # If the ACTION is to "CAPTURE" then always add score data.  If it is an assist
+                # ONLY add score data if the node IS NOT STABLE - can only be an ASSIST if cap_status is
+                # known
+                if data['action'] == 'CAPTURE' or (data['action'] == 'ASSIST' and not cap_stable):
+
+                    self.exec_sql(SQL.add_row, 'score', data)
 
                 data = {'node':node, 'tag':uid, 'team':team}
 
