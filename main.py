@@ -109,11 +109,14 @@ def main_page():
 @application.route('/node_admin')
 def node_admin():
 
+    node_status = {n:CP.exec_sql(SQL._get_node_status, n) for n in CP.end_nodes}
 
     kwargs = {
-             'node_dict':CP.end_nodes,
-             'cmd_dict' :CP.CMD_DICT if CP.end_nodes else None,
-             'cmd_args' :CMD_ARGS
+             'node_dict'   : CP.end_nodes,
+             'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
+             'cmd_args'    : CMD_ARGS,
+             'node_cols'   : ['node id','location','configuration'],
+             'node_status' : node_status,
              }
 
     return render_template('node_admin.html', **kwargs)

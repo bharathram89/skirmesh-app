@@ -117,30 +117,6 @@ class CONTROL_POINT(XBeeDevice):
 
 
     @staticmethod
-    def __make_bytearray(payload):
-
-        if not hasattr(payload, '__len__'):
-            return bytearray([payload])
-
-        elif not isinstance(payload, bytearray):
-            return bytearray(payload)
-
-        else: return payload
-
-
-    def assemble_pkt(self, *args):
-        """
-        Takes any number of arguments and assembles them
-        into a bytearray.
-        """
-        pkt = bytearray()
-        for arg in args:
-            pkt = pkt + self.__make_bytearray(arg)
-
-        return pkt
-
-
-    @staticmethod
     def exec_sql(sql_fun, *args):
 
         conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
@@ -178,6 +154,7 @@ class CONTROL_POINT(XBeeDevice):
                         end_node.capture_status = self.exec_sql(SQL._get_capture_status, node_addr)
 
                 self.end_nodes[node_addr] = end_node
+
 
     def transmit_pkt(self, dest, pkt):
 
@@ -234,7 +211,6 @@ class CONTROL_POINT(XBeeDevice):
             pkt = self.parse_message[cmd](sender, payload)
 
             if pkt: self.transmit_pkt(sender, pkt)
-
 
 
     @property

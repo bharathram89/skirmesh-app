@@ -103,6 +103,43 @@
 
     </form>
 
+    <br>
+    
+    {% if cmd_dict %}
+
+        <div class="table-wrapper">
+
+          <table id="table">
+
+            <thead>
+              <tr>
+                  {% for col in node_cols %}
+                    <th class="header" style="background-color:#808080;"> {{col | safe}} </th>
+                  {% endfor %}
+              </tr>
+            </thead>
+
+            <tbody>
+
+                {% for n in node_status %}
+                <tr class="row" style="color:#808080;">
+
+                    <td> {{ n | safe }} </td>
+                    <td> {{ node_status[n][0] | safe }} </td>
+                    {% set config = node_status[n][1] | int %}
+                    <td> {{ cmd_dict[config] | safe }} </td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+    {% endif %}
+
     </body>
 
 {% endblock %}
