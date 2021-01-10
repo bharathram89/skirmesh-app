@@ -340,8 +340,10 @@ div.player-leaderboard {
 }
 
 div.roster {
-    max-height: 20em;
+    max-height: 22.8em;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 table {
