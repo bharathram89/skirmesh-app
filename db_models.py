@@ -47,7 +47,7 @@ class Team(DB.Model):
     __tablename__ = 'team'
 
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
-    uid       = DB.Column(DB.String(), nullable=False)
+    uid       = DB.Column(DB.String(), unique=True, nullable=False)
     team      = DB.Column(DB.Integer(), nullable=False)
     timestamp = DB.Column(DB.DateTime(), default=datetime.now())
 
@@ -344,17 +344,21 @@ def flatten(not_flat):
         return [v[0] for v in not_flat(*arg)]
     return helper
 
-# @flatten
+@flatten
 def get_team_members(team):
 
-    sbqry = DB.session.query(Team, func.max(Team.timestamp).label('maxts'))
-    sbqry = sbqry.filter(func.DATE(Team.timestamp) == date.today())
-    sbqry = sbqry.group_by(Team.uid).subquery()
+    query = DB.session.query(Team.uid)
+    query = query.filter(func.DATE(Team.timestamp) == date.today())
+    query = query.filter(Team.team == team)
 
-    query = DB.session.query(sbqry).filter(Team.team == team)
-
-    print(query)
     return query.all()
+
+
+def get_uid_in_team(uid):
+
+    query = DB.session.query(Team).filter(Team.uid == uid)
+
+    return query.first()
 
 
 def get_player_names():

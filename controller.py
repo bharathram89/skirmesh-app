@@ -1,5 +1,9 @@
 from digi.xbee.devices import XBeeDevice, RemoteZigBeeDevice, RemoteXBeeDevice
 import sqlite_functions as SQL
+
+from sqlalchemy.dialects.mysql import insert
+from  sqlalchemy.exc import IntegrityError, InvalidRequestError
+
 import db_models as PG
 import time
 from datetime import datetime
@@ -241,8 +245,12 @@ class CONTROL_POINT(XBeeDevice):
         print(f'Registering {uid} to team {team}')
         data = {'uid':uid,'team':team}
         # self.exec_sql(SQL.add_row, 'team', data)
-        self.DB.session.add(PG.Team(**data))
-        # self.DB.session.commit()
+
+        exists = PG.get_uid_in_team(uid)
+
+        exists.team = team if exists else self.DB.session.add(PG.Team(**data))
+
+        self.DB.session.commit()
 
         data = {'uid':uid,'alive':1}
         # self.exec_sql(SQL.add_row, 'medic', data)
