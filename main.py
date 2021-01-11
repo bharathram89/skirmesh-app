@@ -109,12 +109,11 @@ def main_page():
 
     # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
     reg_teams = [t.team for t in PG.get_registered_teams()]
-    print(reg_teams)
     # teams = [SQL._get_team_members(conn, t) for t in reg_teams if reg_teams]
     teams = [PG.get_team_members(t) for t in reg_teams if reg_teams]
-    print(teams)
     # _players_ = SQL._get_player_names(conn)
     _players_ = PG.get_player_names()
+
     # players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
     players =  {p.uid:p.lname for p in _players_ if p.uid}
 
@@ -140,6 +139,7 @@ def registration():
     form = RegisterAccountForm(request.form)
 
     if request.method == 'POST' and form.validate():
+
         username = form.username.data
         email = form.email.data
         password = form.password.data
