@@ -375,7 +375,7 @@ def get_player(id):
 
 def get_time_held_by_team():
 
-    query = DB.session.query(Score, Score.team, func.sum(Score.time_held).label('time'))
+    query = DB.session.query(Score.team, func.sum(Score.time_held).label('time'))
     query = query.filter(func.DATE(Score.timestamp) == date.today())
     query = query.group_by(Score.team)
 
@@ -386,11 +386,11 @@ def get_times_for_node(node):
 
     if not get_capture_status(node): return None
 
-    query = DB.session.query(Score, Score.team, func.sum(Score.time_held).label('time'))
+    query = DB.session.query(Score, Score.team, func.sum(Score.time_held))
     query = query.filter(func.DATE(Score.timestamp) == date.today())
     query = query.filter(Score.node == node)
 
-    return query.group_by(Score.team).order_by(Score.time.desc()).all()
+    return query.group_by(Score.team).order_by(func.sum(Score.time_held).desc()).all()
 
 
 def get_score_by_team():

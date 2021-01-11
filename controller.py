@@ -287,10 +287,10 @@ class CONTROL_POINT(XBeeDevice):
 
             if orig_captor:
 
-                orig_uid, orig_team = orig_captor
+                orig_uid, orig_team = orig_captor.uid, orig_captor.team
 
                 data = {'node':node,
-                        'tag':orig_captor.tag,
+                        'tag':orig_captor.uid,
                         'team':orig_captor.team,
                         'points':2,
                         'action':'CAPTURE COMPLETE'}
@@ -326,7 +326,6 @@ class CONTROL_POINT(XBeeDevice):
 
                         if begin:
 
-                            begin = datetime.strptime(begin, PG.TIME_FMT)
                             lost  = datetime.now()
                             held  = int((lost - begin).total_seconds())
 
@@ -375,8 +374,8 @@ class CONTROL_POINT(XBeeDevice):
         if medic:
 
             alive, timestamp = medic.alive, medic.timestamp
-            timestamp = datetime.strptime(timestamp, CONTROL_POINT.TIME_FMTR)
-            d_t = datetime.now() - medic.timestamp
+
+            d_t = datetime.now() - timestamp
 
             if not alive and d_t.total_seconds() >= CONTROL_POINT.MEDIC_TIME:
                 # If he was dead and has waited the correct amount of time,

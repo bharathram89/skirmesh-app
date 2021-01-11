@@ -265,7 +265,7 @@ def players():
     # tm_times = SQL._get_time_held_by_team(conn)
     tm_times = PG.get_time_held_by_team()
     # team_times = {tt['team']:tt['time'] for tt in tm_times}
-    team_times = {tt.team:tt.time for tt in tm_times}
+    team_times = {tt[0]:tt[1] for tt in tm_times}
 
     # _players_ = SQL._get_player_names(conn)
     _players_ = PG.get_player_names()
@@ -443,7 +443,6 @@ def issue_command():
 
                     if begin and not closed:
 
-                        begin = datetime.strptime(begin.timestamp, CP.TIME_FMTR)
                         lost  = datetime.now()
                         held  = int((lost - begin).total_seconds())
 
