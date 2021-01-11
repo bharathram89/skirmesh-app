@@ -24,8 +24,7 @@ import sqlite_functions as SQL
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-
-# DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
+#DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
 DATABASE_URL = 'sqlite:////home/pi/Coding/battlefield/database.db'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')

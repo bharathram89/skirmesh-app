@@ -333,10 +333,10 @@ def get_node_status(node):
 
 def get_registered_teams():
 
-    query = DB.session.query(Team)
+    query = DB.session.query(Team.team).distinct()
     query = query.filter(func.DATE(Team.timestamp) == date.today())
 
-    return query.group_by(Team.team).order_by(Team.team.asc()).all()
+    return query.order_by(Team.team.asc()).all()
 
 
 def flatten(not_flat):

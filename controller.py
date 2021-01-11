@@ -248,7 +248,8 @@ class CONTROL_POINT(XBeeDevice):
 
         exists = PG.get_uid_in_team(uid)
 
-        exists.team = team if exists else self.DB.session.add(PG.Team(**data))
+        if exists: exists.team = team
+        else:      self.DB.session.add(PG.Team(**data))
 
         self.DB.session.commit()
 
