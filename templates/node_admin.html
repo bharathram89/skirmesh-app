@@ -104,7 +104,7 @@
     </form>
 
     <br>
-    
+
     {% if cmd_dict %}
 
         <div class="table-wrapper">
@@ -125,9 +125,8 @@
                 <tr class="row" style="color:#808080;">
 
                     <td> {{ n | safe }} </td>
-                    <td> {{ node_status[n][0] | safe }} </td>
-                    {% set config = node_status[n][1] | int %}
-                    <td> {{ cmd_dict[config] | safe }} </td>
+                    <td> {{ node_status[n].location | safe }} </td>
+                    <td> {{ cmd_dict[node_status[n].config] | safe }} </td>
 
                 </tr>
                 {% endfor %}

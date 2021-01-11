@@ -24,7 +24,7 @@
         <tr class="row">
             {% for col in cols_data %}
                 {% if col == 'timestamp' %}
-                <td> {{ datetime.strptime(dat[col], time_fmt).strftime(time_disp) }}
+                <td> {{ dat[col].strftime(time_disp) }}
                 {% else %}
                 <td> {{ dat[col] | safe }} </td>
                 {% endif %}
