@@ -25,7 +25,7 @@ import sqlite_functions as SQL
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
 #DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
-DATABASE_URL = 'sqlite:////home/pi/Coding/battlefield/database.db'
+DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/database.db'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
@@ -34,6 +34,7 @@ loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{
 
 CMD_ARGS = {
             'REGISTER'    : json.load(open("json/teams.json")),
+            'SET TEAM'    : json.load(open("json/teams.json")),
             'SET LOCATION': json.loads(loc_json),
             'TIME DATA'   : json.load(open("json/timer_values.json"))
             }
@@ -422,9 +423,20 @@ def issue_command():
 
             else:
 
-                print(f"Sending {dest}:", *pkt)
+                if int(config, 16) == CP.SET_TEAM:
 
-                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                    bytearray([CP.CAPT_TIME, 0]))
+                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                    bytearray([CP.CAPTURE, pkt[2]]))
+                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                    bytearray([CP.CAPT_TIME, 6]))
+
+                else:
+
+                    print(f"Sending {dest}:", *pkt)
+
+                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
 
 
         elif button == 'End Game':

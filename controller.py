@@ -36,6 +36,7 @@ class CONTROL_POINT(XBeeDevice):
     REGISTER  = 0x01
     QUERY     = 0x02
     USER_REG  = 0x03
+    SET_TEAM  = 0x04
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
     BOMB      = 0xBB
@@ -81,6 +82,7 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB_TIME : 'SET BOMB TIMER',
                 USER_REG  : 'REGISTER PLAYERS',
                 MED_TIME  : 'SET MEDIC TIME',
+                SET_TEAM  : 'SET TEAM',
                 }
 
     CONFIGURATIONS = [REGISTER,
