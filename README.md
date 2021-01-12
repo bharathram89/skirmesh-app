@@ -1,4 +1,4 @@
-# Battlefield Gaming System
+# IRL Systems - Battlefield
 
 This projct aims to provide stationary or mobile nodes throughout gameplay, which enhance obsevability from a controlling station. Examples are team control of certain objectives, medic validation, or even follow a unit as they traverse the battlefield.
 

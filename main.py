@@ -14,6 +14,7 @@ from flask import Flask, render_template, flash, jsonify
 from flask import request, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 
+import os
 from datetime import datetime
 from bs4 import BeautifulSoup as SOUP
 import time, json
@@ -25,7 +26,11 @@ import sqlite_functions as SQL
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
 #DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
-DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/database.db'
+#DATABASE_URL = 'sqlite:////home/pi/Coding/battlefield/database.db'
+
+DATABASE_URL = os.environ['DATABASE_URL']
+print(DATABASE_URL)
+
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
