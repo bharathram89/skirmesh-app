@@ -296,10 +296,8 @@ class CONTROL_POINT(XBeeDevice):
 
             if orig_captor:
 
-                orig_uid, orig_team = orig_captor.uid, orig_captor.team
-
                 data = {'node':node,
-                        'tag':orig_captor.uid,
+                        'uid':orig_captor.uid,
                         'team':orig_captor.team,
                         'points':2,
                         'action':'CAPTURE COMPLETE'}
