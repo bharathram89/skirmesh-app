@@ -29,7 +29,6 @@ from forms import RegistrationForm, RegisterAccountForm, LoginForm
 #DATABASE_URL = 'sqlite:////home/pi/Coding/battlefield/database.db'
 
 DATABASE_URL = os.environ['DATABASE_URL']
-print(DATABASE_URL)
 
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
@@ -114,7 +113,7 @@ def main_page():
     # conn = SQL.create_connection(CP.DB_NAME)
 
     # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
-    reg_teams = [t.team for t in PG.get_registered_teams()]
+    reg_teams = PG.get_registered_teams()
     # teams = [SQL._get_team_members(conn, t) for t in reg_teams if reg_teams]
     teams = [PG.get_team_members(t) for t in reg_teams if reg_teams]
     # _players_ = SQL._get_player_names(conn)
@@ -246,7 +245,6 @@ def logout():
 def node_admin():
 
     node_status = {n:PG.get_node_status(n) for n in CP.end_nodes}
-    print(node_status)
 
     kwargs = {
              'node_dict'   : CP.end_nodes,
@@ -266,7 +264,7 @@ def players():
     # conn = SQL.create_connection(CP.DB_NAME)
 
     # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
-    reg_teams = [T.team for T in PG.get_registered_teams()]
+    reg_teams = PG.get_registered_teams()
 
     # tm_times = SQL._get_time_held_by_team(conn)
     tm_times = PG.get_time_held_by_team()
@@ -448,7 +446,7 @@ def issue_command():
 
             for node in CP.end_nodes:
 
-                cap_status = CP.exec_sql(SQL._get_capture_status, node)
+                # cap_status = CP.exec_sql(SQL._get_capture_status, node)
                 cap_status = PG.get_capture_status(node)
 
                 if cap_status and cap_status.stable:
