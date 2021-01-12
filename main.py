@@ -378,7 +378,10 @@ def issue_command():
                     'node'    : dest}
 
             # CP.exec_sql(SQL.add_row, 'node_status', data)
-            DB.session.add(PG.NodeStatus(**data))
+            exists = PG.get_node_status(dest)
+            if exists: exists.location = data['location']
+            else: DB.session.add(PG.NodeStatus(**data))
+
             DB.session.commit()
 
 
@@ -394,7 +397,10 @@ def issue_command():
                         'node'    : dest}
 
                 # CP.exec_sql(SQL.add_row, 'node_status', data)
-                DB.session.add(PG.NodeStatus(**data))
+                exists = PG.get_node_status(dest)
+                if exists: exists.config = int(config, 16)
+                else: DB.session.add(PG.NodeStatus(**data))
+
                 DB.session.commit()
 
             # If setting a BROADCAST configuration - apply to all nodes
@@ -407,7 +413,10 @@ def issue_command():
                             'node'    : n}
 
                     # CP.exec_sql(SQL.add_row, 'node_status', data)
-                    DB.session.add(PG.NodeStatus(**data))
+                    exists = PG.get_node_status(n)
+                    if exists: exists.config = int(config, 16)
+                    else: DB.session.add(PG.NodeStatus(**data))
+
                     DB.session.commit()
 
             # Shift the pkt left to remove reconfigure command byte when
@@ -423,6 +432,19 @@ def issue_command():
                 CP.MEDIC_TIME = int(pkt[1]*10)
                 dest = BROADCAST
 
+
+            if int(config, 16) == CP.SET_TEAM:
+
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                bytearray([CP.CAPT_TIME, 0]))
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                bytearray([CP.CAPTURE, pkt[2]]))
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                bytearray([CP.CAPT_TIME, 6]))
+
+                return make_response(jsonify({"message": "OK"}), 200)
+
+
             if dest == BROADCAST:
 
                 print(f"BROADCASTING: ", *pkt)
@@ -431,20 +453,9 @@ def issue_command():
 
             else:
 
-                if int(config, 16) == CP.SET_TEAM:
+                print(f"Sending {dest}:", *pkt)
 
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                    bytearray([CP.CAPT_TIME, 0]))
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                    bytearray([CP.CAPTURE, pkt[2]]))
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                    bytearray([CP.CAPT_TIME, 6]))
-
-                else:
-
-                    print(f"Sending {dest}:", *pkt)
-
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
 
 
         elif button == 'End Game':
