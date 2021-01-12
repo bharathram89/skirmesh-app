@@ -47,6 +47,7 @@ class CONTROL_POINT(XBeeDevice):
     # Time setters
     CAPT_TIME = 0x8A
     BOMB_TIME = 0x8B
+    CAP_PERC  = 0x8C
     MED_TIME  = 0x8E
 
     # Color assignments
@@ -83,6 +84,7 @@ class CONTROL_POINT(XBeeDevice):
                 USER_REG  : 'REGISTER PLAYERS',
                 MED_TIME  : 'SET MEDIC TIME',
                 SET_TEAM  : 'SET TEAM',
+                CAP_PERC  : 'SET ASSIST %',
                 }
 
     CONFIGURATIONS = [REGISTER,

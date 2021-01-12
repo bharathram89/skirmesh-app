@@ -27,8 +27,9 @@ from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
 #DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
 #DATABASE_URL = 'sqlite:////home/pi/Coding/battlefield/database.db'
+DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/database.db'
 
-DATABASE_URL = os.environ['DATABASE_URL']
+#DATABASE_URL = os.environ['DATABASE_URL']
 print(DATABASE_URL)
 
 
@@ -41,7 +42,8 @@ CMD_ARGS = {
             'REGISTER'    : json.load(open("json/teams.json")),
             'SET TEAM'    : json.load(open("json/teams.json")),
             'SET LOCATION': json.loads(loc_json),
-            'TIME DATA'   : json.load(open("json/timer_values.json"))
+            'TIME DATA'   : json.load(open("json/timer_values.json")),
+            'SET ASSIST %': json.load(open("json/percent_values.json"))
             }
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
