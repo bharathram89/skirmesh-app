@@ -32,9 +32,8 @@ if 'DATABASE_URL' in os.environ:
 
 else:
 
-    DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
-    #DATABASE_URL = 'postgres:////tmp/test.pg'
-
+    DATABASE_URL = "postgres://mzyxzrexzzswvj:382b5066ff809bbc8c9c8b3767499604cd107fd43615a301011c99ed23ea6cf3@ec2-52-6-75-198.compute-1.amazonaws.com:5432/d2j7fdi5l857i"
+    #DATABASE_URL = 'sqlite:////tmp/test.postgres'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
