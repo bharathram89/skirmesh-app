@@ -15,7 +15,7 @@ class CommsData(DB.Model):
     dest       = DB.Column(DB.String(), nullable=False)
     command    = DB.Column(DB.Integer(), nullable=False)
     payload    = DB.Column(DB.String(), nullable=False)
-    timestamp  = DB.Column(DB.DateTime(), default=datetime.now
+    timestamp  = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
