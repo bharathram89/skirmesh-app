@@ -15,7 +15,7 @@ class CommsData(DB.Model):
     dest       = DB.Column(DB.String(), nullable=False)
     command    = DB.Column(DB.Integer(), nullable=False)
     payload    = DB.Column(DB.String(), nullable=False)
-    timestamp  = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp  = DB.Column(DB.DateTime(), default=datetime.now
 
 
     def __init__(self, **kwargs):
@@ -49,7 +49,7 @@ class Team(DB.Model):
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     uid       = DB.Column(DB.String(), unique=True, nullable=False)
     team      = DB.Column(DB.Integer(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -81,7 +81,7 @@ class Medic(DB.Model):
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     uid       = DB.Column(DB.String(), unique=True, nullable=False)
     alive     = DB.Column(DB.Integer(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -117,7 +117,7 @@ class Score(DB.Model):
     action    = DB.Column(DB.String())
     points    = DB.Column(DB.Integer())
     time_held = DB.Column(DB.Integer())
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -155,7 +155,7 @@ class CaptureStatus(DB.Model):
     tag       = DB.Column(DB.String(), nullable=False)
     team      = DB.Column(DB.Integer(), nullable=False)
     stable    = DB.Column(DB.Integer(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -190,7 +190,7 @@ class NodeStatus(DB.Model):
     node      = DB.Column(DB.String(), unique=True, nullable=False)
     location  = DB.Column(DB.String())
     config    = DB.Column(DB.Integer())
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -226,7 +226,7 @@ class Player(DB.Model):
     callsign  = DB.Column(DB.String())
     outfit    = DB.Column(DB.String())
     uid       = DB.Column(DB.String(), unique=True)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
     # DB.UniqueConstraint(fname, lname)
 
@@ -263,7 +263,7 @@ class AuthUsers(DB.Model):
     username  = DB.Column(DB.String(), nullable=False, unique=True)
     email     = DB.Column(DB.String(), nullable=False)
     password  = DB.Column(DB.String(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
     DB.UniqueConstraint(username, password)
 
