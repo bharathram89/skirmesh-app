@@ -333,7 +333,7 @@ class CONTROL_POINT(XBeeDevice):
 
                         if begin:
 
-                            lost  = datetime.utcnow()
+                            lost  = datetime.now()
                             held  = int((lost - begin).total_seconds())
 
                             tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'LOST CONTROL'}
@@ -396,7 +396,7 @@ class CONTROL_POINT(XBeeDevice):
 
             alive, timestamp = medic.alive, medic.timestamp
 
-            d_t = datetime.utcnow() - timestamp
+            d_t = datetime.now() - timestamp
 
             if not alive and d_t.total_seconds() >= CONTROL_POINT.MEDIC_TIME:
                 # If he was dead and has waited the correct amount of time,
@@ -407,7 +407,7 @@ class CONTROL_POINT(XBeeDevice):
                 data = {'uid':uid,'alive':ALIVE}
                 # self.exec_sql(SQL.add_row, 'medic', data)
                 medic.alive     = ALIVE
-                medic.timestamp = datetime.utcnow()
+                medic.timestamp = datetime.now()
                 # self.DB.session.add(PG.Medic(**data))
                 self.DB.session.commit()
 
@@ -430,7 +430,7 @@ class CONTROL_POINT(XBeeDevice):
                 # self.exec_sql(SQL.add_row, 'medic', data)
 
                 medic.alive     = DEAD
-                medic.timestamp = datetime.utcnow()
+                medic.timestamp = datetime.now()
                 # self.DB.session.add(PG.Medic(**data))
                 self.DB.session.commit()
 
