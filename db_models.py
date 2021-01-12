@@ -419,7 +419,8 @@ def get_score_by_team():
 
 def get_score_by_uid():
 
-    query = DB.session.query(Score.uid, func.sum(Score.points)).group_by(Score.uid)
+    query = DB.session.query(Score.uid, func.sum(Score.points))
+    query = query.filter(Score.uid != None).group_by(Score.uid)
     #query = query.filter(func.DATE(Score.timestamp) == date.today())
 
     return query.all()

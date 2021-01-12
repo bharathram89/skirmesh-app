@@ -333,7 +333,7 @@ class CONTROL_POINT(XBeeDevice):
                         # begin = self.exec_sql(SQL._get_time_capture_complete, node)
                         begin = PG.get_time_capture_complete(node)
 
-                        if begin:
+                        if begin and not PG.get_is_capture_closed(node):
 
                             lost  = datetime.now()
                             held  = int((lost - begin).total_seconds())

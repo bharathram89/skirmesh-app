@@ -272,9 +272,9 @@ def players():
     reg_teams = PG.get_registered_teams()
 
     # tm_times = SQL._get_time_held_by_team(conn)
-    tm_times = PG.get_time_held_by_team()
-    # team_times = {tt['team']:tt['time'] for tt in tm_times}
-    team_times = {tt[0]:tt[1] for tt in tm_times}
+    team_times = {tt[0]:tt[1] for tt in PG.get_time_held_by_team()}
+    team_score = {ts[0]:ts[1] for ts in PG.get_score_by_team()}
+    plyr_score = {ps[0]:ps[1] for ps in PG.get_score_by_uid()}
 
     # _players_ = SQL._get_player_names(conn)
     _players_ = PG.get_player_names()
@@ -289,10 +289,10 @@ def players():
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               # 'team_score' : SQL._score_by_team(conn),
-              'team_score' : PG.get_score_by_team(),
+              'team_score' : team_score,
               'p_sc_cols'  : ['player', 'points'],
               # 'plyr_score' : SQL._score_by_uid(conn),
-              'plyr_score' : PG.get_score_by_uid(),
+              'plyr_score' : plyr_score,
               'nodes'      : CP.end_nodes.keys(),
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
