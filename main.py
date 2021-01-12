@@ -25,12 +25,15 @@ import sqlite_functions as SQL
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-#DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
-#DATABASE_URL = 'sqlite:////home/pi/Coding/battlefield/database.db'
-DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/database.db'
+#RUNNING LOCALLY
+if 'DATABASE_URL' in os.environ:
 
-#DATABASE_URL = os.environ['DATABASE_URL']
-print(DATABASE_URL)
+    DATABASE_URL = os.environ['DATABASE_URL']
+
+else:
+
+    DATABASE_URL = "postgres://wsdhikwqyjmawy:0ecec5742e44f0dc4a9f30c4288bbfe7f2d62047eacfb0880e1c7c1685a1ab41@ec2-23-20-70-32.compute-1.amazonaws.com:5432/ddijsq2vaoqd9a"
+    #DATABASE_URL = 'postgres:////tmp/test.pg'
 
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
@@ -116,7 +119,7 @@ def main_page():
     # conn = SQL.create_connection(CP.DB_NAME)
 
     # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
-    reg_teams = [t.team for t in PG.get_registered_teams()]
+    reg_teams = PG.get_registered_teams()
     # teams = [SQL._get_team_members(conn, t) for t in reg_teams if reg_teams]
     teams = [PG.get_team_members(t) for t in reg_teams if reg_teams]
     # _players_ = SQL._get_player_names(conn)
@@ -248,7 +251,6 @@ def logout():
 def node_admin():
 
     node_status = {n:PG.get_node_status(n) for n in CP.end_nodes}
-    print(node_status)
 
     kwargs = {
              'node_dict'   : CP.end_nodes,
@@ -268,7 +270,7 @@ def players():
     # conn = SQL.create_connection(CP.DB_NAME)
 
     # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
-    reg_teams = [T.team for T in PG.get_registered_teams()]
+    reg_teams = PG.get_registered_teams()
 
     # tm_times = SQL._get_time_held_by_team(conn)
     tm_times = PG.get_time_held_by_team()
@@ -377,7 +379,10 @@ def issue_command():
                     'node'    : dest}
 
             # CP.exec_sql(SQL.add_row, 'node_status', data)
-            DB.session.add(PG.NodeStatus(**data))
+            exists = PG.get_node_status(dest)
+            if exists: exists.location = data['location']
+            else: DB.session.add(PG.NodeStatus(**data))
+
             DB.session.commit()
 
 
@@ -393,7 +398,10 @@ def issue_command():
                         'node'    : dest}
 
                 # CP.exec_sql(SQL.add_row, 'node_status', data)
-                DB.session.add(PG.NodeStatus(**data))
+                exists = PG.get_node_status(dest)
+                if exists: exists.config = int(config, 16)
+                else: DB.session.add(PG.NodeStatus(**data))
+
                 DB.session.commit()
 
             # If setting a BROADCAST configuration - apply to all nodes
@@ -406,7 +414,10 @@ def issue_command():
                             'node'    : n}
 
                     # CP.exec_sql(SQL.add_row, 'node_status', data)
-                    DB.session.add(PG.NodeStatus(**data))
+                    exists = PG.get_node_status(n)
+                    if exists: exists.config = int(config, 16)
+                    else: DB.session.add(PG.NodeStatus(**data))
+
                     DB.session.commit()
 
             # Shift the pkt left to remove reconfigure command byte when
@@ -422,6 +433,19 @@ def issue_command():
                 CP.MEDIC_TIME = int(pkt[1]*10)
                 dest = BROADCAST
 
+
+            if int(config, 16) == CP.SET_TEAM:
+
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                bytearray([CP.CAPT_TIME, 0]))
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                bytearray([CP.CAPTURE, pkt[2]]))
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
+                                bytearray([CP.CAPT_TIME, 6]))
+
+                return make_response(jsonify({"message": "OK"}), 200)
+
+
             if dest == BROADCAST:
 
                 print(f"BROADCASTING: ", *pkt)
@@ -430,27 +454,16 @@ def issue_command():
 
             else:
 
-                if int(config, 16) == CP.SET_TEAM:
+                print(f"Sending {dest}:", *pkt)
 
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                    bytearray([CP.CAPT_TIME, 0]))
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                    bytearray([CP.CAPTURE, pkt[2]]))
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                    bytearray([CP.CAPT_TIME, 6]))
-
-                else:
-
-                    print(f"Sending {dest}:", *pkt)
-
-                    CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
 
 
         elif button == 'End Game':
 
             for node in CP.end_nodes:
 
-                cap_status = CP.exec_sql(SQL._get_capture_status, node)
+                # cap_status = CP.exec_sql(SQL._get_capture_status, node)
                 cap_status = PG.get_capture_status(node)
 
                 if cap_status and cap_status.stable:

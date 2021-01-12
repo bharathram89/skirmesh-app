@@ -127,14 +127,14 @@ class CONTROL_POINT(XBeeDevice):
         self.add_data_received_callback(self.data_received_callback)
 
 
-    @staticmethod
-    def exec_sql(sql_fun, *args):
-
-        conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
-        result = sql_fun(conn, *args)
-        conn.close()
-
-        return result
+    # @staticmethod
+    # def exec_sql(sql_fun, *args):
+    #
+    #     conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
+    #     result = sql_fun(conn, *args)
+    #     conn.close()
+    #
+    #     return result
 
 
     def find_nodes(self):
@@ -153,16 +153,16 @@ class CONTROL_POINT(XBeeDevice):
                 end_node = END_NODE(self, node)
                 node_addr = str(node.get_64bit_addr())
 
-                nd_status = self.exec_sql(SQL._get_node_status, node_addr)
+                nd_status = PG.get_node_status(node_addr)
 
                 if nd_status:
 
-                    end_node.location      = nd_status[0]
-                    end_node.configuration = nd_status[1]
+                    end_node.location      = nd_status.location
+                    end_node.configuration = nd_status.config
 
-                    if nd_status[1] == CONTROL_POINT.CAPTURE:
+                    if nd_status.config == CONTROL_POINT.CAPTURE:
 
-                        end_node.capture_status = self.exec_sql(SQL._get_capture_status, node_addr)
+                        end_node.capture_status = PG.get_capture_status(node_addr)
 
                 self.end_nodes[node_addr] = end_node
 
@@ -252,14 +252,18 @@ class CONTROL_POINT(XBeeDevice):
 
         exists = PG.get_uid_in_team(uid)
 
-        if exists: exists.team = team
-        else:      self.DB.session.add(PG.Team(**data))
+        if exists:
+            exists.team      = team
+            exists.timestamp = datetime.now()
+        else:
+            self.DB.session.add(PG.Team(**data))
 
         self.DB.session.commit()
 
         data = {'uid':uid,'alive':1}
         # self.exec_sql(SQL.add_row, 'medic', data)
-        self.DB.session.add(PG.Medic(**data))
+
+        if not PG.get_is_alive(uid):  self.DB.session.add(PG.Medic(**data))
 
         self.DB.session.commit()
 
@@ -283,7 +287,8 @@ class CONTROL_POINT(XBeeDevice):
 
             data = {'node':node, 'tag':cap_status.tag, 'team':cap_status.team, 'stable':stable}
             # self.exec_sql(SQL.add_row, 'capture_status', data)
-            self.DB.session.add(PG.CaptureStatus(**data))
+            cap_status.stable = stable
+            #self.DB.session.add(PG.CaptureStatus(**data))
             self.DB.session.commit()
 
             # orig_captor = self.exec_sql(SQL._get_last_captor, node)
@@ -305,7 +310,7 @@ class CONTROL_POINT(XBeeDevice):
         if len(payload[1:5]) == 4:
 
             uid = payload[1:5].hex()
-            team = self.exec_sql(SQL._get_team, uid)
+            # team = self.exec_sql(SQL._get_team, uid)
             team = PG.get_team(uid)
 
             if team:
@@ -334,8 +339,9 @@ class CONTROL_POINT(XBeeDevice):
                             held  = int((lost - begin).total_seconds())
 
                             tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'LOST CONTROL'}
-                            self.exec_sql(SQL.add_row, 'score', tdat)
+                            # self.exec_sql(SQL.add_row, 'score', tdat)
                             self.DB.session.add(PG.Score(**tdat))
+                            self.DB.session.commit()
 
                 else:
 
@@ -349,6 +355,7 @@ class CONTROL_POINT(XBeeDevice):
 
                     # self.exec_sql(SQL.add_row, 'score', data)
                     self.DB.session.add(PG.Score(**data))
+                    self.DB.session.commit()
 
                 data = {'node':node, 'tag':uid, 'team':team}
 
@@ -357,7 +364,19 @@ class CONTROL_POINT(XBeeDevice):
                 data['stable'] = 1 if not cap_status or (cap_status.stable and team == cap_status.team) else 0
 
                 # self.exec_sql(SQL.add_row, 'capture_status', data)
-                self.DB.session.add(PG.CaptureStatus(**data))
+
+                if cap_status:
+
+                    cap_status.tag  = uid
+                    cap_status.team = team
+                    # TODO Need to cleanup how this is assigned
+                    cap_status.stable = data['stable']
+
+                else:
+
+                    self.DB.session.add(PG.CaptureStatus(**data))
+
+                self.DB.session.commit()
 
                 return bytearray([CONTROL_POINT.CAPTURE, team])
 
@@ -389,7 +408,10 @@ class CONTROL_POINT(XBeeDevice):
 
                 data = {'uid':uid,'alive':ALIVE}
                 # self.exec_sql(SQL.add_row, 'medic', data)
-                self.DB.session.add(PG.Medic(**data))
+                medic.alive     = ALIVE
+                medic.timestamp = datetime.now()
+                # self.DB.session.add(PG.Medic(**data))
+                self.DB.session.commit()
 
                 return bytearray([CONTROL_POINT.MEDIC, ALIVE, 0x00])
 
@@ -408,7 +430,11 @@ class CONTROL_POINT(XBeeDevice):
 
                 data = {'uid':uid,'alive':DEAD}
                 # self.exec_sql(SQL.add_row, 'medic', data)
-                self.DB.session.add(PG.Medic(**data))
+
+                medic.alive     = DEAD
+                medic.timestamp = datetime.now()
+                # self.DB.session.add(PG.Medic(**data))
+                self.DB.session.commit()
 
                 return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
 

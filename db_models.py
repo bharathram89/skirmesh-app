@@ -15,7 +15,7 @@ class CommsData(DB.Model):
     dest       = DB.Column(DB.String(), nullable=False)
     command    = DB.Column(DB.Integer(), nullable=False)
     payload    = DB.Column(DB.String(), nullable=False)
-    timestamp  = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp  = DB.Column(DB.DateTime(), default=datetime.now
 
 
     def __init__(self, **kwargs):
@@ -49,7 +49,7 @@ class Team(DB.Model):
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     uid       = DB.Column(DB.String(), unique=True, nullable=False)
     team      = DB.Column(DB.Integer(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -79,9 +79,9 @@ class Medic(DB.Model):
     __tablename__ = 'medic'
 
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
-    uid       = DB.Column(DB.String(), nullable=False)
+    uid       = DB.Column(DB.String(), unique=True, nullable=False)
     alive     = DB.Column(DB.Integer(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -117,7 +117,7 @@ class Score(DB.Model):
     action    = DB.Column(DB.String())
     points    = DB.Column(DB.Integer())
     time_held = DB.Column(DB.Integer())
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -151,11 +151,11 @@ class CaptureStatus(DB.Model):
     __tablename__ = 'capture_status'
 
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
-    node      = DB.Column(DB.String(), nullable=False)
+    node      = DB.Column(DB.String(), unique=True, nullable=False)
     tag       = DB.Column(DB.String(), nullable=False)
     team      = DB.Column(DB.Integer(), nullable=False)
     stable    = DB.Column(DB.Integer(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -187,10 +187,10 @@ class NodeStatus(DB.Model):
     __tablename__ = 'node_status'
 
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
-    node      = DB.Column(DB.String(), nullable=False)
+    node      = DB.Column(DB.String(), unique=True, nullable=False)
     location  = DB.Column(DB.String())
     config    = DB.Column(DB.Integer())
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
     def __init__(self, **kwargs):
@@ -226,7 +226,7 @@ class Player(DB.Model):
     callsign  = DB.Column(DB.String())
     outfit    = DB.Column(DB.String())
     uid       = DB.Column(DB.String(), unique=True)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
     # DB.UniqueConstraint(fname, lname)
 
@@ -263,7 +263,7 @@ class AuthUsers(DB.Model):
     username  = DB.Column(DB.String(), nullable=False, unique=True)
     email     = DB.Column(DB.String(), nullable=False)
     password  = DB.Column(DB.String(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now())
+    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
     DB.UniqueConstraint(username, password)
 
@@ -291,6 +291,16 @@ class AuthUsers(DB.Model):
 
 
 
+def flatten(not_flat):
+
+    def helper(*arg, **kwargs):
+
+        return [v[0] for v in not_flat(*arg)]
+
+    return helper
+
+
+
 def get_is_alive(uid):
 
     query = DB.session.query(Medic).filter(Medic.uid == uid)
@@ -302,7 +312,7 @@ def get_is_alive(uid):
 def get_team(uid):
 
     query = DB.session.query(Team)
-    query = query.filter(func.DATE(Team.timestamp) == date.today())
+    #query = query.filter(func.DATE(Team.timestamp) == date.today())
     query = query.filter(Team.uid == uid)
 
     return query.order_by(Team.id.desc()).first()
@@ -316,7 +326,7 @@ def get_auth_users():
 def get_capture_status(node):
 
     query = DB.session.query(CaptureStatus)
-    query = query.filter(func.DATE(CaptureStatus.timestamp) == date.today())
+    #query = query.filter(func.DATE(CaptureStatus.timestamp) == date.today())
     query = query.filter(CaptureStatus.node == node)
 
     return query.order_by(CaptureStatus.id.desc()).first()
@@ -325,30 +335,36 @@ def get_capture_status(node):
 def get_node_status(node):
 
     query = DB.session.query(NodeStatus)
-    query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
+    #query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
     query = query.filter(NodeStatus.node == node)
 
     return query.order_by(NodeStatus.id.desc()).first()
 
 
+@flatten
+def get_nodes():
+
+    query = DB.session.query(NodeStatus.node)
+    #query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
+    query = query.distinct(NodeStatus.node)
+
+    return query.all()
+
+
+@flatten
 def get_registered_teams():
 
     query = DB.session.query(Team.team).distinct()
-    query = query.filter(func.DATE(Team.timestamp) == date.today())
+    #query = query.filter(func.DATE(Team.timestamp) == date.today())
 
     return query.order_by(Team.team.asc()).all()
 
-
-def flatten(not_flat):
-    def helper(*arg, **kwargs):
-        return [v[0] for v in not_flat(*arg)]
-    return helper
 
 @flatten
 def get_team_members(team):
 
     query = DB.session.query(Team.uid)
-    query = query.filter(func.DATE(Team.timestamp) == date.today())
+    #query = query.filter(func.DATE(Team.timestamp) == date.today())
     query = query.filter(Team.team == team)
 
     return query.all()
@@ -375,45 +391,44 @@ def get_player(id):
 
 def get_time_held_by_team():
 
-    query = DB.session.query(Score.team, func.sum(Score.time_held).label('time'))
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
-    query = query.group_by(Score.team)
+    query = DB.session.query(Score.team, func.sum(Score.time_held)).group_by(Score.team)
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
+    # query = query.query(Score.team, func.sum(Score.time_held))
 
-    return query.order_by(func.sum(Score.time_held).desc()).all()
+    return query.all()
 
 
 def get_times_for_node(node):
 
     if not get_capture_status(node): return None
 
-    query = DB.session.query(Score, Score.team, func.sum(Score.time_held))
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
+    query = DB.session.query(Score.team, func.sum(Score.time_held)).group_by(Score.team)
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
     query = query.filter(Score.node == node)
 
-    return query.group_by(Score.team).order_by(func.sum(Score.time_held).desc()).all()
+    return query.all()
 
 
 def get_score_by_team():
 
-    query = DB.session.query(Score, Score.team, func.sum(Score.points).label('points'))
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
+    query = DB.session.query(Score.team, func.sum(Score.points)).group_by(Score.team)
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
 
-    return query.group_by(Score.team).order_by(Score.points.desc()).all()
+    return query.all()
 
 
 def get_score_by_uid():
 
-    query = DB.session.query(Score, Score.uid, func.sum(Score.points).label('points'))
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
-    query = query.filter(Score.uid.isnot(None))
+    query = DB.session.query(Score.uid, func.sum(Score.points)).group_by(Score.uid)
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
 
-    return query.group_by(Score.uid).order_by(Score.points.desc()).all()
+    return query.all()
 
 
 def get_last_captor(node):
 
     query = DB.session.query(Score)
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
     query = query.filter(Score.action == 'CAPTURE')
     query = query.filter(Score.node == node)
 
@@ -423,7 +438,7 @@ def get_last_captor(node):
 def get_time_capture_complete(node):
 
     query = DB.session.query(Score)
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
     query = query.filter(Score.action == 'CAPTURE COMPLETE')
     query = query.filter(Score.node == node)
 
@@ -435,7 +450,7 @@ def get_time_capture_complete(node):
 def get_is_capture_closed(node):
 
     query = DB.session.query(Score)
-    query = query.filter(func.DATE(Score.timestamp) == date.today())
+    #query = query.filter(func.DATE(Score.timestamp) == date.today())
     query = query.filter(Score.node == node)
     result = query.order_by(Score.id.desc()).first()
 
@@ -445,7 +460,7 @@ def get_is_capture_closed(node):
 def get_is_alive(uid):
 
     query = DB.session.query(Medic)
-    # query = query.filter(func.DATE(Medic.timestamp) == date.today())
+    #query = query.filter(func.DATE(Medic.timestamp) == date.today())
     query = query.filter(Medic.uid == uid)
 
     return query.order_by(Medic.id.desc()).first()
