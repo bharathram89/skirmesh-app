@@ -232,7 +232,7 @@ def _get_is_alive(conn, uid):
 
     sql_arg = """SELECT * FROM medic
                  WHERE uid=(?)
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
 
     cur = conn.cursor()
@@ -245,7 +245,7 @@ def _get_team(conn, uid):
 
     sql_arg = """SELECT team FROM team
                  WHERE date(timestamp) = date('now', 'localtime') AND uid=(?)
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
 
     cur = conn.cursor()
@@ -372,7 +372,7 @@ def _get_last_captor(conn, node):
 
     sql_arg = """SELECT tag,team FROM score
                  WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE' AND node = (?)
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
     cur = conn.cursor()
     cur.execute(sql_arg, (node,))
@@ -384,7 +384,7 @@ def _get_time_capture_complete(conn, node):
 
     sql_arg = """SELECT timestamp FROM score
                  WHERE date(timestamp) = date('now', 'localtime') AND action = 'CAPTURE COMPLETE' AND node = (?)
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
     cur = conn.cursor()
     cur.execute(sql_arg, (node,))
@@ -398,7 +398,7 @@ def _is_capture_open(conn, node):
                     (
                     SELECT time_held FROM score
                     WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
-                    ORDER BY timestamp DESC, id DESC LIMIT 1
+                    ORDER BY id DESC LIMIT 1
                     )
                  WHERE time_held IS NULL;
               """
@@ -412,7 +412,7 @@ def _get_owning(conn):
 
     sql_arg = """SELECT tag,team,timestamp FROM capture_status
                  WHERE date(timestamp) = date('now', 'localtime')
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
 
     cur = conn.cursor()
@@ -425,7 +425,7 @@ def _get_capture_status(conn, node):
 
     sql_arg = """SELECT tag,team,stable,timestamp FROM capture_status
                  WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
 
     cur = conn.cursor()
@@ -438,7 +438,7 @@ def _get_node_status(conn, node):
 
     sql_arg = """SELECT location, config FROM node_status
                  WHERE date(timestamp) = date('now', 'localtime') AND node = (?)
-                 ORDER BY timestamp DESC, id DESC LIMIT 1;
+                 ORDER BY id DESC LIMIT 1;
               """
 
     cur = conn.cursor()

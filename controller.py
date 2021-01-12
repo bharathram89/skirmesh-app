@@ -1,11 +1,16 @@
 from digi.xbee.devices import XBeeDevice, RemoteZigBeeDevice, RemoteXBeeDevice
 import sqlite_functions as SQL
+
+from sqlalchemy.dialects.mysql import insert
+from  sqlalchemy.exc import IntegrityError, InvalidRequestError
+
+import db_models as PG
 import time
 from datetime import datetime
 
 
-class END_NODE(RemoteXBeeDevice):
 
+class END_NODE(RemoteXBeeDevice):
 
     def __init__(self, host, device):
 
@@ -14,6 +19,8 @@ class END_NODE(RemoteXBeeDevice):
         self.location       = None
         self.configuration  = None
         self.capture_status = None
+
+
 
 class CONTROL_POINT(XBeeDevice):
     """
@@ -85,15 +92,15 @@ class CONTROL_POINT(XBeeDevice):
     DB_NAME    = "database.sqlite"
     MEDIC_TIME = int(60)
 
-    def __init__(self, serial, baud ):
+    def __init__(self, serial, baud, database):
 
         XBeeDevice.__init__(self, serial, baud)
         #database location/name
-        conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
-        SQL.init_tables(conn)
-        conn.close()
+        # conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
+        # SQL.init_tables(conn)
+        # conn.close()
 
-        self.DB = None
+        self.DB = database
 
         self.end_nodes = {}
         self.user_reg = None
@@ -114,30 +121,6 @@ class CONTROL_POINT(XBeeDevice):
 
         self.XB_net.add_network_modified_callback(self.net_mod_callback)
         self.add_data_received_callback(self.data_received_callback)
-
-
-    @staticmethod
-    def __make_bytearray(payload):
-
-        if not hasattr(payload, '__len__'):
-            return bytearray([payload])
-
-        elif not isinstance(payload, bytearray):
-            return bytearray(payload)
-
-        else: return payload
-
-
-    def assemble_pkt(self, *args):
-        """
-        Takes any number of arguments and assembles them
-        into a bytearray.
-        """
-        pkt = bytearray()
-        for arg in args:
-            pkt = pkt + self.__make_bytearray(arg)
-
-        return pkt
 
 
     @staticmethod
@@ -179,6 +162,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 self.end_nodes[node_addr] = end_node
 
+
     def transmit_pkt(self, dest, pkt):
 
         self.log_comm(dest, pkt)
@@ -189,13 +173,15 @@ class CONTROL_POINT(XBeeDevice):
 
     def log_comm(self, dest, pkt):
 
-        data = {'sender':str(self.get_64bit_addr()),
-                'destination':str(dest.get_64bit_addr()),
-                'command':pkt[0],
-                'payload':pkt[1:].hex(),
+        data = {'sender' : str(self.get_64bit_addr()),
+                'dest'   : str(dest.get_64bit_addr()),
+                'command': pkt[0],
+                'payload': pkt[1:].hex(),
                }
 
-        self.exec_sql(SQL.add_row, 'data', data)
+        # self.exec_sql(SQL.add_row, 'data', data)
+        self.DB.session.add(PG.CommsData(**data))
+        self.DB.session.commit()
 
 
     @staticmethod
@@ -219,13 +205,15 @@ class CONTROL_POINT(XBeeDevice):
             self.find_nodes()
 
         data = {
-                'sender'     :str(sender.get_64bit_addr()),
-                'destination':str(self.get_64bit_addr()),
-                'command'    :payload[0],
-                'payload'    :payload[1:].hex(),
+                'sender' : str(sender.get_64bit_addr()),
+                'dest'   : str(self.get_64bit_addr()),
+                'command': payload[0],
+                'payload': payload[1:].hex(),
                }
 
-        self.exec_sql(SQL.add_row, 'data', data)
+        # self.exec_sql(SQL.add_row, 'data', data)
+        self.DB.session.add(PG.CommsData(**data))
+        self.DB.session.commit()
 
         cmd = payload[0]
 
@@ -234,7 +222,6 @@ class CONTROL_POINT(XBeeDevice):
             pkt = self.parse_message[cmd](sender, payload)
 
             if pkt: self.transmit_pkt(sender, pkt)
-
 
 
     @property
@@ -257,10 +244,20 @@ class CONTROL_POINT(XBeeDevice):
 
         print(f'Registering {uid} to team {team}')
         data = {'uid':uid,'team':team}
-        self.exec_sql(SQL.add_row, 'team', data)
+        # self.exec_sql(SQL.add_row, 'team', data)
+
+        exists = PG.get_uid_in_team(uid)
+
+        if exists: exists.team = team
+        else:      self.DB.session.add(PG.Team(**data))
+
+        self.DB.session.commit()
 
         data = {'uid':uid,'alive':1}
-        self.exec_sql(SQL.add_row, 'medic', data)
+        # self.exec_sql(SQL.add_row, 'medic', data)
+        self.DB.session.add(PG.Medic(**data))
+
+        self.DB.session.commit()
 
         return None
 
@@ -268,7 +265,8 @@ class CONTROL_POINT(XBeeDevice):
     def __capture(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        cap_status = self.exec_sql(SQL._get_capture_status, node)
+        # cap_status = self.exec_sql(SQL._get_capture_status, node)
+        cap_status = PG.get_capture_status(node)
 
         if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
@@ -277,71 +275,85 @@ class CONTROL_POINT(XBeeDevice):
             # node as stable with the prosecuting team as owning
             stable   = payload[1]
 
-            own_uid, own_team, cap_stable, cap_time = cap_status
+            # own_uid, own_team, cap_stable, cap_time = cap_status
 
-            data = {'node':node, 'tag':own_uid, 'team':own_team, 'stable':stable}
-            self.exec_sql(SQL.add_row, 'capture_status', data)
+            data = {'node':node, 'tag':cap_status.tag, 'team':cap_status.team, 'stable':stable}
+            # self.exec_sql(SQL.add_row, 'capture_status', data)
+            self.DB.session.add(PG.CaptureStatus(**data))
+            self.DB.session.commit()
 
-            orig_captor = self.exec_sql(SQL._get_last_captor, node)
+            # orig_captor = self.exec_sql(SQL._get_last_captor, node)
+            orig_captor = PG.get_last_captor(node)
 
             if orig_captor:
 
-                orig_uid, orig_team = orig_captor
+                orig_uid, orig_team = orig_captor.uid, orig_captor.team
 
                 data = {'node':node,
-                        'tag':orig_uid,
-                        'team':orig_team,
+                        'tag':orig_captor.uid,
+                        'team':orig_captor.team,
                         'points':2,
                         'action':'CAPTURE COMPLETE'}
-                self.exec_sql(SQL.add_row, 'score', data)
+                # self.exec_sql(SQL.add_row, 'score', data)
+                self.DB.session.add(PG.Score(**data))
+                self.DB.session.commit()
 
         if len(payload[1:5]) == 4:
 
             uid = payload[1:5].hex()
             team = self.exec_sql(SQL._get_team, uid)
+            team = PG.get_team(uid)
 
             if team:
 
-                team = team[0]
+                team = team.team
                 print(f'Team {team} is prosecuting Node_{node}')
 
                 data = {'tag':uid, 'team':team, 'node':node}
 
                 if cap_status:
 
-                    own_uid, own_team, cap_stable, cap_time = cap_status
+                    # own_uid, own_team, cap_stable, cap_time = cap_status
                     # If no one owns the node, the attacker captures immediately
                     # If his teams was already there, he only assists
-                    data['action'] = 'CAPTURE' if team != own_team else 'ASSIST'
-                    data['points'] = 2 if team != own_team else 1
+                    data['action'] = 'CAPTURE' if team != cap_status.team else 'ASSIST'
+                    data['points'] = 2 if team != cap_status.team else 1
 
                     if data['action'] == 'CAPTURE':
 
-                        begin = self.exec_sql(SQL._get_time_capture_complete, node)
+                        # begin = self.exec_sql(SQL._get_time_capture_complete, node)
+                        begin = PG.get_time_capture_complete(node)
 
                         if begin:
 
-                            begin = datetime.strptime(begin[0], CONTROL_POINT.TIME_FMTR)
                             lost  = datetime.now()
                             held  = int((lost - begin).total_seconds())
 
-                            tdat = {'node':node,'team':own_team,'time_held':held,'action':'LOST CONTROL'}
+                            tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'LOST CONTROL'}
                             self.exec_sql(SQL.add_row, 'score', tdat)
+                            self.DB.session.add(PG.Score(**tdat))
 
                 else:
 
                     data['action'] = 'CAPTURE'
                     data['points'] = 2
 
-                self.exec_sql(SQL.add_row, 'score', data)
+                # If the ACTION is to "CAPTURE" then always add score data.  If it is an assist
+                # ONLY add score data if the node IS NOT STABLE - can only be an ASSIST if cap_status is
+                # known
+                if data['action'] == 'CAPTURE' or (data['action'] == 'ASSIST' and not cap_status.stable):
+
+                    # self.exec_sql(SQL.add_row, 'score', data)
+                    self.DB.session.add(PG.Score(**data))
 
                 data = {'node':node, 'tag':uid, 'team':team}
 
                 # If the node is not currently owned, then it's immediately stable
                 # If the prosecuting team is the same team, keep it stable
-                data['stable'] = 1 if not cap_status or (cap_status[2] and team == own_team) else 0
+                data['stable'] = 1 if not cap_status or (cap_status.stable and team == cap_status.team) else 0
 
-                self.exec_sql(SQL.add_row, 'capture_status', data)
+                # self.exec_sql(SQL.add_row, 'capture_status', data)
+                self.DB.session.add(PG.CaptureStatus(**data))
 
                 return bytearray([CONTROL_POINT.CAPTURE, team])
 
@@ -353,15 +365,16 @@ class CONTROL_POINT(XBeeDevice):
     def __medic(self, sender, payload):
 
         uid = payload[1:5].hex()
-        row = self.exec_sql(SQL._get_is_alive, uid)
+        # row = self.exec_sql(SQL._get_is_alive, uid)
+        medic = PG.get_is_alive(uid)
 
         DEAD  = 0x00
         ALIVE = 0x01
 
-        if row:
+        if medic:
 
-            id, __uid__, alive, timestamp = row
-            timestamp = datetime.strptime(timestamp, CONTROL_POINT.TIME_FMTR)
+            alive, timestamp = medic.alive, medic.timestamp
+
             d_t = datetime.now() - timestamp
 
             if not alive and d_t.total_seconds() >= CONTROL_POINT.MEDIC_TIME:
@@ -370,8 +383,9 @@ class CONTROL_POINT(XBeeDevice):
 
                 print(f'{uid} is ALIVE')
 
-                data = {'uid':uid,'alive':1}
-                self.exec_sql(SQL.add_row, 'medic', data)
+                data = {'uid':uid,'alive':ALIVE}
+                # self.exec_sql(SQL.add_row, 'medic', data)
+                self.DB.session.add(PG.Medic(**data))
 
                 return bytearray([CONTROL_POINT.MEDIC, ALIVE, 0x00])
 
@@ -388,8 +402,9 @@ class CONTROL_POINT(XBeeDevice):
                 # If he was alive, and he's back at the medic, he probably died
                 print(f'{uid} is now DEAD')
 
-                data = {'uid':uid,'alive':0}
-                self.exec_sql(SQL.add_row, 'medic', data)
+                data = {'uid':uid,'alive':DEAD}
+                # self.exec_sql(SQL.add_row, 'medic', data)
+                self.DB.session.add(PG.Medic(**data))
 
                 return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
 
@@ -398,8 +413,9 @@ class CONTROL_POINT(XBeeDevice):
             # in for the first time because he's dead.
             print(f'{uid} is registered DEAD')
 
-            data = {'uid':uid,'alive':0}
-            self.exec_sql(SQL.add_row, 'medic', data)
+            data = {'uid':uid,'alive':DEAD}
+            # self.exec_sql(SQL.add_row, 'medic', data)
+            self.DB.session.add(PG.Medic(**data))
 
             return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
 
@@ -407,16 +423,16 @@ class CONTROL_POINT(XBeeDevice):
     def __query(self, sender, payload):
 
         uid = payload[1:5].hex()
-        row = self.exec_sql(SQL._get_is_alive, uid)
+        # row = self.exec_sql(SQL._get_is_alive, uid)
+        medic = PG.get_is_alive(uid)
 
-        alive = 0x00
+        alive = medic.alive if medic else 0x00
         team = None
 
-        if row: id, __uid__, alive, timestamp = row
+        # team = self.exec_sql(SQL._get_team, uid)
+        team = PG.get_team(uid)
 
-        team = self.exec_sql(SQL._get_team, uid)
-
-        if team: pkt = bytearray([CONTROL_POINT.QUERY, team[0], alive])
+        if team: pkt = bytearray([CONTROL_POINT.QUERY, team.team, alive])
         else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00])
 
         return pkt
@@ -425,16 +441,18 @@ class CONTROL_POINT(XBeeDevice):
     def __status(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        status = self.exec_sql(SQL._get_capture_status, node)
+        # status = self.exec_sql(SQL._get_capture_status, node)
+        status = PG.get_capture_status(node)
 
         if not status: return None
 
         cmd    = bytearray([CONTROL_POINT.ND_STATUS])
-        uid    = bytearray.fromhex(status[0])
-        team   = bytearray([status[1]])
-        stable = bytearray([status[2]])
+        uid    = bytearray.fromhex(status.tag)
+        team   = bytearray([status.team])
+        stable = bytearray([status.stable])
 
         return cmd + uid + team + stable
+
 
     def __user_reg(self, sender, payload):
 
@@ -444,6 +462,7 @@ class CONTROL_POINT(XBeeDevice):
             return None
         else:
             self.user_reg = uid
+
 
     def uid_handler(self, uid):
 

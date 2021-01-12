@@ -53,11 +53,11 @@
           </tr>
         </thead>
         <tbody>
-            {% for dat in team %}
+            {% for mbr in team %}
             <tr class="row">
-                {% for col in team_col %}
-                    <td class="team{{team_i | safe}}"> {{ players[dat[col]]['lname'] if dat[col] in players else dat[col] | safe }} </td>
-                {% endfor %}
+
+                <td class="team{{team_i | safe}}"> {{ players[mbr]['lname'] if mbr in players else mbr | safe }} </td>
+
             </tr>
             {% endfor %}
         </tbody>
@@ -88,11 +88,11 @@
           </tr>
         </thead>
         <tbody>
-            {% for dat in team %}
+            {% for mbr in team %}
             <tr class="row">
-                {% for col in team_col %}
-                    <td class="team{{team_i | safe}}"> {{ players[dat[col]]['lname'] if dat[col] in players else dat[col] | safe }} </td>
-                {% endfor %}
+
+                <td class="team{{team_i | safe}}"> {{ players[mbr]['lname'] if mbr in players else mbr | safe }} </td>
+
             </tr>
             {% endfor %}
         </tbody>
