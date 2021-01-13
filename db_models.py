@@ -336,9 +336,8 @@ def get_node_status(node):
 
     query = DB.session.query(NodeStatus)
     #query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
-    query = query.filter(NodeStatus.node == node)
 
-    return query.order_by(NodeStatus.id.desc()).first()
+    return query.filter(NodeStatus.node == node).first()
 
 
 @flatten
