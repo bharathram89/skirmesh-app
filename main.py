@@ -275,7 +275,8 @@ def user_reg(uid=None):
 
         try:
 
-            DB.session.add(Player(**data))
+            DB.session.add(PG.Player(**data))
+            DB.session.commit()
 
         except:
 
