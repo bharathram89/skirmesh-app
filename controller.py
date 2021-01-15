@@ -189,25 +189,8 @@ class CONTROL_POINT(XBeeDevice):
         while self.XB_net.is_discovery_running():
             time.sleep(0.1)
 
-        for node in self.XB_net.get_devices():
 
-            if node not in self.end_nodes:
 
-                end_node = END_NODE(self, node)
-                node_addr = str(node.get_64bit_addr())
-
-                nd_status = PG.get_node_status(node_addr)
-
-                if nd_status:
-
-                    end_node.location      = nd_status.location
-                    end_node.configuration = nd_status.config
-
-                    if nd_status.config == CONTROL_POINT.CAPTURE:
-
-                        end_node.capture_status = PG.get_capture_status(node_addr)
-
-                self.end_nodes[node_addr] = end_node
 
 
     # █▀▀ █▀▀▄ █▀▀▄ 　 █▀▀▄ █▀▀█ █▀▀▄ █▀▀ 　
@@ -249,14 +232,36 @@ class CONTROL_POINT(XBeeDevice):
         self.DB.session.commit()
 
 
-    @staticmethod
-    def net_mod_callback(event, reason, node):
+    def net_mod_callback(self, event, reason, node):
 
         print('Network Event:')
         print("Type: %s (%d)" % (event.description, event.code))
         print("Reason: %s (%d)" % (reason.description, reason.code))
 
-        if node: print(f"Node: {node}")
+        if node and node.get_64bit_addr() not in self.end_nodes:
+
+            print(f"Adding {node} to Network")
+
+            end_node = END_NODE(self, node)
+            node_addr = str(node.get_64bit_addr())
+
+            nd_status = PG.get_node_status(node_addr)
+
+            if nd_status:
+
+                end_node.location      = nd_status.location
+                end_node.configuration = nd_status.config
+
+                if nd_status.config == CONTROL_POINT.CAPTURE:
+
+                    end_node.capture_status = PG.get_capture_status(node_addr)
+
+            else:
+
+                self.DB.session.add(PG.NodeStatus(**{'node':node_addr}))
+
+            self.end_nodes[node_addr] = end_node
+            self.DB.session.commit()
 
 
     def data_received_callback(self, xb_msg):
@@ -328,6 +333,7 @@ class CONTROL_POINT(XBeeDevice):
         print(f'Registering {uid} to team {team}')
 
         exists = PG.get_uid_in_team(uid)
+        self.DB.session.commit()
         # If the player already exists, update his information
         if exists:
             exists.team      = team
@@ -354,6 +360,7 @@ class CONTROL_POINT(XBeeDevice):
 
         node       = str(sender.get_64bit_addr())
         cap_status = PG.get_capture_status(node)
+        self.DB.session.commit()
 
         if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
@@ -380,16 +387,17 @@ class CONTROL_POINT(XBeeDevice):
                         'action':'CAPTURE COMPLETE'}
 
                 self.DB.session.add(PG.Score(**data))
-                self.DB.session.commit()
+
+            self.DB.session.commit()
 
         if len(payload[1:5]) == 4:
 
             uid = payload[1:5].hex()
             team = PG.get_team(uid)
+            self.DB.session.commit()
 
             if team:
 
-                team = team.team
                 print(f'Team {team} is prosecuting Node_{node}')
 
                 data = {'uid':uid, 'team':team, 'node':node}
@@ -418,7 +426,8 @@ class CONTROL_POINT(XBeeDevice):
                                     'action'   :'LOST CONTROL'}
 
                             self.DB.session.add(PG.Score(**tdat))
-                            self.DB.session.commit()
+
+                        self.DB.session.commit()
 
                 else:
                     # If there was no status for the node - this is a capture
@@ -470,6 +479,7 @@ class CONTROL_POINT(XBeeDevice):
 
         uid = payload[1:5].hex()
         medic = PG.get_is_alive(uid)
+        self.DB.session.commit()
 
         DEAD  = 0x00
         ALIVE = 0x01
@@ -532,8 +542,9 @@ class CONTROL_POINT(XBeeDevice):
 
         alive = medic.alive if medic else 0x00
         team  = PG.get_team(uid)
+        self.DB.session.commit()
 
-        if team: pkt = bytearray([CONTROL_POINT.QUERY, team.team, alive])
+        if team: pkt = bytearray([CONTROL_POINT.QUERY, team, alive])
         else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00])
 
         return pkt
@@ -544,6 +555,7 @@ class CONTROL_POINT(XBeeDevice):
 
         node = str(sender.get_64bit_addr())
         status = PG.get_capture_status(node)
+        self.DB.session.commit()
 
         if not status: return None
 

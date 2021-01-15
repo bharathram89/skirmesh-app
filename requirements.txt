@@ -12,6 +12,7 @@ numpy==1.19.2
 psycopg2-binary==2.8.6
 pyftdi==0.52.0
 pyserial==3.4
+python-dotenv==0.15.0
 pyusb==1.1.0
 six==1.15.0
 soupsieve==2.1

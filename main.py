@@ -21,15 +21,9 @@ import time, json
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-#RUNNING LOCALLY
-if 'DATABASE_URL' in os.environ:
 
-    DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ['DATABASE_URL']
 
-else:
-
-    DATABASE_URL = "postgres://mzyxzrexzzswvj:382b5066ff809bbc8c9c8b3767499604cd107fd43615a301011c99ed23ea6cf3@ec2-52-6-75-198.compute-1.amazonaws.com:5432/d2j7fdi5l857i"
-    #DATABASE_URL = 'sqlite:////tmp/test.postgres'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
@@ -59,8 +53,8 @@ application.secret_key = 'a secret'
 
 
 DB = SQLAlchemy(application)
-
-import db_models as PG
+from db_models import *
+# import db_models as PG
 from controller import CONTROL_POINT, END_NODE
 
 # Creates/initializes the databases - not really necessary here...could
@@ -87,8 +81,8 @@ def is_change():
 
         for n in CP.end_nodes:
 
-            cap_status  = PG.get_capture_status(n)
-            node_status = PG.get_node_status(n)
+            cap_status  = get_capture_status(n)
+            node_status = get_node_status(n)
 
             if node_status and cap_status:
 
@@ -98,6 +92,8 @@ def is_change():
                                 'color' : CP.TEAM_CMAP[cap_status.team],
                                 'stable': cap_status.stable
                                 }
+
+            DB.session.commit()
 
         if to_update: return make_response(jsonify(to_update), 200)
 
@@ -111,9 +107,9 @@ def main_page():
     """
     Establish main page.
     """
-    reg_teams = PG.get_registered_teams()
-    teams = [PG.get_team_members(t) for t in reg_teams if reg_teams]
-    _players_ = PG.get_player_names()
+    reg_teams = get_registered_teams()
+    teams = [get_team_members(t) for t in reg_teams if reg_teams]
+    _players_ = get_player_names()
 
     #TODO circle back on this once we register players to see if it works...
     players =  {p.uid:p.lname for p in _players_ if p.uid}
@@ -127,6 +123,8 @@ def main_page():
               'team_name'  : CP.TEAM_NAME,
               'players'    : players,
                }
+
+    DB.session.commit()
 
     return render_template('field.html', **kwargs)
 
@@ -146,8 +144,7 @@ def registration():
 
         try:
 
-            users = PG.AuthUsers(**data)
-
+            users = AuthUsers(**data)
             DB.session.add(users)
             DB.session.commit()
 
@@ -158,6 +155,11 @@ def registration():
 
             error = 'That account already exists'
             flash(error)
+
+        finally:
+
+            DB.session.commit()
+
             return render_template('registration.html', form=form, error=error)
 
     return render_template('registration.html', form=form)
@@ -174,7 +176,8 @@ def login():
         username = form.username.data
         password = form.password.data
 
-        users = PG.get_auth_users()
+        users = get_auth_users()
+        DB.session.commit()
 
         valid_users = {k.username:k.password for k in users}
 
@@ -226,18 +229,18 @@ def logout():
 def players():
 
 
-    reg_teams  = PG.get_registered_teams()
-    team_times = {tt[0]:tt[1] for tt in PG.get_time_held_by_team()}
-    team_score = {ts[0]:ts[1] for ts in PG.get_score_by_team()}
-    plyr_score = {ps[0]:ps[1] for ps in PG.get_score_by_uid()}
+    reg_teams  = get_registered_teams()
+    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
+    team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
+    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
 
-    _players_ = PG.get_player_names()
+    _players_ = get_player_names()
     players =  {p.uid:p.lname for p in _players_ if p.uid}
 
     nd_times = dict()
     for n in CP.end_nodes:
 
-        times = PG.get_times_for_node(n)
+        times = get_times_for_node(n)
         if times: nd_times[CP.end_nodes[n].location] = times
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
@@ -251,6 +254,8 @@ def players():
               'node_times' : nd_times,
               'players'    : players}
 
+    DB.session.commit()
+
     return render_template('players.html', **kwargs)
 
 
@@ -258,8 +263,11 @@ def players():
 @application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg(uid=None):
 
-    form    = RegistrationForm(request.form)
-    players = PG.get_player_names()
+    form  = RegistrationForm(request.form)
+    error = None
+
+    players = get_player_names()
+    DB.session.commit()
 
     if request.method == "POST" and form.validate():
 
@@ -275,8 +283,7 @@ def user_reg(uid=None):
 
         try:
 
-            DB.session.add(PG.Player(**data))
-            DB.session.commit()
+            DB.session.add(Player(**data))
 
         except:
 
@@ -284,9 +291,11 @@ def user_reg(uid=None):
             print(error)
             flash(error)
 
-            return render_template('user_reg.html', error=error)
+        finally:
 
-        return redirect(url_for('user_reg'))
+            DB.session.commit()
+
+            return render_template('user_reg.html', form=form, error=error)
 
     return render_template('user_reg.html', form=form, Players=players)
 
@@ -295,16 +304,17 @@ def user_reg(uid=None):
 @application.route('/node_admin')
 def node_admin():
 
-    nodes = PG.get_nodes()
-    node_status = {n:PG.get_node_status(n) for n in nodes}
+    nodes = get_nodes()
+    node_status = {n:get_node_status(n) for n in CP.end_nodes}
 
     kwargs = {
-
              'cmd_dict'    : CP.CMD_DICT if nodes else None,
              'cmd_args'    : CMD_ARGS,
              'node_cols'   : ['node id','location','configuration'],
              'node_status' : node_status,
              }
+
+    DB.session.commit()
 
     return render_template('node_admin.html', **kwargs)
 
@@ -337,9 +347,9 @@ def issue_command():
                     'config'  : CP.end_nodes[dest].configuration,
                     'node'    : dest}
 
-            exists = PG.get_node_status(dest)
+            exists = get_node_status(dest)
             if exists: exists.location = data['location']
-            else: DB.session.add(PG.NodeStatus(**data))
+            else: DB.session.add(NodeStatus(**data))
 
             DB.session.commit()
 
@@ -355,9 +365,9 @@ def issue_command():
                         'config'  : int(config, 16),
                         'node'    : dest}
 
-                exists = PG.get_node_status(dest)
+                exists = get_node_status(dest)
                 if exists: exists.config = int(config, 16)
-                else: DB.session.add(PG.NodeStatus(**data))
+                else: DB.session.add(NodeStatus(**data))
 
                 DB.session.commit()
 
@@ -370,9 +380,9 @@ def issue_command():
                             'config'  : int(config, 16),
                             'node'    : n}
 
-                    exists = PG.get_node_status(n)
+                    exists = get_node_status(n)
                     if exists: exists.config = int(config, 16)
-                    else: DB.session.add(PG.NodeStatus(**data))
+                    else: DB.session.add(NodeStatus(**data))
 
                     DB.session.commit()
 
@@ -429,12 +439,12 @@ def issue_command():
 
             for node in CP.end_nodes:
 
-                cap_status = PG.get_capture_status(node)
+                cap_status = get_capture_status(node)
 
                 if cap_status and cap_status.stable:
 
-                    begin  = PG.get_time_capture_complete(node)
-                    closed = PG.get_is_capture_closed(node)
+                    begin  = get_time_capture_complete(node)
+                    closed = get_is_capture_closed(node)
 
                     # If a capture started and was not closed out normally
                     # then close it out
@@ -443,10 +453,12 @@ def issue_command():
                         held  = int((datetime.now() - begin).total_seconds())
 
                         tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'END GAME'}
-                        DB.session.add(PG.Score(**tdat))
+                        DB.session.add(Score(**tdat))
                         DB.session.commit()
 
                         print(f"Ended timer count for {node}")
+
+                DB.session.commit()
 
 
         elif button == 'Discover Network':
@@ -461,8 +473,8 @@ def issue_command():
 @application.route('/comms')
 def comms_log():
 
-    kwargs = {'cols_data' : PG.CommsData.__table__.columns.keys(),
-              'data_data' : DB.session.query(PG.CommsData).order_by(PG.CommsData.id.desc()).all(),
+    kwargs = {'cols_data' : CommsData.__table__.columns.keys(),
+              'data_data' : DB.session.query(CommsData).order_by(CommsData.id.desc()).all(),
               'datetime'  : datetime,
               'time_disp' : CP.TIME_DISP,
              }
@@ -514,7 +526,7 @@ def assign_uid():
 
     try:
 
-        player = PG.get_player(player)
+        player = get_player(player)
         player.uid = uid
         DB.session.commit()
 
