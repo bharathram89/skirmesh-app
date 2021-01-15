@@ -13,7 +13,7 @@
 
 <div class="leaderboard">
 
-  <h1> team leaderboard </h1>
+  <h1 class="leaderboard_header"> team leaderboard </h1>
 
   <table id="table">
     <thead>
@@ -50,7 +50,7 @@
 
 
 {% for nd in node_times %}
-<h3> {{ nd if nd else node_times[nd].node }} </h3>
+<h3 class="leaderboard_header"> {{ nd if nd else node_times[nd].node }} </h3>
 <table id="table">
   <thead>
     <tr>
@@ -87,7 +87,7 @@
 
 <div class="leaderboard">
 
-  <h1> player leaderboard </h1>
+  <h1 class="leaderboard_header"> player leaderboard </h1>
 
   <table id="table">
     <thead>
@@ -100,12 +100,11 @@
     <tbody>
         {% for dat in plyr_score %}
         <tr class="row">
-
             {% for col in p_sc_cols %}
                 {% if col.lower() == 'player' %}
-                <td style="width:50%"> {{ players[dat] if dat in players else dat | safe }} </td>
+                <td style="width:40%"> {{ players[dat] if dat in players else dat | safe }} </td>
                 {% else %}
-                <td style="width:50%"> {{ plyr_score[dat] | safe }} </td>
+                <td style="width:40%"> {{ plyr_score[dat] | safe }} </td>
                 {% endif %}
             {% endfor %}
 

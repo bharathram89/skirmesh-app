@@ -2,7 +2,6 @@ from main import DB
 from datetime import datetime, date
 from sqlalchemy import func, and_
 
-
 TIME_FMT = '%Y-%m-%d %H:%M:%f'
 
 
@@ -190,6 +189,10 @@ class NodeStatus(DB.Model):
     node      = DB.Column(DB.String(), unique=True, nullable=False)
     location  = DB.Column(DB.String())
     config    = DB.Column(DB.Integer())
+    cap_time  = DB.Column(DB.Integer())
+    med_time  = DB.Column(DB.Integer())
+    bomb_time = DB.Column(DB.Integer())
+    cap_asst  = DB.Column(DB.Integer())
     timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 

@@ -339,6 +339,12 @@ div.player-leaderboard {
     overflow-y: auto;
 }
 
+.leaderboard_header {
+    background: linear-gradient(45deg, black, red);
+    text-align: left;
+
+}
+
 div.roster {
     max-height: 22.8em;
     overflow-y: auto;
@@ -422,4 +428,8 @@ dd, dt {
 
 #fname, #lname {
     box-sizing: border-box;
+}
+
+.node_container {
+    text-align: left;
 }

@@ -32,8 +32,8 @@ if 'DATABASE_URL' in os.environ:
 
 else:
 
-    DATABASE_URL = "postgres://mzyxzrexzzswvj:382b5066ff809bbc8c9c8b3767499604cd107fd43615a301011c99ed23ea6cf3@ec2-52-6-75-198.compute-1.amazonaws.com:5432/d2j7fdi5l857i"
-    #DATABASE_URL = 'sqlite:////tmp/test.postgres'
+    #DATABASE_URL = "postgres://mzyxzrexzzswvj:382b5066ff809bbc8c9c8b3767499604cd107fd43615a301011c99ed23ea6cf3@ec2-52-6-75-198.compute-1.amazonaws.com:5432/d2j7fdi5l857i"
+    DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/test.db'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
@@ -63,7 +63,7 @@ application.secret_key = 'a secret'
 
 
 DB = SQLAlchemy(application)
-from db_models import *
+#from db_models import *
 import db_models as PG
 from controller import CONTROL_POINT, END_NODE
 
@@ -250,13 +250,17 @@ def logout():
 def node_admin():
 
     node_status = {n:PG.get_node_status(n) for n in CP.end_nodes}
+    capture_status = {c:PG.get_capture_status(c) for c in CP.end_nodes}
 
     kwargs = {
              'node_dict'   : CP.end_nodes,
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
-             'node_cols'   : ['node id','location','configuration'],
+             'node_cols'   : ['node id','location','configuration',
+                              'Capture Time', 'Medic Time', 'Bomb Time'
+                              'Capture Assist %'],
              'node_status' : node_status,
+             'cap_status'  : capture_status,
              }
 
     return render_template('node_admin.html', **kwargs)
@@ -333,6 +337,7 @@ def user_reg(uid=None):
             # conn = SQL.create_connection(CP.DB_NAME)
             # SQL.add_row(conn, 'player', data)
             DB.session.add(Player(**data))
+            DB.session.commit()
             # conn.close()
 
         except:
@@ -367,15 +372,26 @@ def issue_command():
         pkt[1] = int(config, 16)
 
 
+        node_status = {n:PG.get_node_status(n) for n in CP.end_nodes}
+        capture_status = {c:PG.get_capture_status(c) for c in CP.end_nodes}
+
+        print(node_status)
+        print(capture_status)
+
         if int(config, 16) == SET_LOCATION and dest != BROADCAST:
 
             print(f"Setting {dest} Location to: {data['location']}")
 
             CP.end_nodes[dest].location = data['location']
 
-            data = {'location': CP.end_nodes[dest].location,
-                    'config'  : CP.end_nodes[dest].configuration,
-                    'node'    : dest}
+            data = {'location' : CP.end_nodes[dest].location,
+                    'config'   : CP.end_nodes[dest].configuration,
+                    'node'     : dest,
+                    'cap_time' : CP.end_nodes[dest].cap_time,
+                    'med_time' : CP.end_nodes[dest].med_time,
+                    'cap_asst' : CP.end_nodes[dest].cap_asst,
+                    'bomb_time': CP.end_nodes[dest].bomb_time,
+                    }
 
             # CP.exec_sql(SQL.add_row, 'node_status', data)
             exists = PG.get_node_status(dest)
@@ -392,9 +408,14 @@ def issue_command():
             # If just setting the configuration for one node
             if int(config, 16) in CP.CONFIGURATIONS and dest in CP.end_nodes:
 
-                data = {'location': CP.end_nodes[dest].location,
-                        'config'  : int(config, 16),
-                        'node'    : dest}
+                data = {'location' : CP.end_nodes[dest].location,
+                        'config'   : CP.end_nodes[dest].configuration,
+                        'node'     : dest,
+                        'cap_time' : CP.end_nodes[dest].cap_time,
+                        'med_time' : CP.end_nodes[dest].med_time,
+                        'cap_asst' : CP.end_nodes[dest].cap_asst,
+                        'bomb_time': CP.end_nodes[dest].bomb_time,
+                        }
 
                 # CP.exec_sql(SQL.add_row, 'node_status', data)
                 exists = PG.get_node_status(dest)
@@ -421,8 +442,34 @@ def issue_command():
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
-            if CP.CAPT_TIME <= int(config, 16) <= CP.MED_TIME: pkt.pop(0)
+            if CP.CAPT_TIME <= int(config, 16) <= CP.MED_TIME:
 
+                pkt.pop(0)
+
+                data = {'location' : CP.end_nodes[dest].location,
+                        'config'   : CP.end_nodes[dest].configuration,
+                        'node'     : dest,
+                        'cap_time' : CP.end_nodes[dest].cap_time,
+                        'med_time' : CP.end_nodes[dest].med_time,
+                        'cap_asst' : CP.end_nodes[dest].cap_asst,
+                        'bomb_time': CP.end_nodes[dest].bomb_time,
+                        }
+
+                exists = PG.get_node_status(dest)
+                if exists:
+
+                    if int(config, 16) == CP.CAPT_TIME:
+                        exists.cap_time = int(args, 16) * 10
+                    elif int(config, 16) == CP.BOMB_TIME:
+                        exists.bomb_time = int(args, 16) * 10
+                    elif int(config, 16) == CP.MED_TIME:
+                        exists.med_time = int(args, 16) * 10
+                    elif int(config, 16) == CP.CAP_PERC:
+                        exists.cap_asst = int((1 / int(args, 16)) * 100)
+
+                else: DB.session.add(PG.NodeStatus(**data))
+
+                DB.session.commit()
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
             if int(config, 16) == CP.MED_TIME:

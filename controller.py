@@ -19,6 +19,11 @@ class END_NODE(RemoteXBeeDevice):
         self.location       = None
         self.configuration  = None
         self.capture_status = None
+        self.cap_time       = 60
+        self.med_time       = 60
+        self.cap_asst       = 5
+        self.bomb_time      = 120
+
 
 
 
