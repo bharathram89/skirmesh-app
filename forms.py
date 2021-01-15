@@ -1,9 +1,11 @@
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 
+
 class RegistrationForm(Form):
 
     fname = TextField('First Name', [validators.Length(min=2, max=20)])
     lname = TextField('Last Name', [validators.Length(min=2, max=20)])
+
 
 
 class RegisterAccountForm(Form):

@@ -1,8 +1,8 @@
 """
-BALLAHACK POINT CONTROL
+IRL Systems - Battlefield  (C)
 
 @Author: Brandon Zoss, Dustin Kuchenbecker
-@Date:   October, 2020
+@Date:   October, 2020 - Present
 
 Setup and run on any Raspberry Pi model.
 This code proves the minimum viable functions of a
@@ -19,21 +19,13 @@ from datetime import datetime
 from bs4 import BeautifulSoup as SOUP
 import time, json
 
-from digi.xbee.devices import XBeeDevice, XBee64BitAddress
-
-import sqlite_functions as SQL
-
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-#RUNNING LOCALLY
-if 'DATABASE_URL' in os.environ:
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
+DATABASE_URL = os.environ['DATABASE_URL']
 
-    DATABASE_URL = os.environ['DATABASE_URL']
-
-else:
-
-    #DATABASE_URL = "postgres://mzyxzrexzzswvj:382b5066ff809bbc8c9c8b3767499604cd107fd43615a301011c99ed23ea6cf3@ec2-52-6-75-198.compute-1.amazonaws.com:5432/d2j7fdi5l857i"
-    DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/test.db'
+#DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/test.db'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
@@ -63,15 +55,21 @@ application.secret_key = 'a secret'
 
 
 DB = SQLAlchemy(application)
-#from db_models import *
-import db_models as PG
+from db_models import *
+# import db_models as PG
 from controller import CONTROL_POINT, END_NODE
 
+# Creates/initializes the databases - not really necessary here...could
+# manually initialize the database once, separately.
 DB.create_all()
 
-serial = '/dev/ttyUSB0'
-baud   = 115200
+
+# This is awkward but necessary to prevent a circular import
 if __name__ == '__main__':
+
+    serial = '/dev/ttyUSB0'
+    baud   = 115200
+
     CP = CONTROL_POINT(serial, baud, database=DB)
 
 
@@ -81,16 +79,12 @@ def is_change():
 
     if request.method == 'GET':
 
-        # conn = SQL.create_connection(CP.DB_NAME)
         to_update = dict()
 
         for n in CP.end_nodes:
 
-            # cap_status = SQL._get_capture_status(conn, n)
-            # nod_status = SQL._get_nod_status(conn, n)
-
-            cap_status  = PG.get_capture_status(n)
-            node_status = PG.get_node_status(n)
+            cap_status  = get_capture_status(n)
+            node_status = get_node_status(n)
 
             if node_status and cap_status:
 
@@ -101,7 +95,7 @@ def is_change():
                                 'stable': cap_status.stable
                                 }
 
-        # conn.close()
+            DB.session.commit()
 
         if to_update: return make_response(jsonify(to_update), 200)
 
@@ -115,16 +109,11 @@ def main_page():
     """
     Establish main page.
     """
-    # conn = SQL.create_connection(CP.DB_NAME)
+    reg_teams = get_registered_teams()
+    teams = [get_team_members(t) for t in reg_teams if reg_teams]
+    _players_ = get_player_names()
 
-    # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
-    reg_teams = PG.get_registered_teams()
-    # teams = [SQL._get_team_members(conn, t) for t in reg_teams if reg_teams]
-    teams = [PG.get_team_members(t) for t in reg_teams if reg_teams]
-    # _players_ = SQL._get_player_names(conn)
-    _players_ = PG.get_player_names()
-
-    # players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
+    #TODO circle back on this once we register players to see if it works...
     players =  {p.uid:p.lname for p in _players_ if p.uid}
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
@@ -137,7 +126,7 @@ def main_page():
               'players'    : players,
                }
 
-    # conn.close()
+    DB.session.commit()
 
     return render_template('field.html', **kwargs)
 
@@ -150,23 +139,14 @@ def registration():
 
     if request.method == 'POST' and form.validate():
 
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-
-
-        data = {'username':username,
-                'email'   :email,
-                'password':password,
+        data = {'username':form.username.data,
+                'email'   :form.email.data,
+                'password':form.password.data,
                }
 
         try:
-            # conn = SQL.create_connection(CP.DB_NAME)
-            # SQL.add_row(conn, 'users', data)
-            # conn.close()
 
             users = AuthUsers(**data)
-
             DB.session.add(users)
             DB.session.commit()
 
@@ -177,6 +157,11 @@ def registration():
 
             error = 'That account already exists'
             flash(error)
+
+        finally:
+
+            DB.session.commit()
+
             return render_template('registration.html', form=form, error=error)
 
     return render_template('registration.html', form=form)
@@ -193,13 +178,9 @@ def login():
         username = form.username.data
         password = form.password.data
 
-        # conn = SQL.create_connection(CP.DB_NAME)
-        # users = SQL._get_auth_users(conn)
-        # conn.close()
+        users = get_auth_users()
+        DB.session.commit()
 
-        users = PG.get_auth_users()
-
-        # valid_users = {k.pop('username'):k['password'] for k in users}
         valid_users = {k.username:k.password for k in users}
 
         if username in valid_users.keys():
@@ -266,36 +247,27 @@ def node_admin():
     return render_template('node_admin.html', **kwargs)
 
 
-
 @application.route('/players')
 def players():
 
-    # conn = SQL.create_connection(CP.DB_NAME)
 
-    # reg_teams = [i[0] for i in SQL._get_registered_teams(conn)]
-    reg_teams = PG.get_registered_teams()
+    reg_teams  = get_registered_teams()
+    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
+    team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
+    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
 
-    # tm_times = SQL._get_time_held_by_team(conn)
-    team_times = {tt[0]:tt[1] for tt in PG.get_time_held_by_team()}
-    team_score = {ts[0]:ts[1] for ts in PG.get_score_by_team()}
-    plyr_score = {ps[0]:ps[1] for ps in PG.get_score_by_uid()}
-
-    # _players_ = SQL._get_player_names(conn)
-    _players_ = PG.get_player_names()
-    # players =  {p.pop('uid'):p for p in _players_ if p.get('uid')}
+    _players_ = get_player_names()
     players =  {p.uid:p.lname for p in _players_ if p.uid}
 
     nd_times = dict()
     for n in CP.end_nodes:
-        # times = SQL._get_times_for_node(conn, n)
-        times = PG.get_times_for_node(n)
+
+        times = get_times_for_node(n)
         if times: nd_times[CP.end_nodes[n].location] = times
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
-              # 'team_score' : SQL._score_by_team(conn),
               'team_score' : team_score,
               'p_sc_cols'  : ['player', 'points'],
-              # 'plyr_score' : SQL._score_by_uid(conn),
               'plyr_score' : plyr_score,
               'nodes'      : CP.end_nodes.keys(),
               't_tm_cols'  : ['team', 'time'],
@@ -304,7 +276,7 @@ def players():
               'node_times' : nd_times,
               'players'    : players}
 
-    # conn.close()
+    DB.session.commit()
 
     return render_template('players.html', **kwargs)
 
@@ -313,15 +285,14 @@ def players():
 @application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg(uid=None):
 
-    form = RegistrationForm(request.form)
+    form  = RegistrationForm(request.form)
+    error = None
 
-    # conn = SQL.create_connection(CP.DB_NAME)
-    # players = SQL._get_player_names(conn)
-    players = PG.get_player_names()
-    # conn.close()
-
+    players = get_player_names()
+    DB.session.commit()
 
     if request.method == "POST" and form.validate():
+
         fname = form.fname.data
         lname = form.lname.data
 
@@ -334,25 +305,21 @@ def user_reg(uid=None):
 
         try:
 
-            # conn = SQL.create_connection(CP.DB_NAME)
-            # SQL.add_row(conn, 'player', data)
             DB.session.add(Player(**data))
-            DB.session.commit()
-            # conn.close()
 
         except:
 
             error = 'Name already exists in database'
             print(error)
             flash(error)
-            # conn.close()
 
-            return render_template('user_reg.html', error=error)
+        finally:
 
-        return redirect(url_for('user_reg'))
+            DB.session.commit()
+
+            return render_template('user_reg.html', form=form, error=error)
 
     return render_template('user_reg.html', form=form, Players=players)
-
 
 
 @application.route('/node_admin/issue_command', methods=['POST'])
@@ -393,10 +360,9 @@ def issue_command():
                     'bomb_time': CP.end_nodes[dest].bomb_time,
                     }
 
-            # CP.exec_sql(SQL.add_row, 'node_status', data)
-            exists = PG.get_node_status(dest)
+            exists = get_node_status(dest)
             if exists: exists.location = data['location']
-            else: DB.session.add(PG.NodeStatus(**data))
+            else: DB.session.add(NodeStatus(**data))
 
             DB.session.commit()
 
@@ -417,10 +383,9 @@ def issue_command():
                         'bomb_time': CP.end_nodes[dest].bomb_time,
                         }
 
-                # CP.exec_sql(SQL.add_row, 'node_status', data)
-                exists = PG.get_node_status(dest)
+                exists = get_node_status(dest)
                 if exists: exists.config = int(config, 16)
-                else: DB.session.add(PG.NodeStatus(**data))
+                else: DB.session.add(NodeStatus(**data))
 
                 DB.session.commit()
 
@@ -433,10 +398,9 @@ def issue_command():
                             'config'  : int(config, 16),
                             'node'    : n}
 
-                    # CP.exec_sql(SQL.add_row, 'node_status', data)
-                    exists = PG.get_node_status(n)
+                    exists = get_node_status(n)
                     if exists: exists.config = int(config, 16)
-                    else: DB.session.add(PG.NodeStatus(**data))
+                    else: DB.session.add(NodeStatus(**data))
 
                     DB.session.commit()
 
@@ -480,15 +444,25 @@ def issue_command():
                 dest = BROADCAST
 
 
+            # Blast a few necessary commands to push the node into a
+            # specicic capture configuration
             if int(config, 16) == CP.SET_TEAM:
 
-                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                bytearray([CP.CAPT_TIME, 0]))
-                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                bytearray([CP.CAPTURE, pkt[2]]))
-                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr,
-                                bytearray([CP.CAPT_TIME, 6]))
+                if dest == BROADCAST:
 
+                    CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
+                    CP.send_data_broadcast(bytearray([CP.CAPTURE, pkt[2]]))
+                    CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 6]))
+
+                else:
+
+                    _64bit_addr = CP.end_nodes[dest]._64bit_addr
+
+                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 0]))
+                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE, pkt[2]]))
+                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 6]))
+
+                # Return here to prevent sending the final
                 return make_response(jsonify({"message": "OK"}), 200)
 
 
@@ -509,27 +483,26 @@ def issue_command():
 
             for node in CP.end_nodes:
 
-                # cap_status = CP.exec_sql(SQL._get_capture_status, node)
-                cap_status = PG.get_capture_status(node)
+                cap_status = get_capture_status(node)
 
                 if cap_status and cap_status.stable:
 
-                    # begin = CP.exec_sql(SQL._get_time_capture_complete, node)
-                    begin = PG.get_time_capture_complete(node)
-                    # open = CP.exec_sql(SQL._is_capture_open, node)
-                    closed = PG.get_is_capture_closed(node)
+                    begin  = get_time_capture_complete(node)
+                    closed = get_is_capture_closed(node)
 
+                    # If a capture started and was not closed out normally
+                    # then close it out
                     if begin and not closed:
 
-                        lost  = datetime.now()
-                        held  = int((lost - begin).total_seconds())
+                        held  = int((datetime.now() - begin).total_seconds())
 
                         tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'END GAME'}
-                        # CP.exec_sql(SQL.add_row, 'score', tdat)
-                        DB.session.add(PG.Score(**tdat))
+                        DB.session.add(Score(**tdat))
                         DB.session.commit()
 
                         print(f"Ended timer count for {node}")
+
+                DB.session.commit()
 
 
         elif button == 'Discover Network':
@@ -544,25 +517,21 @@ def issue_command():
 @application.route('/comms')
 def comms_log():
 
-    # conn = SQL.create_connection(CP.DB_NAME)
-
-    kwargs = {'cols_data' : PG.CommsData.__table__.columns.keys(),
-              'data_data' : DB.session.query(PG.CommsData).order_by(PG.CommsData.id.desc()).all(),
+    kwargs = {'cols_data' : CommsData.__table__.columns.keys(),
+              'data_data' : DB.session.query(CommsData).order_by(CommsData.id.desc()).all(),
               'datetime'  : datetime,
-              'time_fmt'  : CP.TIME_FMTR,
               'time_disp' : CP.TIME_DISP,
              }
-
-    # conn.close()
 
     return render_template('comms.html', **kwargs)
 
 
-
+# TODO: Make this a listener function and just pop the UID if it gets one
 @application.route('/user_reg/get_uid', methods=['POST','GET'])
 def get_uid():
 
     while not CP.user_reg:
+
         pass
 
     uid = CP.user_reg
@@ -571,11 +540,12 @@ def get_uid():
     return make_response(jsonify({"uid": uid}), 200)
 
 
-
+# TODO: I don't understand the need for all of these exact same functions
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
 
     while not CP.user_reg:
+
         pass
 
     uid = CP.user_reg.pop()
@@ -583,7 +553,7 @@ def register_user():
     return make_response(jsonify({"uid": uid}), 200)
 
 
-
+# TODO: I have no idea if all this still works
 @application.route('/user_reg/assign_uid', methods=['POST'])
 def assign_uid():
 
@@ -594,24 +564,20 @@ def assign_uid():
         player = data['player']
         uid = data['uid']
 
-    conn = SQL.create_connection(CP.DB_NAME)
-
     data = {'id'  : player,
             'uid' : uid,
            }
 
     try:
-        # CP.exec_sql(SQL.edit_row, 'player', data)
-        player = PG.get_player(player)
+
+        player = get_player(player)
         player.uid = uid
         DB.session.commit()
 
     except:
-        print('UID already assigned to player')
-        # conn.close()
-        return redirect(url_for('user_reg'))
 
-    # conn.close()
+        print('UID already assigned to player')
+        return redirect(url_for('user_reg'))
 
     return redirect(url_for('user_reg'))
 
@@ -624,10 +590,8 @@ if __name__ == '__main__':
 
     t = time.monotonic()
     while not CP.end_nodes and (time.monotonic() - t) < 10:
-        CP.find_nodes()
 
-    #print("Network:")
-    #print(CP.XB_net.get_devices())
+        CP.find_nodes()
 
     # Configure and start the flask application
     application.jinja_env.auto_reload = True

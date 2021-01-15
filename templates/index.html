@@ -35,7 +35,7 @@
         });
       },
 
-    1000); // Happen every 5 seconds (5000 milliseconds)
+    5000); // Happen every 5 seconds (5000 milliseconds)
 
 </script>
 
@@ -56,7 +56,7 @@
             {% for mbr in team %}
             <tr class="row">
 
-                <td class="team{{team_i | safe}}"> {{ players[mbr]['lname'] if mbr in players else mbr | safe }} </td>
+                <td class="team{{team_i | safe}}"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
 
             </tr>
             {% endfor %}
@@ -91,7 +91,7 @@
             {% for mbr in team %}
             <tr class="row">
 
-                <td class="team{{team_i | safe}}"> {{ players[mbr]['lname'] if mbr in players else mbr | safe }} </td>
+                <td class="team{{team_i | safe}}"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
 
             </tr>
             {% endfor %}

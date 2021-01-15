@@ -1,13 +1,16 @@
 from digi.xbee.devices import XBeeDevice, RemoteZigBeeDevice, RemoteXBeeDevice
-import sqlite_functions as SQL
-
-from sqlalchemy.dialects.mysql import insert
-from  sqlalchemy.exc import IntegrityError, InvalidRequestError
+from datetime import datetime
 
 import db_models as PG
 import time
-from datetime import datetime
 
+
+# ██████╗░███████╗░██████╗░██╗███╗░░██╗  ███╗░░██╗░█████╗░██████╗░███████╗
+# ██╔══██╗██╔════╝██╔════╝░██║████╗░██║  ████╗░██║██╔══██╗██╔══██╗██╔════╝
+# ██████╦╝█████╗░░██║░░██╗░██║██╔██╗██║  ██╔██╗██║██║░░██║██║░░██║█████╗░░
+# ██╔══██╗██╔══╝░░██║░░╚██╗██║██║╚████║  ██║╚████║██║░░██║██║░░██║██╔══╝░░
+# ██████╦╝███████╗╚██████╔╝██║██║░╚███║  ██║░╚███║╚█████╔╝██████╔╝███████╗
+# ╚═════╝░╚══════╝░╚═════╝░╚═╝╚═╝░░╚══╝  ╚═╝░░╚══╝░╚════╝░╚═════╝░╚══════╝
 
 
 class END_NODE(RemoteXBeeDevice):
@@ -26,17 +29,39 @@ class END_NODE(RemoteXBeeDevice):
 
 
 
+# ███████╗███╗░░██╗██████╗░  ███╗░░██╗░█████╗░██████╗░███████╗
+# ██╔════╝████╗░██║██╔══██╗  ████╗░██║██╔══██╗██╔══██╗██╔════╝
+# █████╗░░██╔██╗██║██║░░██║  ██╔██╗██║██║░░██║██║░░██║█████╗░░
+# ██╔══╝░░██║╚████║██║░░██║  ██║╚████║██║░░██║██║░░██║██╔══╝░░
+# ███████╗██║░╚███║██████╔╝  ██║░╚███║╚█████╔╝██████╔╝███████╗
+# ╚══════╝╚═╝░░╚══╝╚═════╝░  ╚═╝░░╚══╝░╚════╝░╚═════╝░╚══════╝
+
+
+
+
+# ██████╗░███████╗░██████╗░██╗███╗░░██╗
+# ██╔══██╗██╔════╝██╔════╝░██║████╗░██║
+# ██████╦╝█████╗░░██║░░██╗░██║██╔██╗██║
+# ██╔══██╗██╔══╝░░██║░░╚██╗██║██║╚████║
+# ██████╦╝███████╗╚██████╔╝██║██║░╚███║
+# ╚═════╝░╚══════╝░╚═════╝░╚═╝╚═╝░░╚══╝
+#
+# ░█████╗░░█████╗░███╗░░██╗████████╗██████╗░░█████╗░██╗░░░░░██╗░░░░░███████╗██████╗░
+# ██╔══██╗██╔══██╗████╗░██║╚══██╔══╝██╔══██╗██╔══██╗██║░░░░░██║░░░░░██╔════╝██╔══██╗
+# ██║░░╚═╝██║░░██║██╔██╗██║░░░██║░░░██████╔╝██║░░██║██║░░░░░██║░░░░░█████╗░░██████╔╝
+# ██║░░██╗██║░░██║██║╚████║░░░██║░░░██╔══██╗██║░░██║██║░░░░░██║░░░░░██╔══╝░░██╔══██╗
+# ╚█████╔╝╚█████╔╝██║░╚███║░░░██║░░░██║░░██║╚█████╔╝███████╗███████╗███████╗██║░░██║
+# ░╚════╝░░╚════╝░╚═╝░░╚══╝░░░╚═╝░░░╚═╝░░╚═╝░╚════╝░╚══════╝╚══════╝╚══════╝╚═╝░░╚═╝
+
 
 class CONTROL_POINT(XBeeDevice):
     """
     This class will be the interface to the contoller
     """
 
-    # Some import string conversions for the datetime object
-    TIME_FMTR = '%Y-%m-%d %H:%M:%S'
-    TIME_DISP = '%d %b %Y  %H:%M:%S'
+    # █▀▀ █▀█ █▄░█ █▀▀ █ █▀▀ █░█ █▀█ ▄▀█ ▀█▀ █ █▀█ █▄░█ █▀
+    # █▄▄ █▄█ █░▀█ █▀░ █ █▄█ █▄█ █▀▄ █▀█ ░█░ █ █▄█ █░▀█ ▄█
 
-    # Configuration codes
     CONFIGURE = 0x00
     REGISTER  = 0x01
     QUERY     = 0x02
@@ -46,16 +71,25 @@ class CONTROL_POINT(XBeeDevice):
     MEDIC     = 0x0E
     BOMB      = 0xBB
 
-    # Status requests
+
+    # █▀ ▀█▀ ▄▀█ ▀█▀ █░█ █▀   █▀█ █▀▀ █▀█ █░█ █▀▀ █▀ ▀█▀ █▀
+    # ▄█ ░█░ █▀█ ░█░ █▄█ ▄█   █▀▄ ██▄ ▀▀█ █▄█ ██▄ ▄█ ░█░ ▄█
+
     ND_STATUS = 0x53
 
-    # Time setters
+
+    # ▀█▀ █ █▀▄▀█ █▀▀   █▀ █▀▀ ▀█▀ ▀█▀ █▀▀ █▀█ █▀
+    # ░█░ █ █░▀░█ ██▄   ▄█ ██▄ ░█░ ░█░ ██▄ █▀▄ ▄█
+
     CAPT_TIME = 0x8A
     BOMB_TIME = 0x8B
     CAP_PERC  = 0x8C
     MED_TIME  = 0x8E
 
-    # Color assignments
+
+    # █▀▀ █▀█ █░░ █▀█ █▀█   █▀▄▀█ ▄▀█ █▀█
+    # █▄▄ █▄█ █▄▄ █▄█ █▀▄   █░▀░█ █▀█ █▀▀
+
     RED    = 0x01
     BLUE   = 0x02
     YELLOW = 0x03
@@ -69,14 +103,17 @@ class CONTROL_POINT(XBeeDevice):
                  GREEN  : '#008000',
                  PURPLE : '#3333CC'}
 
+    #TODO This needs to be JSON file based for ease of swap
     TEAM_NAME = {RED    : 'RED',
                  BLUE   : 'BLUE',
                  YELLOW : 'YELLOW',
                  GREEN  : 'GREEN',
                  PURPLE : 'PURPLE'}
 
-    # This is primarly used to set the menu options in
-    # the node configuration page
+
+    # █▀▄▀█ █▀▀ █▄░█ █░█   █▀ █▀▀ ▀█▀ ▀█▀ █▀▀ █▀█ █▀
+    # █░▀░█ ██▄ █░▀█ █▄█   ▄█ ██▄ ░█░ ░█░ ██▄ █▀▄ ▄█
+    # This is primarly used to set the menu options
     CMD_DICT = {
                 CONFIGURE : 'CONFIGURE',
                 REGISTER  : 'REGISTER',
@@ -92,27 +129,43 @@ class CONTROL_POINT(XBeeDevice):
                 CAP_PERC  : 'SET ASSIST %',
                 }
 
+
+
+    # ▄▀█ █░░ █░░ █▀█ █░█░█ █▀▀ █▀▄   █▀▀ █▀█ █▄░█ █▀▀ █ █▀▀ █▀
+    # █▀█ █▄▄ █▄▄ █▄█ ▀▄▀▄▀ ██▄ █▄▀   █▄▄ █▄█ █░▀█ █▀░ █ █▄█ ▄█
+
     CONFIGURATIONS = [REGISTER,
                       QUERY,
                       CAPTURE,
                       MEDIC,
                       BOMB]
 
-    DB_NAME    = "database.sqlite"
+
+    # █▀▄▀█ █ █▀ █▀▀   ▄▀█ ▀█▀ ▀█▀ █▀█ █ █▄▄ █░█ ▀█▀ █▀▀ █▀
+    # █░▀░█ █ ▄█ █▄▄   █▀█ ░█░ ░█░ █▀▄ █ █▄█ █▄█ ░█░ ██▄ ▄█
+
+    TIME_DISP = '%d %b %Y  %H:%M:%S'
     MEDIC_TIME = int(60)
+
+
+
+    # █▀▀▄ █▀▀ █▀▀▀ ░▀░ █▀▀▄ 　 █▀▀▄ █▀▀█ █▀▀▄ █▀▀ 　
+    # █▀▀▄ █▀▀ █░▀█ ▀█▀ █░░█ 　 █░░█ █░░█ █░░█ █▀▀ 　
+    # ▀▀▀░ ▀▀▀ ▀▀▀▀ ▀▀▀ ▀░░▀ 　 ▀░░▀ ▀▀▀▀ ▀▀▀░ ▀▀▀ 　
+    #
+    # ░▀░ █▀▀▄ ░▀░ ▀▀█▀▀ ░▀░ █▀▀█ █░░ ░▀░ ▀▀█ ▀▀█▀▀ ░▀░ █▀▀█ █▀▀▄
+    # ▀█▀ █░░█ ▀█▀ ░░█░░ ▀█▀ █▄▄█ █░░ ▀█▀ ▄▀░ ░░█░░ ▀█▀ █░░█ █░░█
+    # ▀▀▀ ▀░░▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀░░▀ ▀▀▀ ▀▀▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀▀▀▀ ▀░░▀
 
     def __init__(self, serial, baud, database):
 
         XBeeDevice.__init__(self, serial, baud)
-        #database location/name
-        # conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
-        # SQL.init_tables(conn)
-        # conn.close()
 
         self.DB = database
 
         self.end_nodes = {}
-        self.user_reg = None
+        self.user_reg  = None
+
         self.configure_XB()
 
 
@@ -132,16 +185,6 @@ class CONTROL_POINT(XBeeDevice):
         self.add_data_received_callback(self.data_received_callback)
 
 
-    # @staticmethod
-    # def exec_sql(sql_fun, *args):
-    #
-    #     conn = SQL.create_connection(CONTROL_POINT.DB_NAME)
-    #     result = sql_fun(conn, *args)
-    #     conn.close()
-    #
-    #     return result
-
-
     def find_nodes(self):
 
         print("Finding nodes in the network")
@@ -151,26 +194,27 @@ class CONTROL_POINT(XBeeDevice):
         while self.XB_net.is_discovery_running():
             time.sleep(0.1)
 
-        for node in self.XB_net.get_devices():
 
-            if node not in self.end_nodes:
 
-                end_node = END_NODE(self, node)
-                node_addr = str(node.get_64bit_addr())
 
-                nd_status = PG.get_node_status(node_addr)
 
-                if nd_status:
+    # █▀▀ █▀▀▄ █▀▀▄ 　 █▀▀▄ █▀▀█ █▀▀▄ █▀▀ 　
+    # █▀▀ █░░█ █░░█ 　 █░░█ █░░█ █░░█ █▀▀ 　
+    # ▀▀▀ ▀░░▀ ▀▀▀░ 　 ▀░░▀ ▀▀▀▀ ▀▀▀░ ▀▀▀ 　
+    #
+    # ░▀░ █▀▀▄ ░▀░ ▀▀█▀▀ ░▀░ █▀▀█ █░░ ░▀░ ▀▀█ ▀▀█▀▀ ░▀░ █▀▀█ █▀▀▄
+    # ▀█▀ █░░█ ▀█▀ ░░█░░ ▀█▀ █▄▄█ █░░ ▀█▀ ▄▀░ ░░█░░ ▀█▀ █░░█ █░░█
+    # ▀▀▀ ▀░░▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀░░▀ ▀▀▀ ▀▀▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀▀▀▀ ▀░░▀
 
-                    end_node.location      = nd_status.location
-                    end_node.configuration = nd_status.config
 
-                    if nd_status.config == CONTROL_POINT.CAPTURE:
 
-                        end_node.capture_status = PG.get_capture_status(node_addr)
-
-                self.end_nodes[node_addr] = end_node
-
+    # █▀▀▄ █▀▀ █▀▀▀ ░▀░ █▀▀▄ 　 ▀▀█▀▀ █░█ ░░ █▀▀█ █░█
+    # █▀▀▄ █▀▀ █░▀█ ▀█▀ █░░█ 　 ░░█░░ ▄▀▄ ▀▀ █▄▄▀ ▄▀▄
+    # ▀▀▀░ ▀▀▀ ▀▀▀▀ ▀▀▀ ▀░░▀ 　 ░░▀░░ ▀░▀ ░░ ▀░▀▀ ▀░▀
+    #
+    # █░░█ █▀▀█ █▀▀▄ █▀▀▄ █░░ █▀▀ █▀▀█
+    # █▀▀█ █▄▄█ █░░█ █░░█ █░░ █▀▀ █▄▄▀
+    # ▀░░▀ ▀░░▀ ▀░░▀ ▀▀▀░ ▀▀▀ ▀▀▀ ▀░▀▀
 
     def transmit_pkt(self, dest, pkt):
 
@@ -193,24 +237,47 @@ class CONTROL_POINT(XBeeDevice):
         self.DB.session.commit()
 
 
-    @staticmethod
-    def net_mod_callback(event, reason, node):
+    def net_mod_callback(self, event, reason, node):
 
         print('Network Event:')
         print("Type: %s (%d)" % (event.description, event.code))
         print("Reason: %s (%d)" % (reason.description, reason.code))
 
-        if node: print(f"Node: {node}")
+        if node and node.get_64bit_addr() not in self.end_nodes:
+
+            print(f"Adding {node} to Network")
+
+            end_node = END_NODE(self, node)
+            node_addr = str(node.get_64bit_addr())
+
+            nd_status = PG.get_node_status(node_addr)
+
+            if nd_status:
+
+                end_node.location      = nd_status.location
+                end_node.configuration = nd_status.config
+
+                if nd_status.config == CONTROL_POINT.CAPTURE:
+
+                    end_node.capture_status = PG.get_capture_status(node_addr)
+
+            else:
+
+                self.DB.session.add(PG.NodeStatus(**{'node':node_addr}))
+
+            self.end_nodes[node_addr] = end_node
+            self.DB.session.commit()
 
 
     def data_received_callback(self, xb_msg):
 
         payload = xb_msg.data
-        sender = xb_msg.remote_device
+        sender  = xb_msg.remote_device
 
         print(f'Received (payload): {payload}')
 
         if str(sender.get_64bit_addr()) not in self.end_nodes:
+
             self.find_nodes()
 
         data = {
@@ -220,7 +287,6 @@ class CONTROL_POINT(XBeeDevice):
                 'payload': payload[1:].hex(),
                }
 
-        # self.exec_sql(SQL.add_row, 'data', data)
         self.DB.session.add(PG.CommsData(**data))
         self.DB.session.commit()
 
@@ -232,6 +298,24 @@ class CONTROL_POINT(XBeeDevice):
 
             if pkt: self.transmit_pkt(sender, pkt)
 
+
+    # █▀▀ █▀▀▄ █▀▀▄ 　 ▀▀█▀▀ █░█ ░░ █▀▀█ █░█
+    # █▀▀ █░░█ █░░█ 　 ░░█░░ ▄▀▄ ▀▀ █▄▄▀ ▄▀▄
+    # ▀▀▀ ▀░░▀ ▀▀▀░ 　 ░░▀░░ ▀░▀ ░░ ▀░▀▀ ▀░▀
+    #
+    # █░░█ █▀▀█ █▀▀▄ █▀▀▄ █░░ █▀▀ █▀▀█
+    # █▀▀█ █▄▄█ █░░█ █░░█ █░░ █▀▀ █▄▄▀
+    # ▀░░▀ ▀░░▀ ▀░░▀ ▀▀▀░ ▀▀▀ ▀▀▀ ▀░▀▀
+
+
+
+    # █▀▀▄ █▀▀ █▀▀▀ ░▀░ █▀▀▄ 　 █▀▄▀█ █▀▀ █▀▀▀
+    # █▀▀▄ █▀▀ █░▀█ ▀█▀ █░░█ 　 █░▀░█ ▀▀█ █░▀█
+    # ▀▀▀░ ▀▀▀ ▀▀▀▀ ▀▀▀ ▀░░▀ 　 ▀░░░▀ ▀▀▀ ▀▀▀▀
+    #
+    # █▀▀█ █▀▀ ▀▀█▀▀ ░▀░ █▀▀█ █▀▀▄
+    # █▄▄█ █░░ ░░█░░ ▀█▀ █░░█ █░░█
+    # ▀░░▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀▀▀▀ ▀░░▀
 
     @property
     def parse_message(self):
@@ -252,73 +336,73 @@ class CONTROL_POINT(XBeeDevice):
         team = payload[1]
 
         print(f'Registering {uid} to team {team}')
-        data = {'uid':uid,'team':team}
-        # self.exec_sql(SQL.add_row, 'team', data)
 
         exists = PG.get_uid_in_team(uid)
-
+        self.DB.session.commit()
+        # If the player already exists, update his information
         if exists:
             exists.team      = team
             exists.timestamp = datetime.now()
         else:
-            self.DB.session.add(PG.Team(**data))
+            self.DB.session.add(PG.Team(**{'uid':uid,'team':team}))
 
         self.DB.session.commit()
 
-        data = {'uid':uid,'alive':1}
-        # self.exec_sql(SQL.add_row, 'medic', data)
+        # If the player is not "alive", reset his alive status
+        if not PG.get_is_alive(uid):
 
-        if not PG.get_is_alive(uid):  self.DB.session.add(PG.Medic(**data))
-
-        self.DB.session.commit()
+            self.DB.session.add(PG.Medic(**{'uid':uid,'alive':1}))
+            self.DB.session.commit()
 
         return None
 
 
+    # ▒█▀▀█ ▒█▀▀▀ ▒█▀▀█ ▀█▀ ▒█▄░▒█ 　 ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ▒█▀▀█ ▒█▀▀▀
+    # ▒█▀▀▄ ▒█▀▀▀ ▒█░▄▄ ▒█░ ▒█▒█▒█ 　 ▒█░░░ ▒█▄▄█ ▒█▄▄█ ░▒█░░ ▒█░▒█ ▒█▄▄▀ ▒█▀▀▀
+    # ▒█▄▄█ ▒█▄▄▄ ▒█▄▄█ ▄█▄ ▒█░░▀█ 　 ▒█▄▄█ ▒█░▒█ ▒█░░░ ░▒█░░ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄
+
     def __capture(self, sender, payload):
 
-        node = str(sender.get_64bit_addr())
-        # cap_status = self.exec_sql(SQL._get_capture_status, node)
+        node       = str(sender.get_64bit_addr())
         cap_status = PG.get_capture_status(node)
+        self.DB.session.commit()
 
         if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
             # byte to indicate that capture is complete
             # Get the most recent team interaction with the node and set the
             # node as stable with the prosecuting team as owning
-            stable   = payload[1]
 
-            # own_uid, own_team, cap_stable, cap_time = cap_status
-
-            data = {'node':node, 'tag':cap_status.tag, 'team':cap_status.team, 'stable':stable}
-            # self.exec_sql(SQL.add_row, 'capture_status', data)
-            cap_status.stable = stable
-            #self.DB.session.add(PG.CaptureStatus(**data))
+            # We only need to update the stability column for the current status
+            cap_status.stable = payload[1]
             self.DB.session.commit()
 
-            # orig_captor = self.exec_sql(SQL._get_last_captor, node)
+            # Grab the last captor from SCORE, to determine who the points are
+            # awarded to when/if capture is completed
             orig_captor = PG.get_last_captor(node)
 
-            if orig_captor:
+            # If there was an originating captor and the node is now STABLE
+            # (...The node will only ever be considered stable here)
+            if orig_captor and payload[1]:
 
-                data = {'node':node,
-                        'uid':orig_captor.uid,
-                        'team':orig_captor.team,
+                data = {'node'  :node,
+                        'uid'   :orig_captor.uid,
+                        'team'  :orig_captor.team,
                         'points':2,
                         'action':'CAPTURE COMPLETE'}
-                # self.exec_sql(SQL.add_row, 'score', data)
+
                 self.DB.session.add(PG.Score(**data))
-                self.DB.session.commit()
+
+            self.DB.session.commit()
 
         if len(payload[1:5]) == 4:
 
             uid = payload[1:5].hex()
-            # team = self.exec_sql(SQL._get_team, uid)
             team = PG.get_team(uid)
+            self.DB.session.commit()
 
             if team:
 
-                team = team.team
                 print(f'Team {team} is prosecuting Node_{node}')
 
                 data = {'uid':uid, 'team':team, 'node':node}
@@ -333,21 +417,26 @@ class CONTROL_POINT(XBeeDevice):
 
                     if data['action'] == 'CAPTURE':
 
-                        # begin = self.exec_sql(SQL._get_time_capture_complete, node)
                         begin = PG.get_time_capture_complete(node)
 
+                        # ONLY figure out the score if the score has not already
+                        # been figured out (i.e. the capture was closed out)
                         if begin and not PG.get_is_capture_closed(node):
 
-                            lost  = datetime.now()
-                            held  = int((lost - begin).total_seconds())
+                            held  = int((datetime.now() - begin).total_seconds())
 
-                            tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'LOST CONTROL'}
-                            # self.exec_sql(SQL.add_row, 'score', tdat)
+                            tdat = {'node'     :node,
+                                    'team'     :cap_status.team,
+                                    'time_held':held,
+                                    'action'   :'LOST CONTROL'}
+
                             self.DB.session.add(PG.Score(**tdat))
-                            self.DB.session.commit()
+
+                        self.DB.session.commit()
 
                 else:
-
+                    # If there was no status for the node - this is a capture
+                    # and the capture should be instant
                     data['action'] = 'CAPTURE'
                     data['points'] = 2
 
@@ -356,23 +445,19 @@ class CONTROL_POINT(XBeeDevice):
                 # known
                 if data['action'] == 'CAPTURE' or (data['action'] == 'ASSIST' and not cap_status.stable):
 
-                    # self.exec_sql(SQL.add_row, 'score', data)
                     self.DB.session.add(PG.Score(**data))
                     self.DB.session.commit()
 
                 data = {'node':node, 'tag':uid, 'team':team}
-
                 # If the node is not currently owned, then it's immediately stable
                 # If the prosecuting team is the same team, keep it stable
                 data['stable'] = 1 if not cap_status or (cap_status.stable and team == cap_status.team) else 0
 
-                # self.exec_sql(SQL.add_row, 'capture_status', data)
-
                 if cap_status:
 
-                    cap_status.tag  = uid
-                    cap_status.team = team
-                    # TODO Need to cleanup how this is assigned
+                    cap_status.tag    = uid
+                    cap_status.team   = team
+                    # TODO cleanup how this is assigned
                     cap_status.stable = data['stable']
 
                 else:
@@ -381,18 +466,25 @@ class CONTROL_POINT(XBeeDevice):
 
                 self.DB.session.commit()
 
+                # In all cases, return CAPTURE and TEAM so the node can
+                # shift status appropriately
                 return bytearray([CONTROL_POINT.CAPTURE, team])
 
+            # If you made it here, the UID is not registered to a team
             print(f'{uid} is not registered to a team')
 
         return None
+
+    # ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▄ 　 ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ▒█▀▀█ ▒█▀▀▀
+    # ▒█▀▀▀ ▒█▒█▒█ ▒█░▒█ 　 ▒█░░░ ▒█▄▄█ ▒█▄▄█ ░▒█░░ ▒█░▒█ ▒█▄▄▀ ▒█▀▀▀
+    # ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▀ 　 ▒█▄▄█ ▒█░▒█ ▒█░░░ ░▒█░░ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄
 
 
     def __medic(self, sender, payload):
 
         uid = payload[1:5].hex()
-        # row = self.exec_sql(SQL._get_is_alive, uid)
         medic = PG.get_is_alive(uid)
+        self.DB.session.commit()
 
         DEAD  = 0x00
         ALIVE = 0x01
@@ -406,14 +498,11 @@ class CONTROL_POINT(XBeeDevice):
             if not alive and d_t.total_seconds() >= CONTROL_POINT.MEDIC_TIME:
                 # If he was dead and has waited the correct amount of time,
                 # bring him back to life
-
                 print(f'{uid} is ALIVE')
 
-                data = {'uid':uid,'alive':ALIVE}
-                # self.exec_sql(SQL.add_row, 'medic', data)
                 medic.alive     = ALIVE
                 medic.timestamp = datetime.now()
-                # self.DB.session.add(PG.Medic(**data))
+
                 self.DB.session.commit()
 
                 return bytearray([CONTROL_POINT.MEDIC, ALIVE, 0x00])
@@ -431,12 +520,9 @@ class CONTROL_POINT(XBeeDevice):
                 # If he was alive, and he's back at the medic, he probably died
                 print(f'{uid} is now DEAD')
 
-                data = {'uid':uid,'alive':DEAD}
-                # self.exec_sql(SQL.add_row, 'medic', data)
-
                 medic.alive     = DEAD
                 medic.timestamp = datetime.now()
-                # self.DB.session.add(PG.Medic(**data))
+
                 self.DB.session.commit()
 
                 return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
@@ -447,8 +533,9 @@ class CONTROL_POINT(XBeeDevice):
             print(f'{uid} is registered DEAD')
 
             data = {'uid':uid,'alive':DEAD}
-            # self.exec_sql(SQL.add_row, 'medic', data)
+
             self.DB.session.add(PG.Medic(**data))
+            self.DB.session.commit()
 
             return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
 
@@ -456,26 +543,24 @@ class CONTROL_POINT(XBeeDevice):
     def __query(self, sender, payload):
 
         uid = payload[1:5].hex()
-        # row = self.exec_sql(SQL._get_is_alive, uid)
         medic = PG.get_is_alive(uid)
 
         alive = medic.alive if medic else 0x00
-        team = None
+        team  = PG.get_team(uid)
+        self.DB.session.commit()
 
-        # team = self.exec_sql(SQL._get_team, uid)
-        team = PG.get_team(uid)
-
-        if team: pkt = bytearray([CONTROL_POINT.QUERY, team.team, alive])
+        if team: pkt = bytearray([CONTROL_POINT.QUERY, team, alive])
         else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00])
 
         return pkt
 
 
+    # TODO this needs to reflect 'CAPTURE' in the function call
     def __status(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        # status = self.exec_sql(SQL._get_capture_status, node)
         status = PG.get_capture_status(node)
+        self.DB.session.commit()
 
         if not status: return None
 
@@ -491,15 +576,30 @@ class CONTROL_POINT(XBeeDevice):
 
         uid = payload[1:5].hex()
 
-        if self.user_reg:
-            return None
-        else:
-            self.user_reg = uid
+        if self.user_reg: return None
+        else:             self.user_reg = uid
 
 
+    # TODO this is not currently in use...save for future possibilities
     def uid_handler(self, uid):
 
         print(f'NFC Reader found: {bytearray(uid).hex(): <20}')
 
         if self.team_register and self.configuration == CONTROL_POINT.REGISTER:
+
             pass
+
+
+# ███████╗███╗░░██╗██████╗░
+# ██╔════╝████╗░██║██╔══██╗
+# █████╗░░██╔██╗██║██║░░██║
+# ██╔══╝░░██║╚████║██║░░██║
+# ███████╗██║░╚███║██████╔╝
+# ╚══════╝╚═╝░░╚══╝╚═════╝░
+#
+# ░█████╗░░█████╗░███╗░░██╗████████╗██████╗░░█████╗░██╗░░░░░██╗░░░░░███████╗██████╗░
+# ██╔══██╗██╔══██╗████╗░██║╚══██╔══╝██╔══██╗██╔══██╗██║░░░░░██║░░░░░██╔════╝██╔══██╗
+# ██║░░╚═╝██║░░██║██╔██╗██║░░░██║░░░██████╔╝██║░░██║██║░░░░░██║░░░░░█████╗░░██████╔╝
+# ██║░░██╗██║░░██║██║╚████║░░░██║░░░██╔══██╗██║░░██║██║░░░░░██║░░░░░██╔══╝░░██╔══██╗
+# ╚█████╔╝╚█████╔╝██║░╚███║░░░██║░░░██║░░██║╚█████╔╝███████╗███████╗███████╗██║░░██║
+# ░╚════╝░░╚════╝░╚═╝░░╚══╝░░░╚═╝░░░╚═╝░░╚═╝░╚════╝░╚══════╝╚══════╝╚══════╝╚═╝░░╚═╝
