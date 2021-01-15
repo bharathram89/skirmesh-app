@@ -21,7 +21,8 @@ import time, json
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
 DATABASE_URL = os.environ['DATABASE_URL']
 
 
