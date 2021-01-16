@@ -195,9 +195,6 @@ class CONTROL_POINT(XBeeDevice):
             time.sleep(0.1)
 
 
-
-
-
     # █▀▀ █▀▀▄ █▀▀▄ 　 █▀▀▄ █▀▀█ █▀▀▄ █▀▀ 　
     # █▀▀ █░░█ █░░█ 　 █░░█ █░░█ █░░█ █▀▀ 　
     # ▀▀▀ ▀░░▀ ▀▀▀░ 　 ▀░░▀ ▀▀▀▀ ▀▀▀░ ▀▀▀ 　
@@ -215,6 +212,7 @@ class CONTROL_POINT(XBeeDevice):
     # █░░█ █▀▀█ █▀▀▄ █▀▀▄ █░░ █▀▀ █▀▀█
     # █▀▀█ █▄▄█ █░░█ █░░█ █░░ █▀▀ █▄▄▀
     # ▀░░▀ ▀░░▀ ▀░░▀ ▀▀▀░ ▀▀▀ ▀▀▀ ▀░▀▀
+
 
     def transmit_pkt(self, dest, pkt):
 
@@ -257,10 +255,14 @@ class CONTROL_POINT(XBeeDevice):
                 end_node.location      = nd_status.location
                 end_node.configuration = nd_status.config
 
+                # Set recent timestamp to now to show last time on the Network
+                # This matters for selecting nodes that are "available" when
+                # filtering for nodes active "today"
+                nd_status.timestamp = datetime.now()
+
                 if nd_status.config == CONTROL_POINT.CAPTURE:
 
                     end_node.capture_status = PG.get_capture_status(node_addr)
-
             else:
 
                 self.DB.session.add(PG.NodeStatus(**{'node':node_addr}))

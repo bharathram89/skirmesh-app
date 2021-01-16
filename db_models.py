@@ -293,6 +293,10 @@ class AuthUsers(DB.Model):
         return ser
 
 
+# Creates/initializes the databases - not really necessary here...could
+# manually initialize the database once, separately.
+DB.create_all()
+
 
 def flatten(not_flat):
 
@@ -307,7 +311,7 @@ def flatten(not_flat):
 def get_is_alive(uid):
 
     query = DB.session.query(Medic).filter(Medic.uid == uid)
-    query = query.filter(func.DATE(Medic.timestamp, TIME_FMT) == date.today())
+    # query = query.filter(func.DATE(Medic.timestamp, TIME_FMT) == date.today())
 
     return query.order_by(Medic.id.desc()).first()
 
@@ -315,10 +319,11 @@ def get_is_alive(uid):
 def get_team(uid):
 
     query = DB.session.query(Team.team)
-    query = query.filter(func.DATE(Team.timestamp) == date.today())
+    # query = query.filter(func.DATE(Team.timestamp) == date.today())
     query = query.filter(Team.uid == uid)
 
-    return query.order_by(Team.id.desc()).first()[0]
+    result = query.order_by(Team.id.desc()).first()
+    return result[0] if result else result
 
 
 def get_auth_users():
@@ -338,7 +343,7 @@ def get_capture_status(node):
 def get_node_status(node):
 
     query = DB.session.query(NodeStatus)
-    query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
+    # query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
     query = query.filter(NodeStatus.node == node)
 
     return query.order_by(NodeStatus.id.desc()).first()
@@ -375,7 +380,7 @@ def get_team_members(team):
 
 def get_uid_in_team(uid):
 
-    query = DB.session.query(Team.team).filter(Team.uid == uid)
+    query = DB.session.query(Team).filter(Team.uid == uid)
 
     return query.first()
 

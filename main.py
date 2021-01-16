@@ -21,11 +21,10 @@ import time, json
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-#from dotenv import load_dotenv
-#load_dotenv(verbose=True)
-#DATABASE_URL = os.environ['DATABASE_URL']
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
+DATABASE_URL = os.environ['DATABASE_URL']
 
-DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/test.db'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
@@ -55,17 +54,14 @@ application.secret_key = 'a secret'
 
 
 DB = SQLAlchemy(application)
-from db_models import *
-# import db_models as PG
-from controller import CONTROL_POINT, END_NODE
 
-# Creates/initializes the databases - not really necessary here...could
-# manually initialize the database once, separately.
-DB.create_all()
 
 
 # This is awkward but necessary to prevent a circular import
 if __name__ == '__main__':
+
+    from db_models import *
+    from controller import CONTROL_POINT
 
     serial = '/dev/ttyUSB0'
     baud   = 115200
@@ -227,26 +223,6 @@ def logout():
 
 
 
-@application.route('/node_admin')
-def node_admin():
-
-    node_status = {n:get_node_status(n) for n in CP.end_nodes}
-    capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
-
-    kwargs = {
-             'node_dict'   : CP.end_nodes,
-             'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
-             'cmd_args'    : CMD_ARGS,
-             'node_cols'   : ['node id','location','configuration',
-                              'Capture Time', 'Medic Time', 'Bomb Time',
-                              'Capture Assist %'],
-             'node_status' : node_status,
-             'cap_status'  : capture_status,
-             }
-
-    return render_template('node_admin.html', **kwargs)
-
-
 @application.route('/players')
 def players():
 
@@ -296,9 +272,6 @@ def user_reg(uid=None):
         fname = form.fname.data
         lname = form.lname.data
 
-        print("First name is: ", fname.upper())
-        print("Last name is: ", lname.upper())
-
         data = {'fname':fname.upper(),
                 'lname':lname.upper(),
                }
@@ -322,6 +295,32 @@ def user_reg(uid=None):
     return render_template('user_reg.html', form=form, Players=players)
 
 
+from pretty_print import print_time, print_perc
+@application.route('/node_admin')
+def node_admin():
+
+    node_status = {n:get_node_status(n) for n in CP.end_nodes}
+    capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
+
+    kwargs = {
+             'node_dict'   : CP.end_nodes,
+             'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
+             'cmd_args'    : CMD_ARGS,
+             'node_cols'   : ['node id','location','configuration',
+                              'Capture Time', 'Medic Time', 'Bomb Time',
+                              'Capture Assist %'],
+             'node_status' : node_status,
+             'cap_status'  : capture_status,
+             'print_time'  : print_time,
+             'print_perc'  : print_perc,
+             }
+
+    DB.session.commit()
+
+    return render_template('node_admin.html', **kwargs)
+
+
+
 @application.route('/node_admin/issue_command', methods=['POST'])
 def issue_command():
 
@@ -342,23 +341,16 @@ def issue_command():
         node_status = {n:get_node_status(n) for n in CP.end_nodes}
         capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
 
-        print(node_status)
-        print(capture_status)
-
         if int(config, 16) == SET_LOCATION and dest != BROADCAST:
 
             print(f"Setting {dest} Location to: {data['location']}")
 
             CP.end_nodes[dest].location = data['location']
 
-            data = {'location' : CP.end_nodes[dest].location,
-                    'config'   : CP.end_nodes[dest].configuration,
+            data = {
+                    'location' : CP.end_nodes[dest].location,
                     'node'     : dest,
-                    'cap_time' : CP.end_nodes[dest].cap_time,
-                    'med_time' : CP.end_nodes[dest].med_time,
-                    'cap_asst' : CP.end_nodes[dest].cap_asst,
-                    'bomb_time': CP.end_nodes[dest].bomb_time,
-                    }
+                   }
 
             exists = get_node_status(dest)
             if exists: exists.location = data['location']
@@ -372,33 +364,18 @@ def issue_command():
             pkt[2] = int(args, 16)
 
             # If just setting the configuration for one node
-            if int(config, 16) in CP.CONFIGURATIONS and dest in CP.end_nodes:
+            if int(config, 16) in CP.CONFIGURATIONS:
 
-                data = {'location' : CP.end_nodes[dest].location,
-                        'config'   : CP.end_nodes[dest].configuration,
-                        'node'     : dest,
-                        'cap_time' : CP.end_nodes[dest].cap_time,
-                        'med_time' : CP.end_nodes[dest].med_time,
-                        'cap_asst' : CP.end_nodes[dest].cap_asst,
-                        'bomb_time': CP.end_nodes[dest].bomb_time,
-                        }
+                for node in CP.end_nodes if dest == BROADCAST else [dest]:
 
-                exists = get_node_status(dest)
-                if exists: exists.config = int(config, 16)
-                else: DB.session.add(NodeStatus(**data))
+                    CP.end_nodes[node].configuration = int(config, 16)
 
-                DB.session.commit()
+                    data = {
+                            'config'   : int(config, 16),
+                            'node'     : node,
+                           }
 
-            # If setting a BROADCAST configuration - apply to all nodes
-            if int(config, 16) in CP.CONFIGURATIONS and dest == BROADCAST:
-
-                for n in CP.end_nodes:
-
-                    data = {'location': CP.end_nodes[n].location,
-                            'config'  : int(config, 16),
-                            'node'    : n}
-
-                    exists = get_node_status(n)
+                    exists = get_node_status(node)
                     if exists: exists.config = int(config, 16)
                     else: DB.session.add(NodeStatus(**data))
 
@@ -410,30 +387,45 @@ def issue_command():
 
                 pkt.pop(0)
 
-                data = {'location' : CP.end_nodes[dest].location,
-                        'config'   : CP.end_nodes[dest].configuration,
-                        'node'     : dest,
-                        'cap_time' : CP.end_nodes[dest].cap_time,
-                        'med_time' : CP.end_nodes[dest].med_time,
-                        'cap_asst' : CP.end_nodes[dest].cap_asst,
-                        'bomb_time': CP.end_nodes[dest].bomb_time,
-                        }
+                val_map = {CP.CAPT_TIME:'cap_time',
+                           CP.BOMB_TIME:'bomb_time',
+                           CP.MED_TIME :'med_time',
+                           CP.CAP_PERC :'cap_asst'}
 
-                exists = get_node_status(dest)
-                if exists:
+                val, arg = int(config, 16), int(args, 16)
 
-                    if int(config, 16) == CP.CAPT_TIME:
-                        exists.cap_time = int(args, 16) * 10
-                    elif int(config, 16) == CP.BOMB_TIME:
-                        exists.bomb_time = int(args, 16) * 10
-                    elif int(config, 16) == CP.MED_TIME:
-                        exists.med_time = int(args, 16) * 10
-                    elif int(config, 16) == CP.CAP_PERC:
-                        exists.cap_asst = int((1 / int(args, 16)) * 100)
+                for node in CP.end_nodes if dest == BROADCAST else [dest]:
 
-                else: DB.session.add(NodeStatus(**data))
+                    data = {'node':node,val_map[val]:arg}
 
-                DB.session.commit()
+                    exists = get_node_status(node)
+                    if exists:
+
+                        if val == CP.CAPT_TIME:
+
+                            exists.cap_time  = arg
+                            data['cap_time'] = arg
+
+                        elif val == CP.BOMB_TIME:
+
+                            exists.bomb_time  = arg
+                            data['bomb_time'] = arg
+
+                        elif val == CP.MED_TIME:
+
+                            exists.med_time  = arg
+                            data['med_time'] = arg
+
+                        elif val == CP.CAP_PERC:
+
+                            exists.cap_asst  = arg
+                            data['cap_asst'] = arg
+
+                    else:
+
+                        DB.session.add(NodeStatus(**data))
+
+                    DB.session.commit()
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
             if int(config, 16) == CP.MED_TIME:
@@ -526,6 +518,7 @@ def comms_log():
     return render_template('comms.html', **kwargs)
 
 
+
 # TODO: Make this a listener function and just pop the UID if it gets one
 @application.route('/user_reg/get_uid', methods=['POST','GET'])
 def get_uid():
@@ -540,6 +533,7 @@ def get_uid():
     return make_response(jsonify({"uid": uid}), 200)
 
 
+
 # TODO: I don't understand the need for all of these exact same functions
 @application.route('/register_user', methods=['POST','GET'])
 def register_user():
@@ -551,6 +545,7 @@ def register_user():
     uid = CP.user_reg.pop()
 
     return make_response(jsonify({"uid": uid}), 200)
+
 
 
 # TODO: I have no idea if all this still works
