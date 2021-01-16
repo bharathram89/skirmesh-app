@@ -21,11 +21,11 @@ import time, json
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
-from dotenv import load_dotenv
-load_dotenv(verbose=True)
-DATABASE_URL = os.environ['DATABASE_URL']
+#from dotenv import load_dotenv
+#load_dotenv(verbose=True)
+#DATABASE_URL = os.environ['DATABASE_URL']
 
-#DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/test.db'
+DATABASE_URL = 'sqlite:////home/kuch/Projects/battlefield/test.db'
 
 soup = SOUP(open('templates/field.html'), 'html.parser')
 paths = soup.find_all('path')
@@ -230,15 +230,15 @@ def logout():
 @application.route('/node_admin')
 def node_admin():
 
-    node_status = {n:PG.get_node_status(n) for n in CP.end_nodes}
-    capture_status = {c:PG.get_capture_status(c) for c in CP.end_nodes}
+    node_status = {n:get_node_status(n) for n in CP.end_nodes}
+    capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
 
     kwargs = {
              'node_dict'   : CP.end_nodes,
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
              'node_cols'   : ['node id','location','configuration',
-                              'Capture Time', 'Medic Time', 'Bomb Time'
+                              'Capture Time', 'Medic Time', 'Bomb Time',
                               'Capture Assist %'],
              'node_status' : node_status,
              'cap_status'  : capture_status,
@@ -339,8 +339,8 @@ def issue_command():
         pkt[1] = int(config, 16)
 
 
-        node_status = {n:PG.get_node_status(n) for n in CP.end_nodes}
-        capture_status = {c:PG.get_capture_status(c) for c in CP.end_nodes}
+        node_status = {n:get_node_status(n) for n in CP.end_nodes}
+        capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
 
         print(node_status)
         print(capture_status)
@@ -419,7 +419,7 @@ def issue_command():
                         'bomb_time': CP.end_nodes[dest].bomb_time,
                         }
 
-                exists = PG.get_node_status(dest)
+                exists = get_node_status(dest)
                 if exists:
 
                     if int(config, 16) == CP.CAPT_TIME:
@@ -431,7 +431,7 @@ def issue_command():
                     elif int(config, 16) == CP.CAP_PERC:
                         exists.cap_asst = int((1 / int(args, 16)) * 100)
 
-                else: DB.session.add(PG.NodeStatus(**data))
+                else: DB.session.add(NodeStatus(**data))
 
                 DB.session.commit()
             # Set medic times globally, because all nodes are handled the

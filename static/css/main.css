@@ -98,13 +98,15 @@ h2 {
     height: 100%;
     line-height: 3em;
     text-decoration: none;
-    background-color: var(--button_color);
+    /*background-color: var(--button_color);*/
+    background-image: linear-gradient(to right, black, red, black);
     font-size: 125%;
     border-radius: 0.1em;
     color: #FFFFFF;
 }
 #main-nav li a:hover {
-    background-color: var(--button_color_hover);
+    /*background-color: var(--button_color_hover);*/
+    background: linear-gradient(to right, red, black, red);
 }
 
 .grid_container {
