@@ -254,6 +254,10 @@ class CONTROL_POINT(XBeeDevice):
 
                 end_node.location      = nd_status.location
                 end_node.configuration = nd_status.config
+                end_node.cap_time      = nd_status.cap_time
+                end_node.med_time      = nd_status.med_time
+                end_node.cap_asst      = nd_status.cap_asst
+                end_node.bomb_time     = nd_status.bomb_time
 
                 # Set recent timestamp to now to show last time on the Network
                 # This matters for selecting nodes that are "available" when
