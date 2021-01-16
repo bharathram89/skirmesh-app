@@ -264,8 +264,13 @@ class CONTROL_POINT(XBeeDevice):
 
                     end_node.capture_status = PG.get_capture_status(node_addr)
             else:
-
-                self.DB.session.add(PG.NodeStatus(**{'node':node_addr}))
+                # Initialize NodeStatus with all the defaults
+                data = {'node':node_addr,
+                        'cap_time' : end_node.cap_time,
+                        'med_time' : end_node.med_time,
+                        'cap_asst' : end_node.cap_asst,
+                        'bomb_time': end_node.bomb_time}
+                self.DB.session.add(PG.NodeStatus(**data))
 
             self.end_nodes[node_addr] = end_node
             self.DB.session.commit()
