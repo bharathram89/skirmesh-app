@@ -311,9 +311,9 @@ def flatten(not_flat):
 def get_is_alive(uid):
 
     query = DB.session.query(Medic).filter(Medic.uid == uid)
-    # query = query.filter(func.DATE(Medic.timestamp, TIME_FMT) == date.today())
+    # query = query.filter(func.DATE(Medic.timestamp) == date.today())
 
-    return query.order_by(Medic.id.desc()).first()
+    return query.first()
 
 
 def get_team(uid):
@@ -335,7 +335,6 @@ def get_capture_status(node):
 
     query = DB.session.query(CaptureStatus)
     # query = query.filter(func.DATE(CaptureStatus.timestamp) == date.today())
-    query = query.filter(CaptureStatus.node == node)
 
     return query.filter(CaptureStatus.node == node).first()
 
@@ -344,9 +343,8 @@ def get_node_status(node):
 
     query = DB.session.query(NodeStatus)
     # query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
-    query = query.filter(NodeStatus.node == node)
 
-    return query.order_by(NodeStatus.id.desc()).first()
+    return query.filter(NodeStatus.node == node).first()
 
 
 @flatten
@@ -463,12 +461,3 @@ def get_is_capture_closed(node):
     result = query.order_by(Score.id.desc()).first()
 
     return result.time_held if result else None
-
-
-def get_is_alive(uid):
-
-    query = DB.session.query(Medic)
-    query = query.filter(func.DATE(Medic.timestamp) == date.today())
-    query = query.filter(Medic.uid == uid)
-
-    return query.order_by(Medic.id.desc()).first()
