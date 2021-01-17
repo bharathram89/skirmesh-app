@@ -4,29 +4,30 @@ def print_time(i):
 
     if not i or not isinstance(i, int):
 
-        return i
+        return None
 
-    if i <= 12:
+    hrs = i // 3600
+    min = (i % 3600) // 60
+    sec = i % 60
 
-        return f"{i*10} (sec)"
+    if not hrs and not min:
 
-    if 12 < i < 60 and not (i*10/60 % 0.5):
+        return f"{sec:02d} (sec)"
 
-        return f"{i*10/60} (min)"
+    if not hrs and min:
 
-    if 60 <= i <= 90 and not (i*10/60 % 1):
+        return f"{min:02d}::{sec:02d}"
 
-        return f"{int(i*10/60)} (min)"
+    if hrs:
 
-    if i > 90 and not (i*10/60 % 5):
+        return f"{hrs:02d}:{min:02d}::{sec:02d}"
 
-        return f"{int(i*10/60)} (min)"
 
 
 def print_perc(i):
 
     if not i or not isinstance(i, int):
 
-        return i
+        return None
 
     return f"{int(100/i)}%"

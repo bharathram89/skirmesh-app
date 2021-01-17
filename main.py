@@ -20,6 +20,7 @@ from bs4 import BeautifulSoup as SOUP
 import time, json
 
 from forms import RegistrationForm, RegisterAccountForm, LoginForm
+from pretty_print import print_time, print_perc
 
 from dotenv import load_dotenv
 load_dotenv(verbose=True)
@@ -38,6 +39,9 @@ CMD_ARGS = {
             'TIME DATA'   : json.load(open("json/timer_values.json")),
             'SET ASSIST %': json.load(open("json/percent_values.json"))
             }
+
+TEAM_NAME = {int(t['value'], 16):t['text'] for t in CMD_ARGS['SET TEAM']}
+TEAM_CMAP = {int(c['value'], 16):c['text'] for c in json.load(open("json/team_colors.json"))}
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
@@ -117,8 +121,8 @@ def main_page():
               'team_col'   : ['player'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
-              'team_cmap'  : CP.TEAM_CMAP,
-              'team_name'  : CP.TEAM_NAME,
+              'team_cmap'  : TEAM_CMAP,
+              'team_name'  : TEAM_NAME,
               'players'    : players,
                }
 
@@ -226,7 +230,6 @@ def logout():
 @application.route('/players')
 def players():
 
-
     reg_teams  = get_registered_teams()
     team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
     team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
@@ -250,7 +253,9 @@ def players():
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
               'node_times' : nd_times,
-              'players'    : players}
+              'players'    : players,
+              'print_time' : print_time,
+              'team_name'  : TEAM_NAME}
 
     DB.session.commit()
 
@@ -295,12 +300,11 @@ def user_reg(uid=None):
     return render_template('user_reg.html', form=form, Players=players)
 
 
-from pretty_print import print_time, print_perc
+
 @application.route('/node_admin')
 def node_admin():
 
     node_status = {n:get_node_status(n) for n in CP.end_nodes}
-    capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
 
     kwargs = {
              'node_dict'   : CP.end_nodes,
@@ -310,7 +314,6 @@ def node_admin():
                               'Capture Time', 'Medic Time', 'Bomb Time',
                               'Capture Assist %'],
              'node_status' : node_status,
-             'cap_status'  : capture_status,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
              }

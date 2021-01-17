@@ -21,9 +21,9 @@
           {% for col in t_sc_cols %}
 
             {% if col == 'time' %}
-            <th class="header"> {{col | safe}} (min) </th>
+            <th class="header"> {{ col | safe }} </th>
             {% else %}
-            <th class="header"> {{col | safe}} </th>
+            <th class="header"> {{ col | safe }} </th>
             {% endif %}
 
           {% endfor %}
@@ -35,9 +35,9 @@
             {% for col in t_sc_cols %}
 
                 {% if col == 'time' %}
-                <td style="width:33%"> {{ team_times[dat]//60 if team_times[dat] else 0 }} </td>
+                <td style="width:33%"> {{ print_time(team_times[dat]) if team_times[dat] else 0 | safe }} </td>
                 {% elif col == 'team' %}
-                <td style="width:33%"> {{ dat }} </td>
+                <td style="width:33%"> {{ team_name[dat] | safe }} </td>
                 {% else %}
                 <td style="width:33%"> {{ team_score[dat] | safe }} </td>
                 {% endif %}
@@ -50,14 +50,14 @@
 
 
 {% for nd in node_times %}
-<h3 class="leaderboard_header"> {{ nd if nd else node_times[nd].node }} </h3>
+<h3 class="leaderboard_header"> {{ nd if nd else node_times[nd].node | safe }} </h3>
 <table id="table">
   <thead>
     <tr>
         {% for col in nd_tm_cols %}
 
           {% if col == 'time' %}
-          <th class="header"> {{col | safe}} (min) </th>
+          <th class="header"> {{col | safe}} </th>
           {% else %}
           <th class="header"> {{col | safe}} </th>
           {% endif %}
@@ -70,8 +70,8 @@
     {% for dat in node_times[nd] %}
     <tr class="row">
 
-            <td style="width:50%"> {{ dat[0] | safe }} </td>
-            <td style="width:50%"> {{ dat[1]//60 if dat[1] else 0 }} </td>
+            <td style="width:50%"> {{ team_name[dat[0]] | safe }} </td>
+            <td style="width:50%"> {{ print_time(dat[1]) if dat[1] else 0 | safe }} </td>
 
     </tr>
     {% endfor %}

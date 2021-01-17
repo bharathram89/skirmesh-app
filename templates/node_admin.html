@@ -124,13 +124,13 @@
                 {% for n in node_status %}
                 <tr class="row" style="color:#808080;">
 
-                    <td> {{ n | safe }} </td>
-                    <td> {{ node_status[n].location  | safe }} </td>
-                    <td> {{ cmd_dict[node_status[n].config] | safe }} </td>
-                    <td> {{ print_time(node_status[n].cap_time)  | safe }} </td>
-                    <td> {{ print_time(node_status[n].med_time)  | safe }} </td>
-                    <td> {{ print_time(node_status[n].bomb_time) | safe }} </td>
-                    <td> {{ print_perc(node_status[n].cap_asst)  | safe }} </td>
+                    <td> {{ n                                                | safe }} </td>
+                    <td> {{ node_status[n].location                          | safe }} </td>
+                    <td> {{ cmd_dict[node_status[n].config]                  | safe }} </td>
+                    <td> {{ print_time((node_status[n].cap_time or 0) * 10)  | safe }} </td>
+                    <td> {{ print_time((node_status[n].med_time or 0) * 10)  | safe }} </td>
+                    <td> {{ print_time((node_status[n].bomb_time or 0) * 10) | safe }} </td>
+                    <td> {{ print_perc(node_status[n].cap_asst)              | safe }} </td>
 
                 </tr>
                 {% endfor %}
