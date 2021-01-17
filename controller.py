@@ -360,10 +360,14 @@ class CONTROL_POINT(XBeeDevice):
         self.DB.session.commit()
 
         # If the player is not "alive", reset his alive status
-        if not PG.get_is_alive(uid):
-
+        exists = PG.get_is_alive(uid)
+        if exists:
+            exists.alive     = 1
+            exists.timestamp = datetime.now()
+        else:
             self.DB.session.add(PG.Medic(**{'uid':uid,'alive':1}))
-            self.DB.session.commit()
+
+        self.DB.session.commit()
 
         return None
 
@@ -499,6 +503,8 @@ class CONTROL_POINT(XBeeDevice):
 
         DEAD  = 0x00
         ALIVE = 0x01
+
+        test = self.DB.session.query(PG.Medic).all()
 
         if medic:
 

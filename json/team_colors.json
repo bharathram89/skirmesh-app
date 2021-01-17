@@ -1,22 +1,22 @@
 [
 			{
 			"value": "0x01",
-			"text": "RED"
+			"text": "#FF0000"
 			},
 			{
 			"value": "0x02",
-			"text": "BLUE"
+			"text": "#0000FF"
 			},
 			{
 			"value": "0x03",
-			"text": "YELLOW"
+			"text": "#FFFF00"
 			},
 			{
 			"value": "0x04",
-			"text": "GREEN"
+			"text": "#008000"
 			},
 			{
 			"value": "0x05",
-			"text": "PURPLE"
+			"text": "#3333CC"
 			}
 ]
