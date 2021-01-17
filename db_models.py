@@ -151,7 +151,7 @@ class CaptureStatus(DB.Model):
 
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     node      = DB.Column(DB.String(), unique=True, nullable=False)
-    tag       = DB.Column(DB.String(), nullable=False)
+    tag       = DB.Column(DB.String())
     team      = DB.Column(DB.Integer(), nullable=False)
     stable    = DB.Column(DB.Integer(), nullable=False)
     timestamp = DB.Column(DB.DateTime(), default=datetime.now)
