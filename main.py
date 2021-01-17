@@ -443,6 +443,28 @@ def issue_command():
             # specicic capture configuration
             if int(config, 16) == CP.SET_TEAM:
 
+                for node in CP.end_nodes if dest == BROADCAST else [dest]:
+
+                    data = {'node':node, 'team':pkt[2], 'action':'CAPTURE'}
+                    DB.session.add(Score(**data))
+
+                    data = {'node':node, 'team':pkt[2], 'stable':1}
+                    exists = get_capture_status(node)
+                    if exists:
+                        exists.team      = pkt[2]
+                        exists.stable    = 1
+                        exists.timestamp = datetime.now()
+                    else: DB.session.add(CaptureStatus(**data))
+
+                    data = {'node':node, 'config':CP.CAPTURE, 'cap_time':6}
+                    exists = get_node_status(node)
+                    if exists:
+                        exists.cap_time  = 6
+                        exists.timestamp = datetime.now()
+                    else: DB.session.add(NodeStatus(**data))
+
+                    DB.session.commit()
+                    
                 if dest == BROADCAST:
 
                     CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
