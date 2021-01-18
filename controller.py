@@ -22,8 +22,8 @@ class END_NODE(RemoteXBeeDevice):
         self.location       = None
         self.configuration  = None
         self.capture_status = None
-        self.cap_time       = 60
-        self.med_time       = 60
+        self.cap_time       = 6
+        self.med_time       = 6
         self.cap_asst       = 5
         self.bomb_time      = 120
 
@@ -145,8 +145,6 @@ class CONTROL_POINT(XBeeDevice):
     # █░▀░█ █ ▄█ █▄▄   █▀█ ░█░ ░█░ █▀▄ █ █▄█ █▄█ ░█░ ██▄ ▄█
 
     TIME_DISP = '%d %b %Y  %H:%M:%S'
-    MEDIC_TIME = int(60)
-
 
 
     # █▀▀▄ █▀▀ █▀▀▀ ░▀░ █▀▀▄ 　 █▀▀▄ █▀▀█ █▀▀▄ █▀▀ 　
@@ -503,8 +501,9 @@ class CONTROL_POINT(XBeeDevice):
 
         DEAD  = 0x00
         ALIVE = 0x01
+        ALL   = 0x05
 
-        test = self.DB.session.query(PG.Medic).all()
+        med_time = self.end_nodes[str(sender.get_64bit_addr())].med_time * 10
 
         if medic:
 
@@ -512,7 +511,7 @@ class CONTROL_POINT(XBeeDevice):
 
             d_t = datetime.now() - timestamp
 
-            if not alive and d_t.total_seconds() >= CONTROL_POINT.MEDIC_TIME:
+            if not alive and d_t.total_seconds() >= med_time:
                 # If he was dead and has waited the correct amount of time,
                 # bring him back to life
                 print(f'{uid} is ALIVE')
@@ -522,16 +521,18 @@ class CONTROL_POINT(XBeeDevice):
 
                 self.DB.session.commit()
 
-                return bytearray([CONTROL_POINT.MEDIC, ALIVE, 0x00])
+                return bytearray([CONTROL_POINT.MEDIC, ALIVE, ALL])
 
             # If he's DEAD and not enough time has passed to bring him back
             # to life, then let him knows how close he is to being alive.
-            if not alive and d_t.total_seconds() < CONTROL_POINT.MEDIC_TIME:
+            if not alive and d_t.total_seconds() < med_time:
 
-                time_remaining = CONTROL_POINT.MEDIC_TIME - d_t.total_seconds()
-                time_remaining = min(max(0, time_remaining), CONTROL_POINT.MEDIC_TIME)
+                time_remaining = med_time - d_t.total_seconds()
+                time_remaining = min(max(0, time_remaining), med_time)
 
-                return bytearray([CONTROL_POINT.MEDIC, DEAD, int(time_remaining)])
+                num_lights = int(5 * (time_remaining/med_time))
+
+                return bytearray([CONTROL_POINT.MEDIC, DEAD, num_lights])
 
             if alive:
                 # If he was alive, and he's back at the medic, he probably died
@@ -542,7 +543,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 self.DB.session.commit()
 
-                return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
+                return bytearray([CONTROL_POINT.MEDIC, DEAD, ALL])
 
         else:
             # If he didn't exist at all then register him and asume he's checking
@@ -554,7 +555,7 @@ class CONTROL_POINT(XBeeDevice):
             self.DB.session.add(PG.Medic(**data))
             self.DB.session.commit()
 
-            return bytearray([CONTROL_POINT.MEDIC, DEAD, CONTROL_POINT.MEDIC_TIME])
+            return bytearray([CONTROL_POINT.MEDIC, DEAD, ALL])
 
 
     def __query(self, sender, payload):

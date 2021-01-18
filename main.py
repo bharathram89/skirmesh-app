@@ -429,15 +429,6 @@ def issue_command():
                         DB.session.add(NodeStatus(**data))
 
                     DB.session.commit()
-            # Set medic times globally, because all nodes are handled the
-            # same at the controller level
-            if int(config, 16) == CP.MED_TIME:
-
-                print(f"Updating MEDIC TIME to {pkt[1]*10} seconds")
-
-                CP.MEDIC_TIME = int(pkt[1]*10)
-                dest = BROADCAST
-
 
             # Blast a few necessary commands to push the node into a
             # specicic capture configuration
@@ -464,7 +455,7 @@ def issue_command():
                     else: DB.session.add(NodeStatus(**data))
 
                     DB.session.commit()
-                    
+
                 if dest == BROADCAST:
 
                     CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
