@@ -2,42 +2,7 @@
 
 {% block content %}
 
-<script type="text/javascript">
-
-  setInterval(
-
-    function(){
-
-    fetch('/index/is_change',  {
-                                method: "GET",
-                                cache: "no-cache",
-                               })
-        .then(function (response) {
-            return response.json();
-        }).then(function (data) {
-
-            for (var node in data) {
-
-                var ele = document.getElementById(data[node].id);
-
-                if (data[node].stable && ele){
-
-                    ele.setAttribute("fill", data[node].color);
-                    ele.setAttribute("opacity", "0.5");
-                    ele.setAttribute("class", "owned");
-                }
-                else{
-                    ele.setAttribute("fill", data[node].color);
-                    ele.setAttribute("class", "beacon");
-                }
-
-            }
-        });
-      },
-
-    5000); // Happen every 5 seconds (5000 milliseconds)
-
-</script>
+<script src="../static/js/field_update.js"></script>
 
 <div class="grid_container">
 
@@ -54,9 +19,9 @@
         </thead>
         <tbody>
             {% for mbr in team %}
-            <tr class="row">
+            <tr class="row team{{team_i | safe}}">
 
-                <td class="team{{team_i | safe}}"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
+                <td class="roster_element"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
 
             </tr>
             {% endfor %}
@@ -89,9 +54,9 @@
         </thead>
         <tbody>
             {% for mbr in team %}
-            <tr class="row">
+            <tr class="row team{{team_i | safe}}">
 
-                <td class="team{{team_i | safe}}"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
+                <td class="roster_element"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
 
             </tr>
             {% endfor %}

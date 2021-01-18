@@ -99,14 +99,12 @@ h2 {
     line-height: 3em;
     text-decoration: none;
     background-color: var(--button_color);
-    /* background-image: linear-gradient(to right, black, red, black); */
     font-size: 125%;
     border-radius: 0.1em;
     color: #FFFFFF;
 }
 #main-nav li a:hover {
     background-color: var(--button_color_hover);
-    /* background: linear-gradient(to right, red, black, red); */
 }
 
 .grid_container {
@@ -124,7 +122,7 @@ h2 {
 }
 
 .grid_element.middle {
-    width: 60%;
+    width: 65%;
     padding-left: 0.5%;
     padding-right: 0.5%;
 }
@@ -132,7 +130,7 @@ h2 {
 .leaderboard, .leaderboard_header{
     animation-duration: 0.5s;
     animation-name: slidein;
-} 
+}
 
 @keyframes slidein {
     from {
@@ -147,37 +145,37 @@ h2 {
 }
 /* Style the tab */
 
-.tablinks {
-    width: 33%;
+/* .tablinks {
     background-color: var(--button_color);
-    font-size: 125%;
     color: white;
     text-transform: uppercase;
     padding: 1em;
-}
+    border-style: none;
+    border-radius: 0.1em;
+} */
 
-.tab {
+/* .tab {
   overflow: hidden;
   text-align: center;
   background-color: #f1f1f1;
-}
+} */
 
-.tab button:hover {
-  background-color: #ddd;
-}
+/* .tab li:hover {
+  background-color: var(--button_color_hover);
+} */
 
 /* Create an active/current tablink class */
-.tab button.active {
-  background-color: red;
+.tab a.tablink.active {
+  background-color: var(--button_color_hover);
 }
 
 /* Style the tab content */
-.tabcontent {
+/* .tabcontent {
   display: none;
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
-}
+} */
 
 
 form {
@@ -210,11 +208,11 @@ input {
     margin: 0.5em;
 }
 
-button, .button {
+button, .button, .tab {
     transition: all .5s ease-in-out;
 }
 button:hover, .button:hover, #end_game_button:hover, #discover_network_button:hover {
-    background-color: var(--RED);
+    background-color: var(--button_color_hover);
   }
 
 select {
@@ -241,12 +239,6 @@ table {
   width: 100%;
 }
 
-/* .scrollable {
-    height: 40em;
-    overflow: auto;
-    width: 80%;
-} */
-
 .header {
   color: #FFFFFF;
   border-bottom: 1px solid #000000;
@@ -264,54 +256,54 @@ table {
   text-align: center;
   text-transform: uppercase;
 }
-tr:hover {background-color: var(--RED);}
+.row:hover {background-color: var(--RED);}
 
 td {
   padding: 1em;
 }
 
 
-.team1 {
+.row.team1 {
     background-color: var(--LIGHT_RED);
 }
-.team2 {
+.row.team2 {
     background-color: var(--LIGHT_BLUE);
 }
-.team3 {
+.row.team3 {
     background-color: #FFFFF0;
 }
-.team4 {
+.row.team4 {
     background-color: #F0FFF0;
 }
-.team5 {
+.row.team5 {
     background-color: #F0F0FF;
 }
 
-.team1, .team2, .team3, .team4, .team5 {
+.roster_element {
     padding: 0.5em;
 }
 
-.team1:hover {
+.row.team1:hover {
     background-color: var(--RED);
     color: #FFFFFF;
     font-weight: bold;
 }
-.team2:hover {
+.row.team2:hover {
     background-color: var(--BLUE);
     color: #FFFFFF;
     font-weight: bold;
 }
-.team3:hover {
+.row.team3:hover {
     background-color: #FFFF00;
-    /* color: #FFFFFF; */
+    color: #FFFFFF;
     font-weight: bold;
 }
-.team4:hover {
+.row.team4:hover {
     background-color: #008000;
     color: #FFFFFF;
     font-weight: bold;
 }
-.team5:hover {
+.row.team5:hover {
     background-color: #3333CC;
     color: #FFFFFF;
     font-weight: bold;
@@ -389,7 +381,7 @@ div.player-leaderboard {
 }
 
 .leaderboard_header {
-    background: linear-gradient(45deg, black, red);
+    background: linear-gradient(90deg, var(--BLACK), var(--button_color), var(--BLACK));
     text-align: center;
 
 }

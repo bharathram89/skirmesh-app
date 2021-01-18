@@ -10,11 +10,11 @@
 </input>
 </div>
 
-<div class="tab">
-  <button class="tablinks" onclick="show_table(event, 'team_score')" id="defaultOpen">Team Score</button>
-  <button class="tablinks" onclick="show_table(event, 'location_score')">Location Stats</button>
-  <button class="tablinks" onclick="show_table(event, 'player_score')">Player Score</button>
-</div>
+<ul class="tab" id="main-nav">
+  <li onclick="show_table(event, 'team_score')" id="defaultOpen"><a class="tablink">Team Score</a></li>
+  <li onclick="show_table(event, 'location_score')"><a class="tablink" >Location Stats</a></li>
+  <li onclick="show_table(event, 'player_score')"><a class="tablink" >Player Score</a></li>
+</ul>
 
 <div id="team_score" class="leaderboard">
   <h1 class="leaderboard_header"> team leaderboard </h1>
@@ -35,7 +35,7 @@
     </thead>
     <tbody>
         {% for dat in team_score %}
-        <tr class="row">
+        <tr class="row team{{dat | safe}}">
             {% for col in t_sc_cols %}
 
                 {% if col == 'time' %}
@@ -73,7 +73,7 @@
 <tbody>
 
     {% for dat in node_times[nd] %}
-    <tr class="row">
+    <tr class="row team{{dat[0] | safe}}">
 
             <td style="width:50%"> {{ team_name[dat[0]] | safe }} </td>
             <td style="width:50%"> {{ print_time(dat[1]) if dat[1] else 0 | safe }} </td>
@@ -117,24 +117,7 @@
   </table>
 </div>
 
-<script>
-function show_table(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("leaderboard");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
+<script src="../static/js/leaderboard.js"></script>
 
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
-</script>
-<br>
 
 {% endblock %}

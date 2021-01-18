@@ -257,7 +257,7 @@ def players():
               'print_time' : print_time,
               'team_name'  : TEAM_NAME,
               'team_cmap'  : TEAM_CMAP,
-              'teams'      : teams,
+              'teams'      : reg_teams,
               }
 
     DB.session.commit()
