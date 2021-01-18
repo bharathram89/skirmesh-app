@@ -40,10 +40,12 @@ header{
     text-align: center;
     vertical-align: center;
     background-color: var(--BLACK);
-    background-image: url('../img/logo.png');
+    /* background-image: url('../img/logo.png'); */
+    background-image: url('../img/soldierA.jpg');
     background-repeat: no-repeat;
-    background-position: left top;
-    background-size: 10%;
+    background-position: center;
+    background-size: cover;
+    filter: drop-shadow(0 0 2em black) grayscale(0.5);
     font-size: 350%;
     padding: 1em;
 }
@@ -473,4 +475,21 @@ dd, dt {
 
 .node_container {
     text-align: left;
+}
+
+.glow {
+  color: #FFFF;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 0.1em #fff, 0 0 0.2em #fff, 0 0 0.3em #fb0, 0 0 0.4em #fa0, 0 0 0.5em #f80, 0 0 0.6em #f60, 0 0 0.7em #f20;
+  }
+  to {
+    text-shadow: 0 0 0.2em #fff, 0 0 0.3em #fdd, 0 0 0.4em #fbb, 0 0 0.5em #f99, 0 0 0.6em #f66, 0 0 0.7em #f33, 0 0 0.8em #f11;
+  }
 }
