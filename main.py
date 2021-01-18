@@ -255,7 +255,10 @@ def players():
               'node_times' : nd_times,
               'players'    : players,
               'print_time' : print_time,
-              'team_name'  : TEAM_NAME}
+              'team_name'  : TEAM_NAME,
+              'team_cmap'  : TEAM_CMAP,
+              'teams'      : teams,
+              }
 
     DB.session.commit()
 

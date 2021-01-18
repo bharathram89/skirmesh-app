@@ -129,9 +129,53 @@ h2 {
     padding-right: 0.5%;
 }
 
-/* .leaderboard{
-    border: 1px #800000;
-} */
+.leaderboard, .leaderboard_header{
+    animation-duration: 0.5s;
+    animation-name: slidein;
+} 
+
+@keyframes slidein {
+    from {
+        margin-right: 100%;
+        width: 300%;
+    }
+
+    to {
+        margin-right: 0%;
+        width: 100%;
+    }
+}
+/* Style the tab */
+
+.tablinks {
+    width: 33%;
+    background-color: var(--button_color);
+    font-size: 2em;
+}
+
+.tab {
+  overflow: hidden;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: red;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
 
 form {
     padding: 1em;

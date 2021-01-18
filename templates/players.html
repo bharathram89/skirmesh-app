@@ -10,9 +10,13 @@
 </input>
 </div>
 
+<div class="tab">
+  <button class="tablinks" onclick="show_table(event, 'team_score')" id="defaultOpen">Team Score</button>
+  <button class="tablinks" onclick="show_table(event, 'location_score')">Location Stats</button>
+  <button class="tablinks" onclick="show_table(event, 'player_score')">Player Score</button>
+</div>
 
-<div class="leaderboard">
-
+<div id="team_score" class="leaderboard">
   <h1 class="leaderboard_header"> team leaderboard </h1>
 
   <table id="table">
@@ -47,8 +51,9 @@
         {% endfor %}
     </tbody>
   </table>
+</div>
 
-
+<div id="location_score" class="leaderboard">
 {% for nd in node_times %}
 <h3 class="leaderboard_header"> {{ nd if nd else node_times[nd].node | safe }} </h3>
 <table id="table">
@@ -83,10 +88,8 @@
 
 </div>
 
-<br>
 
-<div class="leaderboard">
-
+<div id="player_score" class="leaderboard">
   <h1 class="leaderboard_header"> player leaderboard </h1>
 
   <table id="table">
@@ -114,6 +117,24 @@
   </table>
 </div>
 
+<script>
+function show_table(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("leaderboard");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
 <br>
 
 {% endblock %}
