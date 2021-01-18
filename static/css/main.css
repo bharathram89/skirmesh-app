@@ -150,7 +150,10 @@ h2 {
 .tablinks {
     width: 33%;
     background-color: var(--button_color);
-    font-size: 2em;
+    font-size: 125%;
+    color: white;
+    text-transform: uppercase;
+    padding: 1em;
 }
 
 .tab {
@@ -387,7 +390,7 @@ div.player-leaderboard {
 
 .leaderboard_header {
     background: linear-gradient(45deg, black, red);
-    text-align: left;
+    text-align: center;
 
 }
 
