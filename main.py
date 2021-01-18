@@ -400,35 +400,27 @@ def issue_command():
                 for node in CP.end_nodes if dest == BROADCAST else [dest]:
 
                     data = {'node':node,val_map[val]:arg}
+                    setattr(CP.end_nodes[node], val_map[val], arg)
 
                     exists = get_node_status(node)
                     if exists:
 
-                        if val == CP.CAPT_TIME:
-
-                            exists.cap_time  = arg
-                            data['cap_time'] = arg
-
-                        elif val == CP.BOMB_TIME:
-
-                            exists.bomb_time  = arg
-                            data['bomb_time'] = arg
-
-                        elif val == CP.MED_TIME:
-
-                            exists.med_time  = arg
-                            data['med_time'] = arg
-
-                        elif val == CP.CAP_PERC:
-
-                            exists.cap_asst  = arg
-                            data['cap_asst'] = arg
+                        setattr(exists, val_map[val], arg)
 
                     else:
 
                         DB.session.add(NodeStatus(**data))
 
                     DB.session.commit()
+
+            # Set medic times globally, because all nodes are handled the
+            # same at the controller level
+            if int(config, 16) == CP.MED_TIME:
+
+                print(f"Updating MEDIC TIME to {pkt[1]*10} seconds")
+
+                # Return here because nothing gets sent to the node for this
+                return make_response(jsonify({"message": "OK"}), 200)
 
             # Blast a few necessary commands to push the node into a
             # specicic capture configuration
