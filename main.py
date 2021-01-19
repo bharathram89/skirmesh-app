@@ -280,8 +280,8 @@ def user_reg(uid=None):
         fname = form.fname.data
         lname = form.lname.data
 
-        data = {'fname':fname.upper(),
-                'lname':lname.upper(),
+        data = {'fname':fname.strip(' ').upper(),
+                'lname':lname.strip(' ').upper(),
                }
 
         try:
