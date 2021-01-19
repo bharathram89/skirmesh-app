@@ -287,6 +287,7 @@ def user_reg(uid=None):
         try:
 
             DB.session.add(Player(**data))
+            flash('User registration successful!')
 
         except:
 
@@ -298,7 +299,9 @@ def user_reg(uid=None):
 
             DB.session.commit()
 
-            return render_template('user_reg.html', form=form, error=error)
+            if not error:
+
+                return redirect(url_for('main_page'))
 
     return render_template('user_reg.html', form=form, Players=players)
 

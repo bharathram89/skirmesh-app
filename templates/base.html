@@ -37,8 +37,15 @@
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
-        <h1 class="error messages" role="alert"> {{ message }} </h1>
+        <div class={{ "error" if error else "success"}} role="alert">
+            <p style="text-align: center;">
+                <span style="font-size: 110%;">
+                    <strong>{{ message }}</strong>
+                </span>
+            </p>
+        </div>
       {% endfor %}
+      <br>
     {% endif %}
   {% endwith %}
 
