@@ -13,14 +13,28 @@ menu, nav, output, ruby, section, summary,
 time, mark, audio, video  */
 
 :root {
-  --button_color: #808080;
+
+  --button_color:       #808080;
   --button_color_hover: #F00000;
-  --RED: #FF0000;
-  --LIGHT_RED: #FFF0F0;
-  --BLUE: #0000FF;
-  --LIGHT_BLUE: #F0F0FF;
-  --BLACK: #000000;
-  --table_bg: #FFFFFF;
+  --table_bg:           #FFFFFF;
+
+  --RED:                #F00000;
+  --LIGHT_RED:          #FFF0F0;
+
+  --BLUE:               #0000F0;
+  --LIGHT_BLUE:         #F0F0FF;
+
+  --PURPLE:             #3333CC;
+  --LIGHT_PURPLE:       #F0F0CC;
+
+  --YELLOW:             #FFFF00;
+  --LIGHT_YELLOW:       #FFFFF0;
+
+  --GREEN:              #008000;
+  --LIGHT_GREEN:        #F0FFF0;
+
+  --BLACK:              #000000;
+  --WHITE:              #FFFFFF;
 }
 
 html {
@@ -35,31 +49,31 @@ body {
 }
 
 header{
-    border-radius: 0.1em;
-    color: rgba(255,255,255,0.70);
-    text-align: center;
-    vertical-align: center;
-    background-color: var(--BLACK);
+    /* border-radius:          0.1em; */
+    /* color: rgba(255,255,255,0.70); */
+    text-align:             center;
+    vertical-align:         center;
+    /* background-color: var(--BLACK); */
     /* background-image: url('../img/logo.png'); */
-    background-image: url('../img/soldierA.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    filter: drop-shadow(0 0 2em black) grayscale(0.5);
-    font-size: 350%;
-    padding: 1em;
+    background-image:       url('../img/soldierA.jpg');
+    background-repeat:      no-repeat;
+    background-position:    center;
+    background-size:        cover;
+    filter:                 drop-shadow(0 0 2em black) grayscale(0.5);
+    font-size:              350%;
+    padding:                1em;
 }
 
 
 h1, h3{
     /* border-radius: 0.1em; */
-    color: rgba(255,255,255); /* ,alpha); */
-    text-align: center;
-    background-color: var(--BLACK);
-    padding: 0.5em;
+    color:              var(--WHITE); /* ,alpha); */
+    text-align:         center;
+    background-color:   var(--BLACK);
+    padding:            0.5em;
     /* text-transform: capitalize; */
-    text-transform: uppercase;
-    margin: 0px;
+    text-transform:     uppercase;
+    margin:             0px;
 }
 h1 {
     font-size: 175%;
@@ -137,7 +151,7 @@ h2 {
 @keyframes slidein {
     from {
         margin-right: 100%;
-        width: 300%;
+        width:  300%;
     }
 
     to {
@@ -243,7 +257,7 @@ table {
 
 .header {
   color: #FFFFFF;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid var(--BLACK);
   padding: 1em;
   text-align: center;
   background-color: var(--BLACK);
@@ -265,21 +279,21 @@ td {
 }
 
 
-.row.team1 {
+/* .row.team1 {
     background-color: var(--LIGHT_RED);
 }
 .row.team2 {
     background-color: var(--LIGHT_BLUE);
 }
 .row.team3 {
-    background-color: #FFFFF0;
+    background-color: var(--LIGHT_YELLOW);
 }
 .row.team4 {
-    background-color: #F0FFF0;
+    background-color: var(--LIGHT_GREEN);
 }
 .row.team5 {
-    background-color: #F0F0FF;
-}
+    background-color: var(--LIGHT_PURPLE);
+} */
 
 .roster_element {
     padding: 0.5em;
@@ -287,27 +301,27 @@ td {
 
 .row.team1:hover {
     background-color: var(--RED);
-    color: #FFFFFF;
+    color: var(--WHITE);
     font-weight: bold;
 }
 .row.team2:hover {
     background-color: var(--BLUE);
-    color: #FFFFFF;
+    color: var(--WHITE);
     font-weight: bold;
 }
 .row.team3:hover {
-    background-color: #FFFF00;
-    color: #FFFFFF;
+    background-color: var(--YELLOW);
+    color: var(--WHITE);
     font-weight: bold;
 }
 .row.team4:hover {
-    background-color: #008000;
-    color: #FFFFFF;
+    background-color: var(--GREEN);
+    color: var(--WHITE);
     font-weight: bold;
 }
 .row.team5:hover {
-    background-color: #3333CC;
-    color: #FFFFFF;
+    background-color: var(--PURPLE);
+    color: var(--WHITE);
     font-weight: bold;
 }
 
@@ -352,7 +366,7 @@ path {
     transform-box: fill-box;
 }
 path:hover {
-    fill: #FFFFFF;
+    fill: var(--WHITE);
     opacity: 0.25;
     transform: scale(1.1);
 }
@@ -421,7 +435,7 @@ table thead tr th {
     text-transform: uppercase;
     width: 80%;
     background-color: var(--button_color);
-    color: #FFFFFF;
+    color: var(--WHITE);
 }
 
 #form_submit_button:hover {background-color: var(--button_color_hover)}
