@@ -362,7 +362,9 @@ def issue_command():
                    }
 
             exists = get_node_status(dest)
-            if exists: exists.location = data['location']
+            if exists:
+                exists.location  = data['location']
+                exists.timestamp = datetime.now()
             else: DB.session.add(NodeStatus(**data))
 
             DB.session.commit()
@@ -385,7 +387,9 @@ def issue_command():
                            }
 
                     exists = get_node_status(node)
-                    if exists: exists.config = int(config, 16)
+                    if exists:
+                        exists.config    = int(config, 16)
+                        exists.timestamp = datetime.now()
                     else: DB.session.add(NodeStatus(**data))
 
                     DB.session.commit()
@@ -580,7 +584,8 @@ def assign_uid():
     try:
 
         player = get_player(player)
-        player.uid = uid
+        player.uid       = uid
+        player.timestamp = datetime.now()
         DB.session.commit()
 
     except:
