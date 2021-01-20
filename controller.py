@@ -468,10 +468,11 @@ class CONTROL_POINT(XBeeDevice):
 
                 if cap_status:
 
-                    cap_status.tag    = uid
-                    cap_status.team   = team
+                    cap_status.tag       = uid
+                    cap_status.team      = team
                     # TODO cleanup how this is assigned
-                    cap_status.stable = data['stable']
+                    cap_status.stable    = data['stable']
+                    cap_status.timestamp = datetime.now()
 
                 else:
 
