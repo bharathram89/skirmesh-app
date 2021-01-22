@@ -25,6 +25,8 @@ class END_NODE(RemoteXBeeDevice):
         self.cap_time       = 6
         self.med_time       = 6
         self.cap_asst       = 5
+        self.diff_time      = 6
+        self.arm_time       = 1
         self.bomb_time      = 120
 
 
@@ -84,6 +86,8 @@ class CONTROL_POINT(XBeeDevice):
     CAPT_TIME = 0x8A
     BOMB_TIME = 0x8B
     CAP_PERC  = 0x8C
+    DIFF_TIME = 0x8D
+    ARM_TIME  = 0x8F
     MED_TIME  = 0x8E
 
 
@@ -123,6 +127,8 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB      : 'BOMB',
                 CAPT_TIME : 'SET CAPTURE TIME',
                 BOMB_TIME : 'SET BOMB TIMER',
+                DIFF_TIME : 'SET BOMB DISARM TIME',
+                ARM_TIME  : 'SET BOMB ARM TIME',
                 USER_REG  : 'REGISTER PLAYERS',
                 MED_TIME  : 'SET MEDIC TIME',
                 SET_TEAM  : 'SET TEAM',

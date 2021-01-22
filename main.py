@@ -396,14 +396,16 @@ def issue_command():
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
-            if CP.CAPT_TIME <= int(config, 16) <= CP.MED_TIME:
+            if CP.CAPT_TIME <= int(config, 16) <= CP.ARM_TIME:
 
                 pkt.pop(0)
 
                 val_map = {CP.CAPT_TIME:'cap_time',
                            CP.BOMB_TIME:'bomb_time',
                            CP.MED_TIME :'med_time',
-                           CP.CAP_PERC :'cap_asst'}
+                           CP.CAP_PERC :'cap_asst',
+                           CP.DIFF_TIME:'diff_time',
+                           CP.ARM_TIME :'arm_time'}
 
                 val, arg = int(config, 16), int(args, 16)
 
