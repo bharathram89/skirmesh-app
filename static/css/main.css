@@ -102,7 +102,7 @@ h2 {
 #main-nav li {
     display: table-cell;
     text-align: center;
-    padding-left: 1em;
+    padding-left: 0.25em;
     text-transform: uppercase;
 }
 #main-nav li:first-child {
@@ -494,17 +494,17 @@ dd, dt {
 .glow {
   color: #FFFF;
   text-align: center;
-  -webkit-animation: glow 1s ease-in-out infinite alternate;
-  -moz-animation: glow 1s ease-in-out infinite alternate;
-  animation: glow 1s ease-in-out infinite alternate;
+  -webkit-animation: glow 1.5s ease-in-out infinite alternate;
+  -moz-animation: glow 1.5s ease-in-out infinite alternate;
+  animation: glow 1.5s ease-in-out infinite alternate;
 }
 
 @-webkit-keyframes glow {
   from {
-    text-shadow: 0 0 0.1em #fff, 0 0 0.2em #fff, 0 0 0.3em #fb0, 0 0 0.4em #fa0, 0 0 0.5em #f80, 0 0 0.6em #f60, 0 0 0.7em #f20;
+    text-shadow: 0 0 0.1em #FFA, 0 0 0.2em #F82;
   }
   to {
-    text-shadow: 0 0 0.2em #fff, 0 0 0.3em #fdd, 0 0 0.4em #fbb, 0 0 0.5em #f99, 0 0 0.6em #f66, 0 0 0.7em #f33, 0 0 0.8em #f11;
+    text-shadow: 0 0 0.2em #DA0, 0 0 0.8em #E60
   }
 }
 
