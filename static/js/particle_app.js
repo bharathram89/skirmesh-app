@@ -8,9 +8,20 @@ var chrome = agent.indexOf("Chrome") > -1;
 // Chrome will have Safari components - if both exist it's Chrome, not Safari
 if (chrome && safari){ safari = false; }
 
-if (!safari) {
 
-    particlesJS("particles-js", {
+/* pJS elements */
+var tag_id = "particles-js";
+var pJS_tag = document.getElementById(tag_id);
+
+
+if (safari) {
+
+    pJS_tag.remove();
+
+}
+else {
+
+    particlesJS(tag_id, {
       "particles": {
         "number": {
           "value": 80,
