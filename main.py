@@ -109,6 +109,19 @@ def main_page():
     """
     Establish main page.
     """
+    kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
+              'name'       : "Battlefield Gaming Systems",
+               }
+
+    return render_template('field_chooser.html', **kwargs)
+
+
+
+@application.route('/index/<field>')
+def field_page(field):
+    """
+    Establish field landing page.
+    """
     reg_teams = get_registered_teams()
     teams = [get_team_members(t) for t in reg_teams if reg_teams]
     _players_ = get_player_names()
@@ -128,7 +141,7 @@ def main_page():
 
     DB.session.commit()
 
-    return render_template('field.html', **kwargs)
+    return render_template(field + '.html', **kwargs)
 
 
 
