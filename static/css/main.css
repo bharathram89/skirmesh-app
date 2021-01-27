@@ -355,7 +355,7 @@ td {
 }
 
 svg {
-    background-image: url('../img/field.png');
+    /* background-image: url('../img/field.png'); */
     background-repeat: no-repeat;
     background-size: contain;
 }

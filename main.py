@@ -10,7 +10,7 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-from flask import Flask, render_template, flash, jsonify
+from flask import Flask, render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 
@@ -27,15 +27,9 @@ load_dotenv(verbose=True)
 DATABASE_URL = os.environ['DATABASE_URL']
 
 
-soup = SOUP(open('templates/field.html'), 'html.parser')
-paths = soup.find_all('path')
-loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
-
-
 CMD_ARGS = {
             'REGISTER'    : json.load(open("json/teams.json")),
             'SET TEAM'    : json.load(open("json/teams.json")),
-            'SET LOCATION': json.loads(loc_json),
             'TIME DATA'   : json.load(open("json/timer_values.json")),
             'SET ASSIST %': json.load(open("json/percent_values.json"))
             }
@@ -122,6 +116,8 @@ def field_page(field):
     """
     Establish field landing page.
     """
+    session['field'] = field
+
     reg_teams = get_registered_teams()
     teams = [get_team_members(t) for t in reg_teams if reg_teams]
     _players_ = get_player_names()
@@ -141,7 +137,7 @@ def field_page(field):
 
     DB.session.commit()
 
-    return render_template(field + '.html', **kwargs)
+    return render_template('fields/' + field + '.html', **kwargs)
 
 
 
@@ -322,6 +318,22 @@ def user_reg(uid=None):
 
 @application.route('/node_admin')
 def node_admin():
+
+    field = session.get('field', None)
+
+    if not field:
+
+        error = "Please select a Field and return to Node Admin"
+        flash(error)
+
+        return render_template('field_chooser.html', error=error)
+
+
+    soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
+    paths = soup.find_all('path')
+    loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
+
+    CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
 
     node_status = {n:get_node_status(n) for n in CP.end_nodes}
 
