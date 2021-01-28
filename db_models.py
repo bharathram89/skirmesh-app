@@ -1,6 +1,8 @@
 from main import DB
 from datetime import datetime, date
 from sqlalchemy import func, and_
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 TIME_FMT = '%Y-%m-%d %H:%M:%f'
 
@@ -258,22 +260,31 @@ class Player(DB.Model):
 
 
 
-class AuthUsers(DB.Model):
+class AuthUsers(UserMixin, DB.Model):
 
     __tablename__ = 'auth_users'
 
-    id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
-    username  = DB.Column(DB.String(), nullable=False, unique=True)
-    email     = DB.Column(DB.String(), nullable=False)
-    password  = DB.Column(DB.String(), nullable=False)
-    timestamp = DB.Column(DB.DateTime(), default=datetime.now)
+    id             = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
+    firstname      = DB.Column(DB.String(), nullable=False)
+    lastname       = DB.Column(DB.String(), nullable=False)
+    callsign       = DB.Column(DB.String(), nullable=False, unique=True)
+    email          = DB.Column(DB.String(), nullable=False)
+    password_hash  = DB.Column(DB.String(), nullable=False)
+    timestamp      = DB.Column(DB.DateTime(), default=datetime.now)
 
-    DB.UniqueConstraint(username, password)
+    DB.UniqueConstraint(callsign)
 
 
     def __init__(self, **kwargs):
 
         self.__dict__.update(**kwargs)
+
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
     def __repr__(self):
@@ -283,11 +294,13 @@ class AuthUsers(DB.Model):
 
     def serialize(self):
 
-        ser = { 'id'        : self.id,
-                'username'  : self.username,
-                'email'     : self.email,
-                'password'  : self.password,
-                'timestamp' : self.timestamp,
+        ser = { 'id'             : self.id,
+                'firstname'      : self.firstname,
+                'lastname'       : self.lastname,
+                'callsign'       : self.callsign,
+                'email'          : self.email,
+                'password_hash'  : self.password_hash,
+                'timestamp'      : self.timestamp,
               }
 
         return ser

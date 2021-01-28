@@ -12,6 +12,7 @@ can be launched and validated.
 
 from flask import Flask, render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
+from flask_login import current_user, login_user, LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 import os
@@ -19,7 +20,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup as SOUP
 import time, json
 
-from forms import RegistrationForm, RegisterAccountForm, LoginForm
 from pretty_print import print_time, print_perc
 
 from dotenv import load_dotenv
@@ -48,6 +48,7 @@ application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 application.secret_key = 'a secret'
+loginMngr = LoginManager(application)
 
 
 
@@ -60,6 +61,7 @@ if __name__ == '__main__':
 
     from db_models import *
     from controller import CONTROL_POINT
+    from forms import RegistrationForm, RegisterAccountForm, LoginForm
 
     serial = '/dev/ttyUSB0'
     baud   = 115200
@@ -180,51 +182,51 @@ def registration():
 @application.route('/login', methods=['POST','GET'])
 def login():
 
-    form = LoginForm(request.form)
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
 
-    if request.method == 'POST' and form.validate():
+    form = LoginForm()
 
-        username = form.username.data
-        password = form.password.data
+    if form.validate_on_submit():
+        user = AuthUsers.query.filter_by(callsign=form.callsign.data).first()
 
-        users = get_auth_users()
-        DB.session.commit()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid callsign or password')
+            return redirect(url_for('login'))
 
-        valid_users = {k.username:k.password for k in users}
+        return redirect(url_for('main_page'))
 
-        if username in valid_users.keys():
-
-            if password == valid_users[username]:
-
-                print('You are logged in')
-                flash(f'Welcome, {username}!')
-
-                session['logged_in'] = True
-                session['username'] = username
-
-                return redirect(url_for('main_page'))
-
-            else:
-
-                error = 'Invalid Password'
-                print(error)
-                flash(error)
-
-                return render_template('login.html', form=form, error=error)
-
-        else:
-
-            error = 'No account exists'
-            print(error)
-            flash(error)
-
-            return render_template('login.html', form=form, error=error)
-
-        return redirect(url_for('login'))
+    print('nope')
 
     return render_template('login.html', form=form)
 
 
+@application.route('/register', methods=['POST','GET'])
+def register():
+
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    form = RegisterAccountForm()
+
+    if form.validate_on_submit():
+
+        user = AuthUsers(callsign=form.callsign.data,
+                         email=form.email.data,
+                         firstname=form.firstname.data,
+                         lastname=form.lastname.data)
+
+        user.set_password(form.password.data)
+
+        DB.session.add(user)
+        DB.session.commit()
+
+        flash('Congrats')
+        return redirect(url_for('main_page'))
+
+    print('failed')
+
+    return render_template('register.html', form=form)
 
 @application.route('/logout')
 def logout():
@@ -623,6 +625,9 @@ def assign_uid():
     return redirect(url_for('user_reg'))
 
 
+@loginMngr.user_loader
+def load_user(id):
+    return AuthUsers.query.get(int(id))
 
 
 if __name__ == '__main__':

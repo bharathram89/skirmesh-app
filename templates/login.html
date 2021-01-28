@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% from "_formhelpers.html" import render_field %}
+    <form id="user_registration"
+          name="Member_Data"
+          action=""
+          method="post"
+          style="float:center">
+
+      {{ form.hidden_tag() }}
+        <dl>
+          {{render_field(form.callsign)}}
+          {{render_field(form.password)}}
+          {{ form.submit() }}
+        </dl>
+
+        <p>Dont have an account? Click <a href="/register">Here.</p>
+
+   </form>
+
+{% endblock %}
