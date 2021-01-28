@@ -12,7 +12,8 @@ can be launched and validated.
 
 from flask import Flask, render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
-from flask_login import current_user, login_user, LoginManager
+from flask_login import current_user, login_user, LoginManager, logout_user
+from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 import os
@@ -183,20 +184,21 @@ def registration():
 def login():
 
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main_page'))
 
     form = LoginForm()
 
     if form.validate_on_submit():
         user = AuthUsers.query.filter_by(callsign=form.callsign.data).first()
+        print(user)
 
         if user is None or not user.check_password(form.password.data):
             flash('Invalid callsign or password')
             return redirect(url_for('login'))
 
-        return redirect(url_for('main_page'))
+        login_user(user)
 
-    print('nope')
+        return redirect(url_for('main_page'))
 
     return render_template('login.html', form=form)
 
@@ -231,8 +233,7 @@ def register():
 @application.route('/logout')
 def logout():
 
-    session['logged_in'] = False
-    flash('Logged Out')
+    logout_user()
 
     return redirect(url_for('main_page'))
 
@@ -624,6 +625,12 @@ def assign_uid():
 
     return redirect(url_for('user_reg'))
 
+@application.route('/player_profile/<callsign>')
+@login_required
+def player_profile(callsign):
+    user = AuthUsers.query.filter_by(callsign=callsign).first()
+
+    return render_template('player_profile.html', user=user)
 
 @loginMngr.user_loader
 def load_user(id):
