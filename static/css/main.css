@@ -221,7 +221,8 @@ label, select{
 input {
     padding: 1em;
     width: 100%;
-    margin: 0.5em;
+    margin: 0.5em 0;
+    box-sizing: border-box;
 }
 
 button, .button, .tab {
@@ -471,10 +472,6 @@ dd, dt {
 }
 
 
-#get_tag_button.button, #assign_uid_button.button, #uidblock, #reg_form_submit, #fname, #lname, dl {
-    margin: 0.5em 0;
-}
-
 #players.select {
     width: 100%;
 }
@@ -483,13 +480,7 @@ dd, dt {
     width: 70%;
 }
 
-#fname, #lname {
-    box-sizing: border-box;
-}
 
-.node_container {
-    text-align: left;
-}
 
 .glow {
   color: #FFFF;
