@@ -230,7 +230,7 @@ class Player(DB.Model):
     lname     = DB.Column(DB.String(), nullable=False)
     callsign  = DB.Column(DB.String())
     outfit    = DB.Column(DB.String())
-    uid       = DB.Column(DB.String(), unique=True)
+    uid       = DB.Column(DB.String(), nullable=True, unique=True)
     timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
     # DB.UniqueConstraint(fname, lname)
@@ -279,10 +279,13 @@ class AuthUsers(UserMixin, DB.Model):
 
         self.__dict__.update(**kwargs)
 
+
     def set_password(self, password):
+
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+
         return check_password_hash(self.password_hash, password)
 
 
