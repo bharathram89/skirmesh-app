@@ -2,6 +2,8 @@
 
 {% block content %}
 
+    <form>
+
     <select name="Players" id="players">
         {% for player in Players %}
         <option value={{  player['id']  }}>{{  player.lname  }},

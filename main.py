@@ -606,6 +606,7 @@ def get_uid():
 def assign_uid():
 
     data = json.loads(request.data)
+    error = None
 
     if request.method == 'POST':
 
@@ -618,28 +619,44 @@ def assign_uid():
 
     try:
 
-        player = get_player(player)
+        player           = get_player(player)
         player.uid       = uid
         player.timestamp = datetime.now()
         DB.session.commit()
 
     except:
 
-        print('UID already assigned to player')
-        return redirect(url_for('user_reg'))
+        error = 'UID already assigned to player'
+        flash(error)
+        print(error)
+
+    finally:
+
+        DB.session.commit()
+
+        if error:
+
+            return render_template('user_reg.html', error=error)
 
     return redirect(url_for('user_reg'))
+
+
 
 @application.route('/player_profile/<callsign>')
 @login_required
 def player_profile(callsign):
     user = AuthUsers.query.filter_by(callsign=callsign).first()
+    DB.session.commit()
 
     return render_template('player_profile.html', user=user)
+
+
 
 @loginMngr.user_loader
 def load_user(id):
     return AuthUsers.query.get(int(id))
+
+
 
 
 if __name__ == '__main__':
