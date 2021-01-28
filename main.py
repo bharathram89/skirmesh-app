@@ -189,12 +189,16 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = AuthUsers.query.filter_by(callsign=form.callsign.data).first()
-        print(user)
 
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid callsign or password')
-            return redirect(url_for('login'))
+        user = AuthUsers.query.filter_by(callsign=form.callsign.data).first()
+        DB.session.commit()
+
+        if not user or not user.check_password(form.password.data):
+
+            error = 'Oops! There was an invalid callsign or password.'
+            flash(error)
+
+            return render_template('login.html', form=form, error=error)
 
         login_user(user)
 
@@ -203,15 +207,17 @@ def login():
     return render_template('login.html', form=form)
 
 
+
 @application.route('/register', methods=['POST','GET'])
 def register():
 
     if current_user.is_authenticated:
         return redirect(url_for('index'))
 
+    error = None
     form = RegisterAccountForm()
 
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate_on_submit():
 
         user = AuthUsers(callsign=form.callsign.data,
                          email=form.email.data,
@@ -220,15 +226,28 @@ def register():
 
         user.set_password(form.password.data)
 
-        DB.session.add(user)
-        DB.session.commit()
+        try:
 
-        flash("Congrats, you're in!")
-        return redirect(url_for('main_page'))
+            DB.session.add(user)
+            flash("Congrats, you're in!")
 
-    print('failed')
+        except:
 
-    return render_template('register.html', form=form)
+            error = 'Oops! You seem to have matching information in our database...'
+            print(error)
+            flash(error)
+
+        finally:
+
+            DB.session.commit()
+
+            if not error:
+
+                return redirect(url_for('main_page'))
+
+    return render_template('register.html', form=form, error=error)
+
+
 
 @application.route('/logout')
 def logout():
@@ -315,7 +334,7 @@ def user_reg(uid=None):
 
                 return redirect(url_for('main_page'))
 
-    return render_template('user_reg.html', form=form, Players=players)
+    return render_template('user_reg.html', form=form, Players=players, error=error)
 
 
 
