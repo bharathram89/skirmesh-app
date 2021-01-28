@@ -132,3 +132,6 @@ dmypy.json
 
 # Database stuff
 *.sqlite
+*.db
+*.database
+*.pgrs

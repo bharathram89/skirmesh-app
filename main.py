@@ -223,7 +223,7 @@ def register():
         DB.session.add(user)
         DB.session.commit()
 
-        flash('Congrats')
+        flash("Congrats, you're in!")
         return redirect(url_for('main_page'))
 
     print('failed')
@@ -577,20 +577,6 @@ def get_uid():
 
     uid = CP.user_reg
     CP.user_reg = None
-
-    return make_response(jsonify({"uid": uid}), 200)
-
-
-
-# TODO: I don't understand the need for all of these exact same functions
-@application.route('/register_user', methods=['POST','GET'])
-def register_user():
-
-    while not CP.user_reg:
-
-        pass
-
-    uid = CP.user_reg.pop()
 
     return make_response(jsonify({"uid": uid}), 200)
 
