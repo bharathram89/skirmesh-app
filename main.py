@@ -622,7 +622,6 @@ def assign_uid():
         player           = get_player(player)
         player.uid       = uid
         player.timestamp = datetime.now()
-        DB.session.commit()
 
     except:
 
@@ -645,6 +644,7 @@ def assign_uid():
 @application.route('/player_profile/<callsign>')
 @login_required
 def player_profile(callsign):
+    
     user = AuthUsers.query.filter_by(callsign=callsign).first()
     DB.session.commit()
 
@@ -654,7 +654,11 @@ def player_profile(callsign):
 
 @loginMngr.user_loader
 def load_user(id):
-    return AuthUsers.query.get(int(id))
+
+    user = AuthUsers.query.get(int(id))
+    DB.session.commit()
+
+    return user
 
 
 
