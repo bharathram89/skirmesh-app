@@ -3,6 +3,7 @@ from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import email_validator
 from wtforms import SubmitField
 from db_models import AuthUsers
+from main import DB
 
 class RegistrationForm(Form):
 
@@ -42,6 +43,8 @@ class RegisterAccountForm(FlaskForm):
     def validate_callsign(self, callsign):
 
         user = AuthUsers.query.filter_by(callsign=callsign.data).first()
+        DB.session.commit()
+
 
         if user:
 
@@ -53,6 +56,7 @@ class RegisterAccountForm(FlaskForm):
     def validate_email(self, email):
 
         user = AuthUsers.query.filter_by(email=email.data).first()
+        DB.session.commit()
 
         if user:
 
