@@ -133,7 +133,7 @@ class CONTROL_POINT(XBeeDevice):
 
         self.DB = database
 
-        self.end_nodes = {}
+        self.end_nodes = set()
         self.user_reg  = None
 
         self.configure_XB()
@@ -216,20 +216,19 @@ class CONTROL_POINT(XBeeDevice):
             print(f"Adding {node} to Network")
 
             node_addr = str(node.get_64bit_addr())
-            node_status = PG.get_node_status(node_addr)
+            self.end_nodes.add(node_addr)
 
+            node_status = PG.get_node_status(node_addr)
             if node_status:
 
                 # Set recent timestamp to now to show last time on the Network
                 # This matters for selecting nodes that are "available" when
                 # filtering for nodes active "today"
                 node_status.timestamp = datetime.now()
-                self.end_nodes[node_addr] = node_status
 
             else:
                 # Initialize NodeStatus with all the defaults
-                self.end_nodes[node_addr] = PG.NodeStatus(**{'node':node_addr})
-                self.DB.session.add(self.end_nodes[node_addr])
+                self.DB.session.add(PG.NodeStatus(**{'node':node_addr}))
 
 
             self.DB.session.commit()
@@ -335,7 +334,6 @@ class CONTROL_POINT(XBeeDevice):
 
         node       = str(sender.get_64bit_addr())
         cap_status = PG.get_node_status(node)
-        self.DB.session.commit()
 
         if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
@@ -345,7 +343,6 @@ class CONTROL_POINT(XBeeDevice):
 
             # We only need to update the stability column for the current status
             cap_status.stable = payload[1]
-            self.DB.session.commit()
 
             # Grab the last captor from SCORE, to determine who the points are
             # awarded to when/if capture is completed
@@ -443,6 +440,7 @@ class CONTROL_POINT(XBeeDevice):
 
             # If you made it here, the UID is not registered to a team
             print(f'{uid} is not registered to a team')
+            self.DB.session.commit()
 
         return None
 
@@ -455,7 +453,6 @@ class CONTROL_POINT(XBeeDevice):
 
         uid = payload[1:5].hex()
         medic = PG.get_is_alive(uid)
-        self.DB.session.commit()
 
         DEAD  = 0x00
         ALIVE = 0x01
