@@ -352,6 +352,8 @@ def node_admin():
 
         return render_template('field_chooser.html', error=error)
 
+    nodes = DB.session.query(NodeStatus).all()
+    print(nodes[0].node)
 
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
@@ -360,7 +362,7 @@ def node_admin():
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
 
     kwargs = {
-             'node_dict'   : CP.end_nodes,
+             'node_dict'   : nodes,
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
              'node_cols'   : ['node id','location','configuration',

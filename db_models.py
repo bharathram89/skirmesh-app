@@ -212,7 +212,7 @@ class NodeStatus(DB.Model):
 
 class Players(UserMixin, DB.Model):
 
-    __tablename__ = 'auth_users'
+    __tablename__ = 'players'
 
     id             = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
 
