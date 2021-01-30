@@ -78,20 +78,22 @@ def is_change():
 
         to_update = dict()
 
-        for n in get_nodes():
+        q = DB.session.query(NodeStatus)
+        q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
+        node_status = q.all()
 
-            node_status = get_node_status(n)
+        for node in node_status:
 
-            if node_status and node_status.team:
+            if node.team and node.location:
 
-                to_update[n] = {
-                                'id'    : node_status.location,
-                                'team'  : node_status.team,
-                                'color' : TEAM_CMAP[node_status.team],
-                                'stable': node_status.stable
-                                }
+                to_update[node.node] = {
+                                       'id'    : node.location,
+                                       'team'  : node.team,
+                                       'color' : TEAM_CMAP[node.team],
+                                       'stable': node.stable
+                                       }
 
-            DB.session.commit()
+        DB.session.commit()
 
         if to_update: return make_response(jsonify(to_update), 200)
 
@@ -268,19 +270,21 @@ def players():
     _players_ = get_player_names()
     players =  {p.uid:p.lname for p in _players_ if p.uid}
 
-    nodes = get_nodes()
-    nd_times = dict()
-    for n in nodes:
+    q = DB.session.query(NodeStatus)
+    q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
+    node_status = q.all()
 
-        times       = get_times_for_node(n)
-        node_status = get_node_status(n)
-        if times and node_status: nd_times[node_status.location] = times
+    nd_times = dict()
+    for node in node_status:
+
+        times = get_times_for_node(node.node)
+        if times: nd_times[node.location] = times
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
               'p_sc_cols'  : ['player', 'points'],
               'plyr_score' : plyr_score,
-              'nodes'      : nodes,
+              'nodes'      : [node.node for node in node_status],
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
@@ -361,17 +365,22 @@ def node_admin():
 
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
 
+    avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
+    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
+    node_status = q.all()
+
     kwargs = {
-             'node_dict'   : nodes,
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
              'node_cols'   : ['node id','location','configuration',
                               'Capture Time', 'Medic Time', 'Bomb Time',
                               'Capture Assist %'],
-             'node_status' : CP.end_nodes,
+             'node_status' : node_status,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
              }
+
+    DB.session.commit()
 
     return render_template('node_admin.html', **kwargs)
 
@@ -389,21 +398,18 @@ def issue_command():
         args   = data['args']
         button = data['button']
 
+        avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
+
         pkt    = bytearray(3)
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
-
 
         if int(config, 16) == SET_LOCATION and dest != BROADCAST:
 
             print(f"Setting {dest} Location to: {data['location']}")
 
-            CP.end_nodes[dest].location = data['location']
-
-            data = {
-                    'location' : CP.end_nodes[dest].location,
-                    'node'     : dest,
-                   }
+            data = {'location' : data['location'],
+                    'node'     : dest}
 
             exists = get_node_status(dest)
             if exists:
@@ -421,22 +427,28 @@ def issue_command():
             # If just setting the configuration for one node
             if int(config, 16) in CP.CONFIGURATIONS:
 
-                for node in CP.end_nodes if dest == BROADCAST else [dest]:
+                if dest == BROADCAST:
 
-                    CP.end_nodes[node].config = int(config, 16)
+                    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
+                    node_status = q.all()
 
-                    data = {
-                            'config'   : int(config, 16),
-                            'node'     : node,
-                           }
+                    for node in node_status:
 
-                    exists = get_node_status(node)
+                        node.config    = int(config, 16)
+                        node.timestamp = datetime.now()
+
+                else:
+
+                    data = {'config'   : int(config, 16),
+                            'node'     : dest}
+
+                    exists = get_node_status(dest)
                     if exists:
                         exists.config    = int(config, 16)
                         exists.timestamp = datetime.now()
                     else: DB.session.add(NodeStatus(**data))
 
-                    DB.session.commit()
+                DB.session.commit()
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
@@ -453,21 +465,24 @@ def issue_command():
 
                 val, arg = int(config, 16), int(args, 16)
 
-                for node in CP.end_nodes if dest == BROADCAST else [dest]:
+                if dest == BROADCAST:
 
-                    data = {'node':node,val_map[val]:arg}
-                    setattr(CP.end_nodes[node], val_map[val], arg)
+                    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
+                    node_status = q.all()
 
-                    exists = get_node_status(node)
-                    if exists:
+                    for node in node_status:
 
-                        setattr(exists, val_map[val], arg)
+                        setattr(node, val_map[val], arg)
 
-                    else:
+                else:
 
-                        DB.session.add(NodeStatus(**data))
+                    data = {'node':dest,val_map[val]:arg}
 
-                    DB.session.commit()
+                    exists = get_node_status(dest)
+                    if exists: setattr(exists, val_map[val], arg)
+                    else: DB.session.add(NodeStatus(**data))
+
+                DB.session.commit()
 
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
@@ -482,23 +497,20 @@ def issue_command():
             # specicic capture configuration
             if int(config, 16) == CP.SET_TEAM:
 
-                for node in CP.end_nodes if dest == BROADCAST else [dest]:
-
-                    data = {'node':node, 'team':pkt[2], 'action':'CAPTURE'}
-                    DB.session.add(Score(**data))
-
-                    data = {'node':node,'team':pkt[2],'stable':1,'config':CP.CAPTURE}
-                    exists = get_node_status(node)
-                    if exists:
-                        exists.team      = pkt[2]
-                        exists.stable    = 1
-                        exists.cap_time  = 6
-                        exists.timestamp = datetime.now()
-                    else: DB.session.add(NodeStatus(**data))
-
-                    DB.session.commit()
-
                 if dest == BROADCAST:
+
+                    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
+                    node_status = q.all()
+
+                    for node in node_status:
+
+                        node.team      = pkt[2]
+                        node.stable    = 1
+                        node.cap_time  = 6
+                        node.timestamp = datetime.now()
+
+                        data = {'node':node.node, 'team':pkt[2], 'action':'CAPTURE'}
+                        DB.session.add(Score(**data))
 
                     CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
                     CP.send_data_broadcast(bytearray([CP.CAPTURE, pkt[2]]))
@@ -506,12 +518,25 @@ def issue_command():
 
                 else:
 
+                    data = {'node':dest, 'team':pkt[2], 'action':'CAPTURE'}
+                    DB.session.add(Score(**data))
+
+                    data = {'node':dest,'team':pkt[2]}
+                    exists = get_node_status(dest)
+                    if exists:
+                        exists.team      = pkt[2]
+                        exists.stable    = 1
+                        exists.cap_time  = 6
+                        exists.timestamp = datetime.now()
+                    else: DB.session.add(NodeStatus(**data))
+
                     _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(dest))
 
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 0]))
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE, pkt[2]]))
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 6]))
 
+                DB.session.commit()
                 # Return here to prevent sending the final
                 return make_response(jsonify({"message": "OK"}), 200)
 
@@ -531,14 +556,15 @@ def issue_command():
 
         elif button == 'End Game':
 
-            for node in CP.end_nodes:
+            q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
+            node_status = q.all()
 
-                cap_status = get_node_status(node)
+            for node in node_status:
 
-                if cap_status and cap_status.stable:
+                if node.stable:
 
-                    begin  = get_time_capture_complete(node)
-                    closed = get_is_capture_closed(node)
+                    begin  = get_time_capture_complete(node.node)
+                    closed = get_is_capture_closed(node.node)
 
                     # If a capture started and was not closed out normally
                     # then close it out
@@ -546,19 +572,20 @@ def issue_command():
 
                         held  = int((datetime.now() - begin).total_seconds())
 
-                        tdat = {'node':node,'team':cap_status.team,'time_held':held,'action':'END GAME'}
+                        tdat = {'node':node,'team':node.team,'time_held':held,'action':'END GAME'}
                         DB.session.add(Score(**tdat))
-                        DB.session.commit()
 
                         print(f"Ended timer count for {node}")
 
-                DB.session.commit()
+            DB.session.commit()
 
 
         elif button == 'Discover Network':
 
             print("Discovering Network")
             CP.find_nodes()
+
+    DB.session.commit()
 
     return make_response(jsonify({"message": "OK"}), 200)
 
