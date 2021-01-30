@@ -158,6 +158,7 @@ class Game(DB.Model):
     # All teams, scores by, and times by are dictionaries or lists converted
     # to strings. To get it back to the original form, call eval()
     teams          = DB.Column(DB.String())
+    team_name_map  = DB.Column(DB.String())
 
     times_by_team  = DB.Column(DB.String())
     times_by_node  = DB.Column(DB.String())
@@ -183,6 +184,7 @@ class Game(DB.Model):
         ser = { 'id'           : self.id,
                 'field'        : self.field,
                 'teams'        : self.teams,
+                'team_name_map': self.team_name_map,
                 'times_by_team': self.times_by_team,
                 'times_by_node': self.times_by_node,
                 'score_by_team': self.score_by_team,
