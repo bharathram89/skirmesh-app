@@ -128,7 +128,7 @@ def field_page(field):
     _players_ = get_player_names()
 
     #TODO circle back on this once we register players to see if it works...
-    players =  {p.uid:p.lname for p in _players_ if p.uid}
+    players =  {p.uid:p.lastname for p in _players_ if p.uid}
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
@@ -263,16 +263,17 @@ def logout():
 @application.route('/players')
 def players():
 
+    field = session.get('field', None)
+
     reg_teams  = get_registered_teams()
     team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
     team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
     plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
 
     _players_ = get_player_names()
-    players =  {p.uid:p.lname for p in _players_ if p.uid}
+    players =  {p.uid:p.lastname for p in _players_ if p.uid}
 
-    q = DB.session.query(NodeStatus)
-    q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
+    q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
     node_status = q.all()
 
     nd_times = dict()
@@ -306,41 +307,11 @@ def players():
 @application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg(uid=None):
 
-    form  = RegistrationForm(request.form)
-    error = None
-
     players = get_player_names()
     DB.session.commit()
 
-    if request.method == "POST" and form.validate():
+    return render_template('user_reg.html', Players=players)
 
-        fname = form.fname.data
-        lname = form.lname.data
-
-        data = {'fname':fname.strip(' ').upper(),
-                'lname':lname.strip(' ').upper(),
-               }
-
-        try:
-
-            DB.session.add(Player(**data))
-            flash('User registration successful!')
-
-        except:
-
-            error = 'Name already exists in database'
-            print(error)
-            flash(error)
-
-        finally:
-
-            DB.session.commit()
-
-            if not error:
-
-                return redirect(url_for('main_page'))
-
-    return render_template('user_reg.html', form=form, Players=players, error=error)
 
 
 from digi.xbee.models.address import XBee64BitAddress

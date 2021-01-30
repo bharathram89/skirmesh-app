@@ -147,6 +147,51 @@ class Score(DB.Model):
 
 
 
+class Game(DB.Model):
+
+    __tablename__ = 'game'
+
+    id             = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
+
+    field          = DB.Column(DB.String())
+
+    teams          = DB.Column(DB.String())
+
+    times_by_team  = DB.Column(DB.String())
+    times_by_node  = DB.Column(DB.String())
+
+    score_by_team  = DB.Column(DB.String())
+    score_by_uid   = DB.Column(DB.String())
+
+    timestamp      = DB.Column(DB.DateTime(), default=datetime.now)
+
+
+    def __init__(self, **kwargs):
+
+        self.__dict__.update(**kwargs)
+
+
+    def __repr__(self):
+
+        return '<id {}>'.format(self.id)
+
+
+    def serialize(self):
+
+        ser = { 'id'        : self.id,
+                'uid'       : self.uid,
+                'node'      : self.node,
+                'team'      : self.team,
+                'action'    : self.action,
+                'points'    : self.points,
+                'time_held' : self.time_held,
+                'timestamp' : self.timestamp,
+              }
+
+        return ser
+
+
+
 class NodeStatus(DB.Model):
 
     __tablename__ = 'node_status'
@@ -353,7 +398,7 @@ def get_uid_in_team(uid):
 
 def get_player_names():
 
-    return DB.session.query(Players).order_by(Players.lastname.asc())
+    return DB.session.query(Players).order_by(Players.lastname.asc()).all()
 
 
 def get_player(id):
