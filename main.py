@@ -371,8 +371,8 @@ def node_admin():
     kwargs = {
              'cmd_dict'    : CP.CMD_DICT if node_status else None,
              'cmd_args'    : CMD_ARGS,
-             'node_cols'   : ['node id','location','configuration',
-                              'Capture Time', 'Medic Time', 'Bomb Time',
+             'node_cols'   : ['node id','location','config',
+                              'Capture Time', 'Medic Time', 'Bomb (FUS | ARM | DIS)',
                               'Capture Assist %'],
              'node_status' : node_status,
              'print_time'  : print_time,

@@ -129,7 +129,7 @@
                     <td> {{ cmd_dict[node.config]                  | safe }} </td>
                     <td> {{ print_time((node.cap_time or 0) * 10)  | safe }} </td>
                     <td> {{ print_time((node.med_time or 0) * 10)  | safe }} </td>
-                    <td> {{ print_time((node.bomb_time or 0) * 10) | safe }} </td>
+                    <td> {{ print_time((node.bomb_time or 0) * 10) | safe }} | {{ print_time((node.arm_time or 0) * 10) | safe }} | {{ print_time((node.diff_time or 0) * 10) | safe }} </td>
                     <td> {{ print_perc(node.cap_asst)              | safe }} </td>
 
                 </tr>
