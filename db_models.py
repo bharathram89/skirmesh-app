@@ -155,6 +155,8 @@ class Game(DB.Model):
 
     field          = DB.Column(DB.String())
 
+    # All teams, scores by, and times by are dictionaries or lists converted
+    # to strings. To get it back to the original form, call eval()
     teams          = DB.Column(DB.String())
 
     times_by_team  = DB.Column(DB.String())
@@ -178,14 +180,14 @@ class Game(DB.Model):
 
     def serialize(self):
 
-        ser = { 'id'        : self.id,
-                'uid'       : self.uid,
-                'node'      : self.node,
-                'team'      : self.team,
-                'action'    : self.action,
-                'points'    : self.points,
-                'time_held' : self.time_held,
-                'timestamp' : self.timestamp,
+        ser = { 'id'           : self.id,
+                'field'        : self.field,
+                'teams'        : self.teams,
+                'times_by_team': self.times_by_team,
+                'times_by_node': self.times_by_node,
+                'score_by_team': self.score_by_team,
+                'score_by_uid' : self.score_by_uid,
+                'timestamp'    : self.timestamp,
               }
 
         return ser
