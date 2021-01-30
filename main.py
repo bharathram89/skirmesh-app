@@ -544,12 +544,51 @@ def issue_command():
 
                         held  = int((datetime.now() - begin).total_seconds())
 
-                        tdat = {'node':node,'team':node.team,'time_held':held,'action':'END GAME'}
+                        tdat = {'node':node.node,'team':node.team,'time_held':held,'action':'END GAME'}
                         DB.session.add(Score(**tdat))
 
-                        print(f"Ended timer count for {node}")
+                        print(f"Ended timer count for {node.node}")
 
             DB.session.commit()
+
+
+        elif button == 'Start Game':
+
+            reg_teams  = get_registered_teams()
+            team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
+            team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
+            plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
+
+            _players_ = get_player_names()
+            players =  {p.uid:p.lastname for p in _players_ if p.uid}
+
+            q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
+            node_status = q.all()
+
+            nd_times = dict()
+            for node in node_status:
+
+                times = get_times_for_node(node.node)
+                if times: nd_times[node.location] = times
+
+            data = {'field'        :field,
+                    'teams'        :str(reg_teams),
+                    'team_name_map':str(TEAM_NAME),
+                    'times_by_team':str(team_times),
+                    'times_by_node':str(times),
+                    'score_by_team':str(team_score),
+                    'score_by_uid' :str(plyr_score),
+                    }
+
+            DB.session.add(Game(**data))
+            DB.session.commit()
+
+            # Delete the scores table data for the next game
+            try:
+                DB.session.query(Score).filter(Score.node.in_(avail_addr)).delete()
+                DB.session.commit()
+            except:
+                DB.session.rollback()
 
 
         elif button == 'Discover Network':

@@ -86,6 +86,17 @@
                  {% endif %}>
                  </input>
 
+         <input class="button"
+                id="start_game_button"
+                type="button"
+                name="action"
+                value="Start Game"
+                onclick="form_submit(this.value)"
+                {% if not cmd_dict %}
+                style="display:none"
+                {% endif %}>
+                </input>
+
           <input class="button"
                  id="discover_network_button"
                  type="button"
