@@ -339,7 +339,6 @@ def user_reg(uid=None):
 
 
 from digi.xbee.models.address import XBee64BitAddress
-from digi.xbee.devices import RemoteZigBeeDevice
 
 @application.route('/node_admin')
 def node_admin():
@@ -360,8 +359,6 @@ def node_admin():
 
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
 
-    node_status = {n:get_node_status(n) for n in CP.end_nodes}
-
     kwargs = {
              'node_dict'   : CP.end_nodes,
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
@@ -369,12 +366,10 @@ def node_admin():
              'node_cols'   : ['node id','location','configuration',
                               'Capture Time', 'Medic Time', 'Bomb Time',
                               'Capture Assist %'],
-             'node_status' : node_status,
+             'node_status' : CP.end_nodes,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
              }
-
-    DB.session.commit()
 
     return render_template('node_admin.html', **kwargs)
 
