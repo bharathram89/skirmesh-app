@@ -78,18 +78,17 @@ def is_change():
 
         to_update = dict()
 
-        for n in CP.end_nodes:
+        for n in get_nodes():
 
-            cap_status  = get_capture_status(n)
             node_status = get_node_status(n)
 
-            if node_status and cap_status:
+            if node_status and node_status.team:
 
                 to_update[n] = {
                                 'id'    : node_status.location,
-                                'team'  : cap_status.team,
-                                'color' : CP.TEAM_CMAP[cap_status.team],
-                                'stable': cap_status.stable
+                                'team'  : node_status.team,
+                                'color' : TEAM_CMAP[node_status.team],
+                                'stable': node_status.stable
                                 }
 
             DB.session.commit()
@@ -158,7 +157,7 @@ def registration():
 
         try:
 
-            users = AuthUsers(**data)
+            users = Players(**data)
             DB.session.add(users)
             DB.session.commit()
 
@@ -190,7 +189,7 @@ def login():
 
     if form.validate_on_submit():
 
-        user = AuthUsers.query.filter_by(callsign=form.callsign.data).first()
+        user = Players.query.filter_by(callsign=form.callsign.data).first()
         DB.session.commit()
 
         if not user or not user.check_password(form.password.data):
@@ -219,10 +218,10 @@ def register():
 
     if request.method == "POST" and form.validate_on_submit():
 
-        user = AuthUsers(callsign=form.callsign.data,
-                         email=form.email.data,
-                         firstname=form.firstname.data,
-                         lastname=form.lastname.data)
+        user = Players(callsign=form.callsign.data,
+                       email=form.email.data,
+                       firstname=form.firstname.data,
+                       lastname=form.lastname.data)
 
         user.set_password(form.password.data)
 
@@ -269,17 +268,19 @@ def players():
     _players_ = get_player_names()
     players =  {p.uid:p.lname for p in _players_ if p.uid}
 
+    nodes = get_nodes()
     nd_times = dict()
-    for n in CP.end_nodes:
+    for n in nodes:
 
-        times = get_times_for_node(n)
-        if times: nd_times[CP.end_nodes[n].location] = times
+        times       = get_times_for_node(n)
+        node_status = get_node_status(n)
+        if times and node_status: nd_times[node_status.location] = times
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
               'p_sc_cols'  : ['player', 'points'],
               'plyr_score' : plyr_score,
-              'nodes'      : CP.end_nodes.keys(),
+              'nodes'      : nodes,
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
@@ -337,6 +338,8 @@ def user_reg(uid=None):
     return render_template('user_reg.html', form=form, Players=players, error=error)
 
 
+from digi.xbee.models.address import XBee64BitAddress
+from digi.xbee.devices import RemoteZigBeeDevice
 
 @application.route('/node_admin')
 def node_admin():
@@ -394,9 +397,6 @@ def issue_command():
         pkt[1] = int(config, 16)
 
 
-        node_status = {n:get_node_status(n) for n in CP.end_nodes}
-        capture_status = {c:get_capture_status(c) for c in CP.end_nodes}
-
         if int(config, 16) == SET_LOCATION and dest != BROADCAST:
 
             print(f"Setting {dest} Location to: {data['location']}")
@@ -426,7 +426,7 @@ def issue_command():
 
                 for node in CP.end_nodes if dest == BROADCAST else [dest]:
 
-                    CP.end_nodes[node].configuration = int(config, 16)
+                    CP.end_nodes[node].config = int(config, 16)
 
                     data = {
                             'config'   : int(config, 16),
@@ -490,17 +490,11 @@ def issue_command():
                     data = {'node':node, 'team':pkt[2], 'action':'CAPTURE'}
                     DB.session.add(Score(**data))
 
-                    data = {'node':node, 'team':pkt[2], 'stable':1}
-                    exists = get_capture_status(node)
+                    data = {'node':node,'team':pkt[2],'stable':1,'config':CP.CAPTURE}
+                    exists = get_node_status(node)
                     if exists:
                         exists.team      = pkt[2]
                         exists.stable    = 1
-                        exists.timestamp = datetime.now()
-                    else: DB.session.add(CaptureStatus(**data))
-
-                    data = {'node':node, 'config':CP.CAPTURE, 'cap_time':6}
-                    exists = get_node_status(node)
-                    if exists:
                         exists.cap_time  = 6
                         exists.timestamp = datetime.now()
                     else: DB.session.add(NodeStatus(**data))
@@ -515,7 +509,7 @@ def issue_command():
 
                 else:
 
-                    _64bit_addr = CP.end_nodes[dest]._64bit_addr
+                    _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(dest))
 
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 0]))
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE, pkt[2]]))
@@ -534,15 +528,15 @@ def issue_command():
             else:
 
                 print(f"Sending {dest}:", *pkt)
-
-                CP.transmit_pkt(CP.end_nodes[dest]._64bit_addr, pkt)
+                _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+                CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
 
 
         elif button == 'End Game':
 
             for node in CP.end_nodes:
 
-                cap_status = get_capture_status(node)
+                cap_status = get_node_status(node)
 
                 if cap_status and cap_status.stable:
 
@@ -644,8 +638,8 @@ def assign_uid():
 @application.route('/player_profile/<callsign>')
 @login_required
 def player_profile(callsign):
-    
-    user = AuthUsers.query.filter_by(callsign=callsign).first()
+
+    user = Players.query.filter_by(callsign=callsign).first()
     DB.session.commit()
 
     return render_template('player_profile.html', user=user)
@@ -655,7 +649,7 @@ def player_profile(callsign):
 @loginMngr.user_loader
 def load_user(id):
 
-    user = AuthUsers.query.get(int(id))
+    user = Players.query.get(int(id))
     DB.session.commit()
 
     return user

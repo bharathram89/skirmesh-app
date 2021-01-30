@@ -5,40 +5,6 @@ import db_models as PG
 import time
 
 
-# ██████╗░███████╗░██████╗░██╗███╗░░██╗  ███╗░░██╗░█████╗░██████╗░███████╗
-# ██╔══██╗██╔════╝██╔════╝░██║████╗░██║  ████╗░██║██╔══██╗██╔══██╗██╔════╝
-# ██████╦╝█████╗░░██║░░██╗░██║██╔██╗██║  ██╔██╗██║██║░░██║██║░░██║█████╗░░
-# ██╔══██╗██╔══╝░░██║░░╚██╗██║██║╚████║  ██║╚████║██║░░██║██║░░██║██╔══╝░░
-# ██████╦╝███████╗╚██████╔╝██║██║░╚███║  ██║░╚███║╚█████╔╝██████╔╝███████╗
-# ╚═════╝░╚══════╝░╚═════╝░╚═╝╚═╝░░╚══╝  ╚═╝░░╚══╝░╚════╝░╚═════╝░╚══════╝
-
-
-class END_NODE(RemoteXBeeDevice):
-
-    def __init__(self, host, device):
-
-        RemoteXBeeDevice.__init__(self, host, device)
-
-        self.location       = None
-        self.configuration  = None
-        self.capture_status = None
-        self.cap_time       = 6
-        self.med_time       = 6
-        self.cap_asst       = 5
-        self.diff_time      = 6
-        self.arm_time       = 1
-        self.bomb_time      = 120
-
-
-
-# ███████╗███╗░░██╗██████╗░  ███╗░░██╗░█████╗░██████╗░███████╗
-# ██╔════╝████╗░██║██╔══██╗  ████╗░██║██╔══██╗██╔══██╗██╔════╝
-# █████╗░░██╔██╗██║██║░░██║  ██╔██╗██║██║░░██║██║░░██║█████╗░░
-# ██╔══╝░░██║╚████║██║░░██║  ██║╚████║██║░░██║██║░░██║██╔══╝░░
-# ███████╗██║░╚███║██████╔╝  ██║░╚███║╚█████╔╝██████╔╝███████╗
-# ╚══════╝╚═╝░░╚══╝╚═════╝░  ╚═╝░░╚══╝░╚════╝░╚═════╝░╚══════╝
-
-
 
 
 # ██████╗░███████╗░██████╗░██╗███╗░░██╗
@@ -249,38 +215,23 @@ class CONTROL_POINT(XBeeDevice):
 
             print(f"Adding {node} to Network")
 
-            end_node = END_NODE(self, node)
             node_addr = str(node.get_64bit_addr())
+            node_status = PG.get_node_status(node_addr)
 
-            nd_status = PG.get_node_status(node_addr)
-
-            if nd_status:
-
-                end_node.location      = nd_status.location
-                end_node.configuration = nd_status.config
-                end_node.cap_time      = nd_status.cap_time
-                end_node.med_time      = nd_status.med_time
-                end_node.cap_asst      = nd_status.cap_asst
-                end_node.bomb_time     = nd_status.bomb_time
+            if node_status:
 
                 # Set recent timestamp to now to show last time on the Network
                 # This matters for selecting nodes that are "available" when
                 # filtering for nodes active "today"
-                nd_status.timestamp = datetime.now()
+                node_status.timestamp = datetime.now()
+                self.end_nodes[node_addr] = node_status
 
-                if nd_status.config == CONTROL_POINT.CAPTURE:
-
-                    end_node.capture_status = PG.get_capture_status(node_addr)
             else:
                 # Initialize NodeStatus with all the defaults
-                data = {'node':node_addr,
-                        'cap_time' : end_node.cap_time,
-                        'med_time' : end_node.med_time,
-                        'cap_asst' : end_node.cap_asst,
-                        'bomb_time': end_node.bomb_time}
-                self.DB.session.add(PG.NodeStatus(**data))
+                self.end_nodes[node_addr] = PG.NodeStatus(**{'node':node_addr})
+                self.DB.session.add(self.end_nodes[node_addr])
 
-            self.end_nodes[node_addr] = end_node
+
             self.DB.session.commit()
 
 
@@ -383,7 +334,7 @@ class CONTROL_POINT(XBeeDevice):
     def __capture(self, sender, payload):
 
         node       = str(sender.get_64bit_addr())
-        cap_status = PG.get_capture_status(node)
+        cap_status = PG.get_node_status(node)
         self.DB.session.commit()
 
         if len(payload[1:5]) == 1 and cap_status:
@@ -467,14 +418,14 @@ class CONTROL_POINT(XBeeDevice):
                     self.DB.session.add(PG.Score(**data))
                     self.DB.session.commit()
 
-                data = {'node':node, 'tag':uid, 'team':team}
+                data = {'node':node, 'uid':uid, 'team':team}
                 # If the node is not currently owned, then it's immediately stable
                 # If the prosecuting team is the same team, keep it stable
                 data['stable'] = 1 if not cap_status or (cap_status.stable and team == cap_status.team) else 0
 
                 if cap_status:
 
-                    cap_status.tag       = uid
+                    cap_status.uid       = uid
                     cap_status.team      = team
                     # TODO cleanup how this is assigned
                     cap_status.stable    = data['stable']
@@ -482,7 +433,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 else:
 
-                    self.DB.session.add(PG.CaptureStatus(**data))
+                    self.DB.session.add(PG.NodeStatus(**data))
 
                 self.DB.session.commit()
 
@@ -584,13 +535,13 @@ class CONTROL_POINT(XBeeDevice):
     def __status(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
-        status = PG.get_capture_status(node)
+        status = PG.get_node_status(node)
         self.DB.session.commit()
 
         if not status: return None
 
         cmd    = bytearray([CONTROL_POINT.ND_STATUS])
-        uid    = bytearray.fromhex(status.tag)
+        uid    = bytearray.fromhex(status.uid)
         team   = bytearray([status.team])
         stable = bytearray([status.stable])
 

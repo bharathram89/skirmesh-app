@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import email_validator
 from wtforms import SubmitField
-from db_models import AuthUsers
+from db_models import Players
 from main import DB
 
 class RegistrationForm(Form):
@@ -42,7 +42,7 @@ class RegisterAccountForm(FlaskForm):
 
     def validate_callsign(self, callsign):
 
-        user = AuthUsers.query.filter_by(callsign=callsign.data).first()
+        user = Players.query.filter_by(callsign=callsign.data).first()
         DB.session.commit()
 
 
@@ -55,7 +55,7 @@ class RegisterAccountForm(FlaskForm):
     # of all the kids signing up with their parents e-mail address.
     def validate_email(self, email):
 
-        user = AuthUsers.query.filter_by(email=email.data).first()
+        user = Players.query.filter_by(email=email.data).first()
         DB.session.commit()
 
         if user:
