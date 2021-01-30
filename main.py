@@ -76,10 +76,11 @@ def is_change():
 
     if request.method == 'GET':
 
+        field = session.get('field', None)
         to_update = dict()
 
-        q = DB.session.query(NodeStatus)
-        q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
+        q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
+        # q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
         node_status = q.all()
 
         for node in node_status:
@@ -388,6 +389,7 @@ def node_admin():
 def issue_command():
 
     data = json.loads(request.data)
+    field = session.get('field', None)
 
     if request.method == 'POST':
 
@@ -411,6 +413,7 @@ def issue_command():
 
             exists = get_node_status(dest)
             if exists:
+                exists.field     = field
                 exists.location  = data['location']
                 exists.timestamp = datetime.now()
             else: DB.session.add(NodeStatus(**data))
