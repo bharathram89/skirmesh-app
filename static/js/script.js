@@ -97,24 +97,32 @@ function form_submit(button) {
 
     // console.log(data)
 
-    fetch("/node_admin/issue_command", {
-      method: "POST",
-      body: JSON.stringify(data),
-      cache: "no-cache",
-    })
-      .then(function (response) {
-        if (response.status !== 200) {
-          console.log('Looks like there was a problem. Status code: ' + response.status);
-          return;
-        }
-        response.json().then(function (data) {
-          // console.log(data);
-        });
-      })
-      .catch(function (error) {
-        console.log("Fetch error: " + error);
-      });
+    var safe = true;
 
+    if (button === "Start Game") {
+        safe = confirm("WARNING: This will REMOVE ALL SCORES from previous games!");
+    }
+
+    if (safe) {
+
+        fetch("/node_admin/issue_command", {
+          method: "POST",
+          body: JSON.stringify(data),
+          cache: "no-cache",
+        })
+          .then(function (response) {
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem. Status code: ' + response.status);
+              return;
+            }
+            response.json().then(function (data) {
+              // console.log(data);
+            });
+          })
+          .catch(function (error) {
+            console.log("Fetch error: " + error);
+          });
+    }
 }
 
 function get_uid(button) {

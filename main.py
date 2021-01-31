@@ -575,7 +575,7 @@ def issue_command():
                     'teams'        :str(reg_teams),
                     'team_name_map':str(TEAM_NAME),
                     'times_by_team':str(team_times),
-                    'times_by_node':str(times),
+                    'times_by_node':str(nd_times),
                     'score_by_team':str(team_score),
                     'score_by_uid' :str(plyr_score),
                     }
@@ -584,10 +584,13 @@ def issue_command():
             DB.session.commit()
 
             # Delete the scores table data for the next game
+            # use try/except to allow a rollback option if it gets sideways
             try:
-                DB.session.query(Score).filter(Score.node.in_(avail_addr)).delete()
+                q = DB.session.query(Score).filter(Score.node.in_(avail_addr))
+                q.delete(synchronize_session='fetch')
                 DB.session.commit()
-            except:
+            except Exception as E:
+                print(E)
                 DB.session.rollback()
 
 

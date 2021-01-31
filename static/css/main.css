@@ -196,7 +196,7 @@ h2 {
 
 form {
     padding: 1em;
-    text-align: left;
+    text-align: center;
     width: 80%;
 }
 
@@ -225,10 +225,20 @@ input {
     box-sizing: border-box;
 }
 
+.button {
+    border-radius: 0.2em;
+    padding: 1em;
+    font-size: 2em;
+    text-transform: uppercase;
+    width: 80%;
+    background-color: var(--button_color);
+    color: var(--WHITE);
+}
+
 button, .button, .tab {
     transition: all .5s ease-in-out;
 }
-button:hover, .button:hover, #end_game_button:hover, #discover_network_button:hover {
+button:hover, .button:hover {
     background-color: var(--button_color_hover);
   }
 
@@ -429,17 +439,6 @@ table thead tr th {
     justify-content: space-between;
 }
 
-#form_submit_button, #discover_network_button, #end_game_button {
-    border-radius: 0.2em;
-    padding: 1em;
-    font-size: 2em;
-    text-transform: uppercase;
-    width: 80%;
-    background-color: var(--button_color);
-    color: var(--WHITE);
-}
-
-#form_submit_button:hover {background-color: var(--button_color_hover)}
 
 #mbr_search {
   /* background-image: url('../img/ss.png');
