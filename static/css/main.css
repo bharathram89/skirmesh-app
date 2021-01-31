@@ -274,6 +274,7 @@ table {
   background-color: var(--BLACK);
   font-weight: bold;
   text-transform: uppercase;
+  white-space: pre-line;
 }
 
 .row {
