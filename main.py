@@ -76,10 +76,11 @@ def is_change():
 
     if request.method == 'GET':
 
+        field = session.get('field', None)
         to_update = dict()
 
-        q = DB.session.query(NodeStatus)
-        q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
+        q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
+        # q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
         node_status = q.all()
 
         for node in node_status:
@@ -122,12 +123,12 @@ def field_page(field):
     """
     session['field'] = field
 
-    reg_teams = get_registered_teams()
+    reg_teams = get_registered_teams(field)
     teams = [get_team_members(t) for t in reg_teams if reg_teams]
     _players_ = get_player_names()
 
     #TODO circle back on this once we register players to see if it works...
-    players =  {p.uid:p.lname for p in _players_ if p.uid}
+    players =  {p.uid:p.lastname for p in _players_ if p.uid}
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "Battlefield Gaming Systems",
@@ -262,23 +263,25 @@ def logout():
 @application.route('/players')
 def players():
 
-    reg_teams  = get_registered_teams()
-    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
-    team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
-    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
+    field = session.get('field', None)
 
+    reg_teams = get_registered_teams(field)
     _players_ = get_player_names()
-    players =  {p.uid:p.lname for p in _players_ if p.uid}
+    players   =  {p.uid:p.lastname for p in _players_ if p.uid}
 
-    q = DB.session.query(NodeStatus)
-    q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
+    q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
     node_status = q.all()
 
     nd_times = dict()
+    avail_addr = [node.node for node in node_status]
     for node in node_status:
 
         times = get_times_for_node(node.node)
         if times: nd_times[node.location] = times
+
+    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(avail_addr)}
+    team_score = {ts[0]:ts[1] for ts in get_score_by_team(avail_addr)}
+    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(avail_addr)}
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
@@ -305,41 +308,11 @@ def players():
 @application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg(uid=None):
 
-    form  = RegistrationForm(request.form)
-    error = None
-
     players = get_player_names()
     DB.session.commit()
 
-    if request.method == "POST" and form.validate():
+    return render_template('user_reg.html', Players=players)
 
-        fname = form.fname.data
-        lname = form.lname.data
-
-        data = {'fname':fname.strip(' ').upper(),
-                'lname':lname.strip(' ').upper(),
-               }
-
-        try:
-
-            DB.session.add(Player(**data))
-            flash('User registration successful!')
-
-        except:
-
-            error = 'Name already exists in database'
-            print(error)
-            flash(error)
-
-        finally:
-
-            DB.session.commit()
-
-            if not error:
-
-                return redirect(url_for('main_page'))
-
-    return render_template('user_reg.html', form=form, Players=players, error=error)
 
 
 from digi.xbee.models.address import XBee64BitAddress
@@ -356,8 +329,7 @@ def node_admin():
 
         return render_template('field_chooser.html', error=error)
 
-    nodes = DB.session.query(NodeStatus).all()
-    print(nodes[0].node)
+    CP.field = field
 
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
@@ -372,9 +344,9 @@ def node_admin():
     kwargs = {
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
-             'node_cols'   : ['node id','location','configuration',
-                              'Capture Time', 'Medic Time', 'Bomb Time',
-                              'Capture Assist %'],
+             'node_cols'   : ['node id','location','config',
+                              'Capture\nTime','Medic\nTime','Bomb\nFUS  |  ARM  |  DIS',
+                              'Capture\nAssist %'],
              'node_status' : node_status,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
@@ -390,6 +362,7 @@ def node_admin():
 def issue_command():
 
     data = json.loads(request.data)
+    field = session.get('field', None)
 
     if request.method == 'POST':
 
@@ -413,6 +386,7 @@ def issue_command():
 
             exists = get_node_status(dest)
             if exists:
+                exists.field     = field
                 exists.location  = data['location']
                 exists.timestamp = datetime.now()
             else: DB.session.add(NodeStatus(**data))
@@ -572,12 +546,54 @@ def issue_command():
 
                         held  = int((datetime.now() - begin).total_seconds())
 
-                        tdat = {'node':node,'team':node.team,'time_held':held,'action':'END GAME'}
+                        tdat = {'node':node.node,'team':node.team,'time_held':held,'action':'END GAME'}
                         DB.session.add(Score(**tdat))
 
-                        print(f"Ended timer count for {node}")
+                        print(f"Ended timer count for {node.node}")
 
             DB.session.commit()
+
+
+        elif button == 'Start Game':
+
+            reg_teams  = get_registered_teams(field)
+            team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(avail_addr)}
+            team_score = {ts[0]:ts[1] for ts in get_score_by_team(avail_addr)}
+            plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(avail_addr)}
+
+            _players_ = get_player_names()
+            players =  {p.uid:p.lastname for p in _players_ if p.uid}
+
+            q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
+            node_status = q.all()
+
+            nd_times = dict()
+            for node in node_status:
+
+                times = get_times_for_node(node.node)
+                if times: nd_times[node.location] = times
+
+            data = {'field'        :field,
+                    'teams'        :str(reg_teams),
+                    'team_name_map':str(TEAM_NAME),
+                    'times_by_team':str(team_times),
+                    'times_by_node':str(nd_times),
+                    'score_by_team':str(team_score),
+                    'score_by_uid' :str(plyr_score),
+                    }
+
+            DB.session.add(Game(**data))
+            DB.session.commit()
+
+            # Delete the scores table data for the next game
+            # use try/except to allow a rollback option if it gets sideways
+            try:
+                q = DB.session.query(Score).filter(Score.node.in_(avail_addr))
+                q.delete(synchronize_session='fetch')
+                DB.session.commit()
+            except Exception as E:
+                print(E)
+                DB.session.rollback()
 
 
         elif button == 'Discover Network':

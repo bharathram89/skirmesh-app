@@ -131,7 +131,8 @@ class CONTROL_POINT(XBeeDevice):
 
         XBeeDevice.__init__(self, serial, baud)
 
-        self.DB = database
+        self.DB    = database
+        self.field = None
 
         self.end_nodes = set()
         self.user_reg  = None
@@ -238,15 +239,16 @@ class CONTROL_POINT(XBeeDevice):
 
         payload = xb_msg.data
         sender  = xb_msg.remote_device
+        address = str(sender.get_64bit_addr())
 
         print(f'Received (payload): {payload}')
 
-        if str(sender.get_64bit_addr()) not in self.end_nodes:
+        if address not in self.end_nodes:
 
             self.find_nodes()
 
         data = {
-                'sender' : str(sender.get_64bit_addr()),
+                'sender' : address,
                 'dest'   : str(self.get_64bit_addr()),
                 'command': payload[0],
                 'payload': payload[1:].hex(),
@@ -303,13 +305,13 @@ class CONTROL_POINT(XBeeDevice):
         print(f'Registering {uid} to team {team}')
 
         exists = PG.get_uid_in_team(uid)
-        self.DB.session.commit()
         # If the player already exists, update his information
         if exists:
             exists.team      = team
+            exists.field     = self.field
             exists.timestamp = datetime.now()
         else:
-            self.DB.session.add(PG.Team(**{'uid':uid,'team':team}))
+            self.DB.session.add(PG.Team(**{'uid':uid,'team':team,'field':self.field}))
 
         self.DB.session.commit()
 
@@ -452,13 +454,15 @@ class CONTROL_POINT(XBeeDevice):
     def __medic(self, sender, payload):
 
         uid = payload[1:5].hex()
+
         medic = PG.get_is_alive(uid)
+        node  = PG.get_node_status(str(sender.get_64bit_addr()))
 
         DEAD  = 0x00
         ALIVE = 0x01
         ALL   = 0x05
 
-        med_time = self.end_nodes[str(sender.get_64bit_addr())].med_time * 10
+        med_time = node.med_time * 10
 
         if medic:
 
