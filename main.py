@@ -123,7 +123,7 @@ def field_page(field):
     """
     session['field'] = field
 
-    reg_teams = get_registered_teams()
+    reg_teams = get_registered_teams(field)
     teams = [get_team_members(t) for t in reg_teams if reg_teams]
     _players_ = get_player_names()
 
@@ -265,22 +265,23 @@ def players():
 
     field = session.get('field', None)
 
-    reg_teams  = get_registered_teams()
-    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
-    team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
-    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
-
+    reg_teams = get_registered_teams(field)
     _players_ = get_player_names()
-    players =  {p.uid:p.lastname for p in _players_ if p.uid}
+    players   =  {p.uid:p.lastname for p in _players_ if p.uid}
 
     q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
     node_status = q.all()
 
     nd_times = dict()
+    avail_addr = [node.node for node in node_status]
     for node in node_status:
 
         times = get_times_for_node(node.node)
         if times: nd_times[node.location] = times
+
+    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(avail_addr)}
+    team_score = {ts[0]:ts[1] for ts in get_score_by_team(avail_addr)}
+    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(avail_addr)}
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
@@ -328,6 +329,7 @@ def node_admin():
 
         return render_template('field_chooser.html', error=error)
 
+    CP.field = field
 
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
@@ -554,10 +556,10 @@ def issue_command():
 
         elif button == 'Start Game':
 
-            reg_teams  = get_registered_teams()
-            team_times = {tt[0]:tt[1] for tt in get_time_held_by_team()}
-            team_score = {ts[0]:ts[1] for ts in get_score_by_team()}
-            plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid()}
+            reg_teams  = get_registered_teams(field)
+            team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(avail_addr)}
+            team_score = {ts[0]:ts[1] for ts in get_score_by_team(avail_addr)}
+            plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(avail_addr)}
 
             _players_ = get_player_names()
             players =  {p.uid:p.lastname for p in _players_ if p.uid}

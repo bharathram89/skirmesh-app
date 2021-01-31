@@ -131,7 +131,8 @@ class CONTROL_POINT(XBeeDevice):
 
         XBeeDevice.__init__(self, serial, baud)
 
-        self.DB = database
+        self.DB    = database
+        self.field = None
 
         self.end_nodes = set()
         self.user_reg  = None
@@ -304,13 +305,13 @@ class CONTROL_POINT(XBeeDevice):
         print(f'Registering {uid} to team {team}')
 
         exists = PG.get_uid_in_team(uid)
-        self.DB.session.commit()
         # If the player already exists, update his information
         if exists:
             exists.team      = team
+            exists.field     = self.field
             exists.timestamp = datetime.now()
         else:
-            self.DB.session.add(PG.Team(**{'uid':uid,'team':team}))
+            self.DB.session.add(PG.Team(**{'uid':uid,'team':team,'field':self.field}))
 
         self.DB.session.commit()
 

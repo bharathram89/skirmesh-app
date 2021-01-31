@@ -50,6 +50,7 @@ class Team(DB.Model):
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     uid       = DB.Column(DB.String(), unique=True, nullable=False)
     team      = DB.Column(DB.Integer(), nullable=False)
+    field     = DB.Column(DB.String(), nullable=False)
     timestamp = DB.Column(DB.DateTime(), default=datetime.now)
 
 
@@ -375,9 +376,9 @@ def get_nodes():
 
 
 @flatten
-def get_registered_teams():
+def get_registered_teams(field):
 
-    query = DB.session.query(Team.team).distinct()
+    query = DB.session.query(Team.team).filter(Team.field == field).distinct()
     # query = query.filter(func.DATE(Team.timestamp) == date.today())
 
     return query.order_by(Team.team.asc()).all()
@@ -412,20 +413,16 @@ def get_player(id):
     return query.order_by(Players.id.desc()).first()
 
 
-def get_time_held_by_team():
+def get_time_held_by_team(nodes):
 
-    query = DB.session.query(Score.team, func.sum(Score.time_held)).group_by(Score.team)
+    query = DB.session.query(Score.team, func.sum(Score.time_held))
+    query = query.filter(Score.node.in_(nodes)).group_by(Score.team)
     # query = query.filter(func.DATE(Score.timestamp) == date.today())
 
     return query.all()
 
 
 def get_times_for_node(node):
-
-    # TODO: find a better way to do this...
-    # I do this for now, because .all() returns "something" even
-    # if the query doesn't have a node match
-    if not get_node_status(node): return None
 
     query = DB.session.query(Score.team, func.sum(Score.time_held)).group_by(Score.team)
     # query = query.filter(func.DATE(Score.timestamp) == date.today())
@@ -434,18 +431,19 @@ def get_times_for_node(node):
     return query.all()
 
 
-def get_score_by_team():
+def get_score_by_team(nodes):
 
-    query = DB.session.query(Score.team, func.sum(Score.points)).group_by(Score.team)
+    query = DB.session.query(Score.team, func.sum(Score.points))
+    query = query.filter(Score.node.in_(nodes)).group_by(Score.team)
     # query = query.filter(func.DATE(Score.timestamp) == date.today())
 
     return query.all()
 
 
-def get_score_by_uid():
+def get_score_by_uid(nodes):
 
     query = DB.session.query(Score.uid, func.sum(Score.points))
-    query = query.filter(Score.uid != None).group_by(Score.uid)
+    query = query.filter(Score.uid != None).filter(Score.node.in_(nodes)).group_by(Score.uid)
     # query = query.filter(func.DATE(Score.timestamp) == date.today())
 
     return query.all()
