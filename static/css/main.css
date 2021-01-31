@@ -532,3 +532,35 @@ dd, dt {
   background-color: rgba(7, 149, 66, 0.35);
   transition:0.5s;
 }
+
+.node_container {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    width: 25%;
+
+}
+
+.node_cmds {
+    display: inline-block;
+    vertical-align: top;
+    width: 25%;
+
+}
+
+.beacon-container.node {
+    display: inline-block;
+    width: 40%;
+
+}
+.game_control {
+
+}
+.node_block {
+    width: 100%;
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
+    padding: .2em;
+
+}

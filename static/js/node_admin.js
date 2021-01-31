@@ -1,8 +1,15 @@
+var paths = document.getElementsByTagName("path");
+console.log(paths);
+for (i in paths){
+    paths[i].setAttribute("ondragover", "allowDrop(event)"); 
+    paths[i].setAttribute("ondrop", "drop(event)"); 
+    
+}
 function show_table(evt, cityName) {
 
     var i, tabcontent, tablinks;
 
-    tabcontent = document.getElementsByClassName("leaderboard");
+    tabcontent = document.getElementsByClassName("node_control");
 
     for (i = 0; i < tabcontent.length; i++) {
 
@@ -24,6 +31,7 @@ document.getElementById("defaultOpen").click();
 
 function allowDrop(ev) {
   ev.preventDefault();
+  ev.target.style.color = 'red';
 }
 
 function drag(ev) {
@@ -34,4 +42,5 @@ function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
+
 }
