@@ -1,8 +1,11 @@
 var paths = document.getElementsByTagName("path");
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
 console.log(paths);
-for (i in paths){
-    paths[i].setAttribute("ondragover", "allowDrop(event)"); 
-    paths[i].setAttribute("ondrop", "drop(event)"); 
+for (i = 0; i < paths.length; i++){
+    paths[i].setAttribute("ondragover", "allowDrop(event, this)"); 
+    paths[i].setAttribute("ondrop", "drop(event, this)"); 
     
 }
 function show_table(evt, cityName) {
@@ -26,19 +29,18 @@ function show_table(evt, cityName) {
     evt.currentTarget.className = "tablink active";
 }
 
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
 
-function allowDrop(ev) {
+function allowDrop(ev, elem ) {
   ev.preventDefault();
-  ev.target.style.color = 'red';
+  elem.opacity = '0.5';
+  elem.fill = 'red';
 }
 
 function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function drop(ev) {
+function drop(ev, elem) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
