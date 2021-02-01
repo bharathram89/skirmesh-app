@@ -7,10 +7,10 @@
     <ul class="tab" id="main-nav">
       <li onclick="show_table(event, 'game_admin')" id="defaultOpen"><a class="tablink">Game Admin</a></li>
       <li onclick="show_table(event, 'node_table')"><a class="tablink">Node Table</a></li>
-      <li onclick="show_table(event, 'player_score')"><a class="tablink" >Player Score</a></li>
     </ul>
 
-  <div id="" class="leaderboard">
+  <div id="game_admin" class="node_admin">
+
     <form id="configuration_control"
           name="Member_Data"
           action=""
@@ -121,37 +121,38 @@
 
     </form>
 
-    <div id="game_admin" class="node_control">
+
       <div class="node_container">
+
         {% for node in node_status %}
 
         <div id="{{node.node | safe}}" class="node_block" draggable="true" ondragstart="drag(event)">
           <p>{{ node.node }}</p>
         </div>
-        
+
         {% endfor %}
 
       </div>
 
       <div class="beacon-container node">
-        
+
         {% block SVG %}
         {% endblock %}
 
       </div>
-        
+
       <div class="node_cmds">
+
         <p> Place Holder </p>
 
-      
-
-
       </div>
-      
 
-    </div>
 
-  <div id="node_table" class="node_control">
+  </div>
+
+
+
+  <div id="node_table" class="node_admin" style="display:'none'">
 
     {% if cmd_dict %}
 

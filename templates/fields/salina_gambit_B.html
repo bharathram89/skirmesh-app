@@ -1,4 +1,4 @@
-{% extends "field_wrapper.html" %}
+{% extends ("node_admin.html" if admin else "field_wrapper.html") %}
 
 {% block SVG %}
 
