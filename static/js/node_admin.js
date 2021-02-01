@@ -31,7 +31,7 @@ var dragged;
 
 /* events fired on the draggable target */
 document.addEventListener("drag", function( event ) {
-
+  event.dataTransfer.setDragImage(event.target, 10,10);
 }, false);
 
 document.addEventListener("dragstart", function( event ) {
@@ -39,6 +39,7 @@ document.addEventListener("dragstart", function( event ) {
   dragged = event.target;
   // make it half transparent
   event.target.style.opacity = 0.5;
+  event.dataTransfer.setData("image/gif", event.target.src);
 }, false);
 
 document.addEventListener("dragend", function( event ) {
