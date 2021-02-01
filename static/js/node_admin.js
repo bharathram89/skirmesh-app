@@ -1,5 +1,5 @@
 var paths = document.getElementsByTagName("path");
-
+/*
 // Don't know if these are doing anything anymore...
 function allowDrop(event, elem ) {
   event.preventDefault();
@@ -25,7 +25,7 @@ for (i = 0; i < paths.length; i++) {
     paths[i].setAttribute("ondrop", "drop(event, this)");
 
 }
-
+*/
 
 var dragged;
 
@@ -39,7 +39,7 @@ document.addEventListener("dragstart", function( event ) {
   dragged = event.target;
   // make it half transparent
   event.target.style.opacity = 0.5;
-  event.dataTransfer.setData("image/gif", event.target.src);
+  event.dataTransfer.setData("text", event.target.src);
 }, false);
 
 document.addEventListener("dragend", function( event ) {
@@ -81,6 +81,7 @@ document.addEventListener("drop", function( event ) {
   if ( event.target.tagName == "path" ) {
       event.target.style = "";
       event.target.style.transform = "scale(1.0)";
+      event.target.style.fill = "#img1"; 
       // Put this back when you're ready to get rid of it
       // dragged.parentNode.removeChild( dragged );
       // event.target.appendChild( dragged );

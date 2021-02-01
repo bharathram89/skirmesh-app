@@ -564,3 +564,14 @@ dd, dt {
     padding: .2em;
 
 }
+
+.node_img_div {
+    display: inline-block;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    padding: .1em;
+
+}
+
+
