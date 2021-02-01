@@ -259,7 +259,7 @@ class CONTROL_POINT(XBeeDevice):
 
         cmd = payload[0]
 
-        if payload[1:] and cmd in self.parse_message:
+        if cmd in self.parse_message:
 
             pkt = self.parse_message[cmd](sender, payload)
 
@@ -334,8 +334,11 @@ class CONTROL_POINT(XBeeDevice):
 
     def __capture(self, sender, payload):
 
-        node       = str(sender.get_64bit_addr())
-        cap_status = PG.get_node_status(node)
+        node        = str(sender.get_64bit_addr())
+        cap_status  = PG.get_node_status(node)
+
+        last = self.DB.session.query(PG.Score).filter(PG.Score.node == node)
+        last = last.order_by(PG.Score.id.desc()).first()
 
         if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
@@ -352,7 +355,9 @@ class CONTROL_POINT(XBeeDevice):
 
             # If there was an originating captor and the node is now STABLE
             # (...The node will only ever be considered stable here)
-            if orig_captor and payload[1]:
+            # If the last action was CAPTURE COMPLETE, the node is coming
+            # online in the middle and this avoids duplicate scores
+            if orig_captor and payload[1] and (last.action != 'CAPTURE COMPLETE' if last else True):
 
                 data = {'node'  :node,
                         'uid'   :orig_captor.uid,
@@ -442,7 +447,8 @@ class CONTROL_POINT(XBeeDevice):
 
             # If you made it here, the UID is not registered to a team
             print(f'{uid} is not registered to a team')
-            self.DB.session.commit()
+
+        self.DB.session.commit()
 
         return None
 
@@ -532,7 +538,6 @@ class CONTROL_POINT(XBeeDevice):
         return pkt
 
 
-    # TODO this needs to reflect 'CAPTURE' in the function call
     def __status(self, sender, payload):
 
         node = str(sender.get_64bit_addr())
@@ -542,11 +547,17 @@ class CONTROL_POINT(XBeeDevice):
         if not status: return None
 
         cmd    = bytearray([CONTROL_POINT.ND_STATUS])
-        uid    = bytearray.fromhex(status.uid)
-        team   = bytearray([status.team])
-        stable = bytearray([status.stable])
 
-        return cmd + uid + team + stable
+        state  = bytearray([status.config, status.team, status.stable])
+        times  = bytearray([status.cap_time,
+                            status.cap_asst,
+                            status.bomb_time,
+                            status.arm_time,
+                            status.diff_time])
+
+        uid    = bytearray.fromhex(status.uid) if status.uid else bytearray()
+
+        return cmd + state + times + uid
 
 
     def __user_reg(self, sender, payload):

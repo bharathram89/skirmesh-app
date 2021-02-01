@@ -349,6 +349,7 @@ def get_team(uid):
     query = query.filter(Team.uid == uid)
 
     result = query.order_by(Team.id.desc()).first()
+    
     return result[0] if result else result
 
 
