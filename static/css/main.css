@@ -238,9 +238,6 @@ input {
     color: var(--WHITE);
 }
 
-button, .button, .tab {
-    transition: all .5s ease-in-out;
-}
 button:hover, .button:hover {
     background-color: var(--button_color_hover);
     transform: scale(1.05);
