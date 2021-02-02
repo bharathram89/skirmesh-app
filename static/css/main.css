@@ -285,7 +285,11 @@ table {
   text-align: center;
   text-transform: uppercase;
 }
-.row:hover {background-color: var(--table_color_hover);}
+.row:hover {
+    color: var(--WHITE);
+    background-color: var(--table_color_hover);
+    font-weight: bold;
+}
 
 td {
   padding: 1em;
