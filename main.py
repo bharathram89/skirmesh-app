@@ -354,7 +354,8 @@ def node_admin():
 
     DB.session.commit()
 
-    return render_template('fields/' + field +'.html', admin=True, **kwargs)
+    return render_template('node_admin.html', **kwargs)
+    # return render_template('fields/' + field +'.html', admin=True, **kwargs)
 
 
 

@@ -228,9 +228,9 @@ input {
 .button {
     border-radius: 0.2em;
     padding: 1em;
-    font-size: 2em;
+    font-size: 150%;
     text-transform: uppercase;
-    width: 80%;
+    width: 60%;
     background-color: var(--button_color);
     color: var(--WHITE);
 }
@@ -573,5 +573,3 @@ dd, dt {
     padding: .1em;
 
 }
-
-
