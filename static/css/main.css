@@ -15,8 +15,10 @@ time, mark, audio, video  */
 :root {
 
   --button_color:       #808080;
-  --button_color_hover: #F00000;
+  --button_color_hover: #A00000;
+
   --table_bg:           #FFFFFF;
+  --table_color_hover:  #A0A0A0;
 
   --RED:                #F00000;
   --LIGHT_RED:          #FFF0F0;
@@ -82,7 +84,7 @@ h3 {
     font-size: 125%;
 }
 h1:hover, h3:hover, header:hover{
-    color: var(--RED);
+    color: var(--button_color_hover);
 }
 
 
@@ -121,6 +123,7 @@ h2 {
 }
 #main-nav li a:hover {
     background-color: var(--button_color_hover);
+    transform: scale(1.05);
 }
 
 .grid_container {
@@ -240,6 +243,7 @@ button, .button, .tab {
 }
 button:hover, .button:hover {
     background-color: var(--button_color_hover);
+    transform: scale(1.05);
   }
 
 select {
@@ -284,7 +288,7 @@ table {
   text-align: center;
   text-transform: uppercase;
 }
-.row:hover {background-color: var(--RED);}
+.row:hover {background-color: var(--table_color_hover);}
 
 td {
   padding: 1em;
