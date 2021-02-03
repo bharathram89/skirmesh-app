@@ -71,8 +71,8 @@ if __name__ == '__main__':
 
 
 
-@application.route('/index/is_change', methods=['GET'])
-def is_change():
+@application.route('/index/update', methods=['GET'])
+def update():
 
     if request.method == 'GET':
 
@@ -108,9 +108,8 @@ def main_page():
     """
     Establish main page.
     """
-    kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
-              'name'       : "Battlefield Gaming Systems",
-               }
+    kwargs = {'author': "Brandon Zoss and Dustin Kuchenbecker",
+              'name'  : "SkirMesh Systems"}
 
     return render_template('field_chooser.html', **kwargs)
 
@@ -297,6 +296,7 @@ def players():
               'team_name'  : TEAM_NAME,
               'team_cmap'  : TEAM_CMAP,
               'teams'      : reg_teams,
+              'field'      : field,
               }
 
     DB.session.commit()
@@ -350,6 +350,7 @@ def node_admin():
              'node_status' : node_status,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
+             'field'       : field,
              }
 
     DB.session.commit()

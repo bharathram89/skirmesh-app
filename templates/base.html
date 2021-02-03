@@ -43,8 +43,11 @@
 
     <ul id="main-nav">
         <li><a href="/index">Home</a></li>
+        {% if field %}
+        <li><a href="/index/{{ field }}">Field Map</a></li>
+        {% endif %}
         <li><a href="/players">Leaderboard</a></li>
-        <li><a href="/user_reg">Pair UID</a></li>
+        <!-- <li><a href="/user_reg">Pair UID</a></li> -->
         <li><a href="/node_admin">Node Admin</a></li>
         <li><a href="/comms">Comms Log</a></li>
     </ul>

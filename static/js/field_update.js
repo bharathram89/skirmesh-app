@@ -2,7 +2,7 @@ setInterval(
 
   function(){
 
-  fetch('/index/is_change',  {
+  fetch('/index/update',  {
                               method: "GET",
                               cache: "no-cache",
                              })
