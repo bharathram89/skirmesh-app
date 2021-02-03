@@ -27,22 +27,22 @@ from dotenv import load_dotenv
 load_dotenv(verbose=True)
 DATABASE_URL = os.environ['DATABASE_URL']
 
+team_data = json.load(open("json/teams.json"))
 
 CMD_ARGS = {
-            'REGISTER'    : json.load(open("json/teams.json")),
-            'SET TEAM'    : json.load(open("json/teams.json")),
+            'REGISTER'    : team_data,
+            'SET TEAM'    : team_data,
             'TIME DATA'   : json.load(open("json/timer_values.json")),
             'SET ASSIST %': json.load(open("json/percent_values.json"))
             }
 
-TEAM_NAME = {int(t['value'], 16):t['text'] for t in CMD_ARGS['SET TEAM']}
-TEAM_CMAP = {int(c['value'], 16):c['text'] for c in json.load(open("json/team_colors.json"))}
+TEAM_NAME = {int(t['value'], 16):t['text'] for t in team_data}
+TEAM_CMAP = {int(c['value'], 16):c['color'] for c in team_data}
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
 SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
-
 
 
 application = Flask(__name__)

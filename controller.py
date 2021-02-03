@@ -57,30 +57,6 @@ class CONTROL_POINT(XBeeDevice):
     MED_TIME  = 0x8E
 
 
-    # █▀▀ █▀█ █░░ █▀█ █▀█   █▀▄▀█ ▄▀█ █▀█
-    # █▄▄ █▄█ █▄▄ █▄█ █▀▄   █░▀░█ █▀█ █▀▀
-
-    RED    = 0x01
-    BLUE   = 0x02
-    YELLOW = 0x03
-    GREEN  = 0x04
-    PURPLE = 0x05
-
-    # Define teams by color, but this could change...
-    TEAM_CMAP = {RED    : '#FF0000',
-                 BLUE   : '#0000FF',
-                 YELLOW : '#FFFF00',
-                 GREEN  : '#008000',
-                 PURPLE : '#3333CC'}
-
-    #TODO This needs to be JSON file based for ease of swap
-    TEAM_NAME = {RED    : 'RED',
-                 BLUE   : 'BLUE',
-                 YELLOW : 'YELLOW',
-                 GREEN  : 'GREEN',
-                 PURPLE : 'PURPLE'}
-
-
     # █▀▄▀█ █▀▀ █▄░█ █░█   █▀ █▀▀ ▀█▀ ▀█▀ █▀▀ █▀█ █▀
     # █░▀░█ ██▄ █░▀█ █▄█   ▄█ ██▄ ░█░ ░█░ ██▄ █▀▄ ▄█
     # This is primarly used to set the menu options
