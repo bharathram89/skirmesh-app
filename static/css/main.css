@@ -288,7 +288,7 @@ table {
 .row:hover {
     color: var(--WHITE);
     background-color: var(--table_color_hover);
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 td {
