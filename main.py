@@ -574,6 +574,16 @@ def issue_command():
                 times = get_times_for_node(node.node)
                 if times: nd_times[node.location] = times
 
+                if node.config == CP.CAPTURE:
+
+                    node.team = None;
+
+                    _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(node.node))
+                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CONFIGURE, CP.CAPTURE]))
+
+            DB.session.commit()
+
+
             data = {'field'        :field,
                     'teams'        :str(reg_teams),
                     'team_name_map':str(TEAM_NAME),
