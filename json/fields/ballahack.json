@@ -1,0 +1,37 @@
+[
+			{
+			"value": "0x01",
+			"text":  "RED",
+			"color": "#FF0000"
+			},
+			{
+			"value": "0x02",
+			"text":  "BLUE",
+			"color": "#0000FF"
+			},
+			{
+			"value": "0x03",
+			"text":  "YELLOW",
+			"color": "#FFFF00"
+			},
+			{
+			"value": "0x04",
+			"text":  "GREEN",
+			"color": "#008000"
+			},
+			{
+			"value": "0x05",
+			"text":  "PURPLE",
+			"color": "#3333CC"
+			},
+			{
+			"value": "0xC8",
+			"text":  "REFEREE START",
+			"color": "#008080"
+			},
+			{
+			"value": "0xC9",
+			"text":  "REFEREE STOP",
+			"color": "#008080"
+			}
+]

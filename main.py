@@ -27,17 +27,10 @@ from dotenv import load_dotenv
 load_dotenv(verbose=True)
 DATABASE_URL = os.environ['DATABASE_URL']
 
-team_data = json.load(open("json/teams.json"))
 
-CMD_ARGS = {
-            'REGISTER'    : team_data,
-            'SET TEAM'    : team_data,
-            'TIME DATA'   : json.load(open("json/timer_values.json")),
-            'SET ASSIST %': json.load(open("json/percent_values.json"))
-            }
 
-TEAM_NAME = {int(t['value'], 16):t['text'] for t in team_data}
-TEAM_CMAP = {int(c['value'], 16):c['color'] for c in team_data}
+CMD_ARGS = {'TIME DATA'   : json.load(open("json/timer_values.json")),
+            'SET ASSIST %': json.load(open("json/percent_values.json"))}
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
@@ -76,8 +69,11 @@ def update():
 
     if request.method == 'GET':
 
-        field = session.get('field', None)
+        field = session.get('field')
         to_update = dict()
+
+        team_data = json.load(open("json/fields/" + field + ".json"))
+        team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
 
         q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
         # q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
@@ -90,7 +86,7 @@ def update():
                 to_update[node.node] = {
                                        'id'    : node.location,
                                        'team'  : node.team,
-                                       'color' : TEAM_CMAP[node.team],
+                                       'color' : team_cmap[node.team],
                                        'stable': node.stable
                                        }
 
@@ -122,6 +118,10 @@ def field_page(field):
     """
     session['field'] = field
 
+    team_data = json.load(open("json/fields/" + field + ".json"))
+    team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
+    team_name = {int(n['value'], 16):n['text'] for n in team_data}
+
     reg_teams = get_registered_teams(field)
     teams = [get_team_members(t) for t in reg_teams if reg_teams]
     _players_ = get_player_names()
@@ -134,8 +134,8 @@ def field_page(field):
               'team_col'   : ['player'],
               'reg_teams'  : reg_teams,
               'teams'      : teams,
-              'team_cmap'  : TEAM_CMAP,
-              'team_name'  : TEAM_NAME,
+              'team_cmap'  : team_cmap,
+              'team_name'  : team_name,
               'players'    : players,
                }
 
@@ -264,7 +264,11 @@ def players():
 
     field = session.get('field', None)
 
-    reg_teams = get_registered_teams(field)
+    team_data = json.load(open("json/fields/" + field + ".json")) if field else []
+    team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
+    team_name = {int(n['value'], 16):n['text'] for n in team_data}
+
+    reg_teams = get_registered_teams(field) if field else []
     _players_ = get_player_names()
     players   =  {p.uid:p.lastname for p in _players_ if p.uid}
 
@@ -272,15 +276,15 @@ def players():
     node_status = q.all()
 
     nd_times = dict()
-    avail_addr = [node.node for node in node_status]
+    nodes = [node.node for node in node_status]
     for node in node_status:
 
         times = get_times_for_node(node.node)
         if times: nd_times[node.location] = times
 
-    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(avail_addr)}
-    team_score = {ts[0]:ts[1] for ts in get_score_by_team(avail_addr)}
-    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(avail_addr)}
+    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(nodes)}
+    team_score = {ts[0]:ts[1] for ts in get_score_by_team(nodes)}
+    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(nodes)}
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
@@ -293,8 +297,8 @@ def players():
               'node_times' : nd_times,
               'players'    : players,
               'print_time' : print_time,
-              'team_name'  : TEAM_NAME,
-              'team_cmap'  : TEAM_CMAP,
+              'team_name'  : team_name,
+              'team_cmap'  : team_cmap,
               'teams'      : reg_teams,
               'field'      : field,
               }
@@ -336,6 +340,7 @@ def node_admin():
     loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
 
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
+    CMD_ARGS['REGISTER'] = CMD_ARGS['SET_LOCATION'] = json.load(open("json/fields/" + field + ".json"))
 
     avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
     q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
@@ -364,7 +369,7 @@ def node_admin():
 def issue_command():
 
     data = json.loads(request.data)
-    field = session.get('field', None)
+    field = session.get('field')
 
     if request.method == 'POST':
 
@@ -584,10 +589,12 @@ def issue_command():
 
             DB.session.commit()
 
+            team_data = json.load(open("json/fields/" + field + ".json"))
+            team_name = {int(n['value'], 16):n['text'] for n in team_data}
 
             data = {'field'        :field,
                     'teams'        :str(reg_teams),
-                    'team_name_map':str(TEAM_NAME),
+                    'team_name_map':str(team_name),
                     'times_by_team':str(team_times),
                     'times_by_node':str(nd_times),
                     'score_by_team':str(team_score),
