@@ -403,10 +403,11 @@ def issue_command():
 
         elif button == 'Issue Command':
 
-            pkt[2] = int(args, 16)
+            pkt[2]  = int(args, 16)
+            _config = int(config, 16)
 
             # If just setting the configuration for one node
-            if int(config, 16) in CP.CONFIGURATIONS:
+            if _config in CP.CONFIGURATIONS:
 
                 if dest == BROADCAST:
 
@@ -415,25 +416,35 @@ def issue_command():
 
                     for node in node_status:
 
-                        node.config    = int(config, 16)
+                        node.config    = _config
                         node.timestamp = datetime.now()
+
+                        if _config == CP.REGISTER:
+
+                            node.team = pkt[2]
 
                 else:
 
-                    data = {'config'   : int(config, 16),
+                    data = {'config'   : _config,
                             'node'     : dest}
 
                     exists = get_node_status(dest)
                     if exists:
-                        exists.config    = int(config, 16)
+
+                        exists.config    = _config
                         exists.timestamp = datetime.now()
+
+                        if _config == CP.REGISTER:
+                            exists.team = pkt[2]
+                            data['team'] = pkt[2]
+
                     else: DB.session.add(NodeStatus(**data))
 
                 DB.session.commit()
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
-            if CP.CAPT_TIME <= int(config, 16) <= CP.ARM_TIME:
+            if CP.CAPT_TIME <= _config <= CP.ARM_TIME:
 
                 pkt.pop(0)
 
@@ -444,7 +455,7 @@ def issue_command():
                            CP.DIFF_TIME:'diff_time',
                            CP.ARM_TIME :'arm_time'}
 
-                val, arg = int(config, 16), int(args, 16)
+                val, arg = _config, int(args, 16)
 
                 if dest == BROADCAST:
 
@@ -467,7 +478,7 @@ def issue_command():
 
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
-            if int(config, 16) == CP.MED_TIME:
+            if _config == CP.MED_TIME:
 
                 print(f"Updating MEDIC TIME to {pkt[1]*10} seconds")
 
@@ -476,7 +487,7 @@ def issue_command():
 
             # Blast a few necessary commands to push the node into a
             # specicic capture configuration
-            if int(config, 16) == CP.SET_TEAM:
+            if _config == CP.SET_TEAM:
 
                 if dest == BROADCAST:
 
