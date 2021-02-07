@@ -21,7 +21,13 @@
 }
 
 .field_link:hover {
-transform: scale(1.1);
+    transform: scale(1.1);
+    box-shadow: 0 0 1em rgba(255, 255, 255, 0.25);
+}
+
+.field_link:active {
+    box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);
+    transform: scale(0.98);
 }
 
 

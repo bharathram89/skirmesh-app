@@ -123,7 +123,14 @@ h2 {
 }
 #main-nav li a:hover {
     background-color: var(--button_color_hover);
+    box-shadow: 0 0 1em rgba(255, 255, 255, 0.25);
     transform: scale(1.05);
+}
+
+#main-nav li a:active {
+    background-color: var(--button_color_hover);
+    box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);
+    transform: scale(0.98);
 }
 
 .grid_container {
@@ -240,8 +247,14 @@ input {
 
 button:hover, .button:hover {
     background-color: var(--button_color_hover);
+    box-shadow: 0 0 1em rgba(255, 255, 255, 0.25);
     transform: scale(1.05);
   }
+
+button:active, .button:active {
+    box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);
+    transform: scale(0.98);
+}
 
 select {
   -webkit-appearance: none;
