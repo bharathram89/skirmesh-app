@@ -340,7 +340,8 @@ def node_admin():
     loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
 
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
-    CMD_ARGS['REGISTER'] = CMD_ARGS['SET_LOCATION'] = json.load(open("json/fields/" + field + ".json"))
+    field_cmd_args = json.load(open("json/fields/" + field + ".json"))
+    CMD_ARGS['REGISTER'] = CMD_ARGS['SET_LOCATION'] = CMD_ARGS['SET TEAM'] = field_cmd_args
 
     avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
     q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
