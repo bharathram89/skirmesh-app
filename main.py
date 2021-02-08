@@ -277,14 +277,32 @@ def players():
 
     nd_times = dict()
     nodes = [node.node for node in node_status]
+
+    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(nodes)}
+    team_score = {ts[0]:ts[1] for ts in get_score_by_team(nodes)}
+    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(nodes)}
+
     for node in node_status:
 
         times = get_times_for_node(node.node)
         if times: nd_times[node.location] = times
 
-    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(nodes)}
-    team_score = {ts[0]:ts[1] for ts in get_score_by_team(nodes)}
-    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(nodes)}
+        loc = node.location
+        times = get_times_for_node(node.node)
+        if times: nd_times[loc] = times
+
+        # Add time for nodes that are still under control
+        begin = get_time_capture_complete(node.node)
+        if node.stable and not get_is_capture_closed(node.node) and begin:
+
+            for i,time in enumerate(times):
+
+                if time[0] == node.team:
+
+                    held  = int((datetime.now() - begin).total_seconds())
+                    times[i] = [time[0], time[1]]
+                    times[i][1] = (time[1] if time[1] else 0) + held if loc in nd_times else held
+                    team_times[time[0]] = team_times[time[0]] + times[i][1] if team_times[time[0]] else times[i][1]
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
@@ -585,6 +603,8 @@ def issue_command():
 
             q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
             node_status = q.all()
+
+            # TODO: Need to END GAME here to save accurate times
 
             nd_times = dict()
             for node in node_status:
