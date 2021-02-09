@@ -36,7 +36,7 @@ class Score(db.Model):
     __tablename__ = 'score'
 
     id        = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    uid       = db.Column(db.Integer, db.ForeignKey('uid.id'),
+    uid       = db.Column(db.Integer, db.ForeignKey('uid.uid'),
                           nullable=False)
     player_uid = db.relationship('UID', backref=db.backref('score',
                                                            lazy=True))
@@ -66,7 +66,7 @@ def add_node_entry():
 
     uids = db.session.query(UID).filter_by(uid='aabbccdd').first()
 
-    entry = Score(uid=uids.id, node='town', team=uids.team, action='capture',
+    entry = Score(uid=uids.uid, node='town', team=uids.team, action='capture',
                   points=2)
 
     db.session.add(entry)
