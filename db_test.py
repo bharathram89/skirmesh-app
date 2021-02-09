@@ -46,9 +46,9 @@ class Team(db.Model):
     id   = db.Column(db.Integer, primary_key=True, autoincrement=True)
     team = db.Column(db.String, unique=True)
 
-    scores = db.relationship('Score', backref=db.backref('scores_team', lazy=True))
-    player = db.relationship('Player', backref=db.backref('player_team', lazy=True, uselist=False))
-    uids   = db.relationship('UID', backref=db.backref('uids_team', lazy=True, uselist=False))
+    scores  = db.relationship('Score', backref=db.backref('scores_team', lazy=True))
+    players = db.relationship('Player', backref=db.backref('player_team', lazy=True))
+    uids    = db.relationship('UID', backref=db.backref('uids_team', lazy=True))
 
     def __repr__(self):
         return self.team
@@ -145,4 +145,4 @@ if __name__ == "__main__":
     print(f'team score count: {len(a.scores)}')
 
     print(f'uids associated with team {a.team}: {a.uids}')
-    print(f'the only team associated with a uid: {b.team}')
+    print(f'the only team associated with uid {b.uid}: {b.team}')
