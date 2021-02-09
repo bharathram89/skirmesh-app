@@ -48,6 +48,7 @@ class Score(db.Model):
 
 def init_db():
 
+    db.create_all()
     dustin = Player(fname='Dustin',lname='Kuchenbecker')
     uid1 = UID(uid='aabbccdd', team=1)
 
