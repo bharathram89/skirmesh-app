@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from random import choice
+from random import choice, shuffle
 
 
 app = Flask(__name__)
@@ -113,12 +113,19 @@ def populate_uids():
 
         uids[i]  =  bytearray([choice(ints) for i in range(4)])
 
-    team = choice(teams)
-    uid  = choice(uids)
+    for team in teams:
 
-    db.session.add(UID(uid=uid.hex(), team=team.hex()))
-    db.session.add(Team(team=team.hex()))
+        db.session.add(Team(team=team.hex()))
+
+    while uids:
+        
+        team = choice(teams)
+        uid  = uids.pop()
+
+        db.session.add(UID(uid=uid.hex(), team=team.hex()))
+
     db.session.commit()
+
 
 
 
@@ -126,18 +133,19 @@ if __name__ == "__main__":
 
     db.create_all()
 
-    for i in range(4):
+    if not db.session.query(UID).first():
+
         populate_uids()
 
-    for i in range(100):
-        add_node_entry()
+        for i in range(100):
+            add_node_entry()
 
 
     b = db.session.query(UID).first()
     a = db.session.query(Team).first()
 
-    print(b.scores)
-    print(a.scores)
+    print(f'uid score count: {len(b.scores)}')
+    print(f'team score count: {len(a.scores)}')
 
-    print(a.uids)
-    print(b.team)
+    print(f'uids associated with team {a.team}: {a.uids}')
+    print(f'the only team associated with a uid: {b.team}')
