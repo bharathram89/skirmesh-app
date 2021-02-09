@@ -46,9 +46,9 @@ class Team(db.Model):
     id   = db.Column(db.Integer, primary_key=True, autoincrement=True)
     team = db.Column(db.String, unique=True)
 
-    scores = db.relationship('Score', backref=db.backref('scores_team', lazy=True))
-    player = db.relationship('Player', backref=db.backref('player_team', lazy=True, uselist=False))
-    uids   = db.relationship('UID', backref=db.backref('uids_team', lazy=True, uselist=False))
+    scores  = db.relationship('Score', backref=db.backref('scores_team', lazy=True))
+    players = db.relationship('Player', backref=db.backref('player_team', lazy=True))
+    uids    = db.relationship('UID', backref=db.backref('uids_team', lazy=True))
 
     def __repr__(self):
         return self.team
@@ -86,13 +86,10 @@ def init_db():
 def add_node_entry():
 
     uids = db.session.query(UID).all()
-    uids = [uid.uid for uid in uids]
 
-    teams = db.session.query(Team).all()
-    teams = [team.team for team in teams]
+    uid = choice(uids)
 
-
-    entry = Score(uid=choice(uids), node='TOWN', team=choice(teams), action='CAPTURE', points=2)
+    entry = Score(uid=uid.uid, node='TOWN', team=uid.team, action='CAPTURE', points=2)
 
     db.session.add(entry)
     db.session.commit()
@@ -118,7 +115,7 @@ def populate_uids():
         db.session.add(Team(team=team.hex()))
 
     while uids:
-        
+
         team = choice(teams)
         uid  = uids.pop()
 
@@ -144,8 +141,8 @@ if __name__ == "__main__":
     b = db.session.query(UID).first()
     a = db.session.query(Team).first()
 
-    print(f'uid score count: {len(b.scores)}')
+    print(f'uid {b.uid} score count: {len(b.scores)}')
     print(f'team score count: {len(a.scores)}')
 
     print(f'uids associated with team {a.team}: {a.uids}')
-    print(f'the only team associated with a uid: {b.team}')
+    print(f'the only team associated with uid {b.uid}: {b.team}')
