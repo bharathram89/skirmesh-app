@@ -28,12 +28,12 @@ class UID(db.Model):
 
     __tablename__ = 'uid'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column(db.String, unique=True)
+    id   = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    uid  = db.Column(db.String, unique=True)
+    team = db.Column(db.String, db.ForeignKey('team.team'), nullable=False)
 
     scores = db.relationship('Score', backref=db.backref('scores_uid', lazy=True))
     player = db.relationship('Player', backref=db.backref('player_uid', lazy=True, uselist=False))
-    team   = db.relationship('Team', backref=db.backref('team_uid', lazy=True, uselist=False))
 
     def __repr__(self):
         return self.uid
@@ -45,10 +45,10 @@ class Team(db.Model):
 
     id   = db.Column(db.Integer, primary_key=True, autoincrement=True)
     team = db.Column(db.String, unique=True)
-    uid  = db.Column(db.Integer, db.ForeignKey('uid.uid'), nullable=False)
 
     scores = db.relationship('Score', backref=db.backref('scores_team', lazy=True))
     player = db.relationship('Player', backref=db.backref('player_team', lazy=True, uselist=False))
+    uids   = db.relationship('UID', backref=db.backref('uids_team', lazy=True, uselist=False))
 
     def __repr__(self):
         return self.team
@@ -102,15 +102,22 @@ def populate_uids():
 
     ints = [i for i in range(256)]
 
-    uid = bytearray([choice(ints) for i in range(4)])
+    # Only make two teams to get multiple UIDs on same team
+    teams = [None]*2
+    for i in range(2):
 
-    db.session.add(UID(uid=uid.hex()))
-    db.session.commit()
+        teams[i] = bytearray([choice(ints) for i in range(3)])
 
-    ints = [i for i in range(256)]
-    team = bytearray([choice(ints) for i in range(3)])
+    uids = [None]*20
+    for i in range(20):
 
-    db.session.add(Team(team=team.hex(), uid=uid.hex()))
+        uids[i]  =  bytearray([choice(ints) for i in range(4)])
+
+    team = choice(teams)
+    uid  = choice(uids)
+
+    db.session.add(UID(uid=uid.hex(), team=team.hex()))
+    db.session.add(Team(team=team.hex()))
     db.session.commit()
 
 
@@ -122,5 +129,15 @@ if __name__ == "__main__":
     for i in range(4):
         populate_uids()
 
-    for i in range(10):
+    for i in range(100):
         add_node_entry()
+
+
+    b = db.session.query(UID).first()
+    a = db.session.query(Team).first()
+
+    print(b.scores)
+    print(a.scores)
+
+    print(a.uids)
+    print(b.team)
