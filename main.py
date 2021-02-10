@@ -85,11 +85,10 @@ def update():
         team_data = json.load(open("json/fields/" + field + ".json"))
         team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
 
-        q = NodeStatus.query.filter(NodeStatus.field == field)
-        # q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
-        node_status = q.all()
+        _field = Field.query.filter(Field.field == field).first()
+        nodes = _field.nodes
 
-        for node in node_status:
+        for node in nodes:
 
             if node.config == CP.CAPTURE and node.team and node.location:
 
