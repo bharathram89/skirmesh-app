@@ -42,7 +42,7 @@ class RegisterAccountForm(FlaskForm):
 
     def validate_callsign(self, callsign):
 
-        user = Players.query.filter_by(callsign=callsign.data).first()
+        user = Player.query.filter_by(callsign=callsign.data).first()
         DB.session.commit()
 
 
@@ -55,7 +55,7 @@ class RegisterAccountForm(FlaskForm):
     # of all the kids signing up with their parents e-mail address.
     def validate_email(self, email):
 
-        user = Players.query.filter_by(email=email.data).first()
+        user = Player.query.filter_by(email=email.data).first()
         DB.session.commit()
 
         if user:
