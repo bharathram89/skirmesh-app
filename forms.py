@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import email_validator
 from wtforms import SubmitField
-from db_models import Players
+from db_models import Player
 from main import DB
 
 class RegistrationForm(Form):
