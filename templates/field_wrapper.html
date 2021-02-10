@@ -9,19 +9,18 @@
 <div class="grid_element roster">
 
     {% for team in teams[0::2] %}
-    {% set team_i = reg_teams[(loop.index-1)*2] %}
 
         <table id="table">
         <thead>
           <tr>
-                <th class="header"> {{team_name[team_i] | safe}} ({{team | length}})</th>
+                <th class="header"> {{team_name[team] | safe}} ({{team_data[team] | length}})</th>
           </tr>
         </thead>
         <tbody>
-            {% for mbr in team %}
-            <tr class="row team{{team_i | safe}}">
+            {% for mbr in team_data[team] %}
+            <tr class="row team{{team | safe}}">
 
-                <td class="roster_element"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
+                <td class="roster_element"> {{ mbr.player.lastname if mbr.player else mbr.uid | safe }} </td>
 
             </tr>
             {% endfor %}
@@ -44,26 +43,25 @@
 <div class="grid_element roster">
 
     {% for team in teams[1::2] %}
-    {% set team_i = reg_teams[loop.index*2 - 1] %}
 
-        <table id="table">
-        <thead>
-          <tr>
-              <th class="header"> {{team_name[team_i] | safe}} ({{team | length}})</th>
-          </tr>
-        </thead>
-        <tbody>
-            {% for mbr in team %}
-            <tr class="row team{{team_i | safe}}">
+    <table id="table">
+    <thead>
+      <tr>
+            <th class="header"> {{team_name[team] | safe}} ({{team_data[team] | length}})</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for mbr in team_data[team] %}
+        <tr class="row team{{team | safe}}">
 
-                <td class="roster_element"> {{ players[mbr] if mbr in players else mbr | safe }} </td>
+            <td class="roster_element"> {{ mbr.player.lastname if mbr.player else mbr.uid | safe }} </td>
 
-            </tr>
-            {% endfor %}
-        </tbody>
-        </table>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
 
-    {% endfor %}
+{% endfor %}
 
 </div>
 

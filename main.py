@@ -16,7 +16,7 @@ from flask_login import current_user, login_user, LoginManager, logout_user
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
-import os
+import os, glob
 from datetime import datetime
 from bs4 import BeautifulSoup as SOUP
 import time, json
@@ -62,6 +62,16 @@ if __name__ == '__main__':
 
     CP = CONTROL_POINT(serial, baud, database=DB)
 
+    # Initialize/update the fields table
+    for file in map(os.path.basename, glob.glob("templates/fields/*.html")):
+
+        field = file.strip('.html')
+        is_field = Field.query.filter(Field.field == field).first()
+        if is_field: continue
+        DB.session.add(Field(field=field))
+
+    DB.session.commit()
+
 
 
 @application.route('/index/update', methods=['GET'])
@@ -75,13 +85,12 @@ def update():
         team_data = json.load(open("json/fields/" + field + ".json"))
         team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
 
-        q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
-        # q = q.filter(func.DATE(NodeStatus.timestamp) == date.today())
-        node_status = q.all()
+        _field = Field.query.filter(Field.field == field).first()
+        nodes = _field.nodes
 
-        for node in node_status:
+        for node in nodes:
 
-            if node.team and node.location:
+            if node.config == CP.CAPTURE and node.team and node.location:
 
                 to_update[node.node] = {
                                        'id'    : node.location,
@@ -118,25 +127,27 @@ def field_page(field):
     """
     session['field'] = field
 
+    # Only leave this in the CONTROLLER branch - so you don't have to
+    # go back to the Node Admin page for the field to take effect
+    if CP.field != field: CP.field = field
+
     team_data = json.load(open("json/fields/" + field + ".json"))
     team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
     team_name = {int(n['value'], 16):n['text'] for n in team_data}
 
-    reg_teams = get_registered_teams(field)
-    teams = [get_team_members(t) for t in reg_teams if reg_teams]
-    _players_ = get_player_names()
+    _field = Field.query.filter(Field.field == field).first()
 
-    #TODO circle back on this once we register players to see if it works...
-    players =  {p.uid:p.lastname for p in _players_ if p.uid}
+    teams = {}
+    for uid in _field.uids if _field else []:
+        teams.setdefault(uid.team, []).append(uid)
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
-              'name'       : "Battlefield Gaming Systems",
+              'name'       : "SkirMesh Gaming",
               'team_col'   : ['player'],
-              'reg_teams'  : reg_teams,
-              'teams'      : teams,
+              'teams'      : [*teams],
+              'team_data'  : teams,
               'team_cmap'  : team_cmap,
               'team_name'  : team_name,
-              'players'    : players,
                }
 
     DB.session.commit()
@@ -159,7 +170,7 @@ def registration():
 
         try:
 
-            users = Players(**data)
+            users = Player(**data)
             DB.session.add(users)
             DB.session.commit()
 
@@ -191,7 +202,7 @@ def login():
 
     if form.validate_on_submit():
 
-        user = Players.query.filter_by(callsign=form.callsign.data).first()
+        user = Player.query.filter_by(callsign=form.callsign.data).first()
         DB.session.commit()
 
         if not user or not user.check_password(form.password.data):
@@ -220,10 +231,10 @@ def register():
 
     if request.method == "POST" and form.validate_on_submit():
 
-        user = Players(callsign=form.callsign.data,
-                       email=form.email.data,
-                       firstname=form.firstname.data,
-                       lastname=form.lastname.data)
+        user = Player(callsign=form.callsign.data,
+                      email=form.email.data,
+                      firstname=form.firstname.data,
+                      lastname=form.lastname.data)
 
         user.set_password(form.password.data)
 
@@ -268,52 +279,56 @@ def players():
     team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
     team_name = {int(n['value'], 16):n['text'] for n in team_data}
 
-    reg_teams = get_registered_teams(field) if field else []
-    _players_ = get_player_names()
-    players   =  {p.uid:p.lastname for p in _players_ if p.uid}
+    _field = Field.query.filter(Field.field == field).first()
+    reg_teams = set([uid.team for uid in _field.uids]) if _field else set()
 
-    q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
-    node_status = q.all()
+    teams = {}
+    for uid in _field.uids if _field else []:
+        teams.setdefault(uid.team, []).append(uid)
 
-    nd_times = dict()
-    nodes = [node.node for node in node_status]
+    _teams = Team.query.filter(Team.team.in_(teams.keys())).all()
 
-    team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(nodes)}
-    team_score = {ts[0]:ts[1] for ts in get_score_by_team(nodes)}
-    plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(nodes)}
+    team_times = {t.team:sum((s.time_held if s.field == field and s.time_held else 0) for s in t.scores) for t in _teams}
+    team_score = {t.team:sum((s.points if s.field == field and s.points else 0) for s in t.scores) for t in _teams}
+    plyr_score = {u:sum((s.points if s.field == field and s.points else 0) for s in u.scores) for u in (_field.uids if _field else [])}
 
-    for node in node_status:
 
-        times = get_times_for_node(node.node)
-        if times: nd_times[node.location] = times
+    nd_times = {}
+    for node in _field.nodes if _field else []:
 
-        loc = node.location
-        times = get_times_for_node(node.node)
-        if times: nd_times[loc] = times
+        times = {}
+        for s in node.scores:
+            times.setdefault(s.team, []).append(s.time_held or 0)
+
+        nd_times[node] = times
 
         # Add time for nodes that are still under control
         begin = get_time_capture_complete(node.node)
         if node.stable and not get_is_capture_closed(node.node) and begin:
 
-            for i,time in enumerate(times):
+            for team in times:
 
-                if time[0] == node.team:
+                if team == node.team:
 
                     held  = int((datetime.now() - begin).total_seconds())
-                    times[i] = [time[0], time[1]]
-                    times[i][1] = (time[1] if time[1] else 0) + held if loc in nd_times else held
-                    team_times[time[0]] = team_times[time[0]] + times[i][1] if team_times[time[0]] else times[i][1]
+
+                    times[team].append(held)
+                    team_times[team] += held
+
+    for node in nd_times:
+        for team in nd_times[node]:
+            nd_times[node][team] = sum(nd_times[node][team])
 
     kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
               'team_score' : team_score,
               'p_sc_cols'  : ['player', 'points'],
               'plyr_score' : plyr_score,
-              'nodes'      : [node.node for node in node_status],
+              'nodes'      : _field.nodes if _field else [],
               't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'nd_tm_cols' : ['team', 'time'],
               'node_times' : nd_times,
-              'players'    : players,
+              # 'players'    : players,
               'print_time' : print_time,
               'team_name'  : team_name,
               'team_cmap'  : team_cmap,
@@ -330,7 +345,7 @@ def players():
 @application.route('/user_reg', methods=['POST', 'GET'])
 def user_reg(uid=None):
 
-    players = get_player_names()
+    players = Player.query.order_by(Player.lastname.asc()).all()
     DB.session.commit()
 
     return render_template('user_reg.html', Players=players)
@@ -351,19 +366,25 @@ def node_admin():
 
         return render_template('field_chooser.html', error=error)
 
+    avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
+    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
+
+    # Use this to update the field status and ensure nodes are on the
+    # right field, but I don't want to do it all the time...need a better way
+    if CP.field != field:
+        for node in nodes:
+            node.field = field
+
     CP.field = field
 
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
     loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
 
+    # Pull specific arguments for the field
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
     field_cmd_args = json.load(open("json/fields/" + field + ".json"))
     CMD_ARGS['REGISTER'] = CMD_ARGS['SET_LOCATION'] = CMD_ARGS['SET TEAM'] = field_cmd_args
-
-    avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
-    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
-    node_status = q.all()
 
     kwargs = {
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
@@ -371,7 +392,7 @@ def node_admin():
              'node_cols'   : ['node id','location','config',
                               'Capture\nTime','Medic\nTime','Bomb\nFUS  |  ARM  |  DIS',
                               'Capture\nAssist %'],
-             'node_status' : node_status,
+             'node_status' : nodes,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
              'field'       : field,
@@ -408,13 +429,13 @@ def issue_command():
             print(f"Setting {dest} Location to: {data['location']}")
 
             data = {'location' : data['location'],
-                    'node'     : dest}
+                    'node'     : dest,
+                    'field'    : field}
 
-            exists = get_node_status(dest)
-            if exists:
-                exists.field     = field
-                exists.location  = data['location']
-                exists.timestamp = datetime.now()
+            node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+            if node:
+                node.field     = field
+                node.location  = data['location']
             else: DB.session.add(NodeStatus(**data))
 
             DB.session.commit()
@@ -430,32 +451,37 @@ def issue_command():
 
                 if dest == BROADCAST:
 
-                    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
-                    node_status = q.all()
+                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
-                    for node in node_status:
+                    for node in nodes:
 
-                        node.config    = _config
-                        node.timestamp = datetime.now()
+                        node.config = _config
 
                         if _config == CP.REGISTER:
 
                             node.team = pkt[2]
 
+                        if _config == CP.CAPTURE:
+
+                            node.team = None
+
                 else:
 
                     data = {'config'   : _config,
-                            'node'     : dest}
+                            'node'     : dest,
+                            'field'    : field}
 
-                    exists = get_node_status(dest)
-                    if exists:
+                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+                    if node:
 
-                        exists.config    = _config
-                        exists.timestamp = datetime.now()
+                        node.config    = _config
 
                         if _config == CP.REGISTER:
-                            exists.team = pkt[2]
+                            node.team = pkt[2]
                             data['team'] = pkt[2]
+
+                        if _config == CP.CAPTURE:
+                            node.team = None
 
                     else: DB.session.add(NodeStatus(**data))
 
@@ -478,19 +504,18 @@ def issue_command():
 
                 if dest == BROADCAST:
 
-                    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
-                    node_status = q.all()
+                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
-                    for node in node_status:
+                    for node in nodes:
 
                         setattr(node, val_map[val], arg)
 
                 else:
 
-                    data = {'node':dest,val_map[val]:arg}
+                    data = {'node':dest, val_map[val]:arg, 'field':field}
 
-                    exists = get_node_status(dest)
-                    if exists: setattr(exists, val_map[val], arg)
+                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+                    if node: setattr(node, val_map[val], arg)
                     else: DB.session.add(NodeStatus(**data))
 
                 DB.session.commit()
@@ -510,17 +535,15 @@ def issue_command():
 
                 if dest == BROADCAST:
 
-                    q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
-                    node_status = q.all()
+                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
-                    for node in node_status:
+                    for node in nodes:
 
                         node.team      = pkt[2]
                         node.stable    = 1
                         node.cap_time  = 6
-                        node.timestamp = datetime.now()
 
-                        data = {'node':node.node, 'team':pkt[2], 'action':'CAPTURE'}
+                        data = {'node':node.node, 'team':pkt[2], 'field':field, 'action':'CAPTURE'}
                         DB.session.add(Score(**data))
 
                     CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
@@ -529,16 +552,15 @@ def issue_command():
 
                 else:
 
-                    data = {'node':dest, 'team':pkt[2], 'action':'CAPTURE'}
+                    data = {'node':dest, 'team':pkt[2], 'field':field, 'action':'CAPTURE'}
                     DB.session.add(Score(**data))
 
                     data = {'node':dest,'team':pkt[2]}
-                    exists = get_node_status(dest)
-                    if exists:
-                        exists.team      = pkt[2]
-                        exists.stable    = 1
-                        exists.cap_time  = 6
-                        exists.timestamp = datetime.now()
+                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+                    if node:
+                        node.team      = pkt[2]
+                        node.stable    = 1
+                        node.cap_time  = 6
                     else: DB.session.add(NodeStatus(**data))
 
                     _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(dest))
@@ -567,15 +589,16 @@ def issue_command():
 
         elif button == 'End Game':
 
-            q = DB.session.query(NodeStatus).filter(NodeStatus.node.in_(avail_addr))
-            node_status = q.all()
+            nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
-            for node in node_status:
+            for node in nodes:
 
                 if node.stable:
 
                     begin  = get_time_capture_complete(node.node)
                     closed = get_is_capture_closed(node.node)
+
+                    print(begin, closed, node)
 
                     # If a capture started and was not closed out normally
                     # then close it out
@@ -583,7 +606,7 @@ def issue_command():
 
                         held  = int((datetime.now() - begin).total_seconds())
 
-                        tdat = {'node':node.node,'team':node.team,'time_held':held,'action':'END GAME'}
+                        tdat = {'node':node.node,'team':node.team,'field':field,'time_held':held,'action':'END GAME'}
                         DB.session.add(Score(**tdat))
 
                         print(f"Ended timer count for {node.node}")
@@ -593,24 +616,40 @@ def issue_command():
 
         elif button == 'Start Game':
 
-            reg_teams  = get_registered_teams(field)
-            team_times = {tt[0]:tt[1] for tt in get_time_held_by_team(avail_addr)}
-            team_score = {ts[0]:ts[1] for ts in get_score_by_team(avail_addr)}
-            plyr_score = {ps[0]:ps[1] for ps in get_score_by_uid(avail_addr)}
+            _field = Field.query.filter(Field.field == field).first()
 
-            _players_ = get_player_names()
-            players =  {p.uid:p.lastname for p in _players_ if p.uid}
+            teams = {}
+            for uid in _field.uids if _field else []:
+                teams.setdefault(uid.team, []).append(uid)
 
-            q = DB.session.query(NodeStatus).filter(NodeStatus.field == field)
-            node_status = q.all()
+            _teams = Team.query.filter(Team.team.in_(teams.keys())).all()
 
-            # TODO: Need to END GAME here to save accurate times
+            team_times = {t.team:sum((s.time_held if s.field == field and s.time_held else 0) for s in t.scores) for t in _teams}
+            team_score = {t.team:sum((s.points if s.field == field and s.points else 0) for s in t.scores) for t in _teams}
+            plyr_score = {u:sum((s.points if s.field == field and s.points else 0) for s in u.scores) for u in (_field.uids if _field else [])}
 
-            nd_times = dict()
-            for node in node_status:
 
-                times = get_times_for_node(node.node)
-                if times: nd_times[node.location] = times
+            nd_times = {}
+            for node in _field.nodes if _field else []:
+
+                times = {}
+                for s in node.scores:
+                    times.setdefault(s.team, []).append(s.time_held or 0)
+
+                nd_times[node] = times
+
+                # Add time for nodes that are still under control
+                begin = get_time_capture_complete(node.node)
+                if node.stable and not get_is_capture_closed(node.node) and begin:
+
+                    for team in times:
+
+                        if team == node.team:
+
+                            held  = int((datetime.now() - begin).total_seconds())
+
+                            times[team].append(held)
+                            team_times[team] += held
 
                 if node.config == CP.CAPTURE:
 
@@ -619,13 +658,18 @@ def issue_command():
                     _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(node.node))
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CONFIGURE, CP.CAPTURE]))
 
+            for node in nd_times:
+                for team in nd_times[node]:
+                    nd_times[node][team] = sum(nd_times[node][team])
+
+
             DB.session.commit()
 
             team_data = json.load(open("json/fields/" + field + ".json"))
             team_name = {int(n['value'], 16):n['text'] for n in team_data}
 
             data = {'field'        :field,
-                    'teams'        :str(reg_teams),
+                    'teams'        :str(_teams),
                     'team_name_map':str(team_name),
                     'times_by_team':str(team_times),
                     'times_by_node':str(nd_times),
@@ -639,7 +683,7 @@ def issue_command():
             # Delete the scores table data for the next game
             # use try/except to allow a rollback option if it gets sideways
             try:
-                q = DB.session.query(Score).filter(Score.node.in_(avail_addr))
+                q = Score.query.filter(Score.node.in_(avail_addr))
                 q.delete(synchronize_session='fetch')
                 DB.session.commit()
             except Exception as E:
@@ -662,7 +706,7 @@ def issue_command():
 def comms_log():
 
     kwargs = {'cols_data' : CommsData.__table__.columns.keys(),
-              'data_data' : DB.session.query(CommsData).order_by(CommsData.id.desc()).all(),
+              'data_data' : CommsData.query.order_by(CommsData.id.desc()).all(),
               'datetime'  : datetime,
               'time_disp' : CP.TIME_DISP,
              }
@@ -704,9 +748,8 @@ def assign_uid():
 
     try:
 
-        player           = get_player(player)
-        player.uid       = uid
-        player.timestamp = datetime.now()
+        _uid        = UID.query.filter(UID.uid == uid).first()
+        _uid.player = Player.query.filter(Player.id == player).first()
 
     except:
 
@@ -730,7 +773,7 @@ def assign_uid():
 @login_required
 def player_profile(callsign):
 
-    user = Players.query.filter_by(callsign=callsign).first()
+    user = Player.query.filter_by(callsign=callsign).first()
     DB.session.commit()
 
     return render_template('player_profile.html', user=user)
@@ -740,7 +783,7 @@ def player_profile(callsign):
 @loginMngr.user_loader
 def load_user(id):
 
-    user = Players.query.get(int(id))
+    user = Player.query.get(int(id))
     DB.session.commit()
 
     return user

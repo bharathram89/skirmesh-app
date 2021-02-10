@@ -55,7 +55,7 @@
 
 <div id="location_score" class="leaderboard">
 {% for nd in node_times %}
-<h3 class="leaderboard_header"> {{ nd if nd else node_times[nd].node | safe }} </h3>
+<h3 class="leaderboard_header"> {{ nd.location or nd.node | safe }} </h3>
 <table id="table">
   <thead>
     <tr>
@@ -73,10 +73,10 @@
 <tbody>
 
     {% for dat in node_times[nd] %}
-    <tr class="row team{{dat[0] | safe}}">
+    <tr class="row team{{dat | safe}}">
 
-            <td style="width:50%"> {{ team_name[dat[0]] | safe }} </td>
-            <td style="width:50%"> {{ print_time(dat[1]) if dat[1] else 0 | safe }} </td>
+            <td style="width:50%"> {{ team_name[dat] | safe }} </td>
+            <td style="width:50%"> {{ print_time(node_times[nd][dat]) or 0 | safe }} </td>
 
     </tr>
     {% endfor %}
@@ -105,7 +105,7 @@
         <tr class="row">
             {% for col in p_sc_cols %}
                 {% if col.lower() == 'player' %}
-                <td style="width:40%"> {{ players[dat] if dat in players else dat | safe }} </td>
+                <td style="width:40%"> {{ dat.player or dat | safe }} </td>
                 {% else %}
                 <td style="width:40%"> {{ plyr_score[dat] | safe }} </td>
                 {% endif %}

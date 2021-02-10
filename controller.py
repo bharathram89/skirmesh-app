@@ -195,13 +195,13 @@ class CONTROL_POINT(XBeeDevice):
             node_addr = str(node.get_64bit_addr())
             self.end_nodes.add(node_addr)
 
-            node_status = PG.get_node_status(node_addr)
-            if node_status:
+            node = PG.NodeStatus.query.filter(PG.NodeStatus.node == node_addr).first()
+            if node:
 
                 # Set recent timestamp to now to show last time on the Network
                 # This matters for selecting nodes that are "available" when
                 # filtering for nodes active "today"
-                node_status.timestamp = datetime.now()
+                node.timestamp = datetime.now()
 
             else:
                 # Initialize NodeStatus with all the defaults
@@ -235,11 +235,14 @@ class CONTROL_POINT(XBeeDevice):
 
         cmd = payload[0]
 
-        if cmd in self.parse_message:
+        if cmd in self.parse_message and self.field:
 
             pkt = self.parse_message[cmd](sender, payload)
 
             if pkt: self.transmit_pkt(sender, pkt)
+
+        if not self.field:
+            print('SELECT A FIELD OR NOTHING WILL WORK')
 
 
     # █▀▀ █▀▀▄ █▀▀▄ 　 ▀▀█▀▀ █░█ ░░ █▀▀█ █░█
@@ -280,24 +283,22 @@ class CONTROL_POINT(XBeeDevice):
 
         print(f'Registering {uid} to team {team}')
 
-        exists = PG.get_uid_in_team(uid)
-        # If the player already exists, update his information
-        if exists:
-            exists.team      = team
-            exists.field     = self.field
-            exists.timestamp = datetime.now()
-        else:
-            self.DB.session.add(PG.Team(**{'uid':uid,'team':team,'field':self.field}))
+        is_team = PG.Team.query.filter(PG.Team.team == team).first()
+        is_uid  = PG.UID.query.filter(PG.UID.uid == uid).first()
 
-        self.DB.session.commit()
+        # If the team doesn't exists - add it
+        if not is_team: self.DB.session.add(PG.Team(team=team))
+        # If the uid exists, update it - if not, add it
+        if is_uid:
+            is_uid.team      = team
+            is_uid.field     = self.field
+        else:
+            is_uid = PG.UID(uid=uid, team=team, field=self.field)
+            self.DB.session.add(is_uid)
 
         # If the player is not "alive", reset his alive status
-        exists = PG.get_is_alive(uid)
-        if exists:
-            exists.alive     = 1
-            exists.timestamp = datetime.now()
-        else:
-            self.DB.session.add(PG.Medic(**{'uid':uid,'alive':1}))
+        if is_uid.medic: is_uid.medic.alive = 1
+        else:            is_uid.medic = PG.Medic(uid=is_uid.uid, alive=1)
 
         self.DB.session.commit()
 
@@ -311,10 +312,9 @@ class CONTROL_POINT(XBeeDevice):
     def __capture(self, sender, payload):
 
         node        = str(sender.get_64bit_addr())
-        cap_status  = PG.get_node_status(node)
+        cap_status  = PG.NodeStatus.query.filter(PG.NodeStatus.node == node).first()
 
-        last = self.DB.session.query(PG.Score).filter(PG.Score.node == node)
-        last = last.order_by(PG.Score.id.desc()).first()
+        last = PG.Score.query.filter(PG.Score.node == node).order_by(PG.Score.id.desc()).first()
 
         if len(payload[1:5]) == 1 and cap_status:
             # If the payload does not contain a UID, it's passing the status
@@ -339,6 +339,7 @@ class CONTROL_POINT(XBeeDevice):
                         'uid'   :orig_captor.uid,
                         'team'  :orig_captor.team,
                         'points':2,
+                        'field' :self.field,
                         'action':'CAPTURE COMPLETE'}
 
                 self.DB.session.add(PG.Score(**data))
@@ -348,14 +349,15 @@ class CONTROL_POINT(XBeeDevice):
         if len(payload[1:5]) == 4:
 
             uid = payload[1:5].hex()
-            team = PG.get_team(uid)
+            _uid = PG.UID.query.filter(PG.UID.uid == uid).first()
+            team = _uid.team
             self.DB.session.commit()
 
             if team:
 
                 print(f'Team {team} is prosecuting Node_{node}')
 
-                data = {'uid':uid, 'team':team, 'node':node}
+                data = {'uid':uid, 'team':team, 'node':node, 'field':self.field}
 
                 if cap_status:
 
@@ -374,10 +376,12 @@ class CONTROL_POINT(XBeeDevice):
                         if begin and not PG.get_is_capture_closed(node):
 
                             held  = int((datetime.now() - begin).total_seconds())
+                            orig_captor = PG.get_last_captor(node)
 
                             tdat = {'node'     :node,
-                                    'team'     :cap_status.team,
+                                    'team'     :orig_captor.team,
                                     'time_held':held,
+                                    'field'    :self.field,
                                     'action'   :'LOST CONTROL'}
 
                             self.DB.session.add(PG.Score(**tdat))
@@ -405,11 +409,10 @@ class CONTROL_POINT(XBeeDevice):
 
                 if cap_status:
 
-                    cap_status.uid       = uid
-                    cap_status.team      = team
+                    cap_status.uid    = uid
+                    cap_status.team   = team
                     # TODO cleanup how this is assigned
-                    cap_status.stable    = data['stable']
-                    cap_status.timestamp = datetime.now()
+                    cap_status.stable = data['stable']
 
                 else:
 
@@ -437,8 +440,9 @@ class CONTROL_POINT(XBeeDevice):
 
         uid = payload[1:5].hex()
 
-        medic = PG.get_is_alive(uid)
-        node  = PG.get_node_status(str(sender.get_64bit_addr()))
+        _uid  = PG.UID.query.filter(PG.UID.uid == uid).first()
+        medic = _uid.medic
+        node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
 
         DEAD  = 0x00
         ALIVE = 0x01
@@ -458,7 +462,6 @@ class CONTROL_POINT(XBeeDevice):
                 print(f'{uid} is ALIVE')
 
                 medic.alive     = ALIVE
-                medic.timestamp = datetime.now()
 
                 self.DB.session.commit()
 
@@ -480,7 +483,6 @@ class CONTROL_POINT(XBeeDevice):
                 print(f'{uid} is now DEAD')
 
                 medic.alive     = DEAD
-                medic.timestamp = datetime.now()
 
                 self.DB.session.commit()
 
@@ -493,7 +495,7 @@ class CONTROL_POINT(XBeeDevice):
 
             data = {'uid':uid,'alive':DEAD}
 
-            self.DB.session.add(PG.Medic(**data))
+            _uid.medic = PG.Medic(**data)
             self.DB.session.commit()
 
             return bytearray([CONTROL_POINT.MEDIC, DEAD, ALL])
@@ -502,10 +504,11 @@ class CONTROL_POINT(XBeeDevice):
     def __query(self, sender, payload):
 
         uid = payload[1:5].hex()
-        medic = PG.get_is_alive(uid)
+        _uid  = PG.UID.query.filter(PG.UID.uid == uid).first()
+        medic = _uid.medic
 
         alive = medic.alive if medic else 0x00
-        team  = PG.get_team(uid)
+        team  = _uid.team
         self.DB.session.commit()
 
         if team: pkt = bytearray([CONTROL_POINT.QUERY, team, alive])
@@ -516,22 +519,21 @@ class CONTROL_POINT(XBeeDevice):
 
     def __status(self, sender, payload):
 
-        node = str(sender.get_64bit_addr())
-        status = PG.get_node_status(node)
+        node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
         self.DB.session.commit()
 
-        if not status: return None
+        if not node: return None
 
         cmd    = bytearray([CONTROL_POINT.ND_STATUS])
 
-        state  = bytearray([status.config, status.team, status.stable])
-        times  = bytearray([status.cap_time,
-                            status.cap_asst,
-                            status.bomb_time,
-                            status.arm_time,
-                            status.diff_time])
+        state  = bytearray([node.config, node.team, node.stable])
+        times  = bytearray([node.cap_time,
+                            node.cap_asst,
+                            node.bomb_time,
+                            node.arm_time,
+                            node.diff_time])
 
-        uid    = bytearray.fromhex(status.uid) if status.uid else bytearray()
+        uid    = bytearray.fromhex(node.uid) if node.uid else bytearray()
 
         return cmd + state + times + uid
 
