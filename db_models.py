@@ -200,25 +200,6 @@ class Player(UserMixin, DB.Model):
 DB.create_all()
 
 
-def flatten(not_flat):
-
-    def helper(*arg, **kwargs):
-
-        return [v[0] for v in not_flat(*arg)]
-
-    return helper
-
-
-
-@flatten
-def get_nodes():
-
-    query = DB.session.query(NodeStatus.node)
-    query = query.filter(func.DATE(NodeStatus.timestamp) == date.today())
-    query = query.distinct(NodeStatus.node)
-
-    return query.all()
-
 
 def get_last_captor(node):
 
