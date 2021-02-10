@@ -220,11 +220,16 @@ def populate_uids():
 
         _uid    = UID(uid=uid.hex(), team=team.hex(), field=field)
         _player = Player(fname='first',lname='last')
+        _medic  = Medic(uid=uid.hex())
+
         db.session.add(_uid)
-        db.session.add(Medic(uid=uid.hex()))
-        db.session.add(Player(fname='first',lname='last'))
+
+        # # This step is not required!! - it gets added below! ... awesome!
+        # db.session.add(_player)
+        # db.session.add(_medic)
 
         _uid.player = _player
+        _uid.medic  = _medic
 
 
     db.session.commit()
