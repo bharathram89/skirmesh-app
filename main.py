@@ -166,7 +166,7 @@ def registration():
 
         try:
 
-            users = Players(**data)
+            users = Player(**data)
             DB.session.add(users)
             DB.session.commit()
 
@@ -198,7 +198,7 @@ def login():
 
     if form.validate_on_submit():
 
-        user = Players.query.filter_by(callsign=form.callsign.data).first()
+        user = Player.query.filter_by(callsign=form.callsign.data).first()
         DB.session.commit()
 
         if not user or not user.check_password(form.password.data):
@@ -227,10 +227,10 @@ def register():
 
     if request.method == "POST" and form.validate_on_submit():
 
-        user = Players(callsign=form.callsign.data,
-                       email=form.email.data,
-                       firstname=form.firstname.data,
-                       lastname=form.lastname.data)
+        user = Player(callsign=form.callsign.data,
+                      email=form.email.data,
+                      firstname=form.firstname.data,
+                      lastname=form.lastname.data)
 
         user.set_password(form.password.data)
 
@@ -779,7 +779,7 @@ def player_profile(callsign):
 @loginMngr.user_loader
 def load_user(id):
 
-    user = Players.query.get(int(id))
+    user = Player.query.get(int(id))
     DB.session.commit()
 
     return user
