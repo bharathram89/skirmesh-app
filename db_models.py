@@ -103,8 +103,8 @@ class Score(DB.Model):
     id        = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     timestamp = DB.Column(DB.DateTime, default=datetime.now)
 
-    uid       = DB.Column(DB.Integer, DB.ForeignKey('uid.uid'))
-    field     = DB.Column(DB.Integer, DB.ForeignKey('field.field'), nullable=False)
+    uid       = DB.Column(DB.String, DB.ForeignKey('uid.uid'))
+    field     = DB.Column(DB.String, DB.ForeignKey('field.field'), nullable=False)
     node      = DB.Column(DB.String, DB.ForeignKey('node_status.node'), nullable=False)
     team      = DB.Column(DB.Integer, DB.ForeignKey('team.team'), nullable=False)
 
