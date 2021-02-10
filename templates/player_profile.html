@@ -2,11 +2,36 @@
 
 {% block content %}
 
-  <h1> Hello, {{ user.callsign }} <h1>
-  <h1> Hello, {{ user.firstname }} <h1>
-  <h1> Hello, {{ user.lastname }} <h1>
-  <h1> Hello, {{ user.email }} <h1>
-  <h1> Hello, {{ user.callsign }} <h1>
-  
+<!--
+  <h1> Hello, {{ user.callsign }} </h1>
+  <h1> Hello, {{ user.firstname }} </h1>
+  <h1> Hello, {{ user.lastname }} </h1>
+  <h1> Hello, {{ user.email }} </h1>
+  <h1> Hello, {{ user.callsign }} </h1>
+-->  
 
+  <div class="callsignHeader">
+    <p> Callsign </p>
+
+  </div>
+
+  <div class="playerImage">
+    <img href="static/img/node.jpg" alt="bad ass dude">
+
+  </div>
+
+  <div class="playerInfo">
+
+    <p> First Name </p>
+    <p> Player First Name </p>
+    <p> Last Name </p>
+    <p> Player Last Name </p>
+    <p> Outfit </p>
+    <p> Player Outfit </p>
+
+  </div>
+
+  <div class="playerStats">
+
+  </div>
 {% endblock %}

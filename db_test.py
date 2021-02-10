@@ -24,12 +24,22 @@ class Player(db.Model):
 
     # uid        = db.relationship('UID', backref=db.backref('player', uselist=False))
     uid        = db.Column(db.Integer, db.ForeignKey('uid.uid'), unique=True)
+    outfit     = db.Column(db.String, db.ForeignKey('outfit.name'))
 
     def __init__(self, **kwargs):
 
         self.__dict__.update(**kwargs)
 
 
+class Outfit(db.Model):
+
+    __tablename__ = 'outfit'
+
+    id         = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name       = db.Column(db.String, unique=True)
+
+    members    = db.relationship('UID', backref='outfit_members',
+                                 uselist=True)
 
 
 class UID(db.Model):
@@ -42,6 +52,7 @@ class UID(db.Model):
     uid        = db.Column(db.String, unique=True)
     team       = db.Column(db.String, db.ForeignKey('team.team'), nullable=False)
     field      = db.Column(db.String, db.ForeignKey('field.field'), nullable=False)
+    outfit     = db.Column(db.String, db.ForeignKey('outfit.name'), nullable=True)
 
     scores     = db.relationship('Score', backref='scores_uid')
     medic      = db.relationship('Medic', backref='medic_uid', uselist=False)
@@ -188,6 +199,10 @@ def populate_uids():
 
     ints = [i for i in range(256)]
     fields = ['ballahack','salina_gambit_A','salina_gambit_B']
+    outfits = ['red', 'blue', 'green']
+
+    for i in outfits:
+        db.session.add(Outfit(name=i))
 
     # Only make two teams to get multiple UIDs on same team
     teams = [None]*2
@@ -215,7 +230,7 @@ def populate_uids():
         field = choice(fields)
         uid  = uids.pop()
 
-        _uid    = UID(uid=uid.hex(), team=team.hex(), field=field)
+        _uid    = UID(uid=uid.hex(), team=team.hex(), field=field, outfit=choice(outfits))
         _player = Player(fname='first',lname='last')
         _medic  = Medic(uid=uid.hex())
 
@@ -230,8 +245,6 @@ def populate_uids():
 
 
     db.session.commit()
-
-
 
 
 if __name__ == "__main__":
