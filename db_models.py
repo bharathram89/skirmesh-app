@@ -165,7 +165,7 @@ class NodeStatus(DB.Model):
 
 class Player(UserMixin, DB.Model):
 
-    __tablename__ = 'players'
+    __tablename__ = 'player'
 
     id             = DB.Column(DB.Integer, primary_key=True, autoincrement=True)
     timestamp      = DB.Column(DB.DateTime, default=datetime.now, onupdate=datetime.now)
