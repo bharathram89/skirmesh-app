@@ -195,7 +195,7 @@ class CONTROL_POINT(XBeeDevice):
             node_addr = str(node.get_64bit_addr())
             self.end_nodes.add(node_addr)
 
-            node = PG.NodeStatus.query.filter(PG.NodeStatus.node == node_addr)
+            node = PG.NodeStatus.query.filter(PG.NodeStatus.node == node_addr).first()
             if node:
 
                 # Set recent timestamp to now to show last time on the Network
