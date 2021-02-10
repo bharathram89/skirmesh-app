@@ -127,6 +127,14 @@ def field_page(field):
     """
     session['field'] = field
 
+    # Only leave this in the CONTROLLER branch - so you don't have to
+    # go back to the Node Admin page for the field to take effect
+    if CP.field != field:
+        for node in node_status:
+            node.field = field
+
+    CP.field = field
+
     team_data = json.load(open("json/fields/" + field + ".json"))
     team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
     team_name = {int(n['value'], 16):n['text'] for n in team_data}
