@@ -9,6 +9,7 @@
   <h1> Hello, {{ user.email }} </h1>
   <h1> Hello, {{ user.callsign }} </h1>
 -->  
+  <div class="playerPage">
 
   <div class="callsignHeader">
     <p> Callsign </p>
@@ -16,22 +17,46 @@
   </div>
 
   <div class="playerImage">
-    <img href="static/img/node.jpg" alt="bad ass dude">
+    <img src="../static/img/soldierC.jpg" alt="bad ass dude" >
 
   </div>
 
   <div class="playerInfo">
 
-    <p> First Name </p>
+    <p> First Name: </p>
     <p> Player First Name </p>
-    <p> Last Name </p>
+    <p> Last Name: </p>
     <p> Player Last Name </p>
-    <p> Outfit </p>
+    <p> Outfit: </p>
     <p> Player Outfit </p>
 
   </div>
 
   <div class="playerStats">
+
+    <table id="table">
+
+      <thead>
+        <tr>
+          <th class="header">Captures</td>
+          <th class="header">Capture Assists</td>
+          <th class="header">Total Points</td>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr class="row">
+          <td>15</td>
+          <td>30</td>
+          <td>100</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
 
   </div>
 {% endblock %}
