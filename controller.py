@@ -1,9 +1,8 @@
 from digi.xbee.devices import XBeeDevice, RemoteZigBeeDevice, RemoteXBeeDevice
 from datetime import datetime
 
-import db_models as PG
+import models.db_models as PG
 import time
-
 
 
 
@@ -113,8 +112,6 @@ class CONTROL_POINT(XBeeDevice):
         self.end_nodes = set()
         self.user_reg  = None
 
-        self.configure_XB()
-
 
     def configure_XB(self):
 
@@ -178,8 +175,8 @@ class CONTROL_POINT(XBeeDevice):
                }
 
         # self.exec_sql(SQL.add_row, 'data', data)
-        self.DB.session.add(PG.CommsData(**data))
-        self.DB.session.commit()
+        self.DB.add(PG.CommsData(**data))
+        self.DB.commit()
 
 
     def net_mod_callback(self, event, reason, node):
@@ -205,10 +202,10 @@ class CONTROL_POINT(XBeeDevice):
 
             else:
                 # Initialize NodeStatus with all the defaults
-                self.DB.session.add(PG.NodeStatus(**{'node':node_addr}))
+                self.DB.add(PG.NodeStatus(**{'node':node_addr}))
 
 
-            self.DB.session.commit()
+            self.DB.commit()
 
 
     def data_received_callback(self, xb_msg):
@@ -230,8 +227,8 @@ class CONTROL_POINT(XBeeDevice):
                 'payload': payload[1:].hex(),
                }
 
-        self.DB.session.add(PG.CommsData(**data))
-        self.DB.session.commit()
+        self.DB.add(PG.CommsData(**data))
+        self.DB.commit()
 
         cmd = payload[0]
 
@@ -287,20 +284,20 @@ class CONTROL_POINT(XBeeDevice):
         is_uid  = PG.UID.query.filter(PG.UID.uid == uid).first()
 
         # If the team doesn't exists - add it
-        if not is_team: self.DB.session.add(PG.Team(team=team))
+        if not is_team: self.DB.add(PG.Team(team=team))
         # If the uid exists, update it - if not, add it
         if is_uid:
             is_uid.team      = team
             is_uid.field     = self.field
         else:
             is_uid = PG.UID(uid=uid, team=team, field=self.field)
-            self.DB.session.add(is_uid)
+            self.DB.add(is_uid)
 
         # If the player is not "alive", reset his alive status
         if is_uid.medic: is_uid.medic.alive = 1
         else:            is_uid.medic = PG.Medic(uid=is_uid.uid, alive=1)
 
-        self.DB.session.commit()
+        self.DB.commit()
 
         return None
 
@@ -342,16 +339,16 @@ class CONTROL_POINT(XBeeDevice):
                         'field' :self.field,
                         'action':'CAPTURE COMPLETE'}
 
-                self.DB.session.add(PG.Score(**data))
+                self.DB.add(PG.Score(**data))
 
-            self.DB.session.commit()
+            self.DB.commit()
 
         if len(payload[1:5]) == 4:
 
             uid = payload[1:5].hex()
             _uid = PG.UID.query.filter(PG.UID.uid == uid).first()
             team = _uid.team
-            self.DB.session.commit()
+            self.DB.commit()
 
             if team:
 
@@ -384,9 +381,9 @@ class CONTROL_POINT(XBeeDevice):
                                     'field'    :self.field,
                                     'action'   :'LOST CONTROL'}
 
-                            self.DB.session.add(PG.Score(**tdat))
+                            self.DB.add(PG.Score(**tdat))
 
-                        self.DB.session.commit()
+                        self.DB.commit()
 
                 else:
                     # If there was no status for the node - this is a capture
@@ -399,8 +396,8 @@ class CONTROL_POINT(XBeeDevice):
                 # known
                 if data['action'] == 'CAPTURE' or (data['action'] == 'ASSIST' and not cap_status.stable):
 
-                    self.DB.session.add(PG.Score(**data))
-                    self.DB.session.commit()
+                    self.DB.add(PG.Score(**data))
+                    self.DB.commit()
 
                 data = {'node':node, 'uid':uid, 'team':team}
                 # If the node is not currently owned, then it's immediately stable
@@ -416,9 +413,9 @@ class CONTROL_POINT(XBeeDevice):
 
                 else:
 
-                    self.DB.session.add(PG.NodeStatus(**data))
+                    self.DB.add(PG.NodeStatus(**data))
 
-                self.DB.session.commit()
+                self.DB.commit()
 
                 # In all cases, return CAPTURE and TEAM so the node can
                 # shift status appropriately
@@ -427,7 +424,7 @@ class CONTROL_POINT(XBeeDevice):
             # If you made it here, the UID is not registered to a team
             print(f'{uid} is not registered to a team')
 
-        self.DB.session.commit()
+        self.DB.commit()
 
         return None
 
@@ -463,7 +460,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 medic.alive     = ALIVE
 
-                self.DB.session.commit()
+                self.DB.commit()
 
                 return bytearray([CONTROL_POINT.MEDIC, ALIVE, ALL])
 
@@ -484,7 +481,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 medic.alive     = DEAD
 
-                self.DB.session.commit()
+                self.DB.commit()
 
                 return bytearray([CONTROL_POINT.MEDIC, DEAD, ALL])
 
@@ -496,7 +493,7 @@ class CONTROL_POINT(XBeeDevice):
             data = {'uid':uid,'alive':DEAD}
 
             _uid.medic = PG.Medic(**data)
-            self.DB.session.commit()
+            self.DB.commit()
 
             return bytearray([CONTROL_POINT.MEDIC, DEAD, ALL])
 
@@ -509,7 +506,7 @@ class CONTROL_POINT(XBeeDevice):
 
         alive = medic.alive if medic else 0x00
         team  = _uid.team
-        self.DB.session.commit()
+        self.DB.commit()
 
         if team: pkt = bytearray([CONTROL_POINT.QUERY, team, alive])
         else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00])
@@ -520,7 +517,7 @@ class CONTROL_POINT(XBeeDevice):
     def __status(self, sender, payload):
 
         node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
-        self.DB.session.commit()
+        self.DB.commit()
 
         if not node: return None
 

@@ -2,8 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import email_validator
 from wtforms import SubmitField
-from db_models import Player
-from main import DB
+
+# from models.db_models import Player
+from database import db_session
 
 class RegistrationForm(Form):
 
@@ -43,7 +44,7 @@ class RegisterAccountForm(FlaskForm):
     def validate_callsign(self, callsign):
 
         user = Player.query.filter_by(callsign=callsign.data).first()
-        DB.session.commit()
+        db_session.commit()
 
 
         if user:
@@ -56,7 +57,7 @@ class RegisterAccountForm(FlaskForm):
     def validate_email(self, email):
 
         user = Player.query.filter_by(email=email.data).first()
-        DB.session.commit()
+        db_session.commit()
 
         if user:
 
