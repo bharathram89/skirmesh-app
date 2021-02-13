@@ -78,6 +78,6 @@ circle.assist {
     stroke: #800000;
 }
 
-circle:hover{
-    transform: scale(1.1);
+svg.score:hover{
+    transform: scale(1.2);
 }

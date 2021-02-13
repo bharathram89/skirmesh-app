@@ -21,7 +21,7 @@ circle.assist {
 svg.score {
     overflow: visible;
 }
-svg:hover {
+svg.score:hover {
     transform: scale(1.2);
 }
 
