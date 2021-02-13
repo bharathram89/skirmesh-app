@@ -14,89 +14,92 @@
 
   <div class="playerPage">
 
-  <div class="callsignHeader">
-    <p> {{ user.outfit or "[You need a squad] " }}: {{ user.callsign }}</p>
+    <div class="callsignHeader">
+      <p> {{ user.outfit or "[You need a squad] " }}: {{ user.callsign }}</p>
 
-  </div>
+    </div>
+  
+    <div class="container1">
+      <div class="playerImage">
+        <img src="../static/img/soldierC.jpg" alt="bad ass dude" >
+      </div>
 
-  <div class="playerImage">
-    <img src="../static/img/soldierC.jpg" alt="bad ass dude" >
-  </div>
+      <div class="playerInfo">
 
-  <div class="playerInfo">
-
-    <p> {{ user.lastname }}, {{ user.firstname }} </p>
-    <p> Career highlights: </p>
-
-
-    {% set cap = user.captures or 10 %}
-    {% set ass = user.assists or 5 %}
-    {% set pts = (cap * 2) + ass %}
-
-    {% set rad = 50 %}
-    {% set circ = rad * 2 * 3.14159 %}
-
-    {% set perc_cap = cap*2/pts %}
-    {% set perc_ass = ass/pts %}
-    {% set perc_pts = pts / 1 %}
-
-    {% set stroke_w = rad / 4 %}
+        <p> {{ user.lastname }}, {{ user.firstname }} </p>
+        <p> Career highlights: </p>
 
 
-  <div class="playerStats">
+        {% set cap = user.captures or 10 %}
+        {% set ass = user.assists or 5 %}
+        {% set pts = (cap * 2) + ass %}
 
-    <table id="table">
+        {% set rad = 50 %}
+        {% set circ = rad * 2 * 3.14159 %}
 
-      <thead>
-        <tr>
-          <th class="header">Captures</td>
-          <th class="header">Capture Assists</td>
-          <th class="header">Total Points</td>
-        </tr>
-      </thead>
+        {% set perc_cap = cap*2/pts %}
+        {% set perc_ass = ass/pts %}
+        {% set perc_pts = pts / 1 %}
 
-      <tbody>
+        {% set stroke_w = rad / 4 %}
+        <div class="playerStats">
 
-        <tr>
-
-          <td>
-              <svg width="100%">
-                <circle class="progress"
-                        cx="50%" cy="50%" r="{{ rad }}"
-                        perc="{{ circ - circ * perc_cap }}"
-                        style="fill:none; stroke: #808080; stroke-width: {{ stroke_w }};" />
-                <text x="50%" y="52.5%" text-anchor="middle">{{ cap }}</text>
-              </svg>
-          </td>
-
-          <td>
-              <svg width="100%">
-                <circle class="progress"
-                        cx="50%" cy="50%" r="{{ rad }}"
-                        perc="{{ circ - circ * perc_ass }}"
-                        style="fill:none; stroke: #808080; stroke-width: {{ stroke_w }};" />
-                <text x="50%" y="52.5%" text-anchor="middle">{{ ass }}</text>
-              </svg>
-          </td>
-
-          <td>
-              <svg width="100%" >
-                <circle class="progress"
-                        cx="50%" cy="50%" r="{{ rad }}"
-                        perc="{{ circ }}"
-                        style="fill:none; stroke:#808080; stroke-width: {{ stroke_w }};" />
-                <text x="50%" y="52.5%" text-anchor="middle">{{ pts }}</text>
-              </svg>
-          </td>
-
-        </tr>
-
-      </tbody>
-
-    </table>
-
-  </div>
-
+          <table id="table">
+  
+            <thead>
+              <tr>
+                <th class="header">Captures</td>
+                <th class="header">Capture Assists</td>
+                <th class="header">Total Points</td>
+              </tr>
+            </thead>
+  
+            <tbody>
+  
+              <tr>
+  
+                <td>
+                    <svg width="100%">
+                      <circle class="progress"
+                              cx="50%" cy="50%" r="{{ rad }}"
+                              perc="{{ circ - circ * perc_cap }}"
+                              style="fill:none; stroke: #808080; stroke-width: {{ stroke_w }};" />
+                      <text x="50%" y="52.5%" text-anchor="middle">{{ cap }}</text>
+                    </svg>
+                </td>
+  
+                <td>
+                    <svg width="100%">
+                      <circle class="progress"
+                              cx="50%" cy="50%" r="{{ rad }}"
+                              perc="{{ circ - circ * perc_ass }}"
+                              style="fill:none; stroke: #808080; stroke-width: {{ stroke_w }};" />
+                      <text x="50%" y="52.5%" text-anchor="middle">{{ ass }}</text>
+                    </svg>
+                </td>
+  
+                <td>
+                    <svg width="100%" >
+                      <circle class="progress"
+                              cx="50%" cy="50%" r="{{ rad }}"
+                              perc="{{ circ }}"
+                              style="fill:none; stroke:#808080; stroke-width: {{ stroke_w }};" />
+                      <text x="50%" y="52.5%" text-anchor="middle">{{ pts }}</text>
+                    </svg>
+                </td>
+  
+              </tr>
+  
+            </tbody>
+  
+          </table>
+  
+        </div>
+        
+      </div>
+         
+    </div>
+     
   </div>
 
 
