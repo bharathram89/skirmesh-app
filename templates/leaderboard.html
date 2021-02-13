@@ -7,21 +7,6 @@
 
 <div id="tooltip" display="none" style="position: absolute; display: none;"></div>
 
-<script>
-function showTooltip(evt, text) {
-  let tooltip = document.getElementById("tooltip");
-  tooltip.innerHTML = String(text) || "0";
-  tooltip.style.display = "block";
-  tooltip.style.left = evt.pageX + 10 + 'px';
-  tooltip.style.top = evt.pageY + 10 + 'px';
-}
-
-function hideTooltip() {
-  var tooltip = document.getElementById("tooltip");
-  tooltip.style.display = "none";
-}
-</script>
-
 
 <div style="display:inline-block; width:100%;">
 <input type="text"
@@ -42,26 +27,11 @@ function hideTooltip() {
 
   <table id="table">
     <thead>
-      <!-- <tr>
-            <th class="header"> points </th>
-            <th class="header"> time </th>
-      </tr> -->
+
     </thead>
     <tbody>
 
         <tr>
-
-            <!-- {% for col in t_sc_cols %}
-
-                {% if col == 'time' %}
-                <td style="width:33%"> {{ print_time(team_times[dat]) if team_times[dat] else 0 | safe }} </td>
-                {% elif col == 'team' %}
-                <td style="width:33%"> {{ team_name[dat] | safe }} </td>
-                {% else %}
-                <td style="width:33%"> {{ team_score[dat] | safe }} </td>
-                {% endif %}
-
-            {% endfor %} -->
 
             {% set tot = {'score':0, 'time':0} %}
 

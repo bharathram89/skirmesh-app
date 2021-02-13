@@ -1,3 +1,17 @@
+function showTooltip(evt, text) {
+  var tooltip = document.getElementById("tooltip");
+  tooltip.innerHTML = String(text) || "0";
+  tooltip.style.display = "block";
+  tooltip.style.left = evt.pageX + 10 + 'px';
+  tooltip.style.top = evt.pageY + 10 + 'px';
+}
+
+function hideTooltip() {
+  var tooltip = document.getElementById("tooltip");
+  tooltip.style.display = "none";
+}
+
+
 function show_table(evt, cityName) {
 
     var i, tabcontent, tablinks;
