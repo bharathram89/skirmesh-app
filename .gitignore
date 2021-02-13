@@ -135,3 +135,7 @@ dmypy.json
 *.db
 *.database
 *.pgrs
+
+
+# misc
+.controller_config
