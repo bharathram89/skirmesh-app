@@ -3,7 +3,7 @@ from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import email_validator
 from wtforms import SubmitField
 
-# from models.db_models import Player
+from models.db_models import Player
 from database import db_session
 
 class RegistrationForm(Form):
