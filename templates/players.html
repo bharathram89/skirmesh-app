@@ -54,22 +54,21 @@
 </div>
 
 <div id="location_score" class="leaderboard">
+
+    <table>
+    <thead>
+      <tr>
+        <th class="header"> Team </th>
+        <th class="header"> Time </th>
+      </tr>
+    </thead>
+    </table>
+
 {% for nd in node_times %}
 <h3 class="leaderboard_header"> {{ nd.location or nd.node | safe }} </h3>
 <table id="table">
-  <thead>
-    <tr>
-        {% for col in nd_tm_cols %}
 
-          {% if col == 'time' %}
-          <th class="header"> {{col | safe}} </th>
-          {% else %}
-          <th class="header"> {{col | safe}} </th>
-          {% endif %}
 
-        {% endfor %}
-    </tr>
-  </thead>
 <tbody>
 
     {% for dat in node_times[nd] %}
@@ -95,9 +94,8 @@
   <table id="table">
     <thead>
       <tr>
-          {% for col in p_sc_cols %}
-            <th class="header"> {{col | safe}} </th>
-          {% endfor %}
+        <th class="header"> Player </th>
+        <th class="header"> Points </th>
       </tr>
     </thead>
     <tbody>
