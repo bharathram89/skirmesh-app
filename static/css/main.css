@@ -600,10 +600,8 @@ dd, dt {
 
 }
 .callsignHeader {
-    border-style : solid;
     width : 99%;
     height : 20%;
-    border-width : 4px;
     text-align : left;
 }
 
@@ -619,8 +617,6 @@ dd, dt {
     display : inline-block;
     height : 40%;
     width  : 48%;
-    border-style : solid;
-    border-width : 4px;
     text-align : left;
 
 }
@@ -633,8 +629,6 @@ dd, dt {
 
 .playerInfo {
     display : inline-block;
-    border-style : solid;
-    border-width : 4px;
     height  : 40%;
     width   : 50%;
     text-align : left;
@@ -643,5 +637,6 @@ dd, dt {
 
 .playerInfo p {
     padding : 1em;
+    font-size : larger;
 }
 /* ------------------------------------------ */
