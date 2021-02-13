@@ -50,6 +50,8 @@ def players():
     nd_times = {}
     for node in _field.nodes if _field else []:
 
+        if node.field != field: continue
+        
         times = {}
         for s in node.scores:
             times.setdefault(s.team, []).append(s.time_held or 0)
@@ -62,7 +64,7 @@ def players():
 
             for team in times:
 
-                if team == node.team:
+                if team == node.team and team in team_times:
 
                     held  = int((datetime.now() - begin).total_seconds())
 
