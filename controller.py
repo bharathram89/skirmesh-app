@@ -2,7 +2,7 @@ from digi.xbee.devices import XBeeDevice, RemoteZigBeeDevice, RemoteXBeeDevice
 from datetime import datetime
 
 import models.db_models as PG
-import time
+import time, os
 
 
 
@@ -112,12 +112,15 @@ class CONTROL_POINT(XBeeDevice):
         self.end_nodes = set()
         self.user_reg  = None
 
-        for line in open('.controller_config', 'r'):
+        if os.path.exists('.controller_config'):
 
-            if "field" in line:
+            for line in open('.controller_config'):
 
-                self.__field = line.split('=')[-1]
-                print(f"Initialized with field: {self.field}")
+                if "field" in line:
+
+                    self.__field = line.split('=')[-1]
+
+        print(f"Initialized with field: {self.field}")
 
 
     @property
@@ -127,9 +130,10 @@ class CONTROL_POINT(XBeeDevice):
     @field.setter
     def field(self, location):
 
-        with open('.controller_config', '+w') as f:
-            
-            if location: f.write('field='+location)
+        if location:
+
+            with open('.controller_config', 'w') as f:
+                 f.write('field='+location)
 
         self.__field = location
 
