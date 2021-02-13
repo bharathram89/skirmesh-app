@@ -20,6 +20,7 @@ circle.assist {
 
 svg.score {
     overflow: visible;
+    padding: 2em 0;
 }
 svg.score:hover {
     transform: scale(1.2);
@@ -31,4 +32,8 @@ svg.score:hover {
     border-radius: 0.2em;
     padding: 1em;
     z-index: 10;
+}
+
+svg text {
+    font-family: 'special_eliteregular';
 }
