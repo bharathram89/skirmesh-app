@@ -127,10 +127,9 @@ class CONTROL_POINT(XBeeDevice):
     @field.setter
     def field(self, location):
 
-        if location:
-
-            with open('.controller_config', '+w') as f:
-                f.write('field='+location)
+        with open('.controller_config', '+w') as f:
+            
+            if location: f.write('field='+location)
 
         self.__field = location
 
