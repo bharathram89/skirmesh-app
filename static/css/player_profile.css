@@ -1,0 +1,67 @@
+
+
+.playerPage {
+    margin  : 0;
+    padding : 0;
+}
+
+.callsignHeader {
+    border-style : solid;
+    width : 80%;
+    height : 20%;
+    border-width : 4px;
+    text-align : left;
+}
+
+.callsignHeader p {
+    font-size : 250%;
+    width : 100%;
+    height : 20%;
+    padding : 0;
+    margin  : 0;
+}
+
+.playerImage {
+    display    : inline-block;
+    width      : 50%;
+    text-align : left;
+    padding    : 1em 0;
+}
+
+.playerImage img {
+    max-height : 100%;
+    max-width  : 100%;
+    text-align : left;
+}
+
+.playerInfo {
+    border-style   : solid;
+    border-width   : 4px;
+    width          : 80%;
+    text-align     : left;
+    vertical-align : top;
+    font-size      : 120%;
+    text-transform : capitalize;
+}
+
+.playerInfo p {
+    padding : 1em;
+}
+
+
+
+.career {
+    padding: 2em;
+}
+
+circle {
+  transition: stroke-dashoffset 5s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+
+circle:hover {
+    stroke-dashoffset: 314.159 !important;
+    transition: stroke-dashoffset 3s ease;
+}
