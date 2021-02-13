@@ -1,12 +1,19 @@
 
+.playerPage {
+    margin  : 0;
+    padding : 0;
+    background-color: ;
+}
+
 .container1 {
     display : flex;
     flex-direction: row;
 }
 
-.playerPage {
-    margin  : 0;
-    padding : 0;
+.playertab {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
 }
 
 .playerImage {
