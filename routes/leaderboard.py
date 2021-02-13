@@ -24,55 +24,54 @@ from pretty_print import print_time, print_perc
 bp = Blueprint('leaderboard', __name__, url_prefix='')
 
 
-@bp.route('/players')
-def players():
+@bp.route('/leaderboard')
+def leaderboard():
 
     field = session.get('field', None)
+
+    if not field:
+
+        error = "Please select a Field and return to the Leaderboard"
+        flash(error)
+
+        return render_template('field_chooser.html', error=error)
 
     team_data = json.load(open("json/fields/" + field + ".json")) if field else []
     team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
     team_name = {int(n['value'], 16):n['text'] for n in team_data}
 
+
     _field = Field.query.filter(Field.field == field).first()
 
-    teams = {}
-    for uid in _field.uids if _field else []:
-        teams.setdefault(uid.team, []).append(uid)
+    team_times, team_score = {}, {}
+    for score in _field.scores:
 
-    _teams = Team.query.filter(Team.team.in_(teams.keys())).all()
+        team_times.setdefault(score.team, []).append(score.time_held or 0)
+        team_score.setdefault(score.team, []).append(score.points or 0)
 
-    team_times = {t.team:sum((s.time_held if s.field == field and s.time_held else 0) for s in t.scores) for t in _teams}
-    team_score = {t.team:sum((s.points if s.field == field and s.points else 0) for s in t.scores) for t in _teams}
-    plyr_score = {u:sum((s.points if s.field == field and s.points else 0) for s in u.scores) for u in (_field.uids if _field else [])}
+    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids}
 
+    for team in team_times:
+        team_times[team] = sum(team_times[team])
+        team_score[team] = sum(team_score[team])
 
     nd_times = {}
-    for node in _field.nodes if _field else []:
+    for node in _field.nodes:
 
-        if node.field != field: continue
-
-        times = {}
-        for s in node.scores:
-            times.setdefault(s.team, []).append(s.time_held or 0)
+        times = {s.team:sum([s.time_held or 0]) for s in node.scores}
 
         nd_times[node] = times
 
         # Add time for nodes that are still under control
         begin = get_time_capture_complete(node.node)
-        if node.stable and not get_is_capture_closed(node.node) and begin:
+        if node.stable and begin and not get_is_capture_closed(node.node) and node.team in times:
 
-            for team in times:
+            times[node.team]
+            held  = int((datetime.now() - begin).total_seconds())
 
-                if team == node.team and team in team_times:
+            nd_times[node][node.team] += held
+            team_times[node.team]     += held
 
-                    held  = int((datetime.now() - begin).total_seconds())
-
-                    times[team].append(held)
-                    team_times[team] += held
-
-    for node in nd_times:
-        for team in nd_times[node]:
-            nd_times[node][team] = sum(nd_times[node][team])
 
     kwargs = {'team_score' : team_score,
               'plyr_score' : plyr_score,
@@ -87,4 +86,4 @@ def players():
 
     db_session.commit()
 
-    return render_template('players.html', **kwargs)
+    return render_template('leaderboard.html', **kwargs)
