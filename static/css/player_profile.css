@@ -62,7 +62,6 @@
 circle {
   fill: none;
   stroke: var(--button_color);
-  stroke-width = 8;
   transition: stroke-dashoffset 5s;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
@@ -77,4 +76,8 @@ circle.capture {
 circle.assist {
     fill: none;
     stroke: #800000;
+}
+
+circle:hover{
+    transform: scale(1.1);
 }

@@ -12,15 +12,15 @@ def print_time(i):
 
     if not hrs and not min:
 
-        return f"00::{sec:02d}"
+        return f"00m {sec:02d}s"
 
     if not hrs and min:
 
-        return f"{min:02d}::{sec:02d}"
+        return f"{min:02d}m {sec:02d}s"
 
     if hrs:
 
-        return f"{hrs:02d}:{min:02d}::{sec:02d}"
+        return f"{hrs:02d}h {min:02d}m {sec:02d}s"
 
 
 

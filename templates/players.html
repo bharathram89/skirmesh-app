@@ -2,6 +2,27 @@
 
 {% block content %}
 
+
+<link rel="stylesheet" type="text/css" href="../static/css/leaderboard.css" charset="utf-8" />
+
+<div id="tooltip" display="none" style="position: absolute; display: none;"></div>
+
+<script>
+function showTooltip(evt, text) {
+  let tooltip = document.getElementById("tooltip");
+  tooltip.innerHTML = String(text) || "0";
+  tooltip.style.display = "block";
+  tooltip.style.left = evt.pageX + 10 + 'px';
+  tooltip.style.top = evt.pageY + 10 + 'px';
+}
+
+function hideTooltip() {
+  var tooltip = document.getElementById("tooltip");
+  tooltip.style.display = "none";
+}
+</script>
+
+
 <div style="display:inline-block; width:100%;">
 <input type="text"
        id="mbr_search"
@@ -21,22 +42,16 @@
 
   <table id="table">
     <thead>
-      <tr>
-          {% for col in t_sc_cols %}
-
-            {% if col == 'time' %}
-            <th class="header"> {{ col | safe }} </th>
-            {% else %}
-            <th class="header"> {{ col | safe }} </th>
-            {% endif %}
-
-          {% endfor %}
-      </tr>
+      <!-- <tr>
+            <th class="header"> points </th>
+            <th class="header"> time </th>
+      </tr> -->
     </thead>
     <tbody>
-        {% for dat in team_score %}
-        <tr class="row team{{dat | safe}}">
-            {% for col in t_sc_cols %}
+
+        <tr>
+
+            <!-- {% for col in t_sc_cols %}
 
                 {% if col == 'time' %}
                 <td style="width:33%"> {{ print_time(team_times[dat]) if team_times[dat] else 0 | safe }} </td>
@@ -46,9 +61,99 @@
                 <td style="width:33%"> {{ team_score[dat] | safe }} </td>
                 {% endif %}
 
+            {% endfor %} -->
+
+            {% set tot = {'score':0, 'time':0} %}
+
+            {% for team in team_score %}
+
+                {% if tot.update({'score': tot['score'] + team_score[team]}) %} {% endif %}
+
             {% endfor %}
+
+            {% for team in team_times %}
+
+                {% if tot.update({'time': tot['time'] + team_times[team]}) %} {% endif %}
+
+            {% endfor %}
+
+            {% set rad = 80 %}
+            {% set circ = rad * 2 * 3.14159 %}
+
+            {% set stroke_w = rad / 4 %}
+            {% set from = namespace(value=0) %}
+
+            <td style="width:50%">
+
+                <svg width="100%" class="score">
+
+                {% for team in team_score %}
+
+                {% set text = team_score[team] %}
+
+                {% if text %}
+
+                {% set to = from.value + circ*team_score[team]/tot['score'] %}
+
+                  <circle class="capture" cx="50%" cy="50%" r="{{ rad }}"
+                          onmousemove="showTooltip(evt, {{ text | safe }} )"
+                          onmouseout="hideTooltip()">
+                      <set attributeName='stroke-width' to="{{ stroke_w }}"/>
+                      <set attributeName='stroke' to="{{ team_cmap[team] }}"/>
+                      <set attributeName='stroke' from="{{ team_cmap[team] }}" to="#C0C0C0" begin="mouseover" end="mouseout"/>
+                      <set attributeName='stroke-dashoffset' to="{{ from.value }}"/>
+                      <set attributeName='stroke-dasharray' to="{{ circ }} {{ to }}"/>
+                  </circle>
+
+                {% set from.value = to %}
+
+                {% endif %}
+
+                {% endfor %}
+                <text x="50%" y="52.5%" text-anchor="middle"> POINTS </text>
+
+                </svg>
+
+            </td>
+
+            <td style="width:50%">
+
+                <svg width="100%" class="score">
+
+                {% set from.value = 0 %}
+
+                {% for team in team_times %}
+
+                {% set text = print_time( team_times[team] ) %}
+
+                {% if text %}
+
+                {% set to = from.value + circ*team_times[team]/tot['time'] %}
+
+                <circle class="capture" cx="50%" cy="50%" r="{{ rad }}"
+                        onmousemove="showTooltip(evt, '{{ text | safe }}' )"
+                        onmouseout="hideTooltip()">
+                      <set attributeName='stroke-width' to="{{ stroke_w }}"/>
+                      <set attributeName='stroke' to="{{ team_cmap[team] }}"/>
+                      <set attributeName='stroke' from="{{ team_cmap[team] }}" to="#C0C0C0" begin="mouseover" end="mouseout"/>
+                      <set attributeName='stroke-dashoffset' to="{{ from.value }}"/>
+                      <set attributeName='stroke-dasharray' to="{{ circ }} {{ to }}"/>
+                  </circle>
+
+                {% set from.value = to %}
+
+                {% endif %}
+
+                {% endfor %}
+                <text x="50%" y="52.5%" text-anchor="middle"> TIME </text>
+
+                </svg>
+
+            </td>
+
+
         </tr>
-        {% endfor %}
+
     </tbody>
   </table>
 </div>
@@ -101,13 +206,9 @@
     <tbody>
         {% for dat in plyr_score %}
         <tr class="row">
-            {% for col in p_sc_cols %}
-                {% if col.lower() == 'player' %}
+
                 <td style="width:40%"> {{ dat.player or dat | safe }} </td>
-                {% else %}
                 <td style="width:40%"> {{ plyr_score[dat] | safe }} </td>
-                {% endif %}
-            {% endfor %}
 
         </tr>
         {% endfor %}
@@ -116,6 +217,8 @@
 </div>
 
 <script src="../static/js/leaderboard.js"></script>
+
+
 
 
 {% endblock %}

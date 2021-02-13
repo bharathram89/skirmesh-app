@@ -34,7 +34,6 @@ def players():
     team_name = {int(n['value'], 16):n['text'] for n in team_data}
 
     _field = Field.query.filter(Field.field == field).first()
-    reg_teams = set([uid.team for uid in _field.uids]) if _field else set()
 
     teams = {}
     for uid in _field.uids if _field else []:
@@ -51,7 +50,7 @@ def players():
     for node in _field.nodes if _field else []:
 
         if node.field != field: continue
-        
+
         times = {}
         for s in node.scores:
             times.setdefault(s.team, []).append(s.time_held or 0)
@@ -75,17 +74,14 @@ def players():
         for team in nd_times[node]:
             nd_times[node][team] = sum(nd_times[node][team])
 
-    kwargs = {'t_sc_cols'  : ['team', 'points', 'time'],
-              'team_score' : team_score,
+    kwargs = {'team_score' : team_score,
               'plyr_score' : plyr_score,
               'nodes'      : _field.nodes if _field else [],
-              't_tm_cols'  : ['team', 'time'],
               'team_times' : team_times,
               'node_times' : nd_times,
               'print_time' : print_time,
               'team_name'  : team_name,
               'team_cmap'  : team_cmap,
-              'teams'      : reg_teams,
               'field'      : field,
               }
 
