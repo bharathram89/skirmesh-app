@@ -279,7 +279,7 @@ def issue_command():
 
             for node in nodes:
 
-                if node.stable:
+                if node.stable and node.team:
 
                     begin  = get_time_capture_complete(node.node)
                     closed = get_is_capture_closed(node.node)

@@ -112,6 +112,28 @@ class CONTROL_POINT(XBeeDevice):
         self.end_nodes = set()
         self.user_reg  = None
 
+        for line in open('.controller_config', 'r'):
+
+            if "field" in line:
+
+                self.__field = line.split('=')[-1]
+                print(f"Initialized with field: {self.field}")
+
+
+    @property
+    def field(self):
+        return self.__field
+
+    @field.setter
+    def field(self, location):
+
+        if location:
+
+            with open('.controller_config', '+w') as f:
+                f.write('field='+location)
+
+        self.__field = location
+
 
     def configure_XB(self):
 

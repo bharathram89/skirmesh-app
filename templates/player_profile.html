@@ -103,24 +103,6 @@
   </div>
 
 
-  <script>
-
-  var circles = document.querySelectorAll('circle');
-
-  for (i = 0; i < circles.length; i++) {
-
-      var circle = circles[i];
-
-      var radius = circle.r.baseVal.value;
-      var perc   = circle.getAttribute('perc');
-
-      var circumference = radius * 2 * Math.PI;
-
-      circle.style.strokeDasharray = `${circumference} ${circumference}`;
-      circle.style.strokeDashoffset = `${perc}`;
-
-  }
-  </script>
 
 
 {% endblock %}

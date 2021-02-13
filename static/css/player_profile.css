@@ -60,13 +60,21 @@
 }
 
 circle {
+  fill: none;
+  stroke: var(--button_color);
+  stroke-width = 8;
   transition: stroke-dashoffset 5s;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
 }
 
 
-circle:hover {
-    stroke-dashoffset: 314.159 !important;
-    transition: stroke-dashoffset 3s ease;
+circle.capture {
+    fill: none;
+    stroke: #808080;
+}
+
+circle.assist {
+    fill: none;
+    stroke: #800000;
 }
