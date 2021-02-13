@@ -58,8 +58,11 @@ def leaderboard():
     nd_times = {}
     for node in _field.nodes:
 
-        times = {s.team:sum([s.time_held or 0]) for s in node.scores}
+        times = {}
+        for score in node.scores:
+            times.setdefault(score.team, []).append(score.time_held or 0)
 
+        for team in times: times[team] = sum(times[team])
         nd_times[node] = times
 
         # Add time for nodes that are still under control
