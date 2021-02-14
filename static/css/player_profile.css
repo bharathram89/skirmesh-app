@@ -9,37 +9,17 @@
     padding : 0;
 }
 
-.callsignHeader {
-    border-style : solid;
-    width : 80%;
-    height : 20%;
-    border-width : 4px;
-    text-align : left;
-}
-
-.callsignHeader p {
-    font-size : 250%;
-    width : 100%;
-    height : 20%;
-    padding : 0;
-    margin  : 0;
-}
-
 .playerImage {
-    margin    : 1em 0;
-    flex      : 1;
+    margin    : 0 0 1em 1em;
+    float     : right;
 }
 
-.playerImage img {
-    max-height : 100%;
-    max-width  : 100%;
-    text-align : left;
+img.playerImage {
+    max-width  : 25%;
 }
 
 .playerInfo {
-    border-style   : solid;
-    border-width   : 4px;
-    flex           : 2;
+
     text-align     : left;
     vertical-align : top;
     font-size      : 120%;
@@ -47,17 +27,14 @@
     margin         : 1em 0;
 }
 
-.playerInfo p {
+.playerInfo {
     padding : 1em;
 }
 
-.playerStats {
-
+.playerStats, .playerInfo, h1 {
+    font-family: 'special_eliteregular'
 }
 
-.career {
-    padding: 2em;
-}
 
 circle {
   fill: none;
@@ -80,4 +57,8 @@ circle.assist {
 
 svg.score:hover{
     transform: scale(1.2);
+}
+
+svg text {
+    font-family: 'special_eliteregular'
 }

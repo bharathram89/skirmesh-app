@@ -2,119 +2,111 @@
 
 {% block content %}
 
-<!--
-  <h1> Hello, {{ user.callsign }} </h1>
-  <h1> Hello, {{ user.firstname }} </h1>
-  <h1> Hello, {{ user.lastname }} </h1>
-  <h1> Hello, {{ user.email }} </h1>
-  <h1> Hello, {{ user.callsign }} </h1>
--->
 
 <link rel="stylesheet" type="text/css" href="../static/css/player_profile.css" charset="utf-8" />
 
-  <div class="playerPage">
+<h1 style="text-transform: none"> {{ user.outfit or "[Your squad here]" }}: {{ user.callsign }}</h1>
 
-    <div class="callsignHeader">
-      <p> {{ user.outfit or "[You need a squad] " }}: {{ user.callsign }}</p>
+<img class="playerImage" src="../static/img/soldierC.jpg" alt="bad ass dude" >
 
-    </div>
+<div class="playerInfo">
 
-    <div class="container1">
-      <div class="playerImage">
-        <img src="../static/img/soldierC.jpg" alt="bad ass dude" >
-      </div>
+<p> {{ user.lastname }}, {{ user.firstname }} </p>
+<p> Career highlights: </p>
 
-      <div class="playerInfo">
+{% if uid %}
+<p>
+    You're conducting operations at {{ uid.field or '_ _ _ _ _'}}.
+    Nodes held by team: <br/>
+    {% for node in uid.nodes %}
+    {{ node.location or node.node }} <br/>
+    {% endfor %}
+    Last medic check-in was {{ uid.medic.timestamp }}. You're currently {{ 'FFD' if uid.medic.alive else 'NPQ' }}.
+</p>
+{% endif %}
 
-        <p> {{ user.lastname }}, {{ user.firstname }} </p>
-        <p> Career highlights: </p>
+<p>
 
+{% set cap = user.captures or 10 %}
+{% set ass = user.assists or 5 %}
+{% set pts = (cap * 2) + ass %}
 
-        {% set cap = user.captures or 10 %}
-        {% set ass = user.assists or 5 %}
-        {% set pts = (cap * 2) + ass %}
+{% set rad = 50 %}
+{% set circ = rad * 2 * 3.14159 %}
 
-        {% set rad = 50 %}
-        {% set circ = rad * 2 * 3.14159 %}
+{% set perc_cap = cap*2/pts %}
+{% set perc_ass = ass/pts %}
+{% set perc_pts = pts / 1 %}
 
-        {% set perc_cap = cap*2/pts %}
-        {% set perc_ass = ass/pts %}
-        {% set perc_pts = pts / 1 %}
+{% set stroke_w = rad / 4 %}
 
-        {% set stroke_w = rad / 4 %}
-        <div class="playerStats">
+<div class="playerStats">
 
-          <table id="table">
+  <table id="table">
 
-            <thead>
-              <tr>
-                <th class="header">Captures</td>
-                <th class="header">Capture Assists</td>
-                <th class="header">Total Points</td>
-              </tr>
-            </thead>
+    <thead>
+        <tr>
+            <th class="header">Captures</td>
+            <th class="header">Capture Assists</td>
+            <th class="header">Total Points</td>
+        </tr>
+    </thead>
 
-            <tbody>
+    <tbody>
 
-              <tr>
+      <tr>
 
-                <td>
-                    <svg width="100%">
-                      <circle class="capture" cx="50%" cy="50%" r="{{ rad }}">
-                          <set attributeName='stroke-width' to="{{ stroke_w }}"/>
-                          <set attributeName='stroke' from="#808080" to="#C0C0C0" begin="mouseover" end="mouseout"/>
-                          <set attributeName='stroke-dashoffset' to="{{ -(circ - circ * perc_cap) }}"/>
-                          <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
-                      </circle>
-                      <text x="50%" y="52.5%" text-anchor="middle">{{ cap }}</text>
-                    </svg>
-                </td>
+        <td>
+            <svg width="100%">
+              <circle class="capture" cx="50%" cy="50%" r="{{ rad }}">
+                  <set attributeName='stroke-width' to="{{ stroke_w }}"/>
+                  <set attributeName='stroke' from="#808080" to="#C0C0C0" begin="mouseover" end="mouseout"/>
+                  <set attributeName='stroke-dashoffset' to="{{ -(circ - circ * perc_cap) }}"/>
+                  <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
+              </circle>
+              <text x="50%" y="52.5%" text-anchor="middle">{{ cap }}</text>
+            </svg>
+        </td>
 
-                <td>
-                    <svg width="100%">
-                      <circle class="assist" cx="50%" cy="50%" r="{{ rad }}">
-                          <set attributeName='stroke-width' to="{{ stroke_w }}"/>
-                          <set attributeName='stroke' from="#800000" to="#F0C0C0" begin="mouseover" end="mouseout"/>
-                          <set attributeName='stroke-dashoffset' to="{{ circ - circ * perc_ass }}"/>
-                          <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
-                      </circle>
-                      <text x="50%" y="52.5%" text-anchor="middle">{{ ass }}</text>
-                    </svg>
-                </td>
+        <td>
+            <svg width="100%">
+              <circle class="assist" cx="50%" cy="50%" r="{{ rad }}">
+                  <set attributeName='stroke-width' to="{{ stroke_w }}"/>
+                  <set attributeName='stroke' from="#800000" to="#F0C0C0" begin="mouseover" end="mouseout"/>
+                  <set attributeName='stroke-dashoffset' to="{{ circ - circ * perc_ass }}"/>
+                  <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
+              </circle>
+              <text x="50%" y="52.5%" text-anchor="middle">{{ ass }}</text>
+            </svg>
+        </td>
 
-                <td>
-                    <svg width="100%" >
-                      <circle class="capture" cx="50%" cy="50%" r="{{ rad }}">
-                          <set attributeName='stroke-width' to="{{ stroke_w }}"/>
-                          <set attributeName='stroke' from="#808080" to="#C0C0C0" begin="mouseover" end="mouseout"/>
-                          <set attributeName='stroke-dashoffset' to="{{ -(circ - circ * perc_cap) }}"/>
-                          <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
-                      </circle>
-                      <circle class="assist" cx="50%" cy="50%" r="{{ rad }}">
-                          <set attributeName='stroke-width' to="{{ stroke_w }}"/>
-                          <set attributeName='stroke' from="#800000" to="#F0C0C0" begin="mouseover" end="mouseout"/>
-                          <set attributeName='stroke-dashoffset' to="{{ circ - circ * perc_ass }}"/>
-                          <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
-                      </circle>
-                      <text x="50%" y="52.5%" text-anchor="middle">{{ pts }}</text>
-                    </svg>
-                </td>
+        <td>
+            <svg width="100%" >
+              <circle class="capture" cx="50%" cy="50%" r="{{ rad }}">
+                  <set attributeName='stroke-width' to="{{ stroke_w }}"/>
+                  <set attributeName='stroke' from="#808080" to="#C0C0C0" begin="mouseover" end="mouseout"/>
+                  <set attributeName='stroke-dashoffset' to="{{ -(circ - circ * perc_cap) }}"/>
+                  <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
+              </circle>
+              <circle class="assist" cx="50%" cy="50%" r="{{ rad }}">
+                  <set attributeName='stroke-width' to="{{ stroke_w }}"/>
+                  <set attributeName='stroke' from="#800000" to="#F0C0C0" begin="mouseover" end="mouseout"/>
+                  <set attributeName='stroke-dashoffset' to="{{ circ - circ * perc_ass }}"/>
+                  <set attributeName='stroke-dasharray' to="{{ circ }} {{ circ }}"/>
+              </circle>
+              <text x="50%" y="52.5%" text-anchor="middle">{{ pts }}</text>
+            </svg>
+        </td>
 
-              </tr>
+      </tr>
 
-            </tbody>
+    </tbody>
 
-          </table>
+  </table>
 
-        </div>
+</div>
 
-      </div>
-
-    </div>
-
-  </div>
-
-
+</div>
 
 
 {% endblock %}

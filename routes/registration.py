@@ -199,9 +199,10 @@ def assign_uid():
 def player_profile(callsign):
 
     user = Player.query.filter_by(callsign=callsign).first()
+    uid  = UID.query.filter_by(uid=user.uid) if user.uid else None
     db_session.commit()
 
-    return render_template('player_profile.html', user=user)
+    return render_template('player_profile.html', user=user, uid=uid)
 
 
 
