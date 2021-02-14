@@ -1,22 +1,8 @@
-from database import db_session
-from models.db_models import (CommsData, UID, Team, Field, Medic,
-                              Score, Game, NodeStatus, Player,
-                              get_time_capture_complete,
-                              get_last_captor, get_is_capture_closed)
 
-import functools
-
-from flask import Flask, render_template, flash, jsonify, session
-from flask import request, redirect, url_for, make_response
-
-from flask_login import current_user, login_user, LoginManager, logout_user
-from flask_login import login_required
-
-from flask import Blueprint
-
+from models.db_models import CommsData
+from flask import render_template, Blueprint
 from datetime import datetime
-from bs4 import BeautifulSoup as SOUP
-import time, json
+
 
 bp = Blueprint('comms', __name__, url_prefix='')
 

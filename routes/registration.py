@@ -1,26 +1,16 @@
 from database import db_session
-from models.db_models import (CommsData, UID, Team, Field, Medic,
-                              Score, Game, NodeStatus, Player,
-                              get_time_capture_complete,
-                              get_last_captor, get_is_capture_closed)
+from models.db_models import UID, Field, Player
+from models.forms import RegisterAccountForm, LoginForm
 
-import functools
-
-from flask import Flask, render_template, flash, jsonify, session
+from flask import render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
-
-from flask_login import current_user, login_user, LoginManager, logout_user
-from flask_login import login_required
-
 from flask import Blueprint
 
-from models.forms import RegistrationForm, RegisterAccountForm, LoginForm
+from flask_login import current_user, login_user, logout_user, login_required
 
 from datetime import datetime
-from bs4 import BeautifulSoup as SOUP
-import time, json
+import json
 
-from pretty_print import print_time, print_perc
 
 
 bp = Blueprint('registration', __name__, url_prefix='')

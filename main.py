@@ -16,7 +16,6 @@ from flask_login import LoginManager
 
 import os, glob
 from datetime import datetime
-from bs4 import BeautifulSoup as SOUP
 import time, json
 
 from pretty_print import print_time, print_perc
@@ -52,7 +51,7 @@ def shutdown_session(exception=None):
     db_session.remove()
 
 
-from models.db_models import Player 
+from models.db_models import Player
 @loginMngr.user_loader
 def load_user(id):
 
