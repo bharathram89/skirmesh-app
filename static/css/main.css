@@ -69,12 +69,8 @@ header{
 
 
 h1, h3{
-    /* border-radius: 0.1em; */
-    color:              var(--WHITE); /* ,alpha); */
     text-align:         center;
-    background-color:   var(--BLACK);
     padding:            0.5em;
-    /* text-transform: capitalize; */
     text-transform:     uppercase;
     margin:             0px;
 }
@@ -101,6 +97,7 @@ h2 {
     display: table;
     table-layout: fixed;
     padding-inline-start: 0;
+    font-family: 'special_eliteregular';
 }
 #main-nav li {
     display: table-cell;
@@ -117,21 +114,23 @@ h2 {
     height: 100%;
     line-height: 3em;
     text-decoration: none;
-    background-color: var(--button_color);
+    /* background-color: var(--button_color); */
     font-size: 125%;
     border-radius: 0.1em;
-    color: #FFFFFF;
+    color: var(--BLACK);
 }
 #main-nav li a:hover {
-    background-color: var(--button_color_hover);
+    /* background-color: var(--button_color_hover); */
     box-shadow: 0 0 1em rgba(255, 255, 255, 0.25);
     transform: scale(1.05);
+    color: var(--BLACK);
+    border-bottom: solid var(--BLACK) 2px;
 }
 
 #main-nav li a:active {
-    background-color: var(--button_color_hover);
     box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);
     transform: scale(0.98);
+    border-bottom: solid var(--RED) 4px;
 }
 
 .grid_container {
@@ -158,6 +157,9 @@ h2 {
     animation-duration: 0.5s;
     animation-name: slidein;
 }
+.leaderboard_header {
+    border-bottom: var(--BLACK) solid;
+}
 
 @keyframes slidein {
     from {
@@ -170,39 +172,11 @@ h2 {
         width: 100%;
     }
 }
-/* Style the tab */
 
-/* .tablinks {
-    background-color: var(--button_color);
-    color: white;
-    text-transform: uppercase;
-    padding: 1em;
-    border-style: none;
-    border-radius: 0.1em;
-} */
-
-/* .tab {
-  overflow: hidden;
-  text-align: center;
-  background-color: #f1f1f1;
-} */
-
-/* .tab li:hover {
-  background-color: var(--button_color_hover);
-} */
-
-/* Create an active/current tablink class */
-.tab a.tablink.active {
-  background-color: var(--button_color_hover);
+li.tablink.active {
+  border-bottom: var(--button_color_hover) solid 4px;
 }
 
-/* Style the tab content */
-/* .tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-} */
 
 
 form {
@@ -310,52 +284,6 @@ td {
 }
 
 
-/* .row.team1 {
-    background-color: var(--LIGHT_RED);
-}
-.row.team2 {
-    background-color: var(--LIGHT_BLUE);
-}
-.row.team3 {
-    background-color: var(--LIGHT_YELLOW);
-}
-.row.team4 {
-    background-color: var(--LIGHT_GREEN);
-}
-.row.team5 {
-    background-color: var(--LIGHT_PURPLE);
-} */
-
-.roster_element {
-    padding: 0.5em;
-}
-
-.row.team1:hover {
-    background-color: var(--RED);
-    color: var(--WHITE);
-    font-weight: bold;
-}
-.row.team2:hover {
-    background-color: var(--BLUE);
-    color: var(--WHITE);
-    font-weight: bold;
-}
-.row.team3:hover {
-    background-color: var(--YELLOW);
-    color: var(--WHITE);
-    font-weight: bold;
-}
-.row.team4:hover {
-    background-color: var(--GREEN);
-    color: var(--WHITE);
-    font-weight: bold;
-}
-.row.team5:hover {
-    background-color: var(--PURPLE);
-    color: var(--WHITE);
-    font-weight: bold;
-}
-
 
 .beacon-container {
   position: relative;
@@ -386,7 +314,6 @@ td {
 }
 
 svg {
-    /* background-image: url('../img/field.png'); */
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -406,7 +333,6 @@ path.owned {
     opacity: 0.5;
 }
 
-
 div.table-wrapper {
     border: 1px solid var(--BLACK));
     max-height: 40em;
@@ -414,24 +340,6 @@ div.table-wrapper {
     overflow-y: auto;
  }
 
-
-div.team-leaderboard {
-    border: 1px solid var(--BLACK));
-    width: 100%;
-}
-
-div.player-leaderboard {
-    border: 1px solid var(--BLACK));
-    max-height: 30em;
-    width: 100%;
-    overflow-y: auto;
-}
-
-.leaderboard_header {
-    background: linear-gradient(90deg, var(--BLACK), var(--button_color), var(--BLACK));
-    text-align: center;
-
-}
 
 div.roster {
     max-height: 22.8em;
