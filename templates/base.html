@@ -36,11 +36,6 @@
 </header>
 
 
-
-
-
-<br>
-
     <ul id="main-nav">
         <li><a href="/index">Home</a></li>
         {% if field %}
@@ -52,7 +47,6 @@
         <li><a href="/comms">Comms Log</a></li>
     </ul>
 
-<br>
 
 <body>
 
@@ -71,7 +65,11 @@
     {% endif %}
   {% endwith %}
 
-  <center> {% block content %}{% endblock %} </center>
+  <center>
+      {% block content %}
+      {% endblock %}
+  </center>
+
 </body>
 
 <br>
