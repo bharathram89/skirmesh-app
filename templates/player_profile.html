@@ -23,7 +23,7 @@
     {% for node in uid.nodes %}
     {{ node.location or node.node }} <br/>
     {% endfor %} <br/>
-    {{ 'Discharged from' if uid.medic.alive else 'Checked into'}} the infirmary:  {{ uid.medic.timestamp.strftime(' %d %b %Y @ %H:%M:%S') }}. <br/>
+    {{ 'Discharged from' if uid.medic.alive else 'Checked into'}} the infirmary on {{ uid.medic.timestamp.strftime(' %d %b %Y @ %H%M hours') }}. <br/>
     You are {{ 'FFD' if uid.medic.alive else 'NPQ' }}.
 </p>
 {% endif %}
