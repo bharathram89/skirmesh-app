@@ -7,21 +7,24 @@
 
 <h1 style="text-transform: none"> {{ user.outfit or "[Your squad here]" }}: {{ user.callsign }}</h1>
 
-<img class="playerImage" src="../static/img/soldierC.jpg" alt="bad ass dude" >
 
 <div class="playerInfo">
 
-<p> {{ user.lastname }}, {{ user.firstname }} </p>
+<img class="playerImage" src="../static/img/soldierC.jpg" alt="bad ass dude" >
+
+<p id="player_name"> {{ user.lastname }}, {{ user.firstname }} </p>
 <p> Career highlights: </p>
 
 {% if uid %}
 <p>
-    You're conducting operations at {{ uid.field or '_ _ _ _ _'}}.
-    Nodes held by team: <br/>
+    Assigned to operations @ {{ uid.field or '_ _ _ _ _'}}. <br/>
+    <br/>
+    Objectives held by team: <br/>
     {% for node in uid.nodes %}
     {{ node.location or node.node }} <br/>
-    {% endfor %}
-    Last medic check-in was {{ uid.medic.timestamp }}. You're currently {{ 'FFD' if uid.medic.alive else 'NPQ' }}.
+    {% endfor %} <br/>
+    {{ 'Discharged from' if uid.medic.alive else 'Checked into'}} the infirmary:  {{ uid.medic.timestamp.strftime(' %d %b %Y @ %H:%M:%S') }}. <br/>
+    You are {{ 'FFD' if uid.medic.alive else 'NPQ' }}.
 </p>
 {% endif %}
 

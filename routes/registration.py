@@ -6,7 +6,7 @@ from flask import render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
 from flask import Blueprint
 
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, login_required
 
 from datetime import datetime
 import json
@@ -121,32 +121,22 @@ def register():
 
 
 
-@bp.route('/user_reg', methods=['POST', 'GET'])
-def user_reg(uid=None):
+@bp.route('/pair_uid', methods=['POST', 'GET'])
+def pair_uid(uid=None):
 
     players = Player.query.order_by(Player.lastname.asc()).all()
     db_session.commit()
 
-    return render_template('user_reg.html', Players=players)
+    return render_template('pair_uid.html', Players=players)
 
 
 # TODO: Make this a listener function and just pop the UID if it gets one
-@bp.route('/user_reg/get_uid', methods=['POST','GET'])
-def get_uid():
 
-    while not CP.user_reg:
-
-        pass
-
-    uid = CP.user_reg
-    CP.user_reg = None
-
-    return make_response(jsonify({"uid": uid}), 200)
 
 
 
 # TODO: I have no idea if all this still works
-@bp.route('/user_reg/assign_uid', methods=['POST'])
+@bp.route('/pair_uid/assign_uid', methods=['POST'])
 def assign_uid():
 
     data = json.loads(request.data)
@@ -155,32 +145,32 @@ def assign_uid():
     if request.method == 'POST':
 
         player = data['player']
-        uid = data['uid']
+        uid    = data['uid']
 
-    data = {'id'  : player,
-            'uid' : uid,
-           }
+        try:
 
-    try:
+            _uid        = UID.query.filter(UID.uid == uid).first()
+            _uid.player = Player.query.get(player)
+            print(_uid.player)
+            db_session.commit()
+            flash(f"UID [{uid}] assigned to {player}")
 
-        _uid        = UID.query.filter(UID.uid == uid).first()
-        _uid.player = Player.query.filter(Player.id == player).first()
+        except:
 
-    except:
+            db_session.rollback()
+            error = 'UID already assigned to player'
+            flash(error)
+            print(error)
 
-        error = 'UID already assigned to player'
-        flash(error)
-        print(error)
+        finally:
 
-    finally:
+            db_session.commit()
 
-        db_session.commit()
+            if error:
 
-        if error:
+                return make_response(jsonify({"message": error}), 200)
 
-            return render_template('user_reg.html', error=error)
-
-    return redirect(url_for('user_reg'))
+    return make_response(jsonify({"message": "OK"}), 200)
 
 
 
@@ -189,16 +179,8 @@ def assign_uid():
 def player_profile(callsign):
 
     user = Player.query.filter_by(callsign=callsign).first()
-    uid  = UID.query.filter_by(uid=user.uid) if user.uid else None
+    uid  = UID.query.filter_by(uid=user.uid).first() if user.uid else None
+
     db_session.commit()
 
     return render_template('player_profile.html', user=user, uid=uid)
-
-
-
-@bp.route('/logout')
-def logout():
-
-    logout_user()
-
-    return redirect(url_for('index.main_page'))

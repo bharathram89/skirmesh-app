@@ -2,6 +2,8 @@
 
 {% block content %}
 
+    <script src="../static/js/pair_uid.js"></script>
+
     <form>
 
     <select name="Players" id="players">
@@ -13,15 +15,6 @@
         </option>
         {% endfor %}
     </select>
-
-    <input class="button"
-           id="get_tag_button"
-           type="button"
-           name="action"
-           value="Get UID"
-           onclick="get_uid(this.value)"
-           >
-           </input>
 
     <h1 id="uidblock" value=""> </h1>
 

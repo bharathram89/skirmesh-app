@@ -368,3 +368,19 @@ def issue_command():
     db_session.commit()
 
     return make_response(jsonify({"message": "OK"}), 200)
+
+
+
+
+@bp.route('/pair_uid/get_uid', methods=['POST','GET'])
+def get_uid():
+
+    uid = CP.user_reg
+    CP.user_reg = None
+
+    if uid:
+
+        print(uid)
+        return make_response(jsonify({"uid": uid}), 200)
+
+    return make_response(jsonify({"message": "OK"}), 200)

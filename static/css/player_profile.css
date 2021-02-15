@@ -18,12 +18,14 @@ img.playerImage {
     max-width  : 25%;
 }
 
-.playerInfo {
+#player_name {
+    text-transform: capitalize;
+}
 
+.playerInfo {
     text-align     : left;
     vertical-align : top;
     font-size      : 120%;
-    text-transform : capitalize;
     margin         : 1em 0;
 }
 
