@@ -32,7 +32,7 @@ class CONTROL_POINT(XBeeDevice):
     CONFIGURE = 0x00
     REGISTER  = 0x01
     QUERY     = 0x02
-    USER_REG  = 0x03
+    PAIR_UID  = 0x03
     SET_TEAM  = 0x04
     CAPTURE   = 0x0A
     MEDIC     = 0x0E
@@ -70,7 +70,7 @@ class CONTROL_POINT(XBeeDevice):
                 BOMB_TIME : 'SET BOMB TIMER',
                 DIFF_TIME : 'SET BOMB DISARM TIME',
                 ARM_TIME  : 'SET BOMB ARM TIME',
-                USER_REG  : 'REGISTER PLAYERS',
+                PAIR_UID  : 'PAIR UID',
                 MED_TIME  : 'SET MEDIC TIME',
                 SET_TEAM  : 'SET TEAM',
                 CAP_PERC  : 'SET ASSIST %',
@@ -293,7 +293,7 @@ class CONTROL_POINT(XBeeDevice):
                     CONTROL_POINT.MEDIC     : self.__medic,
                     CONTROL_POINT.QUERY     : self.__query,
                     CONTROL_POINT.ND_STATUS : self.__status,
-                    CONTROL_POINT.USER_REG  : self.__user_reg}
+                    CONTROL_POINT.PAIR_UID  : self.__pair_uid}
 
         return msg_dict
 
@@ -560,7 +560,7 @@ class CONTROL_POINT(XBeeDevice):
         return cmd + state + times + uid
 
 
-    def __user_reg(self, sender, payload):
+    def __pair_uid(self, sender, payload):
 
         uid = payload[1:5].hex()
 

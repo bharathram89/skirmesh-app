@@ -2,18 +2,9 @@
 
 {% block content %}
 
-<!-- <script src="../static/js/node_admin.js"></script> -->
-
-
+<script src="../static/js/node_admin.js"></script>
 
 <body onload="update_cmd_args({{ cmd_args | safe }})">
-
-    <!-- <ul class="tab" id="main-nav">
-      <li onclick="show_table(event, 'game_admin')" id="defaultOpen"><a class="tablink">Game Admin</a></li>
-      <li onclick="show_table(event, 'node_table')"><a class="tablink">Node Table</a></li>
-    </ul> -->
-
-  <!-- <div id="game_admin" class="node_admin"> -->
 
     <form id="configuration_control"
           name="Member_Data"
@@ -126,48 +117,6 @@
     </form>
 
 
-      <!-- <div class="node_container">
-
-        {% for node in node_status %}
-
-        <div id="{{node.node | safe}}" class="node_block" >
-          <div id="{{node.node | safe}}_img" class="node_img_div"  draggable="true" width="70px" height="70px">
-            <img src="static/img/node.jpg", draggable="false" width="50px" height="50px">
-          </div>
-          <p>{{ node.node }}</p>
-        </div>
-
-        {% endfor %}
-
-      </div>
-
-      <div class="beacon-container node">
-
-          <defs>
-            <pattern id="img1" patternUnits="userSpaceOnUse" width="100" height="100">
-              <image href="static/img/node.jpg" x="0" y="0" width="100" height="100" />
-            </pattern>
-          </defs>
-
-        {% block SVG %}
-        {% endblock %}
-
-      </div>
-
-      <div class="node_cmds">
-
-        <p> Place Holder </p>
-
-      </div> -->
-
-
-  <!-- </div> -->
-
-
-
-
-  <!-- <div id="node_table" class="node_admin" style="display:'none'"> -->
-
     {% if cmd_dict %}
 
         <div class="table-wrapper">
@@ -206,11 +155,7 @@
 
     {% endif %}
 
-  <!-- </div> -->
-
 </body>
 
-
-<!-- <script> document.getElementById("defaultOpen").click(); </script> -->
 
 {% endblock %}

@@ -2,11 +2,14 @@
 
 {% block content %}
 
+    <link rel="stylesheet" type="text/css" href="../static/css/pair_uid.css" charset="utf-8" />
     <script src="../static/js/pair_uid.js"></script>
 
-    <form>
+    <form name="Pair_UID"
+          method="post"
+          action="{{ url_for('registration.assign_uid') }}">
 
-    <select name="Players" id="players">
+    <select name="player" id="player">
         {% for player in Players %}
         <option value={{  player['id']  }}>
             {{  player.lastname  }},
@@ -16,16 +19,14 @@
         {% endfor %}
     </select>
 
-    <h1 id="uidblock" value=""> </h1>
+    <input type="text" name="uid" value="" id="uidblock"/>
 
     <input class="button"
            id="assign_uid_button"
-           type="button"
+           type="submit"
            name="action"
-           value="Assign UID"
-           onclick="assign_uid(this.value)"
-           >
-           </input>
+           value="Assign UID">
+   </input>
 
 
    </form>

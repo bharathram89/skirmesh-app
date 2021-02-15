@@ -1,0 +1,10 @@
+input#uidblock {
+    font-family : 'special_eliteregular';
+    font-size   : 175%;
+    text-align  : center;
+    border      : none;
+}
+
+input#uidblock:hover {
+    color       : var(--button_color_hover);
+}

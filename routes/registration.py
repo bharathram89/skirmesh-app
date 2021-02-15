@@ -139,28 +139,25 @@ def pair_uid(uid=None):
 @bp.route('/pair_uid/assign_uid', methods=['POST'])
 def assign_uid():
 
-    data = json.loads(request.data)
     error = None
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form['action'] == 'Assign UID':
 
-        player = data['player']
-        uid    = data['uid']
+        player = int(request.form['player'])
+        uid    = request.form['uid']
 
         try:
 
             _uid        = UID.query.filter(UID.uid == uid).first()
             _uid.player = Player.query.get(player)
-            print(_uid.player)
             db_session.commit()
-            flash(f"UID [{uid}] assigned to {player}")
+            flash(f"UID [{uid}] assigned to {_uid.player.callsign}")
 
         except:
 
             db_session.rollback()
             error = 'UID already assigned to player'
             flash(error)
-            print(error)
 
         finally:
 
@@ -168,9 +165,9 @@ def assign_uid():
 
             if error:
 
-                return make_response(jsonify({"message": error}), 200)
+                return redirect(url_for('registration.pair_uid', error=error))
 
-    return make_response(jsonify({"message": "OK"}), 200)
+    return redirect(url_for('registration.pair_uid'))
 
 
 
