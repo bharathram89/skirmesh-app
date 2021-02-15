@@ -127,7 +127,7 @@ def pair_uid(uid=None):
     players = Player.query.order_by(Player.lastname.asc()).all()
     db_session.commit()
 
-    return render_template('pair_uid.html', Players=players)
+    return render_template('pair_uid.html', Players=players, error=request.args.get('error', None))
 
 
 # TODO: Make this a listener function and just pop the UID if it gets one
@@ -156,7 +156,7 @@ def assign_uid():
         except:
 
             db_session.rollback()
-            error = 'UID already assigned to player'
+            error = f'UID already assigned to {_uid.player.callsign}'
             flash(error)
 
         finally:
