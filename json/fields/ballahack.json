@@ -1,37 +1,27 @@
 [
-			{
-			"value": "ff0000",
-			"text":  "RED",
-			"color": "#ff0000"
-			},
-			{
-			"value": "0000ff",
-			"text":  "BLUE",
-			"color": "#0000ff"
-			},
-			{
-			"value": "ffff00",
-			"text":  "YELLOW",
-			"color": "#ffff00"
-			},
-			{
-			"value": "008000",
-			"text":  "GREEN",
-			"color": "#008000"
-			},
-			{
-			"value": "3333cc",
-			"text":  "PURPLE",
-			"color": "#3333cc"
-			},
-			{
-			"value": "00a0a0",
-			"text":  "REFEREE START",
-			"color": "#00A0A0"
-			},
-			{
-			"value": "008080",
-			"text":  "REFEREE STOP",
-			"color": "#008080"
-			}
+		{
+		"value": "ff0000",
+		"text":  "RED",
+		"color": "#ff0000"
+		},
+		{
+		"value": "0000ff",
+		"text":  "BLUE",
+		"color": "#0000ff"
+		},
+		{
+		"value": "ffff00",
+		"text":  "YELLOW",
+		"color": "#ffff00"
+		},
+		{
+		"value": "008000",
+		"text":  "GREEN",
+		"color": "#008000"
+		},
+		{
+		"value": "3333cc",
+		"text":  "PURPLE",
+		"color": "#3333cc"
+		}
 ]
