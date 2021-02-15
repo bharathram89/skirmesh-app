@@ -12,7 +12,7 @@ can be launched and validated.
 
 from flask import Flask, render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
-from flask_login import LoginManager
+from flask_login import LoginManager, logout_user
 
 import os, glob
 from datetime import datetime
@@ -60,6 +60,13 @@ def load_user(id):
 
     return user
 
+
+@application.route('/logout')
+def logout():
+
+    logout_user()
+
+    return redirect(url_for('index.main_page'))
 
 
 
