@@ -187,7 +187,7 @@
         {% for dat in plyr_score %}
         <tr class="row">
 
-                <td style="width:40%"> {{ dat.player or dat | safe }} </td>
+                <td style="width:40%"> {{ dat.player.callsign or dat | safe }} </td>
                 <td style="width:40%"> {{ plyr_score[dat] | safe }} </td>
 
         </tr>

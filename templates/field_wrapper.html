@@ -20,7 +20,7 @@
             {% for mbr in team_data[team] %}
             <tr class="row team{{team | safe}}">
 
-                <td class="roster_element"> {{ mbr.player.lastname if mbr.player else mbr.uid | safe }} </td>
+                <td class="roster_element"> {{ mbr.player.callsign if mbr.player else mbr.uid | safe }} </td>
 
             </tr>
             {% endfor %}

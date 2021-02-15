@@ -271,7 +271,6 @@ table {
   background-color: var(--table_bg)
   padding: 1em;
   text-align: center;
-  text-transform: uppercase;
 }
 .row:hover {
     color: var(--WHITE);
