@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import (UID, Field, Score, Game, NodeStatus,
+from models.db_models import (UID, Team, Field, Score, Game, NodeStatus,
                               get_time_capture_complete, get_is_capture_closed)
 
 from flask import render_template, flash, jsonify, session, request, make_response
@@ -60,6 +60,12 @@ def node_admin():
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
     field_cmd_args = json.load(open("json/fields/" + field + ".json"))
     CMD_ARGS['REGISTER'] = CMD_ARGS['SET_LOCATION'] = CMD_ARGS['SET TEAM'] = field_cmd_args
+
+    _avail_teams_ = Team.query.all()
+    for _team_ in [c['value'] for c in field_cmd_args]:
+
+        if _team_ not in [t.team for t in _avail_teams_]:
+            db_session.add(Team(**{'team':_team_}))
 
     kwargs = {
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
