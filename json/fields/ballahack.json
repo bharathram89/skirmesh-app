@@ -1,36 +1,36 @@
 [
 			{
-			"value": "0x01",
+			"value": "ff0000",
 			"text":  "RED",
-			"color": "#FF0000"
+			"color": "#ff0000"
 			},
 			{
-			"value": "0x02",
+			"value": "0000ff",
 			"text":  "BLUE",
-			"color": "#0000FF"
+			"color": "#0000ff"
 			},
 			{
-			"value": "0x03",
+			"value": "ffff00",
 			"text":  "YELLOW",
-			"color": "#FFFF00"
+			"color": "#ffff00"
 			},
 			{
-			"value": "0x04",
+			"value": "008000",
 			"text":  "GREEN",
 			"color": "#008000"
 			},
 			{
-			"value": "0x05",
+			"value": "3333cc",
 			"text":  "PURPLE",
-			"color": "#3333CC"
+			"color": "#3333cc"
 			},
 			{
-			"value": "0xC8",
+			"value": "00a0a0",
 			"text":  "REFEREE START",
-			"color": "#008080"
+			"color": "#00A0A0"
 			},
 			{
-			"value": "0xC9",
+			"value": "008080",
 			"text":  "REFEREE STOP",
 			"color": "#008080"
 			}

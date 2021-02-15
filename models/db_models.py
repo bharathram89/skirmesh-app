@@ -33,7 +33,7 @@ class UID(Base):
     timestamp  = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     uid        = Column(String, unique=True)
-    team       = Column(Integer, ForeignKey('team.team'), nullable=False)
+    team       = Column(String, ForeignKey('team.team'), nullable=False)
     field      = Column(String, ForeignKey('field.field'), nullable=False)
 
     scores     = relationship('Score', backref='scores_uid')
@@ -55,7 +55,7 @@ class Team(Base):
     id        = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-    team      = Column(Integer, unique=True, nullable=False)
+    team      = Column(String, unique=True, nullable=False)
 
     scores    = relationship('Score', backref='scores_team')
     uids      = relationship('UID', backref='uids_team')
@@ -64,7 +64,7 @@ class Team(Base):
 
     def __repr__(self):
 
-        return str(self.team)
+        return self.team
 
 
 
@@ -110,7 +110,7 @@ class Score(Base):
     uid       = Column(String, ForeignKey('uid.uid'))
     field     = Column(String, ForeignKey('field.field'), nullable=False)
     node      = Column(String, ForeignKey('node_status.node'), nullable=False)
-    team      = Column(Integer, ForeignKey('team.team'), nullable=False)
+    team      = Column(String, ForeignKey('team.team'), nullable=False)
 
     action    = Column(String)
     points    = Column(Integer)
@@ -160,7 +160,7 @@ class NodeStatus(Base):
     cap_asst  = Column(Integer, default=5)
     # Capture status attributes
     uid       = Column(String, ForeignKey('uid.uid'))
-    team      = Column(Integer, ForeignKey('team.team'))
+    team      = Column(String, ForeignKey('team.team'))
     stable    = Column(Integer, default=1)
 
     scores    = relationship('Score', backref='node_status_scores')

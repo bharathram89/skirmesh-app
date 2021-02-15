@@ -20,7 +20,7 @@ def update():
         to_update = dict()
 
         team_data = json.load(open("json/fields/" + field + ".json"))
-        team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
+        team_cmap = {c['value']:c['color'] for c in team_data}
 
         _field = Field.query.filter(Field.field == field).first()
         nodes = _field.nodes
@@ -65,8 +65,8 @@ def field_page(field):
     session['field'] = field
 
     team_data = json.load(open("json/fields/" + field + ".json"))
-    team_cmap = {int(c['value'], 16):c['color'] for c in team_data}
-    team_name = {int(n['value'], 16):n['text'] for n in team_data}
+    team_cmap = {c['value']:c['color'] for c in team_data}
+    team_name = {n['value']:n['text'] for n in team_data}
 
     _field = Field.query.filter(Field.field == field).first()
 

@@ -118,7 +118,17 @@ def issue_command():
 
         elif button == 'Issue Command':
 
-            pkt[2]  = int(args, 16)
+            try:
+                pkt[2:] = bytearray.fromhex(args)  #Grab the team
+                print('tried', pkt)
+
+            # Catch the case where we pass a single byte-like object for pretty
+            # much everything  besides the team stuff and it can't get parsed
+            # into a bytearray
+            except ValueError:
+                pkt[2] = int(args, 16)              #Pull int arguments
+                print('failed', pkt)
+
             _config = int(config, 16)
 
             # If just setting the configuration for one node
@@ -134,7 +144,7 @@ def issue_command():
 
                         if _config == CP.REGISTER:
 
-                            node.team = pkt[2]
+                            node.team = pkt[2:].hex()
 
                         if _config == CP.CAPTURE:
 
@@ -152,8 +162,8 @@ def issue_command():
                         node.config    = _config
 
                         if _config == CP.REGISTER:
-                            node.team = pkt[2]
-                            data['team'] = pkt[2]
+                            node.team = pkt[2:].hex()
+                            data['team'] = pkt[2:].hex()
 
                         if _config == CP.CAPTURE:
                             node.team = None
@@ -214,7 +224,7 @@ def issue_command():
 
                     for node in nodes:
 
-                        node.team      = pkt[2]
+                        node.team      = pkt[2:].hex()
                         node.stable    = 1
                         node.cap_time  = 6
 
@@ -222,18 +232,18 @@ def issue_command():
                         db_session.add(Score(**data))
 
                     CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
-                    CP.send_data_broadcast(bytearray([CP.CAPTURE, pkt[2]]))
+                    CP.send_data_broadcast(bytearray([CP.CAPTURE]) + pkt[2:])
                     CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 6]))
 
                 else:
 
-                    data = {'node':dest, 'team':pkt[2], 'field':field, 'action':'CAPTURE'}
+                    data = {'node':dest, 'team':pkt[2:].hex(), 'field':field, 'action':'CAPTURE'}
                     db_session.add(Score(**data))
 
-                    data = {'node':dest,'team':pkt[2]}
+                    data = {'node':dest,'team':pkt[2:].hex()}
                     node = NodeStatus.query.filter(NodeStatus.node == dest).first()
                     if node:
-                        node.team      = pkt[2]
+                        node.team      = pkt[2:].hex()
                         node.stable    = 1
                         node.cap_time  = 6
                     else: db_session.add(NodeStatus(**data))
@@ -241,7 +251,7 @@ def issue_command():
                     _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(dest))
 
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 0]))
-                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE, pkt[2]]))
+                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE]) + pkt[2:])
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 6]))
 
                 db_session.commit()

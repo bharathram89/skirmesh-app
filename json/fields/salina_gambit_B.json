@@ -1,21 +1,21 @@
 [
 			{
-			"value": "0x03",
+			"value": "ffff00",
 			"text":  "CLEARSKY",
-			"color": "#FFFF00"
+			"color": "#ffff00"
 			},
 			{
-			"value": "0x04",
+			"value": "008000",
 			"text":  "SALINA",
 			"color": "#008000"
 			},
 			{
-			"value": "0xC8",
+			"value": "00a0a0",
 			"text":  "REFEREE START",
-			"color": "#008080"
+			"color": "#00a0a0"
 			},
 			{
-			"value": "0xC9",
+			"value": "008080",
 			"text":  "REFEREE STOP",
 			"color": "#008080"
 			}

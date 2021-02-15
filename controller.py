@@ -300,8 +300,8 @@ class CONTROL_POINT(XBeeDevice):
 
     def __register(self, sender, payload):
 
-        uid = payload[2:6].hex()
-        team = payload[1]
+        uid = payload[4:8].hex()
+        team = payload[1:4].hex()
 
         print(f'Registering {uid} to team {team}')
 
@@ -444,7 +444,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 # In all cases, return CAPTURE and TEAM so the node can
                 # shift status appropriately
-                return bytearray([CONTROL_POINT.CAPTURE, team])
+                return bytearray([CONTROL_POINT.CAPTURE]) + bytearray.fromhex(team)
 
             # If you made it here, the UID is not registered to a team
             print(f'{uid} is not registered to a team')
@@ -533,8 +533,8 @@ class CONTROL_POINT(XBeeDevice):
         team  = _uid.team
         self.DB.commit()
 
-        if team: pkt = bytearray([CONTROL_POINT.QUERY, team, alive])
-        else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00])
+        if team: pkt = bytearray([CONTROL_POINT.QUERY]) + bytearray.fromhex(team) + bytearray([alive])
+        else: pkt = bytearray([CONTROL_POINT.QUERY, 0x00, 0x00, 0x00, 0x00])
 
         return pkt
 
@@ -548,7 +548,7 @@ class CONTROL_POINT(XBeeDevice):
 
         cmd    = bytearray([CONTROL_POINT.ND_STATUS])
 
-        state  = bytearray([node.config, node.team, node.stable])
+        state  = bytearray([node.config]) + bytearray.fromhex(node.team) + bytearray([node.stable])
         times  = bytearray([node.cap_time,
                             node.cap_asst,
                             node.bomb_time,
@@ -571,7 +571,7 @@ class CONTROL_POINT(XBeeDevice):
     # TODO this is not currently in use...save for future possibilities
     def uid_handler(self, uid):
 
-        print(f'NFC Reader found: {bytearray(uid).hex(): <20}')
+        print(f'NFC Reader found: {uid.hex(): <20}')
 
         if self.team_register and self.configuration == CONTROL_POINT.REGISTER:
 
