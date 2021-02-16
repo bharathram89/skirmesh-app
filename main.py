@@ -42,8 +42,9 @@ application.register_blueprint(registration.bp)
 application.register_blueprint(leaderboard.bp)
 application.register_blueprint(comms.bp)
 
-from routes import admin
+from routes import admin, pair_uid
 application.register_blueprint(admin.bp)
+application.register_blueprint(pair_uid.bp)
 
 
 @application.teardown_appcontext
