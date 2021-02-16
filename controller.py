@@ -370,9 +370,9 @@ class CONTROL_POINT(XBeeDevice):
 
         if len(payload[1:5]) == 4:
 
-            uid = payload[1:5].hex()
+            uid  = payload[1:5].hex()
             _uid = PG.UID.query.filter(PG.UID.uid == uid).first()
-            team = _uid.team
+            team = _uid.team if _uid else None
             self.DB.commit()
 
             if team:
