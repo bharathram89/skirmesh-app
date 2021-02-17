@@ -32,17 +32,7 @@ def leaderboard():
 
     _field = Field.query.filter(Field.field == field).first()
 
-    team_times, team_score = {}, {}
-    for score in _field.scores:
-
-        team_times.setdefault(score.team, []).append(score.time_held or 0)
-        team_score.setdefault(score.team, []).append(score.points or 0)
-
     plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids}
-
-    for team in team_times:
-        team_times[team] = sum(team_times[team])
-        team_score[team] = sum(team_score[team])
 
     nd_times = {}
     for node in _field.nodes:
@@ -62,8 +52,18 @@ def leaderboard():
             held  = int((datetime.now() - begin).total_seconds())
 
             nd_times[node][node.team] += held
-            team_times[node.team]     += held
 
+    team_times, team_score = {}, {}
+    for node in nd_times:
+
+        for team in nd_times[node]:
+
+            team_times.setdefault(team, []).append(nd_times[node][team])
+            team_score.setdefault(team, []).append(nd_times[node][team]//node.point_scale)
+
+    for team in team_times:
+        team_times[team] = sum(team_times[team])
+        team_score[team] = sum(team_score[team])
 
     kwargs = {'team_score' : team_score,
               'plyr_score' : plyr_score,
