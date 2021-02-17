@@ -21,7 +21,8 @@ baud   = 115200
 CP = CONTROL_POINT(serial, baud, database=db_session)
 
 CMD_ARGS = {'TIME DATA'   : json.load(open("json/timer_values.json")),
-            'SET ASSIST %': json.load(open("json/percent_values.json"))}
+            'SET ASSIST %': json.load(open("json/percent_values.json")),
+            'SCALE DATA'  : json.load(open("json/time_to_points.json"))}
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
@@ -59,7 +60,7 @@ def node_admin():
     # Pull specific arguments for the field
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
     field_cmd_args = json.load(open("json/fields/" + field + ".json"))
-    CMD_ARGS['REGISTER'] = CMD_ARGS['SET_LOCATION'] = CMD_ARGS['SET TEAM'] = field_cmd_args
+    CMD_ARGS['REGISTER'] = CMD_ARGS['SET TEAM'] = field_cmd_args
 
     _avail_teams_ = Team.query.all()
     for _team_ in [c['value'] for c in field_cmd_args]:
@@ -180,7 +181,7 @@ def issue_command():
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
-            if CP.CAPT_TIME <= _config <= CP.ARM_TIME:
+            if CP.CAPT_TIME <= _config <= CP.SCALE_PTS:
 
                 pkt.pop(0)
 
@@ -189,17 +190,15 @@ def issue_command():
                            CP.MED_TIME :'med_time',
                            CP.CAP_PERC :'cap_asst',
                            CP.DIFF_TIME:'diff_time',
-                           CP.ARM_TIME :'arm_time'}
+                           CP.ARM_TIME :'arm_time',
+                           CP.SCALE_PTS:'point_scale'}
 
                 val, arg = _config, int(args, 16)
 
                 if dest == BROADCAST:
 
                     nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
-
-                    for node in nodes:
-
-                        setattr(node, val_map[val], arg)
+                    for node in nodes: setattr(node, val_map[val], arg)
 
                 else:
 
@@ -213,12 +212,11 @@ def issue_command():
 
             # Set medic times globally, because all nodes are handled the
             # same at the controller level
-            if _config == CP.MED_TIME:
-
-                print(f"Updating MEDIC TIME to {pkt[1]*10} seconds")
+            if _config == CP.MED_TIME or _config == CP.SCALE_PTS:
 
                 # Return here because nothing gets sent to the node for this
                 return make_response(jsonify({"message": "OK"}), 200)
+
 
             # Blast a few necessary commands to push the node into a
             # specicic capture configuration

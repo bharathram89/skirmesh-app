@@ -55,6 +55,8 @@ class CONTROL_POINT(XBeeDevice):
     ARM_TIME  = 0x8F
     MED_TIME  = 0x8E
 
+    SCALE_PTS = 0x9a
+
 
     # █▀▄▀█ █▀▀ █▄░█ █░█   █▀ █▀▀ ▀█▀ ▀█▀ █▀▀ █▀█ █▀
     # █░▀░█ ██▄ █░▀█ █▄█   ▄█ ██▄ ░█░ ░█░ ██▄ █▀▄ ▄█
@@ -74,6 +76,7 @@ class CONTROL_POINT(XBeeDevice):
                 MED_TIME  : 'SET MEDIC TIME',
                 SET_TEAM  : 'SET TEAM',
                 CAP_PERC  : 'SET ASSIST %',
+                SCALE_PTS : 'SET POINT SCALE',
                 }
 
 
@@ -320,7 +323,7 @@ class CONTROL_POINT(XBeeDevice):
 
         # If the player is not "alive", reset his alive status
         if is_uid.medic: is_uid.medic.alive = 1
-        else:            is_uid.medic = PG.Medic(uid=is_uid.uid, alive=1)
+        else:            is_uid.medic = PG.Medic(uid=is_uid.uid)
 
         self.DB.commit()
 
