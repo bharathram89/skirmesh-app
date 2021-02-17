@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -96,7 +96,7 @@ class Medic(Base):
     timestamp = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     uid       = Column(String, ForeignKey('uid.uid'), unique=True, nullable=False)
-    alive     = Column(Integer, nullable=False)
+    alive     = Column(Boolean, default=1, nullable=False)
 
 
 
@@ -162,6 +162,9 @@ class NodeStatus(Base):
     uid       = Column(String, ForeignKey('uid.uid'))
     team      = Column(String, ForeignKey('team.team'))
     stable    = Column(Integer, default=1)
+    # Point scaling
+    point_scale = Column(Integer, default=60)
+    allow_medic = Column(Boolean, default=1)
 
     scores    = relationship('Score', backref='node_status_scores')
 
