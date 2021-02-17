@@ -81,7 +81,7 @@ function update_cmd_args(cmd_arg_list) {
     var new_options = "";
 
     // Look for the argument in the index unless it's a timer, then just match
-    if ((cmd_txt in cmd_arg_list) || (cmd_txt.indexOf('TIME') > -1)){
+    if ((cmd_txt in cmd_arg_list) || (cmd_txt.indexOf('TIME') > -1) || (cmd_txt.indexOf('SCALE') > -1) ){
 
         // Set all time indexes to the timer list
         if (cmd_txt.indexOf('TIME') > -1) {
@@ -169,27 +169,27 @@ function form_submit(button) {
 }
 
 
-
-
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
-
-function show_table(event, id_name) {
-
-    var i, tabcontent, tablinks;
-
-    tabcontent = document.getElementsByClassName("node_admin");
-
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-
-    tablinks = document.getElementsByClassName("tablink");
-
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className = "tablink";
-    }
-
-    document.getElementById(id_name).style.display = "";
-    event.currentTarget.className = "tablink active";
-}
+//
+//
+// // Get the element with id="defaultOpen" and click on it
+// document.getElementById("defaultOpen").click();
+//
+// function show_table(event, id_name) {
+//
+//     var i, tabcontent, tablinks;
+//
+//     tabcontent = document.getElementsByClassName("node_admin");
+//
+//     for (i = 0; i < tabcontent.length; i++) {
+//       tabcontent[i].style.display = "none";
+//     }
+//
+//     tablinks = document.getElementsByClassName("tablink");
+//
+//     for (i = 0; i < tablinks.length; i++) {
+//       tablinks[i].className = tablinks[i].className = "tablink";
+//     }
+//
+//     document.getElementById(id_name).style.display = "";
+//     event.currentTarget.className = "tablink active";
+// }

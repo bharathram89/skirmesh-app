@@ -33,14 +33,20 @@
                   <select name="conf" id="conf" placeholder="Configuration" onchange="update_cmd_args({{ cmd_args | safe }})">
                       {% if cmd_dict %}
 
-                      {% for key in cmd_dict %}
-                          {% if cmd_dict[key] == 'CONFIGURE' %}
-                          {% else %}
-                            <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
-                          {% endif %}
-                      {% endfor %}
+                          {% for key in cmd_dict %}
 
-                      <option value="FF" id="set_loc" style="display:none">SET LOCATION</option>
+                              {% if cmd_dict[key] == 'CONFIGURE' %}
+                              {% else %}
+
+                                {% if '%02X' % key == "FF" %}
+                                    <option value="{{ '%02X' % key }}" id="set_loc" style="display:none">SET LOCATION</option>
+                                {% else %}
+                                    <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
+                                {% endif %}
+
+                              {% endif %}
+
+                          {% endfor %}
 
                       {% else %}
 
@@ -119,9 +125,9 @@
 
     {% if cmd_dict %}
 
-        <div class="table-wrapper">
+        <div class="table-wrapper" style="font-size: 80%">
 
-          <table id="table" style"font-size: 80%">
+          <table id="table">
 
             <thead>
               <tr>
@@ -140,11 +146,11 @@
                     <td> {{ node.location                   | safe }} </td>
                     <td> {{ cmd_dict[node.config]           | safe }} </td>
                     <td> {{ print_time(node.cap_time * 10)  | safe }} </td>
-                    <td> {{ print_time(node.med_time * 10)  | safe }} </td>
-                    <td> {{ print_time(node.bomb_time * 10) | safe }} | {{ print_time(node.arm_time * 10) | safe }} | {{ print_time(node.diff_time * 10) | safe }} </td>
                     <td> {{ print_perc(node.cap_asst)       | safe }} </td>
-                    <td> {{ (node.point_scale/60)           | safe }} x </td>
+                    <td> {{ (60/node.point_scale)           | safe }} x </td>
+                    <td> {{ print_time(node.med_time * 10)  | safe }} </td>
                     <td> {{ node.allow_medic                | safe }} </td>
+                    <td> {{ print_time(node.bomb_time * 10) | safe }} | {{ print_time(node.arm_time * 10) | safe }} | {{ print_time(node.diff_time * 10) | safe }} </td>
 
                 </tr>
                 {% endfor %}

@@ -26,7 +26,6 @@ CMD_ARGS = {'TIME DATA'   : json.load(open("json/timer_values.json")),
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
-SET_LOCATION = 0xFF
 BROADCAST    = "FFFF"
 
 
@@ -71,9 +70,10 @@ def node_admin():
     kwargs = {
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
-             'node_cols'   : ['node id','location','config',
-                              'Capture\nTime','Medic\nTime','Bomb\nFUS  |  ARM  |  DIS',
-                              'Capture\nAssist %', 'Point\nScale', 'Medic'],
+             'node_cols'   : ['node id', 'location', 'config',
+                              'Capture\nTime', 'Capture\nAssist %', 'Point\nScale',
+                              'Medic\nTime', 'Medic',
+                              'Bomb\nFUS  |  ARM  |  DIS'],
              'node_status' : nodes,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
@@ -106,7 +106,7 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
-        if int(config, 16) == SET_LOCATION and dest != BROADCAST:
+        if int(config, 16) == CP.SET_LOCATION and dest != BROADCAST:
 
             print(f"Setting {dest} Location to: {data['location']}")
 
