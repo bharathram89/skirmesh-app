@@ -121,7 +121,7 @@
 
         <div class="table-wrapper">
 
-          <table id="table">
+          <table id="table" style"font-size: 80%">
 
             <thead>
               <tr>
@@ -143,6 +143,8 @@
                     <td> {{ print_time(node.med_time * 10)  | safe }} </td>
                     <td> {{ print_time(node.bomb_time * 10) | safe }} | {{ print_time(node.arm_time * 10) | safe }} | {{ print_time(node.diff_time * 10) | safe }} </td>
                     <td> {{ print_perc(node.cap_asst)       | safe }} </td>
+                    <td> {{ node.point_scale/60.            | safe }} x </td>
+                    <td> {{ node.allow_medic                | safe }} </td>
 
                 </tr>
                 {% endfor %}

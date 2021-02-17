@@ -73,7 +73,7 @@ def node_admin():
              'cmd_args'    : CMD_ARGS,
              'node_cols'   : ['node id','location','config',
                               'Capture\nTime','Medic\nTime','Bomb\nFUS  |  ARM  |  DIS',
-                              'Capture\nAssist %'],
+                              'Capture\nAssist %', 'Point\nScale', 'Medic'],
              'node_status' : nodes,
              'print_time'  : print_time,
              'print_perc'  : print_perc,
