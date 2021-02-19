@@ -400,6 +400,7 @@ class CONTROL_POINT(XBeeDevice):
 
                         begin = PG.get_time_capture_complete(node)
 
+
                         # ONLY figure out the score if the score has not already
                         # been figured out (i.e. the capture was closed out)
                         if begin and not PG.get_is_capture_closed(node):
@@ -427,6 +428,11 @@ class CONTROL_POINT(XBeeDevice):
                 # ONLY add score data if the node IS NOT STABLE - can only be an ASSIST if cap_status is
                 # known
                 if data['action'] == 'CAPTURE' or (data['action'] == 'ASSIST' and not cap_status.stable):
+
+                    if _uid.player:
+
+                        if data['action'] == 'CAPTURE': _uid.player.captures += 1
+                        if data['action'] == 'ASSIST': _uid.player.assists += 1
 
                     self.DB.add(PG.Score(**data))
                     self.DB.commit()
@@ -474,7 +480,7 @@ class CONTROL_POINT(XBeeDevice):
         node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
 
         if not node.allow_medic: return None
-        
+
         DEAD  = 0x00
         ALIVE = 0x01
         ALL   = 0x05
