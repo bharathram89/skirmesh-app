@@ -6,8 +6,6 @@ from flask import render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
 from flask import Blueprint
 
-from flask_login import current_user, login_user, login_required
-
 from datetime import datetime
 import json
 
@@ -65,16 +63,3 @@ def assign_uid():
                 return redirect(url_for('pair_uid.pair_uid', error=error))
 
     return redirect(url_for('pair_uid.pair_uid'))
-
-
-
-@bp.route('/player_profile/<callsign>')
-@login_required
-def player_profile(callsign):
-
-    user = Player.query.filter_by(callsign=callsign).first()
-    uid  = UID.query.filter_by(uid=user.uid).first() if user.uid else None
-
-    db_session.commit()
-
-    return render_template('player_profile.html', user=user, uid=uid)

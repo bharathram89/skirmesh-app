@@ -118,3 +118,15 @@ def register():
                 return redirect(url_for('index.main_page'))
 
     return render_template('register.html', form=form, error=error)
+
+
+@bp.route('/player_profile/<callsign>')
+@login_required
+def player_profile(callsign):
+
+    user = Player.query.filter_by(callsign=callsign).first()
+    uid  = UID.query.filter_by(uid=user.uid).first() if user.uid else None
+
+    db_session.commit()
+
+    return render_template('player_profile.html', user=user, uid=uid)
