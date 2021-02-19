@@ -20,9 +20,13 @@
     Assigned to operations @ {{ uid.field or '_ _ _ _ _'}}. <br/>
     <br/>
     Objectives held by team: <br/>
-    {% for node in uid.nodes %}
-    {{ node.location or node.node }} <br/>
-    {% endfor %} <br/>
+    
+    {% if team %}
+        {% for node in team.nodes %}
+        {{ node.location or node.node }} <br/>
+        {% endfor %} <br/>
+    {% endif %}
+
     {{ 'Discharged from' if uid.medic.alive else 'Checked into'}} the infirmary on {{ uid.medic.timestamp.strftime(' %d %b %Y @ %H%M hours') }}. <br/>
     You are {{ 'FFD' if uid.medic.alive else 'NPQ' }}.
 </p>

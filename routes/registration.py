@@ -126,7 +126,7 @@ def player_profile(callsign):
 
     user = Player.query.filter_by(callsign=callsign).first()
     uid  = UID.query.filter_by(uid=user.uid).first() if user.uid else None
-
+    team = Team.query.filter_by(team=uid.team).first() if user.team else None
     db_session.commit()
 
-    return render_template('player_profile.html', user=user, uid=uid)
+    return render_template('player_profile.html', user=user, uid=uid, team=team)
