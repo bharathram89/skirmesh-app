@@ -185,11 +185,10 @@ class Player(UserMixin, Base):
     email          = Column(String, nullable=False)
     password_hash  = Column(String, nullable=False)
     # Point stuff
-    captures       = Column(Integer, nullable=True)
-    assists        = Column(Integer, nullable=True)
+    captures       = Column(Integer, nullable=True, default=0)
+    assists        = Column(Integer, nullable=True, default=0)
 
     uid            = Column(String, ForeignKey('uid.uid'), unique=True, nullable=True)
-
 
 
     def set_password(self, password):
@@ -199,6 +198,7 @@ class Player(UserMixin, Base):
     def check_password(self, password):
 
         return check_password_hash(self.password_hash, password)
+
 
 
 def get_last_captor(node):
