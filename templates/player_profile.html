@@ -28,8 +28,8 @@
 </p>
 {% endif %}
 
-{% set cap = user.captures or 10 %}
-{% set ass = user.assists or 5 %}
+{% set cap = user.captures or 0 %}
+{% set ass = user.assists or 0 %}
 {% set pts = (cap * 2) + ass %}
 
 {% set rad = 50 %}
@@ -44,7 +44,7 @@
 <div class="playerStats">
 
     <p style="margin: 1em 0 0 0">Battlefield contributions:</p>
-    
+
   <table id="table">
 
     <thead>
