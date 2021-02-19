@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import UID, Field, Player
+from models.db_models import UID, Field, Player, Team
 from models.forms import RegisterAccountForm, LoginForm
 
 from flask import render_template, flash, jsonify, session
