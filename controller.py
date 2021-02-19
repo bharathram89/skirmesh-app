@@ -473,6 +473,8 @@ class CONTROL_POINT(XBeeDevice):
         medic = _uid.medic
         node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
 
+        if not node.allow_medic: return None
+        
         DEAD  = 0x00
         ALIVE = 0x01
         ALL   = 0x05
