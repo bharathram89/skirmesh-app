@@ -30,14 +30,14 @@
 
 {% set cap = user.captures or 0 %}
 {% set ass = user.assists or 0 %}
-{% set pts = (cap * 2) + ass %}
+{% set pts = ((cap * 2) + ass) or 1 %}
 
 {% set rad = 50 %}
 {% set circ = rad * 2 * 3.14159 %}
 
 {% set perc_cap = cap*2/pts %}
 {% set perc_ass = ass/pts %}
-{% set perc_pts = pts / 1 %}
+{% set perc_pts = pts  %}
 
 {% set stroke_w = rad / 4 %}
 
