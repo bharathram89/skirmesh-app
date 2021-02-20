@@ -23,7 +23,7 @@
                   <select name="dest" id="dest" placeholder="Destination Node" onchange="update_cmd_opts()">
                       <option value="FFFF">BROADCAST</option>
                       {% for node in node_status %}
-                      <option value="{{ node.node }}">{{ node.location if node.location else node.node }}</option>
+                      <option value="{{ node.node }}">{{ node.location if node.location else node.node[8:] }}</option>
                       {% endfor %}
                   </select>
               </div>
