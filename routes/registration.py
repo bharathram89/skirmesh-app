@@ -81,10 +81,17 @@ def register():
 
             if current_user.is_authenticated:
 
-                if user.image and user.image != form.image.data:
+                if user.image:
 
                     user.image.data     = form.image.data.read()
                     user.image.mimetype = form.image.data.content_type
+
+                else:
+
+                    image = Images(data     = form.image.data.read(),
+                                   mimetype = form.image.data.content_type)
+
+                    user.image = image
 
             else:
 
