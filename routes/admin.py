@@ -32,7 +32,8 @@ BROADCAST    = "FFFF"
 @bp.route('/node_admin')
 def node_admin():
 
-    field = session.get('field', None)
+
+    field = session.get('field', CP.field)
 
     if not field:
 
@@ -47,10 +48,9 @@ def node_admin():
     # Use this to update the field status and ensure nodes are on the
     # right field, but I don't want to do it all the time...need a better way
     if CP.field != field:
-        for node in nodes:
-            node.field = field
 
-    CP.field = field
+        for node in nodes: node.field = field
+        CP.field = field
 
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
@@ -91,7 +91,7 @@ def node_admin():
 def issue_command():
 
     data = json.loads(request.data)
-    field = session.get('field')
+    field = session.get('field', CP.field)
 
     if request.method == 'POST':
 
