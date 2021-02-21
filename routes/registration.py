@@ -1,8 +1,8 @@
 from database import db_session
-from models.db_models import UID, Field, Player, Team
+from models.db_models import UID, Field, Player, Team, Images
 from models.forms import RegisterAccountForm, LoginForm
 
-from flask import render_template, flash, jsonify, session
+from flask import render_template, flash, jsonify, session, Response
 from flask import request, redirect, url_for, make_response
 from flask import Blueprint
 
@@ -14,41 +14,6 @@ import json
 
 
 bp = Blueprint('registration', __name__, url_prefix='')
-
-
-@bp.route('/registration', methods=['POST','GET'])
-def registration():
-
-    form = RegisterAccountForm(request.form)
-
-    if request.method == 'POST' and form.validate():
-
-        data = {'username':form.username.data,
-                'email'   :form.email.data,
-                'password':form.password.data,
-               }
-
-        try:
-
-            users = Player(**data)
-            db_session.add(users)
-            db_session.commit()
-
-            flash("Account Successfully Created")
-            return redirect(url_for('main_page'))
-
-        except Exception as E:
-
-            error = 'That account already exists'
-            flash(error)
-
-        finally:
-
-            db_session.commit()
-
-            return render_template('registration.html', form=form, error=error)
-
-    return render_template('registration.html', form=form)
 
 
 
@@ -89,14 +54,24 @@ def register():
     error = None
     form = RegisterAccountForm()
 
-    if request.method == "POST" and form.validate_on_submit():
+    if form.validate_on_submit():
 
-        user = Player(callsign=form.callsign.data,
-                      email=form.email.data,
-                      firstname=form.firstname.data,
-                      lastname=form.lastname.data)
+        user = Player(callsign  = form.callsign.data,
+                      email     = form.email.data,
+                      firstname = form.firstname.data,
+                      lastname  = form.lastname.data)
 
         user.set_password(form.password.data)
+
+        print(form.image.data.content_type)
+
+        if form.image:
+
+            image = Images(data     = form.image.data.read(),
+                           mimetype = form.image.data.content_type)
+
+            user.image = image
+
 
         try:
 
@@ -105,7 +80,7 @@ def register():
 
         except:
 
-            error = 'Oops! You seem to have matching information in our database...'
+            error = 'Oops! Your entry matched information in our database...'
             print(error)
             flash(error)
 
@@ -118,6 +93,16 @@ def register():
                 return redirect(url_for('index.main_page'))
 
     return render_template('register.html', form=form, error=error)
+
+
+
+@bp.route('/player_image/<id>')
+def serve_image(id):
+
+    image = Images.query.get(id)
+
+    return Response(image.data, mimetype=image.mimetype)
+
 
 
 @bp.route('/player_profile/<callsign>')
