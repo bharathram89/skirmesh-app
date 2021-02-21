@@ -189,6 +189,8 @@ class Player(UserMixin, db.Model):
     id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
     timestamp      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
+    image          = db.relationship('Images', backref='player_image', uselist=False)
+
     firstname      = db.Column(db.String, nullable=False)
     lastname       = db.Column(db.String, nullable=False)
     callsign       = db.Column(db.String, nullable=False, unique=True)
@@ -210,6 +212,22 @@ class Player(UserMixin, db.Model):
     def check_password(self, password):
 
         return check_password_hash(self.password_hash, password)
+
+
+
+class Images(db.Model):
+
+    __tablename__ = 'images'
+
+    id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    timestamp      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+    player         = db.Column(db.String, db.ForeignKey('player.callsign'), nullable=False)
+
+    data           = db.Column(db.LargeBinary, nullable=False)
+    mimetype       = db.Column(db.String, nullable=False)
+
+
 
 
 if __name__ == "__main__":
