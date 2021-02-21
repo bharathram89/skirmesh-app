@@ -87,7 +87,31 @@ class UpdateAccountForm(FlaskForm):
     image     = FileField('Upload a cool image!',
                           validators=[FileAllowed(['jpg','png','jpeg','gif'], 'Image only!')])
 
-    submit    = SubmitField('Register')
+    submit    = SubmitField('Update')
+
+
+
+class UpdatePasswordForm(FlaskForm):
+
+    password  = PasswordField('',
+                              [validators.DataRequired(), validators.Length(min=6)],
+                              render_kw={"placeholder": "password (at least 6 characters)", "autocomplete":"off"})
+
+    confirm   = PasswordField('',
+                              [validators.EqualTo('password', message='Passwords must match')],
+                              render_kw={"placeholder": "Confirm your password", "autocomplete":"off"})
+
+    submit    = SubmitField('Update')
+
+
+
+class UpdateCallsignForm(FlaskForm):
+
+    callsign  = TextField('',
+                          [validators.DataRequired(), validators.Length(min=1, max=20)],
+                          render_kw={"placeholder": "Callsign (Please keep this G rated)", "autocomplete":"on"})
+
+    submit    = SubmitField('Update')
 
 
 

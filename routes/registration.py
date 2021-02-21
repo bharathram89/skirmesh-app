@@ -1,6 +1,6 @@
 from database import db_session
 from models.db_models import UID, Field, Player, Team, Images
-from models.forms import RegisterAccountForm, LoginForm, UpdateAccountForm
+from models.forms import RegisterAccountForm, LoginForm, UpdateAccountForm, UpdatePasswordForm, UpdateCallsignForm
 
 from flask import render_template, flash, jsonify, session, Response
 from flask import request, redirect, url_for, make_response
@@ -98,12 +98,12 @@ def register():
             if current_user.is_authenticated:
 
                 db_session.commit()
+                flash("Congrats, your profile is updated!")
 
             else:
 
                 db_session.add(user)
-
-            flash("Congrats, you're in!")
+                flash("Congrats, you're in!")
 
         except:
 
@@ -131,6 +131,94 @@ def image_too_large(e):
     flash(error)
 
     return render_template('something_went_wrong.html', error=error), 413
+
+
+
+@bp.route('/update_password', methods=['POST','GET'])
+def update_password():
+
+    if not current_user.is_authenticated:
+
+        return redirect(url_for('index.main_page'))
+
+    form  = UpdatePasswordForm()
+    error = None
+
+    if request.method == "POST" and form.validate_on_submit():
+
+        current_user.set_password(form.password.data)
+
+        try:
+
+            db_session.commit()
+            flash("Congrats, your password is updated!")
+
+        except:
+
+            error = 'Oops! Something went wrong...'
+            print(error)
+            flash(error)
+            db_session.rollback()
+
+        finally:
+
+            db_session.commit()
+
+            if not error:
+
+                return redirect(url_for('registration.player_profile', callsign=current_user.callsign))
+
+    return render_template('update_password.html', form=form, error=error)
+
+
+
+@bp.route('/update_callsign', methods=['POST','GET'])
+def update_callsign():
+
+    if not current_user.is_authenticated:
+
+        return redirect(url_for('index.main_page'))
+
+    form  = UpdateCallsignForm(obj=current_user)
+    error = None
+
+    if request.method == "POST" and form.validate_on_submit():
+
+        if current_user.callsign == form.callsign.data:
+
+            flash("You entered the same callsign - nothing was updated.")
+            # Do nothing, because they didn't change their callsign
+            return redirect(url_for('registration.player_profile', callsign=current_user.callsign))
+
+        if Player.query.filter(Player.callsign == form.callsign.data).first():
+
+            error = "Oh, no! That callsign is in use. Try another."
+            flash(error)
+            return render_template('update_password.html', form=form, error=error)
+
+        current_user.callsign = form.callsign.data
+
+        try:
+
+            db_session.commit()
+            flash("Congrats, your callsign is updated!")
+
+        except:
+
+            error = 'Oops! Something went wrong...'
+            print(error)
+            flash(error)
+            db_session.rollback()
+
+        finally:
+
+            db_session.commit()
+
+            if not error:
+
+                return redirect(url_for('registration.player_profile', callsign=current_user.callsign))
+
+    return render_template('update_callsign.html', form=form, error=error)
 
 
 

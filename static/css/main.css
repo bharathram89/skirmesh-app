@@ -91,7 +91,7 @@ h2 {
 }
 
 
-#main-nav {
+.nav {
     margin: 0;
     width: 100%;
     display: table;
@@ -99,16 +99,16 @@ h2 {
     padding-inline-start: 0;
     font-family: 'special_eliteregular';
 }
-#main-nav li {
+.nav li {
     display: table-cell;
     text-align: center;
     padding-left: 0.25em;
     text-transform: uppercase;
 }
-#main-nav li:first-child {
+.nav li:first-child {
     padding-left: 0;
 }
-#main-nav li a {
+.nav li a {
     width: 100%;
     display: block;
     height: 100%;
@@ -118,20 +118,20 @@ h2 {
     font-size: 125%;
     color: var(--BLACK);
 }
-#main-nav li a:hover {
+.nav li a:hover {
     /* background-color: var(--button_color_hover); */
     box-shadow: 0 0 1em rgba(255, 255, 255, 0.25);
     transform: scale(1.05);
     color: var(--BLACK);
 }
 
-#main-nav li a:active {
+.nav li a:active {
     box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);
     transform: scale(0.98);
     border-bottom: solid var(--RED) 4px;
 }
 
-#main-nav li:after {
+.nav li:after {
   content: '';
   display: block;
   margin: auto;
@@ -140,7 +140,7 @@ h2 {
   background: transparent;
   transition: width .5s ease, background-color .5s ease;
 }
-#main-nav li:hover:after {
+.nav li:hover:after {
   width: 100%;
   background: var(--BLACK);
 }

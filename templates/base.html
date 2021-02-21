@@ -8,16 +8,6 @@
 <link rel="stylesheet" type="text/css" href="../static/css/fonts.css" charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../static/css/particles.css" charset="utf-8" />
 
-<ul id="user-controls" class="user-buttons">
-    {% if current_user.is_anonymous %}
-      <li><a href="/login">Login</a></li>
-    {% else %}
-      <li><a href="/player_profile/{{ current_user.callsign }}">My Profile</a></li>
-      <li><a href="/register"> Update profile </a></li>
-      <li><a href="/logout">Logout</a></li>
-    {% endif %}
-</ul>
-
 <head>
 
   <title> SkirMesh - Battlefield </title>
@@ -37,12 +27,17 @@
 </header>
 
 
-    <ul id="main-nav">
+    <ul class="nav">
         <li><a href="/index">Home</a></li>
         {% if field %}
         <li><a href="/index/{{ field }}">Field Map</a></li>
         {% endif %}
         <li><a href="/leaderboard">Leaderboard</a></li>
+        {% if current_user.is_anonymous %}
+          <li><a href="/login">Login</a></li>
+        {% else %}
+          <li><a href="/player_profile/{{ current_user.callsign }}">Profile</a></li>
+        {% endif %}
         <li><a href="/pair_uid">Pair UID</a></li>
         <li><a href="/node_admin">Node Admin</a></li>
         <li><a href="/comms">Comms Log</a></li>
