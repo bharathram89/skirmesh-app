@@ -1,6 +1,6 @@
 from database import db_session
 from models.db_models import UID, Field, Player, Team, Images
-from models.forms import RegisterAccountForm, LoginForm
+from models.forms import RegisterAccountForm, LoginForm, UpdateAccountForm
 
 from flask import render_template, flash, jsonify, session, Response
 from flask import request, redirect, url_for, make_response
@@ -49,33 +49,60 @@ def login():
 def register():
 
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+
+        form = UpdateAccountForm(obj=current_user)
+
+    else:
+
+        form = RegisterAccountForm()
 
     error = None
-    form = RegisterAccountForm()
 
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate_on_submit():
 
-        user = Player(callsign  = form.callsign.data,
-                      email     = form.email.data,
-                      firstname = form.firstname.data,
-                      lastname  = form.lastname.data)
+        if current_user.is_authenticated:
 
-        user.set_password(form.password.data)
+            user = current_user
 
-        print(form.image.data.content_type)
+            user.firstname = form.firstname.data
+            user.lastname  = form.lastname.data
+            user.email     = form.email.data
+
+        else:
+
+            user = Player(callsign  = form.callsign.data,
+                          email     = form.email.data,
+                          firstname = form.firstname.data,
+                          lastname  = form.lastname.data)
+
+            user.set_password(form.password.data)
 
         if form.image:
 
-            image = Images(data     = form.image.data.read(),
-                           mimetype = form.image.data.content_type)
+            if current_user.is_authenticated:
 
-            user.image = image
+                if user.image != form.image.data:
 
+                    user.image.data     = form.image.data.read()
+                    user.image.mimetype = form.image.data.content_type
+
+            else:
+
+                image = Images(data     = form.image.data.read(),
+                               mimetype = form.image.data.content_type)
+
+                user.image = image
 
         try:
 
-            db_session.add(user)
+            if current_user.is_authenticated:
+
+                db_session.commit()
+
+            else:
+
+                db_session.add(user)
+
             flash("Congrats, you're in!")
 
         except:
@@ -83,6 +110,7 @@ def register():
             error = 'Oops! Your entry matched information in our database...'
             print(error)
             flash(error)
+            db_session.rollback()
 
         finally:
 

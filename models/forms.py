@@ -70,6 +70,27 @@ class RegisterAccountForm(FlaskForm):
 
 
 
+class UpdateAccountForm(FlaskForm):
+
+    firstname = TextField('',
+                          [validators.DataRequired(), validators.Length(min=1, max=20)],
+                          render_kw={"placeholder": "First Name", "autocomplete":"on"})
+
+    lastname  = TextField('',
+                          [validators.DataRequired(), validators.Length(min=1, max=20)],
+                          render_kw={"placeholder": "Last Name", "autocomplete":"on"})
+
+    email     = TextField('',
+                          [validators.DataRequired(), validators.Email(check_deliverability=True)],
+                          render_kw={"placeholder": "e-Mail", "autocomplete":"on"})
+
+    image     = FileField('Upload a cool image!',
+                          validators=[FileAllowed(['jpg','png','jpeg','gif'], 'Image only!')])
+
+    submit    = SubmitField('Register')
+
+
+
 class LoginForm(FlaskForm):
 
     callsign = TextField('',
