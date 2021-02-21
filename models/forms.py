@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from flask_wtf.file import FileField, FileAllowed
+
 import email_validator
 from wtforms import SubmitField
 
 from models.db_models import Player
 from database import db_session
+
 
 class RegistrationForm(Form):
 
@@ -31,21 +34,23 @@ class RegisterAccountForm(FlaskForm):
                           render_kw={"placeholder": "e-Mail", "autocomplete":"on"})
 
     password  = PasswordField('',
-                             [validators.DataRequired(), validators.Length(min=6)],
-                             render_kw={"placeholder": "password (at least 6 characters)", "autocomplete":"off"})
+                              [validators.DataRequired(), validators.Length(min=6)],
+                              render_kw={"placeholder": "password (at least 6 characters)", "autocomplete":"off"})
 
     confirm   = PasswordField('',
                               [validators.EqualTo('password', message='Passwords must match')],
                               render_kw={"placeholder": "Confirm your password", "autocomplete":"off"})
 
-    submit = SubmitField('Register')
+    image     = FileField('Upload a cool image!',
+                          validators=[FileAllowed(['jpg','png','jpeg','gif'], 'Image only!')])
+
+    submit    = SubmitField('Register')
 
 
     def validate_callsign(self, callsign):
 
         user = Player.query.filter_by(callsign=callsign.data).first()
         db_session.commit()
-
 
         if user:
 
@@ -54,14 +59,14 @@ class RegisterAccountForm(FlaskForm):
 
     # TODO: Do we really want to force everyone to have a unique e-mail?  I think
     # of all the kids signing up with their parents e-mail address.
-    def validate_email(self, email):
-
-        user = Player.query.filter_by(email=email.data).first()
-        db_session.commit()
-
-        if user:
-
-            raise validators.ValidationError('Sorry, that email address is already in use')
+    # def validate_email(self, email):
+    #
+    #     user = Player.query.filter_by(email=email.data).first()
+    #     db_session.commit()
+    #
+    #     if user:
+    #
+    #         raise validators.ValidationError('Sorry, that email address is already in use')
 
 
 
