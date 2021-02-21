@@ -79,11 +79,12 @@ if __name__ == '__main__':
     init_db()
 
     # Initialize/update the fields table
+    _fields = [f.field for f in Field.query.all()]
     for file in map(os.path.basename, glob.glob("templates/fields/*.html")):
 
         field = file.strip('.html')
-        is_field = Field.query.filter(Field.field == field).first()
-        if is_field: continue
+        if field in _fields: continue
+
         db_session.add(Field(field=field))
 
     db_session.commit()
