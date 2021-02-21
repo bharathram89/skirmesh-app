@@ -277,6 +277,7 @@ def issue_command():
                 CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
 
 
+
         elif button == 'Pause Game':
 
             CP.is_paused = True
@@ -305,9 +306,22 @@ def issue_command():
             db_session.commit()
 
 
+
         elif button == 'Resume Game':
 
             CP.is_paused = False
+
+            nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
+
+            for node in nodes:
+
+                if node.config == CP.CAPTURE:
+
+                    _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
+                    pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+
+                    CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
+
 
 
         elif button == 'Start Game':

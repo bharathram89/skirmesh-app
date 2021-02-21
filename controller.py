@@ -294,7 +294,7 @@ class CONTROL_POINT(XBeeDevice):
                     CONTROL_POINT.CAPTURE   : self.__capture,
                     CONTROL_POINT.MEDIC     : self.__medic,
                     CONTROL_POINT.QUERY     : self.__query,
-                    CONTROL_POINT.ND_STATUS : self.__status,
+                    CONTROL_POINT.ND_STATUS : self._status,
                     CONTROL_POINT.PAIR_UID  : self.__pair_uid}
 
         return msg_dict
@@ -552,7 +552,7 @@ class CONTROL_POINT(XBeeDevice):
         return pkt
 
 
-    def __status(self, sender, payload):
+    def _status(self, sender, payload):
 
         node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
         self.DB.commit()
@@ -561,7 +561,7 @@ class CONTROL_POINT(XBeeDevice):
 
         cmd    = bytearray([CONTROL_POINT.ND_STATUS])
 
-        state  = bytearray([node.config]) + bytearray.fromhex(node.team) + bytearray([node.stable])
+        state  = bytearray([node.config]) + bytearray.fromhex(node.team or '000000') + bytearray([node.stable])
         times  = bytearray([node.cap_time,
                             node.cap_asst,
                             node.bomb_time,
