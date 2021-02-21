@@ -227,18 +227,19 @@ def issue_command():
 
                     nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
+                    CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
+                    CP.send_data_broadcast(bytearray([CP.CAPTURE]) + pkt[2:])
+
                     for node in nodes:
 
                         node.team      = pkt[2:].hex()
                         node.stable    = 1
-                        node.cap_time  = 6
 
-                        data = {'node':node.node, 'team':pkt[2], 'field':field, 'action':'CAPTURE'}
+                        data = {'node':node.node, 'team':node.team, 'field':field, 'action':'CAPTURE'}
                         db_session.add(Score(**data))
 
-                    CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
-                    CP.send_data_broadcast(bytearray([CP.CAPTURE]) + pkt[2:])
-                    CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 6]))
+                        _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
+                        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([CP.CAPT_TIME, node.cap_time]))
 
                 else:
 
@@ -250,14 +251,15 @@ def issue_command():
                     if node:
                         node.team      = pkt[2:].hex()
                         node.stable    = 1
-                        node.cap_time  = 6
-                    else: db_session.add(NodeStatus(**data))
+                    else:
+                        node = NodeStatus(**data)
+                        db_session.add(node)
 
                     _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(dest))
 
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 0]))
                     CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE]) + pkt[2:])
-                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 6]))
+                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, node.cap_time]))
 
                 db_session.commit()
                 # Return here to prevent sending the final
