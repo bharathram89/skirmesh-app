@@ -222,7 +222,7 @@ class Images(db.Model):
     id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
     timestamp      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-    player         = db.Column(db.String, db.ForeignKey('player.callsign'), nullable=False)
+    player         = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
 
     data           = db.Column(db.LargeBinary, nullable=False)
     mimetype       = db.Column(db.String, nullable=False)
