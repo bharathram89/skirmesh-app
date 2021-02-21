@@ -4,6 +4,7 @@ from models.db_models import Field
 from flask import render_template, jsonify, session, request, make_response
 from flask import Blueprint
 
+from datetime import date
 import json
 
 
@@ -51,7 +52,7 @@ def main_page():
     Establish main page.
     """
     kwargs = {'author': "Brandon Zoss and Dustin Kuchenbecker",
-              'name'  : "SkirMesh Systems"}
+              'name'  : "SkirMesh"}
 
     return render_template('field_chooser.html', **kwargs)
 
@@ -72,10 +73,12 @@ def field_page(field):
 
     teams = {}
     for uid in _field.uids if _field else []:
+        # Only add to team if they registered today
+        if uid.timestamp.date() != date.today(): continue
         teams.setdefault(uid.team, []).append(uid)
 
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
-              'name'       : "SkirMesh Gaming",
+              'name'       : "SkirMesh",
               'team_col'   : ['player'],
               'teams'      : [*teams],
               'team_data'  : teams,
