@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, LargeBinary
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -177,6 +177,8 @@ class Player(UserMixin, Base):
     id             = Column(Integer, primary_key=True, autoincrement=True)
     timestamp      = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
+    image          = relationship('Images', backref='player_image', uselist=False)
+
     firstname      = Column(String, nullable=False)
     lastname       = Column(String, nullable=False)
     callsign       = Column(String, nullable=False, unique=True)
@@ -198,6 +200,20 @@ class Player(UserMixin, Base):
     def check_password(self, password):
 
         return check_password_hash(self.password_hash, password)
+
+
+
+class Images(Base):
+
+    __tablename__ = 'images'
+
+    id             = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp      = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    player         = Column(String, ForeignKey('player.callsign'), nullable=False)
+
+    data           = Column(LargeBinary, nullable=False)
+    mimetype       = Column(String, nullable=False)
 
 
 
