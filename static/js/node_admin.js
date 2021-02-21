@@ -134,15 +134,22 @@ function form_submit(button) {
                 'args'     : args.value,
                 'dest'     : dest.value,
                 'conf'     : conf.value,
-                'button'   : button,
+                'button'   : button.value,
                 'location' : args.options[args.selectedIndex].text,
                };
 
     // console.log(data)
 
+    if (button.value == "Pause Game"){
+        button.value = "Resume Game";
+    }
+    else if (button.value == "Resume Game") {
+        button.value = "Pause Game";
+    }
+
     var safe = true;
 
-    if (button === "Start Game") {
+    if (button.value === "Start Game") {
         safe = confirm("WARNING: This will REMOVE ALL SCORES from previous games!");
     }
 

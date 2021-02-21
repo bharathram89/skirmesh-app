@@ -78,6 +78,7 @@ def node_admin():
              'print_time'  : print_time,
              'print_perc'  : print_perc,
              'field'       : field,
+             'is_paused'   : CP.is_paused,
              }
 
     db_session.commit()
@@ -276,10 +277,13 @@ def issue_command():
                 CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
 
 
-        elif button == 'End Game':
+        elif button == 'Pause Game':
+
+            CP.is_paused = True
 
             nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
+            # This closes out the times for all open nodes
             for node in nodes:
 
                 if node.stable and node.team:
@@ -299,6 +303,11 @@ def issue_command():
                         print(f"Ended timer count for {node.node}")
 
             db_session.commit()
+
+
+        elif button == 'Resume Game':
+
+            CP.is_paused = False
 
 
         elif button == 'Start Game':

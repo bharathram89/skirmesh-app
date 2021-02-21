@@ -95,12 +95,6 @@ class CONTROL_POINT(XBeeDevice):
                       BOMB]
 
 
-    # █▀▄▀█ █ █▀ █▀▀   ▄▀█ ▀█▀ ▀█▀ █▀█ █ █▄▄ █░█ ▀█▀ █▀▀ █▀
-    # █░▀░█ █ ▄█ █▄▄   █▀█ ░█░ ░█░ █▀▄ █ █▄█ █▄█ ░█░ ██▄ ▄█
-
-    TIME_DISP = '%d %b %Y  %H:%M:%S'
-
-
     # █▀▀▄ █▀▀ █▀▀▀ ░▀░ █▀▀▄ 　 █▀▀▄ █▀▀█ █▀▀▄ █▀▀ 　
     # █▀▀▄ █▀▀ █░▀█ ▀█▀ █░░█ 　 █░░█ █░░█ █░░█ █▀▀ 　
     # ▀▀▀░ ▀▀▀ ▀▀▀▀ ▀▀▀ ▀░░▀ 　 ▀░░▀ ▀▀▀▀ ▀▀▀░ ▀▀▀ 　
@@ -113,8 +107,9 @@ class CONTROL_POINT(XBeeDevice):
 
         XBeeDevice.__init__(self, serial, baud)
 
-        self.DB    = database
-        self.field = None
+        self.DB        = database
+        self.field     = None
+        self.is_paused = False
 
         self.end_nodes = set()
         self.user_reg  = None
@@ -339,6 +334,9 @@ class CONTROL_POINT(XBeeDevice):
     # ▒█▄▄█ ▒█▄▄▄ ▒█▄▄█ ▄█▄ ▒█░░▀█ 　 ▒█▄▄█ ▒█░▒█ ▒█░░░ ░▒█░░ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄
 
     def __capture(self, sender, payload):
+
+        # If the game is paused, ignore all capture requests
+        if self.is_paused: return None
 
         node        = str(sender.get_64bit_addr())
         cap_status  = PG.NodeStatus.query.filter(PG.NodeStatus.node == node).first()
