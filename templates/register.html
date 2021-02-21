@@ -7,17 +7,21 @@
           name="Member_Data"
           action=""
           method="post"
+          enctype="multipart/form-data"
           style="float:center">
+
       {{ form.hidden_tag() }}
 
         <dl>
-          {{render_field(form.firstname)}}
-          {{render_field(form.lastname)}}
-          {{render_field(form.email)}}
-          {{render_field(form.callsign)}}
-          {{render_field(form.password)}}
-          {{render_field(form.confirm)}}
-          {{ form.submit() }}
+            {{ form.csrf_token }}
+            {{render_field(form.firstname)}}
+            {{render_field(form.lastname)}}
+            {{render_field(form.email)}}
+            {{render_field(form.callsign)}}
+            {{render_field(form.password)}}
+            {{render_field(form.confirm)}}
+            {{render_field(form.image)}}
+            {{ form.submit() }}
         </dl>
 
    </form>

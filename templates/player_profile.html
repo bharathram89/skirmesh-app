@@ -10,7 +10,8 @@
 
 <div class="playerInfo">
 
-<img class="playerImage" src="../static/img/soldierC.jpg" alt="bad ass dude" >
+<img class="playerImage" src="{{ url_for('registration.serve_image', id=user.image.id) }}" onerror="this.onerror=null; this.src='../static/img/soldierC.jpg'"/>
+
 
 <p id="player_name"> {{ user.lastname }}, {{ user.firstname }} </p>
 <p> Career highlights: </p>
