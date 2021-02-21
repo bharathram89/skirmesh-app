@@ -96,6 +96,16 @@ def register():
 
 
 
+@bp.errorhandler(413)
+def image_too_large(e):
+
+    error = 'Oops! Your image was too large (limit 2MB).'
+    flash(error)
+
+    return render_template('something_went_wrong.html', error=error), 413
+
+
+
 @bp.route('/player_image/<id>')
 def serve_image(id):
 
