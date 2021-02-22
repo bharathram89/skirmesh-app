@@ -314,6 +314,10 @@ class CONTROL_POINT(XBeeDevice):
         if not is_team: self.DB.add(PG.Team(team=team))
         # If the uid exists, update it - if not, add it
         if is_uid:
+            # This was necessary to force a timestamp update if nothing changes
+            # but a player "registers" onto a team on gameday
+            if is_uid.team == team and is_uid.field == self.field:
+                is_uid.timestamp = datetime.now()
             is_uid.team      = team
             is_uid.field     = self.field
         else:
