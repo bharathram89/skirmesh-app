@@ -61,6 +61,8 @@ def node_admin():
     field_cmd_args = json.load(open("json/fields/" + field + ".json"))
     CMD_ARGS['REGISTER'] = CMD_ARGS['SET TEAM'] = field_cmd_args
 
+    team_name = {n['value']:n['text'] for n in field_cmd_args}
+
     _avail_teams_ = Team.query.all()
     for _team_ in [c['value'] for c in field_cmd_args]:
 
@@ -70,7 +72,7 @@ def node_admin():
     kwargs = {
              'cmd_dict'    : CP.CMD_DICT if CP.end_nodes else None,
              'cmd_args'    : CMD_ARGS,
-             'node_cols'   : ['node id', 'location', 'config',
+             'node_cols'   : ['node id', 'location', 'config', 'team',
                               'Capture\nTime', 'Capture\nAssist %', 'Point\nScale',
                               'Medic\nTime', 'Medic',
                               'Bomb\nFUS  |  ARM  |  DIS'],
@@ -79,6 +81,7 @@ def node_admin():
              'print_perc'  : print_perc,
              'field'       : field,
              'is_paused'   : CP.is_paused,
+             'team_name'   : team_name,
              }
 
     db_session.commit()
@@ -218,7 +221,6 @@ def issue_command():
                 # Return here because nothing gets sent to the node for this
                 return make_response(jsonify({"message": "OK"}), 200)
 
-
             # Blast a few necessary commands to push the node into a
             # specicic capture configuration
             if _config == CP.SET_TEAM:
@@ -227,10 +229,9 @@ def issue_command():
 
                     nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
-                    CP.send_data_broadcast(bytearray([CP.CAPT_TIME, 0]))
-                    CP.send_data_broadcast(bytearray([CP.CAPTURE]) + pkt[2:])
-
                     for node in nodes:
+                        # Skip nodes that are not in capture
+                        if node.config != CP.CAPTURE: continue
 
                         node.team      = pkt[2:].hex()
                         node.stable    = 1
@@ -238,8 +239,12 @@ def issue_command():
                         data = {'node':node.node, 'team':node.team, 'field':field, 'action':'CAPTURE'}
                         db_session.add(Score(**data))
 
+                        db_session.commit()
+
+                        # Send command to set the status to desired team in control
                         _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
-                        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([CP.CAPT_TIME, node.cap_time]))
+                        _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+                        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
 
                 else:
 
@@ -248,6 +253,7 @@ def issue_command():
 
                     data = {'node':dest,'team':pkt[2:].hex()}
                     node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+
                     if node:
                         node.team      = pkt[2:].hex()
                         node.stable    = 1
@@ -255,11 +261,11 @@ def issue_command():
                         node = NodeStatus(**data)
                         db_session.add(node)
 
-                    _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(dest))
+                    db_session.commit()
 
-                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, 0]))
-                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPTURE]) + pkt[2:])
-                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CAPT_TIME, node.cap_time]))
+                    _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+                    _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+                    CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
 
                 db_session.commit()
                 # Return here to prevent sending the final
@@ -401,10 +407,13 @@ def issue_command():
                 db_session.rollback()
 
 
+
         elif button == 'Discover Network':
 
             print("Discovering Network")
             CP.find_nodes()
+
+
 
     db_session.commit()
 

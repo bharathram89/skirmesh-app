@@ -129,7 +129,7 @@
 
     {% if cmd_dict %}
 
-        <div class="table-wrapper" style="font-size: 80%">
+        <div class="table-wrapper" style="font-size: 75%">
 
           <table id="table">
 
@@ -149,6 +149,7 @@
                     <td> {{ node.node[8:]                   | safe }} </td>
                     <td> {{ node.location                   | safe }} </td>
                     <td> {{ cmd_dict[node.config]           | safe }} </td>
+                    <td> {{ team_name[node.team]            | safe }} </td>
                     <td> {{ print_time(node.cap_time * 10)  | safe }} </td>
                     <td> {{ print_perc(node.cap_asst)       | safe }} </td>
                     <td> {{ (60/node.point_scale)           | safe }} x </td>
