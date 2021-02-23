@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import Field, get_time_capture_complete, get_is_capture_closed
+from models.db_models import Field, Team, get_time_capture_complete, get_is_capture_closed
 
 from flask import render_template, flash, session
 from flask import Blueprint
@@ -31,8 +31,12 @@ def leaderboard():
 
 
     _field = Field.query.filter(Field.field == field).first()
+    _teams = set([Team.query.filter(Team.team == u.team).first() for u in _field.uids])
 
     plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids}
+
+    team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
+    team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
 
     nd_times = {}
     for node in _field.nodes:
@@ -52,18 +56,8 @@ def leaderboard():
             held  = int((datetime.now() - begin).total_seconds())
 
             nd_times[node][node.team] += held
-
-    team_times, team_score = {}, {}
-    for node in nd_times:
-
-        for team in nd_times[node]:
-
-            team_times.setdefault(team, []).append(nd_times[node][team])
-            team_score.setdefault(team, []).append(nd_times[node][team]//node.point_scale)
-
-    for team in team_times:
-        team_times[team] = sum(team_times[team])
-        team_score[team] = sum(team_score[team])
+            team_times[node.team] += held
+            team_score[node.team] += held//node.point_scale
 
     kwargs = {'team_score' : team_score,
               'plyr_score' : plyr_score,

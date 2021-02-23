@@ -107,9 +107,10 @@ class CONTROL_POINT(XBeeDevice):
 
         XBeeDevice.__init__(self, serial, baud)
 
-        self.DB        = database
-        self.field     = None
-        self.is_paused = False
+        self.DB          = database
+        self.field       = None
+        self.is_paused   = False
+        self.halt_points = False
 
         self.end_nodes = set()
         self.user_reg  = None
@@ -369,11 +370,14 @@ class CONTROL_POINT(XBeeDevice):
                 data = {'node'  :node,
                         'uid'   :orig_captor.uid,
                         'team'  :orig_captor.team,
-                        'points':2,
+                        'points':2 if not self.halt_points else 0,
                         'field' :self.field,
                         'action':'CAPTURE COMPLETE'}
 
                 self.DB.add(PG.Score(**data))
+
+                # Reset to only halt points for that single transaction
+                self.halt_points = False
 
             self.DB.commit()
 
@@ -413,6 +417,8 @@ class CONTROL_POINT(XBeeDevice):
                             tdat = {'node'     :node,
                                     'team'     :orig_captor.team,
                                     'time_held':held,
+                                    # Account for points as scaled by current value
+                                    'points'   :held//cap_status.point_scale,
                                     'field'    :self.field,
                                     'action'   :'LOST CONTROL'}
 

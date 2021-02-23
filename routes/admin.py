@@ -245,6 +245,7 @@ def issue_command():
                         _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
                         _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
                         CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
+                        CP.halt_points = True
 
                 else:
 
@@ -266,6 +267,7 @@ def issue_command():
                     _64bit_addr = XBee64BitAddress.from_hex_string(dest)
                     _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
                     CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
+                    CP.halt_points = True
 
                 db_session.commit()
                 # Return here to prevent sending the final
@@ -335,8 +337,12 @@ def issue_command():
         elif button == 'Start Game':
 
             _field = Field.query.filter(Field.field == field).first()
+            _teams = set([Team.query.filter(Team.team == u.team).first() for u in _field.uids])
 
             plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids}
+
+            team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
+            team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
 
             nd_times = {}
             for node in _field.nodes:
@@ -356,28 +362,17 @@ def issue_command():
                     held  = int((datetime.now() - begin).total_seconds())
 
                     nd_times[node][node.team] += held
+                    team_times[node.team] += held
+                    team_score[node.team] += held//node.point_scale
 
-
-                if node.config == CP.CAPTURE:
+                # Verify node in available addresses in the event it's not...
+                if node.config == CP.CAPTURE and node.node in avail_addr:
 
                     node.team = None;
 
-                    _64bit_addr = CP.XB_net.get_device_by_64(XBee64BitAddress.from_hex_string(node.node))
-                    CP.transmit_pkt(_64bit_addr, bytearray([CP.CONFIGURE, CP.CAPTURE]))
-
-
-            team_times, team_score = {}, {}
-            for node in nd_times:
-
-                for team in nd_times[node]:
-
-                    team_times.setdefault(team, []).append(nd_times[node][team])
-                    team_score.setdefault(team, []).append(nd_times[node][team]//node.point_scale)
-
-            for team in team_times:
-                team_times[team] = sum(team_times[team])
-                team_score[team] = sum(team_score[team])
-
+                    _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
+                    CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([CP.CONFIGURE, CP.CAPTURE]))
+                    CP.halt_points = True
 
             db_session.commit()
 
