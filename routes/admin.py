@@ -185,7 +185,7 @@ def issue_command():
 
             # Shift the pkt left to remove reconfigure command byte when
             # setting attributes like timers
-            if CP.CAPT_TIME <= _config <= CP.SCALE_PTS:
+            if CP.CAPT_TIME <= _config <= CP.ARM_TIME:
 
                 pkt.pop(0)
 
@@ -194,8 +194,7 @@ def issue_command():
                            CP.MED_TIME :'med_time',
                            CP.CAP_PERC :'cap_asst',
                            CP.DIFF_TIME:'diff_time',
-                           CP.ARM_TIME :'arm_time',
-                           CP.SCALE_PTS:'point_scale'}
+                           CP.ARM_TIME :'arm_time'}
 
                 val, arg = _config, int(args, 16)
 
@@ -214,11 +213,42 @@ def issue_command():
 
                 db_session.commit()
 
-            # Set medic times globally, because all nodes are handled the
-            # same at the controller level
-            if _config == CP.MED_TIME or _config == CP.SCALE_PTS:
+            # medic is handled at the controller level
+            if _config == CP.MED_TIME:
 
                 # Return here because nothing gets sent to the node for this
+                return make_response(jsonify({"message": "OK"}), 200)
+
+
+            if _config == CP.SCALE_PTS:
+
+                node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+
+                if node.stable and node.team:
+
+                    begin = get_time_capture_complete(node.node)
+                    # If a capture started and was not closed out normally
+                    # then close it out
+                    if begin and not get_is_capture_closed(node.node):
+
+                        held  = int((datetime.now() - begin).total_seconds())
+
+                        tdat = {'node':node.node,'team':node.team,'field':field,
+                                'points':held//node.point_scale,'time_held':held,
+                                'action':'SET SCALE'}
+                        db_session.add(Score(**tdat))
+
+                _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+                _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+                CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
+                # Only stop points if node was controlled by a team, otherwise
+                # it will prevent the next capture action from earning points
+                CP.halt_points = True if node.team else False
+
+                node.point_scale = int(args, 16)
+
+                db_session.commit()
+
                 return make_response(jsonify({"message": "OK"}), 200)
 
             # Blast a few necessary commands to push the node into a
@@ -308,7 +338,9 @@ def issue_command():
 
                         held  = int((datetime.now() - begin).total_seconds())
 
-                        tdat = {'node':node.node,'team':node.team,'field':field,'time_held':held,'action':'END GAME'}
+                        tdat = {'node':node.node,'team':node.team,'field':field,
+                                'points':held//node.point_scale, 'time_held':held,
+                                'action':'PAUSE GAME'}
                         db_session.add(Score(**tdat))
 
                         print(f"Ended timer count for {node.node}")
@@ -331,6 +363,7 @@ def issue_command():
                     pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
 
                     CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
+                    CP.halt_points = True
 
 
 
@@ -372,7 +405,6 @@ def issue_command():
 
                     _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
                     CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([CP.CONFIGURE, CP.CAPTURE]))
-                    CP.halt_points = True
 
             db_session.commit()
 

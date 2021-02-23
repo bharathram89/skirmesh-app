@@ -405,8 +405,6 @@ class CONTROL_POINT(XBeeDevice):
                     if data['action'] == 'CAPTURE':
 
                         begin = PG.get_time_capture_complete(node)
-
-
                         # ONLY figure out the score if the score has not already
                         # been figured out (i.e. the capture was closed out)
                         if begin and not PG.get_is_capture_closed(node):
