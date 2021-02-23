@@ -112,13 +112,16 @@ function update_cmd_args(cmd_arg_list) {
 function update_cmd_opts() {
 
     var dest = document.getElementById("dest");
-    var option = document.getElementById("set_loc");
+    var loc = document.getElementById("set_loc");
+    var scale = document.getElementById("set_scale");
 
     if (dest.value == "FFFF") {
-        option.style.display = "none";
+        loc.style.display = "none";
+        scale.style.display = "none";
     }
     else {
-        option.style.display = "";
+        loc.style.display = "";
+        scale.style.display = "";
     }
 
 }

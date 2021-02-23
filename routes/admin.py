@@ -224,30 +224,32 @@ def issue_command():
 
                 node = NodeStatus.query.filter(NodeStatus.node == dest).first()
 
-                if node.stable and node.team:
+                if node:
 
-                    begin = get_time_capture_complete(node.node)
-                    # If a capture started and was not closed out normally
-                    # then close it out
-                    if begin and not get_is_capture_closed(node.node):
+                    if node.stable and node.team:
+                        
+                        begin = get_time_capture_complete(node.node)
+                        # If a capture started and was not closed out normally
+                        # then close it out
+                        if begin and not get_is_capture_closed(node.node):
 
-                        held  = int((datetime.now() - begin).total_seconds())
+                            held  = int((datetime.now() - begin).total_seconds())
 
-                        tdat = {'node':node.node,'team':node.team,'field':field,
-                                'points':held//node.point_scale,'time_held':held,
-                                'action':'SET SCALE'}
-                        db_session.add(Score(**tdat))
+                            tdat = {'node':node.node,'team':node.team,'field':field,
+                                    'points':held//node.point_scale,'time_held':held,
+                                    'action':'SET SCALE'}
+                            db_session.add(Score(**tdat))
 
-                _64bit_addr = XBee64BitAddress.from_hex_string(dest)
-                _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
-                CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
-                # Only stop points if node was controlled by a team, otherwise
-                # it will prevent the next capture action from earning points
-                CP.halt_points = True if node.team else False
+                    _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+                    _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+                    CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
+                    # Only stop points if node was controlled by a team, otherwise
+                    # it will prevent the next capture action from earning points
+                    CP.halt_points = True if node.team else False
 
-                node.point_scale = int(args, 16)
+                    node.point_scale = int(args, 16)
 
-                db_session.commit()
+                    db_session.commit()
 
                 return make_response(jsonify({"message": "OK"}), 200)
 

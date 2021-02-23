@@ -40,6 +40,8 @@
 
                                 {% if '%02X' % key == "FF" %}
                                     <option value="{{ '%02X' % key }}" id="set_loc" style="display:none">SET LOCATION</option>
+                                {% elif '%02X' % key == "9A" %}
+                                    <option value="{{ '%02X' % key }}" id="set_scale" style="display:none">SET POINT SCALE</option>
                                 {% else %}
                                     <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
                                 {% endif %}
