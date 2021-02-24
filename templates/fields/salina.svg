@@ -1,8 +1,4 @@
-{% extends ("node_admin.html" if admin else "field_wrapper.html") %}
-
-{% block SVG %}
-
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -56,8 +52,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <image
-      sodipodi:absref="{{ url_for('static', filename='img/fields/salina_gambit.png') }}"
-       xlink:href="{{ url_for('static', filename='img/fields/salina_gambit.png') }}"
+       sodipodi:absref="/home/kuch/Projects/battlefield/templates/fields/../../static/img/fields/salina_gambit.png"
+       xlink:href="../../static/img/fields/salina_gambit.png"
        y="1.7078444"
        x="1.9073366"
        id="image126"
@@ -131,6 +127,3 @@
        inkscape:connector-curvature="0" />
   </g>
 </svg>
-
-
-{% endblock %}
