@@ -24,7 +24,7 @@ def update():
         team_cmap = {c['value']:c['color'] for c in team_data}
 
         _field = Field.query.filter(Field.field == field).first()
-        nodes = _field.nodes
+        nodes = _field.nodes if _field else []
 
         for node in nodes:
 
