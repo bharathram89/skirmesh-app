@@ -227,7 +227,7 @@ def issue_command():
                 if node:
 
                     if node.stable and node.team:
-                        
+
                         begin = get_time_capture_complete(node.node)
                         # If a capture started and was not closed out normally
                         # then close it out
@@ -411,7 +411,7 @@ def issue_command():
             db_session.commit()
 
             team_data = json.load(open("json/fields/" + field + ".json"))
-            team_name = {int(n['value'], 16):n['text'] for n in team_data}
+            team_name = {n['value']:n['text'] for n in team_data}
 
             data = {'field'        :field,
                     'teams'        :str([team_score.keys()]),
