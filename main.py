@@ -38,11 +38,12 @@ loginMngr = LoginManager(application)
 from database import db_session
 
 
-from routes import index, leaderboard, comms, registration
+from routes import index, leaderboard, comms, registration, about
 application.register_blueprint(index.bp)
 application.register_blueprint(registration.bp)
 application.register_blueprint(leaderboard.bp)
 application.register_blueprint(comms.bp)
+application.register_blueprint(about.bp)
 
 from routes import admin, pair_uid
 application.register_blueprint(admin.bp)
