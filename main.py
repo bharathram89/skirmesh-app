@@ -84,13 +84,14 @@ if __name__ == '__main__':
     _fields = [f.field for f in Field.query.all()]
     for file in map(os.path.basename, glob.glob("templates/fields/*.html")):
 
-        field = file.strip('.html')
+        field = field, ext = os.path.splitext(file)
         if field in _fields: continue
 
         db_session.add(Field(field=field))
 
     db_session.commit()
 
+    
 
     from routes.admin import CP
     print("Initializing host controller")
