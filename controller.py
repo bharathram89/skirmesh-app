@@ -343,8 +343,8 @@ class CONTROL_POINT(XBeeDevice):
         # If the game is paused, ignore all capture requests
         if self.is_paused: return None
 
-        node        = str(sender.get_64bit_addr())
-        cap_status  = PG.NodeStatus.query.filter(PG.NodeStatus.node == node).first()
+        node       = str(sender.get_64bit_addr())
+        cap_status = PG.NodeStatus.query.filter(PG.NodeStatus.node == node).first()
 
         last = PG.Score.query.filter(PG.Score.node == node).order_by(PG.Score.id.desc()).first()
 
@@ -356,11 +356,9 @@ class CONTROL_POINT(XBeeDevice):
 
             # We only need to update the stability column for the current status
             cap_status.stable = payload[1]
-
             # Grab the last captor from SCORE, to determine who the points are
             # awarded to when/if capture is completed
             orig_captor = PG.get_last_captor(node)
-
             # If there was an originating captor and the node is now STABLE
             # (...The node will only ever be considered stable here)
             # If the last action was CAPTURE COMPLETE, the node is coming
@@ -387,6 +385,10 @@ class CONTROL_POINT(XBeeDevice):
             _uid = PG.UID.query.filter(PG.UID.uid == uid).first()
             team = _uid.team if _uid else None
             self.DB.commit()
+
+            if _uid and _uid.field != self.field:
+                print(f'UID {uid} is not registered to field: {self.field}')
+                return None
 
             if team:
 
