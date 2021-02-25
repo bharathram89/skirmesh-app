@@ -4,6 +4,7 @@ var agent = navigator.userAgent;
 
 var safari = agent.indexOf("Safari") > -1;
 var chrome = agent.indexOf("Chrome") > -1;
+var ie = agent.indexOf("MSIE") > -1;
 
 // Chrome will have Safari components - if both exist it's Chrome, not Safari
 if (chrome && safari){ safari = false; }
@@ -14,7 +15,7 @@ var tag_id = "particles-js";
 var pJS_tag = document.getElementById(tag_id);
 
 
-if (safari) {
+if (safari || ie) {
 
     pJS_tag.remove();
 
