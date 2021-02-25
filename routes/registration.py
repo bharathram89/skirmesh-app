@@ -77,7 +77,7 @@ def register():
 
             user.set_password(form.password.data)
 
-        if form.image:
+        if form.image and form.image.data:
 
             if current_user.is_authenticated:
 
