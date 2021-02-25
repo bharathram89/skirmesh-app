@@ -5,9 +5,10 @@
 <link rel="stylesheet" type="text/css" href="../static/css/about.css" charset="utf-8" />
 
 	<div class="container">
-		<p> SkirMesh is poised to revolutionize the game of Airsoft through mesh
-			networking and RFID technology. Uniquely leveraging desired attributes of each,
-			the airsoft field becomes a dynamic and interactive experience on and off the field.
+
+		<p id="introduction"> SkirMesh is poised to revolutionize the game of Airsoft through mesh
+			networking and RFID technology. Uniquely leveraging desired attributes of each can
+			transform the battlefield into a dynamic and interactive experience on and off the field.
 		</p>
 		<!-- <p> Three main components comprise the SkirMesh System: </p>
 		<ul>
@@ -19,7 +20,7 @@
 
 
 		<h3> The node </h3>
-		<img class="node_img" src="../static/img/node.jpg" alt="NODE" >
+		<!-- <img class="node_img" src="../static/img/node.jpg" alt="NODE" > -->
 		<p>
 			The node is the foundation of the system and permits player interaction.
 			Dozens can populate the field and take on different functions to allow the
@@ -75,7 +76,7 @@
                     a node.
 		</p> -->
 
-		<h3> node Interaction </h3>
+		<h3> Node Interaction </h3>
 		<!-- <p> A lot has been said interacting with the SkirMesh System so let us take a quick moment to show you
         what that looks like.
 		</p> -->
@@ -84,6 +85,8 @@
 			the area marked with glow-in-the-dark tape will be acknowledged by the node. Acknowledgement may
 			be in the form of flashing lights, chirping sounds, or both.
 		</p>
+
+	</div>
 
 		<svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -97,8 +100,6 @@
    height="123mm"
    viewBox="0 0 133 123"
    version="1.1"
-   id="node"
-	 class="node"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="box.svg">
   <defs
@@ -128,7 +129,7 @@
      id="layer1">
     <rect
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect833"
+       id="node"
        width="131.48903"
        height="76.137123"
        x="0.95101351"
@@ -142,42 +143,42 @@
        y="62.670265" />
     <ellipse
        id="LED0"
-			 class="LED"
+	   class="LED"
        cx="71.157562"
        cy="86.16658"
        rx="2.598151"
        ry="2.7111142" />
     <ellipse
        id="LED1"
-			 class="LED"
+	   class="LED"
        cx="80.222847"
        cy="86.16658"
        rx="2.598151"
        ry="2.7111142"/>
     <ellipse
        id="LED2"
-			 class="LED"
+	   class="LED"
        cx="89.288147"
        cy="86.166588"
        rx="2.598151"
        ry="2.7111142" />
     <ellipse
        id="LED3"
-			 class="LED"
+	   class="LED"
        cx="98.353432"
        cy="86.166588"
        rx="2.598151"
        ry="2.7111142" />
     <ellipse
        id="LED4"
-			 class="LED"
+	   class="LED"
        cx="107.41872"
        cy="86.166588"
        rx="2.598151"
        ry="2.7111142" />
     <ellipse
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path837-4"
+       id="LED5"
+	   class="LED"
        cx="107.41872"
        cy="78.033241"
        rx="2.598151"
@@ -251,12 +252,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="54mm"
-   height="65mm"
+   width="25%"
    viewBox="0 0 54 65"
    version="1.1"
    id="band"
-   class="band"
+   style="position:absolute; z-index:10; display:none"
    inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
    sodipodi:docname="band.svg">
   <defs
@@ -303,6 +303,8 @@
     </rdf:RDF>
   </metadata>
 		</svg>
+
+		<div class="container">
 
 		<h3> Node Configurations </h3>
 		<p> Nodes can be configured to serve different purposes based on the game play requirements. These include:</p>
@@ -388,7 +390,7 @@
 		<p> When configured as a Bomb/IED players are able to arm or disarm them by swiping their RFID tag.
             The arming, fuse, and difusing times are all configurable by the controller.
 
-		<h4> Arming </h4>
+		<h5> Arming </h5>
 		<p> To arm the bomb, the player would hold their RFID band over the node for the duration of time set
             by the arming parameter.  As the player holds their RFID band over the node, the RGBs will start to
             turn orange again following the 1/5 rule explained above. Once all RBGs turn orange they will immediately
@@ -398,9 +400,9 @@
             to reset the bomb.
 		</p>
 
-		<h4> Disarming </h4>
-		<p> Disarming follows the same method as above. However, the node does not give feedback on the amount of
-			of time is left to disarming is complete. Knowing what the disarm time is and looking at the lights remaining
+		<h5> Disarming </h5>
+		<p> Disarming follows the same method as above. However, the node does not give feedback on the amount
+			of time left beyond a simple light count. Knowing what the disarm time is and looking at the lights remaining
 			is the only way of knowing if you will be successful in disarming or become collateral damage.
 		</p>
 
@@ -416,14 +418,11 @@
             your RFID tag is associated with a team either re-register or find a Team Query node(explained below).
 		</p>
 
-		<h4> Team Query </h4>
-		<p> A team query node has just the single white LED illuminated. When you swipe your RFID tag, it will display
-            your team color on the first 2 RGBs and the last RGB will be green if you are being tracked as "alive" or red
+		<h4> Player Query </h4>
+		<p> A player query node has just the single white LED illuminated. When you swipe your RFID tag, it will display
+            your team color on the first 3 RGBs and the last RGB will be green if you are being tracked as "alive" or red
             if "dead."
 		</p>
 
-	</div>
-
-	<script src="static/js/script.js">
-
+	<script src="../static/js/about.js"></script>
 {% endblock %}
