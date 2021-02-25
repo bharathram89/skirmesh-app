@@ -2,12 +2,16 @@
 
 var agent = navigator.userAgent;
 
-var safari = agent.indexOf("Safari") > -1;
-var chrome = agent.indexOf("Chrome") > -1;
-var ie = agent.indexOf("MSIE") > -1;
+var isSafari = agent.indexOf("Safari") > -1;
+var isChrome = agent.indexOf("Chrome") > -1;
+
+// Internet Explorer 6-11
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+// Edge 20+
+var isEdge = !isIE && !!window.StyleMedia;
 
 // Chrome will have Safari components - if both exist it's Chrome, not Safari
-if (chrome && safari){ safari = false; }
+if (isChrome && isSafari){ isSafari = false; }
 
 
 /* pJS elements */
@@ -15,11 +19,12 @@ var tag_id = "particles-js";
 var pJS_tag = document.getElementById(tag_id);
 
 
-if (safari || ie) {
+if (isSafari || isIE || isEdge) {
 
     pJS_tag.remove();
 
 }
+
 else {
 
     particlesJS(tag_id, {
