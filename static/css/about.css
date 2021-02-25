@@ -1,0 +1,24 @@
+.container {
+  text-align: left;
+  font-size: larger;
+}
+
+.node_img {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.LED {
+  fill: #ffffff;
+}
+
+.node {
+  display: inline-block;
+}
+
+.band {
+  display: inline-block;
+}
