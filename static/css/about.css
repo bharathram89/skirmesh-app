@@ -22,3 +22,13 @@
 .band {
   display: inline-block;
 }
+
+path {
+  opacity: 1;
+}
+
+path:hover {
+  opacity: 1;
+  fill: inherit;
+  transform: scale(1);
+}
