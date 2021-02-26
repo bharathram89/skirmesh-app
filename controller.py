@@ -313,21 +313,24 @@ class CONTROL_POINT(XBeeDevice):
 
         # If the team doesn't exists - add it
         if not is_team: self.DB.add(PG.Team(team=team))
+
         # If the uid exists, update it - if not, add it
         if is_uid:
             # This was necessary to force a timestamp update if nothing changes
             # but a player "registers" onto a team on gameday
             if is_uid.team == team and is_uid.field == self.field:
                 is_uid.timestamp = datetime.now()
-            is_uid.team      = team
-            is_uid.field     = self.field
+
+            is_uid.team        = team
+            is_uid.field       = self.field
+            is_uid.medic.alive = 1
+
         else:
+
             is_uid = PG.UID(uid=uid, team=team, field=self.field)
             self.DB.add(is_uid)
 
-        # If the player is not "alive", reset his alive status
-        if is_uid.medic: is_uid.medic.alive = 1
-        else:            is_uid.medic = PG.Medic(uid=is_uid.uid)
+            is_uid.medic = PG.Medic(uid=is_uid.uid)
 
         self.DB.commit()
 
@@ -484,10 +487,10 @@ class CONTROL_POINT(XBeeDevice):
         uid = payload[1:5].hex()
 
         _uid  = PG.UID.query.filter(PG.UID.uid == uid).first()
-        medic = _uid.medic
+        medic = _uid.medic if _uid else None
         node  = PG.NodeStatus.query.filter(PG.NodeStatus.node == str(sender.get_64bit_addr())).first()
 
-        if not node.allow_medic: return None
+        if not node.allow_medic or not _uid: return None
 
         DEAD  = 0x00
         ALIVE = 0x01
