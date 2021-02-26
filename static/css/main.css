@@ -295,55 +295,6 @@ td {
 }
 
 
-
-.beacon-container {
-  position: relative;
-  padding: 0;
-}
-
-.beacon {
-  content: '';
-  display: block;
-  width: 4%;
-  height: 0;
-  padding-bottom: calc(4%);
-  border: 1vw;
-  border-radius: 50%;
-  position: absolute;
-  /* top: 50%;
-  left: 50%; */
-  animation: pulsate infinite 1.5s;
-}
-
-@keyframes pulsate {
-  from {transform: scale(0.8);
-      opacity: 1;
-  }
-  to {transform: scale(1.2);
-        opacity: 0;
-  }
-}
-
-svg {
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-
-path {
-    opacity: 0;
-    transform-origin: center;
-    transform-box: fill-box;
-}
-path:hover {
-    fill: var(--WHITE);
-    opacity: 0.25;
-    transform: scale(1.1);
-}
-
-path.owned {
-    opacity: 0.5;
-}
-
 div.table-wrapper {
     border: 1px solid var(--BLACK));
     max-height: 40em;
@@ -351,13 +302,6 @@ div.table-wrapper {
     overflow-y: auto;
  }
 
-
-div.roster {
-    max-height: 22.8em;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
 
 table {
    width: 100%;
@@ -469,45 +413,4 @@ dd, dt {
 .success:hover{
   background-color: rgba(7, 149, 66, 0.35);
   transition:0.5s;
-}
-
-.node_container {
-    display: inline-block;
-    vertical-align: top;
-    height: 100%;
-    width: 25%;
-
-}
-
-.node_cmds {
-    display: inline-block;
-    vertical-align: top;
-    width: 25%;
-
-}
-
-.beacon-container.node {
-    display: inline-block;
-    width: 40%;
-
-}
-.game_control {
-
-}
-.node_block {
-    width: 100%;
-    border-width: 3px;
-    border-style: solid;
-    border-color: black;
-    padding: .2em;
-
-}
-
-.node_img_div {
-    display: inline-block;
-    border-width: 1px;
-    border-style: solid;
-    border-color: black;
-    padding: .1em;
-
 }

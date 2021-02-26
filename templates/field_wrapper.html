@@ -3,6 +3,7 @@
 {% block content %}
 
 <script src="../static/js/field_update.js"></script>
+<link rel="stylesheet" type="text/css" href="../static/css/field_wrapper.css" charset="utf-8" />
 
 <div class="grid_container">
 
@@ -18,7 +19,7 @@
         </thead>
         <tbody>
             {% for mbr in team_data[team] %}
-            <tr class="row team{{team | safe}}">
+            <tr class="row" id=team{{team | safe}}>
 
                 <td class="roster_element"> {{ mbr.player.callsign if mbr.player else mbr.uid | safe }} </td>
 
@@ -26,6 +27,10 @@
             {% endfor %}
         </tbody>
         </table>
+
+        <style>
+        #team{{team | safe}}:hover {background-color: #{{ team | safe }}}
+        </style>
 
     {% endfor %}
 
@@ -52,7 +57,7 @@
     </thead>
     <tbody>
         {% for mbr in team_data[team] %}
-        <tr class="row team{{team | safe}}">
+        <tr class="row" id=team{{team | safe}}>
 
             <td class="roster_element"> {{ mbr.player.callsign if mbr.player else mbr.uid | safe }} </td>
 
@@ -60,6 +65,10 @@
         {% endfor %}
     </tbody>
     </table>
+
+    <style>
+    #team{{team | safe}}:hover {background-color: #{{ team | safe }}}
+    </style>
 
 {% endfor %}
 
