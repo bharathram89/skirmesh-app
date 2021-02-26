@@ -81,15 +81,11 @@ function update_cmd_args(cmd_arg_list) {
     var new_options = "";
 
     // Look for the argument in the index unless it's a timer, then just match
-    if ((cmd_txt in cmd_arg_list) || (cmd_txt.indexOf('TIME') > -1) || (cmd_txt.indexOf('SCALE') > -1) ){
+    if ((cmd_txt in cmd_arg_list) || (cmd_txt.indexOf('TIME') > -1) ){
 
         // Set all time indexes to the timer list
         if (cmd_txt.indexOf('TIME') > -1) {
           cmd_txt = 'TIME DATA';
-        }
-        // Set scale values to the time_to_points data
-        if (cmd_txt.indexOf('SCALE') > -1) {
-          cmd_txt = 'SCALE DATA';
         }
 
         for (var i = 0; i < cmd_arg_list[cmd_txt.toUpperCase()].length; i++) {

@@ -20,9 +20,10 @@ serial = '/dev/ttyUSB0'
 baud   = 115200
 CP = CONTROL_POINT(serial, baud, database=db_session)
 
-CMD_ARGS = {'TIME DATA'   : json.load(open("json/timer_values.json")),
-            'SET ASSIST %': json.load(open("json/percent_values.json")),
-            'SCALE DATA'  : json.load(open("json/time_to_points.json"))}
+CMD_ARGS = {'TIME DATA'       : json.load(open("json/timer_values.json")),
+            'SET ASSIST %'    : json.load(open("json/percent_values.json")),
+            'SET POINT SCALE' : json.load(open("json/time_to_points.json")),
+            'ALLOW MEDIC'     : json.load(open("json/yes_no.json"))}
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
@@ -251,6 +252,26 @@ def issue_command():
 
                     db_session.commit()
 
+                return make_response(jsonify({"message": "OK"}), 200)
+
+
+            if _config == CP.ALLOW_MED:
+
+                if dest == BROADCAST:
+
+                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
+
+                    for node in nodes:
+
+                        node.allow_medic = int(args, 16)
+
+                else:
+
+                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+                    node.allow_medic = int(args, 16)
+
+                db_session.commit()
+                
                 return make_response(jsonify({"message": "OK"}), 200)
 
             # Blast a few necessary commands to push the node into a

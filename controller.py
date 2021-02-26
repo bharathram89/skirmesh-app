@@ -56,6 +56,7 @@ class CONTROL_POINT(XBeeDevice):
     MED_TIME  = 0x8E
 
     SCALE_PTS = 0x9a
+    ALLOW_MED = 0X9b
 
 
     SET_LOCATION = 0xff
@@ -81,6 +82,7 @@ class CONTROL_POINT(XBeeDevice):
                 SET_TEAM    : 'SET TEAM',
                 CAP_PERC    : 'SET ASSIST %',
                 SCALE_PTS   : 'SET POINT SCALE',
+                ALLOW_MED   : 'ALLOW MEDIC',
                 }
 
 
