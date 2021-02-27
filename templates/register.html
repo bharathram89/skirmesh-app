@@ -16,14 +16,18 @@
             {{ form.csrf_token }}
             {{render_field(form.firstname)}}
             {{render_field(form.lastname)}}
+
             {{render_field(form.email)}}
 
             {% if not current_user.is_authenticated %}
-            
                 {{render_field(form.callsign)}}
+            {% endif %}
+
+            {{render_field(form.outfit)}}
+
+            {% if not current_user.is_authenticated %}
                 {{render_field(form.password)}}
                 {{render_field(form.confirm)}}
-
             {% endif %}
 
             {{render_field(form.image)}}

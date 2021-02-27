@@ -27,7 +27,11 @@ class RegisterAccountForm(FlaskForm):
 
     callsign  = TextField('',
                           [validators.DataRequired(), validators.Length(min=1, max=20)],
-                          render_kw={"placeholder": "Callsign (Please keep this G rated)", "autocomplete":"on"})
+                          render_kw={"placeholder": "Callsign (Please keep this G rated)", "autocomplete":"off"})
+
+    outfit    = TextField('',
+                          [validators.Optional(), validators.Length(min=1, max=20)],
+                          render_kw={"placeholder": "Outfit - Who do you run with?", "autocomplete":"off"})
 
     email     = TextField('',
                           [validators.DataRequired(), validators.Email(check_deliverability=True)],
@@ -79,6 +83,10 @@ class UpdateAccountForm(FlaskForm):
     lastname  = TextField('',
                           [validators.DataRequired(), validators.Length(min=1, max=20)],
                           render_kw={"placeholder": "Last Name", "autocomplete":"on"})
+
+    outfit    = TextField('',
+                          [validators.Optional(), validators.Length(min=1, max=20)],
+                          render_kw={"placeholder": "Outfit - Who do you run with?", "autocomplete":"off"})
 
     email     = TextField('',
                           [validators.DataRequired(), validators.Email(check_deliverability=True)],

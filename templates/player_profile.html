@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" type="text/css" href="../static/css/player_profile.css" charset="utf-8" />
 
-<h1 style="text-transform: none"> {{ user.outfit or "[Your squad here]" }}: {{ user.callsign }}</h1>
+<h1 style="text-transform: none"> {{ (user.outfit + " | ") if user.outfit else "" }} {{ user.callsign }}</h1>
 
 
 <div class="playerInfo">

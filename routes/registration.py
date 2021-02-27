@@ -67,13 +67,15 @@ def register():
             user.firstname = form.firstname.data
             user.lastname  = form.lastname.data
             user.email     = form.email.data
+            user.outfit    = form.outfit.data if form.outfit else None
 
         else:
 
             user = Player(callsign  = form.callsign.data,
                           email     = form.email.data,
                           firstname = form.firstname.data,
-                          lastname  = form.lastname.data)
+                          lastname  = form.lastname.data,
+                          outfit    = form.outfit.data if form.outfit else None)
 
             user.set_password(form.password.data)
 
