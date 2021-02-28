@@ -48,10 +48,10 @@ class UID(db.Model):
     team       = db.Column(db.String, db.ForeignKey('team.team'), nullable=False)
     field      = db.Column(db.String, db.ForeignKey('field.field'), nullable=False)
 
-    scores     = db.relationship('Score', backref='scores_uid')
-    medic      = db.relationship('Medic', backref='medic_uid', uselist=False)
-    player     = db.relationship('Player', backref='player_uid', uselist=False)
-    nodes      = db.relationship('NodeStatus', backref='nodestatus_uid')
+    scores     = db.relationship('Score', backref='scores_uid', cascade="all, delete-orphan")
+    medic      = db.relationship('Medic', backref='medic_uid', uselist=False, cascade="all, delete-orphan")
+    player     = db.relationship('Player', backref='player_uid', uselist=False, cascade="all, delete-orphan")
+    nodes      = db.relationship('NodeStatus', backref='nodestatus_uid', cascade="all, delete-orphan")
 
 
     def __repr__(self):
@@ -69,9 +69,9 @@ class Team(db.Model):
 
     team      = db.Column(db.String, unique=True, nullable=False)
 
-    scores    = db.relationship('Score', backref='scores_team')
-    uids      = db.relationship('UID', backref='uids_team')
-    nodes     = db.relationship('NodeStatus', backref='nodes_team')
+    scores    = db.relationship('Score', backref='scores_team', cascade="all, delete-orphan")
+    uids      = db.relationship('UID', backref='uids_team', cascade="all, delete-orphan")
+    nodes     = db.relationship('NodeStatus', backref='nodes_team', cascade="all, delete-orphan")
 
 
     def __repr__(self):
@@ -89,9 +89,9 @@ class Field(db.Model):
 
     field      = db.Column(db.String, unique=True, nullable=False)
 
-    scores     = db.relationship('Score', backref='scores_field')
-    uids       = db.relationship('UID', backref='uids_field')
-    nodes      = db.relationship('NodeStatus', backref='nodes_field')
+    scores     = db.relationship('Score', backref='scores_field', cascade="all, delete-orphan")
+    uids       = db.relationship('UID', backref='uids_field', cascade="all, delete-orphan")
+    nodes      = db.relationship('NodeStatus', backref='nodes_field', cascade="all, delete-orphan")
 
 
     def __repr__(self):
@@ -178,7 +178,7 @@ class NodeStatus(db.Model):
     point_scale = db.Column(db.Integer, default=60)
     allow_medic = db.Column(db.Boolean, default=1)
 
-    scores    = db.relationship('Score', backref='node_status_scores')
+    scores    = db.relationship('Score', backref='node_status_scores', cascade="all, delete-orphan")
 
 
 
@@ -189,7 +189,7 @@ class Player(UserMixin, db.Model):
     id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
     timestamp      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-    image          = db.relationship('Images', backref='player_image', uselist=False)
+    image          = db.relationship('Images', backref='player_image', uselist=False, cascade="all, delete-orphan")
 
     firstname      = db.Column(db.String, nullable=False)
     lastname       = db.Column(db.String, nullable=False)
