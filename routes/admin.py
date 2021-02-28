@@ -111,6 +111,7 @@ def issue_command():
         pkt[0] = CP.CONFIGURE
         pkt[1] = int(config, 16)
 
+
         if int(config, 16) == CP.SET_LOCATION and dest != BROADCAST:
 
             print(f"Setting {dest} Location to: {data['location']}")
@@ -121,8 +122,8 @@ def issue_command():
 
             node = NodeStatus.query.filter(NodeStatus.node == dest).first()
             if node:
-                node.field     = field
-                node.location  = data['location']
+                node.field    = field
+                node.location = data['location']
             else: db_session.add(NodeStatus(**data))
 
             db_session.commit()
@@ -131,13 +132,14 @@ def issue_command():
         elif button == 'Issue Command':
 
             try:
+
                 pkt[2:] = bytearray.fromhex(args)  #Grab the team
                 print('tried', pkt)
-
             # Catch the case where we pass a single byte-like object for pretty
-            # much everything  besides the team stuff and it can't get parsed
+            # much everything besides the team stuff and it can't get parsed
             # into a bytearray
             except ValueError:
+
                 pkt[2] = int(args, 16)              #Pull int arguments
                 print('failed', pkt)
 
@@ -214,11 +216,13 @@ def issue_command():
 
                 db_session.commit()
 
+
             # medic is handled at the controller level
             if _config == CP.MED_TIME:
 
                 # Return here because nothing gets sent to the node for this
                 return make_response(jsonify({"message": "OK"}), 200)
+
 
 
             if _config == CP.SCALE_PTS:
@@ -253,6 +257,7 @@ def issue_command():
                     db_session.commit()
 
                 return make_response(jsonify({"message": "OK"}), 200)
+
 
 
             if _config == CP.ALLOW_MED:
@@ -325,6 +330,7 @@ def issue_command():
                 db_session.commit()
                 # Return here to prevent sending the final
                 return make_response(jsonify({"message": "OK"}), 200)
+
 
 
             if dest == BROADCAST:
