@@ -4,7 +4,7 @@ from models.db_models import Field, Team, get_time_capture_complete, get_is_capt
 from flask import render_template, flash, session
 from flask import Blueprint
 
-from datetime import datetime
+from datetime import datetime, date
 import json
 
 from pretty_print import print_time
@@ -33,8 +33,7 @@ def leaderboard():
     _field = Field.query.filter(Field.field == field).first()
     _teams = set([Team.query.filter(Team.team == u.team).first() for u in _field.uids])
 
-    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids}
-
+    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids if u.timestamp.date() == date.today()}
     team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
     team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
 
