@@ -477,9 +477,6 @@ def get_uid():
     uid = CP.user_reg
     CP.user_reg = None
 
-    if uid:
-
-        print(uid)
-        return make_response(jsonify({"uid": uid}), 200)
+    if uid: return make_response(jsonify({"uid": uid}), 200)
 
     return make_response(jsonify({"message": "OK"}), 200)
