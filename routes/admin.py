@@ -271,7 +271,7 @@ def issue_command():
                     node.allow_medic = int(args, 16)
 
                 db_session.commit()
-                
+
                 return make_response(jsonify({"message": "OK"}), 200)
 
             # Blast a few necessary commands to push the node into a
@@ -393,10 +393,9 @@ def issue_command():
         elif button == 'Start Game':
 
             _field = Field.query.filter(Field.field == field).first()
-            _teams = set([Team.query.filter(Team.team == u.team).first() for u in _field.uids])
+            _teams = set(Team.query.filter(Team.team == u.team).first() for u in _field.uids)
 
-            plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids}
-
+            plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids if u.timestamp.date() == date.today()}
             team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
             team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
 
