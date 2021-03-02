@@ -17,7 +17,9 @@
         <table id="table">
         <thead>
           <tr>
-                <th class="header"> {{team_name[team] | safe}} ({{team_data[team] | length}}) <br/> {{ team_score[team] | safe }}pts</th>
+                <th class="header"> {{ team_name[team] | safe }} ({{ team_data[team] | length }})
+                                    {{ team_score[team] | safe }} {{ ' pt' if team_score[team] == 1 else ' pts' }}
+                </th>
           </tr>
         </thead>
         <tbody>
@@ -55,7 +57,9 @@
     <table id="table">
     <thead>
       <tr>
-            <th class="header"> {{team_name[team] | safe}} ({{team_data[team] | length}}) <br/> {{ team_score[team] | safe }}pts</th>
+            <th class="header"> {{ team_name[team] | safe }} ({{ team_data[team] | length }})
+                                {{ team_score[team] | safe }} {{ ' pt' if team_score[team] == 1 else ' pts' }}
+            </th>
       </tr>
     </thead>
     <tbody>
