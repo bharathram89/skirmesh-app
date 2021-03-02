@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import Field
+from models.db_models import Field, get_field_scores
 
 from flask import render_template, jsonify, session, request, make_response
 from flask import Blueprint
@@ -77,6 +77,8 @@ def field_page(field):
         if uid.timestamp.date() != date.today(): continue
         teams.setdefault(uid.team, []).append(uid)
 
+    plyr_score, team_score, team_times, nd_times = get_field_scores(field)
+
     kwargs = {'author'     : "Brandon Zoss and Dustin Kuchenbecker",
               'name'       : "SkirMesh",
               'team_col'   : ['player'],
@@ -84,6 +86,7 @@ def field_page(field):
               'team_data'  : teams,
               'team_cmap'  : team_cmap,
               'team_name'  : team_name,
+              'team_score' : team_score,
                }
 
     db_session.commit()

@@ -241,3 +241,40 @@ def get_is_capture_closed(node):
     result = query.order_by(Score.id.desc()).first()
 
     return result.time_held if result else None
+
+
+def get_field_scores(field):
+
+    _field = Field.query.filter(Field.field == field).first()
+
+    if not _field: return {}, {}, {}, {}
+
+    _teams = set(Team.query.filter(Team.team == u.team).first() for u in _field.uids)
+
+    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids if u.timestamp.date() == date.today()}
+    team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
+    team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
+
+    nd_times = {}
+    for node in _field.nodes:
+
+        times = {}
+        for score in node.scores:
+            times.setdefault(score.team, []).append(score.time_held or 0)
+
+        for team in times: times[team] = sum(times[team])
+        nd_times[node] = times
+
+        # Add time for nodes that are still under control
+        begin = get_time_capture_complete(node.node)
+        if node.stable and begin and not get_is_capture_closed(node.node) and node.team in times:
+
+            times[node.team]
+            held  = int((datetime.now() - begin).total_seconds())
+
+            nd_times[node][node.team] += held
+            team_times[node.team] += held
+            team_score[node.team] += held//node.point_scale
+
+
+    return plyr_score, team_score, team_times, nd_times
