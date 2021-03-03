@@ -4,8 +4,7 @@ from sqlalchemy.orm import relationship
 
 from database import Base
 
-from datetime import datetime, date
-from dateutil import tz
+from datetime import datetime
 
 from sqlalchemy import func, and_
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -246,7 +245,10 @@ def get_is_capture_closed(node):
 
 
 def date_is_today(utctime):
-    return utctime.replace(tzinfo=tz.tzutc()).astimezone(tz.tzlocal()).date() == date.today()
+
+    diff = datetime.now() - utctime
+
+    return diff.days == 0
 
 
 def get_field_scores(field):
