@@ -239,7 +239,7 @@ def issue_command():
                         # then close it out
                         if begin and not get_is_capture_closed(node.node):
 
-                            held  = int((datetime.now() - begin).total_seconds())
+                            held  = int((datetime.utcnow() - begin).total_seconds())
 
                             tdat = {'node':node.node,'team':node.team,'field':field,
                                     'points':held//node.point_scale,'time_held':held,
@@ -366,7 +366,7 @@ def issue_command():
                     # then close it out
                     if begin and not closed:
 
-                        held  = int((datetime.now() - begin).total_seconds())
+                        held  = int((datetime.utcnow() - begin).total_seconds())
 
                         tdat = {'node':node.node,'team':node.team,'field':field,
                                 'points':held//node.point_scale, 'time_held':held,

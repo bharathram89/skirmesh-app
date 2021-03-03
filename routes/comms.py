@@ -1,7 +1,6 @@
 
 from models.db_models import CommsData
 from flask import render_template, Blueprint
-from datetime import datetime
 
 
 bp = Blueprint('comms', __name__, url_prefix='')
@@ -11,7 +10,6 @@ def comms_log():
 
     kwargs = {'cols_data' : CommsData.__table__.columns.keys(),
               'data_data' : CommsData.query.order_by(CommsData.id.desc()).all(),
-              'datetime'  : datetime,
               'time_disp' : '%d %b %Y  %H:%M:%S',
              }
 

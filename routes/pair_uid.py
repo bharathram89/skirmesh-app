@@ -6,9 +6,6 @@ from flask import render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
 from flask import Blueprint
 
-from datetime import datetime
-import json
-
 
 
 bp = Blueprint('pair_uid', __name__, url_prefix='')

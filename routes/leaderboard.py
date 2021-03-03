@@ -5,7 +5,6 @@ from models.db_models import (Field, Team, get_time_capture_complete,
 from flask import render_template, flash, session
 from flask import Blueprint
 
-from datetime import datetime, date
 import json
 
 from pretty_print import print_time

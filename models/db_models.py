@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship
 from database import Base
 
 from datetime import datetime, date
+from dateutil import tz
+
 from sqlalchemy import func, and_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -16,7 +18,7 @@ class CommsData(Base):
     __tablename__ = 'data'
 
     id         = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp  = Column(DateTime, default=datetime.now)
+    timestamp  = Column(DateTime, default=datetime.utcnow)
 
     sender     = Column(String, nullable=False)
     dest       = Column(String, nullable=False)
@@ -30,7 +32,7 @@ class UID(Base):
     __tablename__ = 'uid'
 
     id         = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp  = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     uid        = Column(String, unique=True)
     team       = Column(String, ForeignKey('team.team'), nullable=False)
@@ -53,7 +55,7 @@ class Team(Base):
     __tablename__ = 'team'
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     team      = Column(String, unique=True, nullable=False)
 
@@ -73,7 +75,7 @@ class Field(Base):
     __tablename__ = 'field'
 
     id         = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp  = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     field      = Column(String, unique=True, nullable=False)
 
@@ -93,7 +95,7 @@ class Medic(Base):
     __tablename__ = 'medic'
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     uid       = Column(String, ForeignKey('uid.uid'), unique=True, nullable=False)
     alive     = Column(Boolean, default=1, nullable=False)
@@ -105,7 +107,7 @@ class Score(Base):
     __tablename__ = 'score'
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.now)
+    timestamp = Column(DateTime, default=datetime.utcnow)
 
     uid       = Column(String, ForeignKey('uid.uid'))
     field     = Column(String, ForeignKey('field.field'), nullable=False)
@@ -135,7 +137,7 @@ class Game(Base):
     score_by_team  = Column(String)
     score_by_uid   = Column(String)
 
-    timestamp      = Column(DateTime, default=datetime.now)
+    timestamp      = Column(DateTime, default=datetime.utcnow)
 
 
 
@@ -144,7 +146,7 @@ class NodeStatus(Base):
     __tablename__ = 'node_status'
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     node      = Column(String, unique=True, nullable=False)
     # General status attributes
@@ -175,7 +177,7 @@ class Player(UserMixin, Base):
     __tablename__ = 'player'
 
     id             = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp      = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     image          = relationship('Images', backref='player_image', uselist=False, cascade="all, delete-orphan")
 
@@ -208,7 +210,7 @@ class Images(Base):
     __tablename__ = 'images'
 
     id             = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp      = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     player         = Column(Integer, ForeignKey('player.id'), nullable=False)
 
@@ -243,6 +245,10 @@ def get_is_capture_closed(node):
     return result.time_held if result else None
 
 
+def date_is_today(utctime):
+    return utctime.replace(tzinfo=tz.tzutc()).astimezone(tz.tzlocal()).date() == date.today()
+
+
 def get_field_scores(field):
 
     _field = Field.query.filter(Field.field == field).first()
@@ -251,7 +257,7 @@ def get_field_scores(field):
 
     _teams = set(Team.query.filter(Team.team == u.team).first() for u in _field.uids)
 
-    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids if u.timestamp.date() == date.today()}
+    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids if date_is_today(u.timestamp)}
     team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
     team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
 
@@ -270,7 +276,7 @@ def get_field_scores(field):
         if node.stable and begin and not get_is_capture_closed(node.node) and node.team in times:
 
             times[node.team]
-            held  = int((datetime.now() - begin).total_seconds())
+            held  = int((datetime.utcnow() - begin).total_seconds())
 
             nd_times[node][node.team] += held
             team_times[node.team] += held

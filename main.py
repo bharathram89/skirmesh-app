@@ -15,8 +15,7 @@ from flask import request, redirect, url_for, make_response
 from flask_login import LoginManager, logout_user
 
 import os, glob
-from datetime import datetime
-import time, json
+import time
 
 from pretty_print import print_time, print_perc
 
@@ -92,7 +91,7 @@ if __name__ == '__main__':
 
     db_session.commit()
 
-    
+
 
     from routes.admin import CP
     print("Initializing host controller")

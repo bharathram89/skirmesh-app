@@ -28,7 +28,7 @@ class CommsData(db.Model):
     __tablename__ = 'data'
 
     id         = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp  = db.Column(db.DateTime, default=datetime.now)
+    timestamp  = db.Column(db.DateTime, default=datetime.utcnow)
 
     sender     = db.Column(db.String, nullable=False)
     dest       = db.Column(db.String, nullable=False)
@@ -42,7 +42,7 @@ class UID(db.Model):
     __tablename__ = 'uid'
 
     id         = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp  = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp  = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     uid        = db.Column(db.String, unique=True)
     team       = db.Column(db.String, db.ForeignKey('team.team'), nullable=False)
@@ -65,7 +65,7 @@ class Team(db.Model):
     __tablename__ = 'team'
 
     id        = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     team      = db.Column(db.String, unique=True, nullable=False)
 
@@ -85,7 +85,7 @@ class Field(db.Model):
     __tablename__ = 'field'
 
     id         = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp  = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp  = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     field      = db.Column(db.String, unique=True, nullable=False)
 
@@ -105,7 +105,7 @@ class Medic(db.Model):
     __tablename__ = 'medic'
 
     id        = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     uid       = db.Column(db.String, db.ForeignKey('uid.uid'), unique=True, nullable=False)
     alive     = db.Column(db.Boolean, default=1, nullable=False)
@@ -117,7 +117,7 @@ class Score(db.Model):
     __tablename__ = 'score'
 
     id        = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     uid       = db.Column(db.String, db.ForeignKey('uid.uid'))
     field     = db.Column(db.String, db.ForeignKey('field.field'), nullable=False)
@@ -147,7 +147,7 @@ class Game(db.Model):
     score_by_team  = db.Column(db.String)
     score_by_uid   = db.Column(db.String)
 
-    timestamp      = db.Column(db.DateTime, default=datetime.now)
+    timestamp      = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 
@@ -156,7 +156,7 @@ class NodeStatus(db.Model):
     __tablename__ = 'node_status'
 
     id        = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     node      = db.Column(db.String, unique=True, nullable=False)
     # General status attributes
@@ -187,7 +187,7 @@ class Player(UserMixin, db.Model):
     __tablename__ = 'player'
 
     id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp      = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     image          = db.relationship('Images', backref='player_image', uselist=False, cascade="all, delete-orphan")
 
@@ -220,7 +220,7 @@ class Images(db.Model):
     __tablename__ = 'images'
 
     id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    timestamp      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    timestamp      = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     player         = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
 

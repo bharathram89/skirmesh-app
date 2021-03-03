@@ -8,9 +8,6 @@ from flask import Blueprint
 
 from flask_login import current_user, login_user, login_required
 
-from datetime import datetime
-import json
-
 
 
 bp = Blueprint('registration', __name__, url_prefix='')

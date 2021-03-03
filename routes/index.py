@@ -1,10 +1,9 @@
 from database import db_session
-from models.db_models import Field, get_field_scores
+from models.db_models import Field, get_field_scores, date_is_today
 
 from flask import render_template, jsonify, session, request, make_response
 from flask import Blueprint
 
-from datetime import date
 import json
 
 
@@ -74,7 +73,7 @@ def field_page(field):
     teams = {}
     for uid in _field.uids if _field else []:
         # Only add to team if they registered today
-        if uid.timestamp.date() != date.today(): continue
+        if not date_is_today(uid.timestamp): continue
         teams.setdefault(uid.team, []).append(uid)
 
     plyr_score, team_score, team_times, nd_times = get_field_scores(field)

@@ -228,7 +228,7 @@ class CONTROL_POINT(XBeeDevice):
                 # Set recent timestamp to now to show last time on the Network
                 # This matters for selecting nodes that are "available" when
                 # filtering for nodes active "today"
-                node.timestamp = datetime.now()
+                node.timestamp = datetime.utcnow()
 
             else:
                 # Initialize NodeStatus with all the defaults
@@ -321,7 +321,7 @@ class CONTROL_POINT(XBeeDevice):
             # This was necessary to force a timestamp update if nothing changes
             # but a player "registers" onto a team on gameday
             if is_uid.team == team and is_uid.field == self.field:
-                is_uid.timestamp = datetime.now()
+                is_uid.timestamp = datetime.utcnow()
 
             is_uid.team        = team
             is_uid.field       = self.field
@@ -416,7 +416,7 @@ class CONTROL_POINT(XBeeDevice):
                         # been figured out (i.e. the capture was closed out)
                         if begin and not PG.get_is_capture_closed(node):
 
-                            held  = int((datetime.now() - begin).total_seconds())
+                            held  = int((datetime.utcnow() - begin).total_seconds())
                             orig_captor = PG.get_last_captor(node)
 
                             tdat = {'node'     :node,
@@ -504,7 +504,7 @@ class CONTROL_POINT(XBeeDevice):
 
             alive, timestamp = medic.alive, medic.timestamp
 
-            d_t = datetime.now() - timestamp
+            d_t = datetime.utcnow() - timestamp
 
             if not alive and d_t.total_seconds() >= med_time:
                 # If he was dead and has waited the correct amount of time,
