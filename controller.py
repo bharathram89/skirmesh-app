@@ -395,6 +395,10 @@ class CONTROL_POINT(XBeeDevice):
                 print(f'UID {uid} is not registered to field: {self.field}')
                 return None
 
+            if _uid and not PG.date_is_today(_uid.timestamp):
+                print(f'UID {uid} is has not registered today')
+                return None
+
             if team:
 
                 print(f'Team {team} is prosecuting Node_{node}')
