@@ -246,7 +246,7 @@ def get_is_capture_closed(node):
 
 def date_is_today(utctime):
 
-    diff = datetime.now() - utctime
+    diff = datetime.utcnow() - utctime
 
     return diff.days == 0
 
