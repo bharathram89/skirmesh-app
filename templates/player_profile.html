@@ -18,7 +18,7 @@
 
 {% if uid %}
 <p>
-    Assigned to operations @ {{ uid.field or '_ _ _ _ _'}}. <br/>
+    Assigned to operations @ {{ uid.field.replace('_',' ') or '_ _ _ _ _'}}. <br/>
     <br/>
     Objectives held by team: <br/>
 
