@@ -23,8 +23,8 @@
     Objectives held by team: <br/>
 
     {% if team %}
-        {% for node in team.nodes %}
-        {{ node.location or node.node }} <br/>
+        {% for node in team.nodes if (node.config == 10 and node.location) %}
+        {{ node.location }} <br/>
         {% endfor %} <br/>
     {% endif %}
 
