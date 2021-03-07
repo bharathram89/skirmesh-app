@@ -28,7 +28,7 @@ DATABASE_URL = os.environ['DATABASE_URL']
 application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-application.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024      # 2MB max file size limit on photos
+application.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024      # 5MB max file size limit on photos
 
 application.secret_key = 'a secret'
 loginMngr = LoginManager(application)
