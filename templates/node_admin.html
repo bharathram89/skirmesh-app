@@ -46,7 +46,7 @@
 
     {% if cmd_dict %}
 
-        <label style="float: right;"><input type="checkbox" id="do_broadcast" onclick="enable_broadcast(this)" /> BROADCAST </label>
+        <label style="float: right;"><input type="checkbox" id="do_broadcast" onclick="enable_broadcast(this)" /> BROADCAST (UPDATE ALL) </label>
 
         <div class="table-wrapper" style="font-size: 75%">
 
@@ -209,7 +209,7 @@
                             </option>
                             {% endfor %}
 
-                        </select> | 
+                        </select> |
 
                         <select class="8D" onchange="update_param(this)" style="width: 30%">
 

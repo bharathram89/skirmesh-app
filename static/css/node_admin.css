@@ -14,7 +14,6 @@ td select {
 th, input {
   width: unset;
   margin: 0;
-  vertical-align: middle;
 }
 
 .broadcast.enabled {
