@@ -1,141 +1,7 @@
-// var paths = document.getElementsByTagName("path");
-//
-//
-// var dragged;
-//
-// /* events fired on the draggable target */
-// document.addEventListener("drag", function( event ) {
-//   event.dataTransfer.setDragImage(event.target, 10,10);
-// }, false);
-//
-// document.addEventListener("dragstart", function( event ) {
-//   // store a ref. on the dragged elem
-//   dragged = event.target;
-//   // make it half transparent
-//   event.target.style.opacity = 0.5;
-//   event.dataTransfer.setData("text", event.target.src);
-// }, false);
-//
-// document.addEventListener("dragend", function( event ) {
-//   // reset the transparency
-//   event.target.style.opacity = "";
-//
-// }, false);
-//
-// /* events fired on the drop targets */
-// document.addEventListener("dragover", function( event ) {
-//   // prevent default to allow drop
-//   event.preventDefault();
-//
-// }, false);
-//
-// document.addEventListener("dragenter", function( event ) {
-//   // highlight potential drop target when the draggable element enters it
-//
-//   if ( event.target.tagName == "path" ) {
-//       event.target.style.opacity = 0.5;
-//       event.target.style.fill = "#800000";
-//       event.target.style.transform = "scale(1.1)";
-//   }
-//
-// }, false);
-//
-// document.addEventListener("dragleave", function( event ) {
-//   // reset background of potential drop target when the draggable element leaves it
-//   if ( event.target.tagName == "path" ) {
-//       event.target.style = "";
-//   }
-//
-// }, false);
-//
-// document.addEventListener("drop", function( event ) {
-//   // prevent default action (open as link for some elements)
-//   event.preventDefault();
-//   // move dragged elem to the selected drop target
-//   if ( event.target.tagName == "path" ) {
-//       event.target.style = "";
-//       event.target.style.transform = "scale(1.0)";
-//       event.target.style.fill = "#img1";
-//       // Put this back when you're ready to get rid of it
-//       // dragged.parentNode.removeChild( dragged );
-//       // event.target.appendChild( dragged );
-//
-//       // Somewhere in here - just set the background to a Beautiful
-//       // picture of a node (or something) --- also need to set the name
-//       // or something besides the ID (it's taken) to let it know that
-//       // it's been assigned... may set the class to "assigned" - or
-//       // something else that seems logical.
-//   }
-//
-// }, false);
-//
-
-
-function update_cmd_args(cmd_arg_list) {
-
-    var cmd_sel = document.getElementById("conf");
-    var cmd_txt = cmd_sel.options[cmd_sel.selectedIndex].text.toUpperCase();
-    var cmd_val = cmd_sel.value;
-
-    var nodes = Array.from(document.getElementById("dest").options).map(elem => elem.text);
-    var new_options = "";
-
-    // Look for the argument in the index unless it's a timer, then just match
-    if ((cmd_txt in cmd_arg_list) || (cmd_txt.indexOf('TIME') > -1) ){
-
-        // Set all time indexes to the timer list
-        if (cmd_txt.indexOf('TIME') > -1) {
-          cmd_txt = 'TIME DATA';
-        }
-
-        for (var i = 0; i < cmd_arg_list[cmd_txt.toUpperCase()].length; i++) {
-
-                if (!nodes.includes(cmd_arg_list[cmd_txt.toUpperCase()][i].text)) {
-
-                  new_options += "<option value=" + cmd_arg_list[cmd_txt.toUpperCase()][i].value + "> ";
-                  new_options += cmd_arg_list[cmd_txt.toUpperCase()][i].text + "</option>";
-                }
-        }
-
-        document.getElementById("args").innerHTML = new_options;
-    }
-    else {
-        document.getElementById("args").innerHTML = "<option value='00'>--select--</option>";
-    }
-}
-
-
-function update_cmd_opts() {
-
-    var dest = document.getElementById("dest");
-    var loc = document.getElementById("set_loc");
-    var scale = document.getElementById("set_scale");
-
-    if (dest.value == "FFFF") {
-        loc.style.display = "none";
-        scale.style.display = "none";
-    }
-    else {
-        loc.style.display = "";
-        scale.style.display = "";
-    }
-
-}
-
 
 function form_submit(button) {
 
-    var dest = document.getElementById("dest");
-    var conf = document.getElementById("conf");
-    var args = document.getElementById("args");
-
-    var data = {
-                'args'     : args.value,
-                'dest'     : dest.value,
-                'conf'     : conf.value,
-                'button'   : button.value,
-                'location' : args.options[args.selectedIndex].text,
-               };
+    var data = {'button':button.value};
 
     // console.log(data)
 
@@ -175,27 +41,270 @@ function form_submit(button) {
 }
 
 
-//
-//
-// // Get the element with id="defaultOpen" and click on it
-// document.getElementById("defaultOpen").click();
-//
-// function show_table(event, id_name) {
-//
-//     var i, tabcontent, tablinks;
-//
-//     tabcontent = document.getElementsByClassName("node_admin");
-//
-//     for (i = 0; i < tabcontent.length; i++) {
-//       tabcontent[i].style.display = "none";
-//     }
-//
-//     tablinks = document.getElementsByClassName("tablink");
-//
-//     for (i = 0; i < tablinks.length; i++) {
-//       tablinks[i].className = tablinks[i].className = "tablink";
-//     }
-//
-//     document.getElementById(id_name).style.display = "";
-//     event.currentTarget.className = "tablink active";
-// }
+
+function unlock(ele) {
+
+    var child;
+
+    child = ele.getElementsByTagName("select")[0];
+    child.disabled = !child.disabled;
+
+}
+
+
+
+function enable_broadcast(checkbox) {
+
+    var i;
+
+    eles = document.getElementsByClassName("broadcast");
+
+    for (i = 0; i < eles.length; i++) {
+
+      if (checkbox.checked) {
+
+          eles[i].classList.add("enabled");
+
+          }
+
+      else {
+
+          eles[i].classList.remove("enabled");
+
+          }
+
+    }
+
+}
+
+
+
+function update_param(ele) {
+
+    var node, i, broadcast, data;
+
+    node = ele.parentNode.parentNode.id;
+    broadcast = document.getElementById("do_broadcast").checked;
+
+    if (broadcast) {
+    eles = document.getElementsByClassName(ele.className);
+
+        for (i = 0; i < eles.length; i++) {
+
+              eles[i].value = ele.value;
+
+              data = {
+                      'dest' : eles[i].parentNode.parentNode.id,
+                      'arg'  : eles[i].value,
+                      'cmd'  : eles[i].className,
+                     };
+
+              transmit_param_data(data);
+
+        }
+
+    }
+
+    else {
+
+        data = {
+                'dest' : ele.parentNode.parentNode.id,
+                'arg'  : ele.value,
+                'cmd'  : ele.className,
+               };
+
+        transmit_param_data(data);
+
+    }
+
+}
+
+
+
+function transmit_param_data(data) {
+
+    fetch("/node_admin/set_param", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status code: ' + response.status);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+}
+
+
+
+function update_config(ele) {
+
+    var node;
+
+    node = ele.parentNode.parentNode.id;
+
+    var data = {
+                'dest' : ele.parentNode.parentNode.id,
+                'conf' : ele.value,
+               };
+
+    switch(data.conf) {
+
+          // QUERY, PAIR_UID, CAPTURE, MEDIC, BOMB
+          case '02': case '03': case '0E': case 'BB':
+
+              transmit_config_data(data);
+              break;
+
+          // REGISTER, SET TEAM
+          case '01': case '04':
+
+              data.team = ele.parentNode.parentNode.getElementsByClassName("04")[0].value;
+              if (data.team){
+
+                  transmit_config_data(data);
+              }
+
+              break;
+
+          case '0A':
+              ele.parentNode.parentNode.getElementsByClassName("04")[0].value = "";
+              transmit_config_data(data);
+              break;
+          }
+
+}
+
+
+
+function transmit_config_data(data) {
+
+    fetch("/node_admin/set_config", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status code: ' + response.status);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+}
+
+
+
+function update_team(ele) {
+
+    var node;
+
+    node = ele.parentNode.parentNode.id;
+    conf = ele.parentNode.parentNode.getElementsByClassName("00")[0].value;
+
+    var data = {
+                'dest' : ele.parentNode.parentNode.id,
+                'team' : ele.value,
+               };
+
+    if (data.team) {
+
+        switch(conf) {
+              // ONLY SET TEAM IF IN CAPTURE MODE
+              case '0A':
+
+                  transmit_team_data(data);
+                  break;
+
+              // Place holder for future expansion
+              case '01':
+                  data.conf = conf;
+                  transmit_config_data(data);
+                  break;
+              }
+
+     }
+
+}
+
+
+
+function transmit_team_data(data) {
+
+    fetch("/node_admin/set_team", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status code: ' + response.status);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+}
+
+
+
+function update_controller(ele) {
+
+    var node, cmd, arg;
+
+    node = ele.parentNode.parentNode.id;
+    cmd  = ele.className;
+    arg  = ele.value;
+
+    var data = {
+                'dest' : node,
+                'cmd'  : cmd,
+                'arg'  : arg,
+               };
+
+    set_controller_data(data);
+
+}
+
+
+
+function update_controller_data(data) {
+
+    fetch("/node_admin/set_controller_data", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status code: ' + response.status);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+}

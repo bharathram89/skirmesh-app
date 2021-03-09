@@ -1,55 +1,55 @@
 [
     {
         "text": "10 (sec)",
-        "value": "0x1"
+        "value": "0x01"
     },
     {
         "text": "20 (sec)",
-        "value": "0x2"
+        "value": "0x02"
     },
     {
         "text": "30 (sec)",
-        "value": "0x3"
+        "value": "0x03"
     },
     {
         "text": "40 (sec)",
-        "value": "0x4"
+        "value": "0x04"
     },
     {
         "text": "50 (sec)",
-        "value": "0x5"
+        "value": "0x05"
     },
     {
         "text": "60 (sec)",
-        "value": "0x6"
+        "value": "0x06"
     },
     {
         "text": "70 (sec)",
-        "value": "0x7"
+        "value": "0x07"
     },
     {
         "text": "80 (sec)",
-        "value": "0x8"
+        "value": "0x08"
     },
     {
         "text": "90 (sec)",
-        "value": "0x9"
+        "value": "0x09"
     },
     {
         "text": "100 (sec)",
-        "value": "0xa"
+        "value": "0x0a"
     },
     {
         "text": "110 (sec)",
-        "value": "0xb"
+        "value": "0x0b"
     },
     {
         "text": "120 (sec)",
-        "value": "0xc"
+        "value": "0x0c"
     },
     {
         "text": "2.5 (min)",
-        "value": "0xf"
+        "value": "0x0f"
     },
     {
         "text": "3.0 (min)",

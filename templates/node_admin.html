@@ -3,161 +3,225 @@
 {% block content %}
 
 <script src="../static/js/node_admin.js"></script>
+<link rel="stylesheet" type="text/css" href="../static/css/node_admin.css" charset="utf-8" />
 
-<body onload="update_cmd_args({{ cmd_args | safe }})">
 
-    <form id="configuration_control"
-          name="Member_Data"
-          action=""
-          method="post"
-          style="float:center">
 
-      <fieldset id="fieldset">
+<body>
 
-          <legend> Configuration Control </legend>
+    <ul class="nav">
+    <li {{ "style=display:none" if not cmd_dict }}>
+    <input class="button"
+           id="end_game_button"
+           type="button"
+           name="action"
+           {% if is_paused %}
+              value="Resume Game"
+           {% else %}
+              value="Pause Game"
+           {% endif %}
+           onclick="form_submit(this)">
+       </input></li>
 
-          <div id="fields">
+   <li {{ "style=display:none" if not cmd_dict }}>
+   <input class="button"
+          id="start_game_button"
+          type="button"
+          name="action"
+          value="Start Game"
+          onclick="form_submit(this)">
+      </input></li>
 
-              <div class="form_field">
-                  <label for="dest"> Destination Node </label> <br>
-                  <select name="dest" id="dest" placeholder="Destination Node" onchange="update_cmd_opts()">
-                      <option value="FFFF">BROADCAST</option>
-                      {% for node in node_status %}
-                      <option value="{{ node.node }}">{{ node.location if node.location else node.node[8:] }}</option>
-                      {% endfor %}
-                  </select>
-              </div>
+    <li {{ "style=display:none" if cmd_dict }}>
+    <input class="button"
+           id="discover_network_button"
+           type="button"
+           name="action"
+           value="Discover Network"
+           onclick="form_submit(this)">
+       </input></li>
+    </ul>
 
-              <div class="form_field">
-                  <br>
-                  <select name="conf" id="conf" placeholder="Configuration" onchange="update_cmd_args({{ cmd_args | safe }})">
-                      {% if cmd_dict %}
-
-                          {% for key in cmd_dict %}
-
-                              {% if cmd_dict[key] == 'CONFIGURE' %}
-                              {% else %}
-
-                                {% if '%02X' % key == "FF" %}
-                                    <option value="{{ '%02X' % key }}" id="set_loc" style="display:none">SET LOCATION</option>
-                                {% elif '%02X' % key == "9A" %}
-                                    <option value="{{ '%02X' % key }}" id="set_scale" style="display:none">SET POINT SCALE</option>
-                                {% else %}
-                                    <option value="{{ '%02X' % key }}">{{ cmd_dict[key] }}</option>
-                                {% endif %}
-
-                              {% endif %}
-
-                          {% endfor %}
-
-                      {% else %}
-
-                      <option value="00" id="no_nodes" style="display:none">--select--</option>
-
-                      {% endif %}
-
-                  </select>
-              </div>
-
-              <div class="form_field">
-                  <label for="args"> Command Argument </label> <br>
-                  <select name="args" id="args" placeholder="Command Argument" onclick="">
-
-                          "<option value='00'>--select--</option>"
-
-                  </select>
-              </div>
-
-          </div>
-
-          <br/>
-
-          <center>
-
-          <input class="button"
-                 id="form_submit_button"
-                 type="button"
-                 name="action"
-                 value="Issue Command"
-                 onclick="form_submit(this)"
-                 {% if not cmd_dict %}
-                 style="display:none"
-                 {% endif %}>
-                 </input>
-
-          <input class="button"
-                 id="end_game_button"
-                 type="button"
-                 name="action"
-                 {% if is_paused %}
-                    value="Resume Game"
-                 {% else %}
-                    value="Pause Game"
-                 {% endif %}
-                 onclick="form_submit(this)"
-                 {% if not cmd_dict %}
-                 style="display:none"
-                 {% endif %}>
-                 </input>
-
-         <input class="button"
-                id="start_game_button"
-                type="button"
-                name="action"
-                value="Start Game"
-                onclick="form_submit(this)"
-                {% if not cmd_dict %}
-                style="display:none"
-                {% endif %}>
-                </input>
-
-          <input class="button"
-                 id="discover_network_button"
-                 type="button"
-                 name="action"
-                 value="Discover Network"
-                 onclick="form_submit(this)"
-                 {% if cmd_dict %}
-                 style="display:none"
-                 {% endif %}>
-                 </input>
-
-          </center>
-
-      </fieldset>
-
-    </form>
 
 
     {% if cmd_dict %}
 
+        <label style="float: right;"><input type="checkbox" id="do_broadcast" onclick="enable_broadcast(this)" /> BROADCAST </label>
+
         <div class="table-wrapper" style="font-size: 75%">
 
-          <table id="table">
+          <table>
 
             <thead>
               <tr>
-                  {% for col in node_cols %}
-                    <th class="header" style="background-color:#808080;"> {{col | safe}} </th>
-                  {% endfor %}
+
+                  <th class="header"> node id </th>
+                  <th class="header"> location </th>
+                  <th class="header"> config </th>
+                  <th class="header"> team </th>
+                  <th class="header broadcast"> capture time </th>
+                  <th class="header broadcast"> capture assist </th>
+                  <th class="header"> point scale </th>
+                  <th class="header broadcast"> medic time </th>
+                  <th class="header"> medic </th>
+                  <th class="header broadcast"> Bomb</br>FUS  |  ARM  |  DIS </th>
+
               </tr>
             </thead>
 
             <tbody>
 
                 {% for node in node_status %}
-                <tr class="row">
+                <tr class="row" id="{{ node.node | safe }}">
 
-                    <td> {{ node.node[8:]                   | safe }} </td>
-                    <td> {{ node.location                   | safe }} </td>
-                    <td> {{ cmd_dict[node.config]           | safe }} </td>
-                    <td> {{ team_name[node.team]            | safe }} </td>
-                    <td> {{ print_time(node.cap_time * 10)  | safe }} </td>
-                    <td> {{ print_perc(node.cap_asst)       | safe }} </td>
-                    <td> {{ (60/node.point_scale)           | safe }} x </td>
-                    <td> {{ print_time(node.med_time * 10)  | safe }} </td>
-                    <td> {{ node.allow_medic                | safe }} </td>
-                    <td> {{ print_time(node.bomb_time * 10) | safe }} | {{ print_time(node.arm_time * 10) | safe }} | {{ print_time(node.diff_time * 10) | safe }} </td>
+                    <td disabled > {{ node.node[12:]                   | safe }} </td>
+                    <td>
+
+                        <select onchange="update_controller(this)">
+
+                          {% for opt in cmd_args['SET LOCATION'] %}
+                            <option {{ 'selected' if opt['text'] == node.location }}>
+                              {{ opt['text'] }}
+                            </option>
+                          {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td ondblclick="unlock(this)">
+
+                        <select class="00" disabled onchange="update_config(this)" onblur="this.disabled = true">
+
+                        {% for key in cmd_dict %}
+                          <option value="{{ '%02X' % key }}" {{ 'selected' if key == node.config }}>
+                            {{ cmd_dict[key] }}
+                          </option>
+                        {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td ondblclick="unlock(this)">
+
+                        <select class="04" disabled onchange="update_team(this)" onblur="this.disabled = true">
+
+                            <option value=""/>
+                            {% for team in team_name %}
+                              <option value="{{ team }}" {{ 'selected' if team == node.team }}>
+                                {{ team_name[team] }}
+                              </option>
+                            {% endfor %}
+
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <select class="8A" onchange="update_param(this)">
+
+                            {% for opt in cmd_args['TIME DATA'] %}
+                            <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.cap_time }}>
+                              {{ print_time( (opt['value'] | int(opt['value'],16)) * 10 ) }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <select class="8C" onchange="update_param(this)">
+
+                            {% for opt in cmd_args['SET ASSIST %'] %}
+                              <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.cap_asst }}>
+                                {{ opt['text'] }}
+                              </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <select class="9A" onchange="update_controller(this)">
+
+                            {% for opt in cmd_args['SET POINT SCALE'] %}
+                              <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.point_scale }}>
+                                {{ opt['text'] }}
+                              </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <select class="8E" onchange="update_controller(this)">
+
+                            {% for opt in cmd_args['TIME DATA'] %}
+                            <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.med_time }}>
+                              {{ print_time( (opt['value'] | int(opt['value'],16)) * 10 ) }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <select class="9B" onchange="update_controller(this)">
+
+                            {% for opt in cmd_args['ALLOW MEDIC'] %}
+                            <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.allow_medic }}>
+                              {{ opt['text'] }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </td>
+
+                    <td nowrap>
+
+                        <select class="8B" onchange="update_param(this)" style="width: 30%">
+
+                            {% for opt in cmd_args['TIME DATA'] %}
+                            <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.bomb_time }}>
+                              {{ print_time( (opt['value'] | int(opt['value'],16)) * 10 ) }}
+                            </option>
+                            {% endfor %}
+
+                        </select> <nobr/> | <nobr/>
+
+                        <select class="8F" onchange="update_param(this)" style="width: 30%">
+
+                            {% for opt in cmd_args['TIME DATA'] %}
+                            <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.arm_time }}>
+                              {{ print_time( (opt['value'] | int(opt['value'],16)) * 10 ) }}
+                            </option>
+                            {% endfor %}
+
+                        </select> <nobr/> | <nobr/>
+
+                        <select class="8D" onchange="update_param(this)" style="width: 30%">
+
+                            {% for opt in cmd_args['TIME DATA'] %}
+                            <option value="{{ opt['value'] }}" {{ 'selected' if (opt['value'] | int(opt['value'],16)) == node.diff_time }}>
+                              {{ print_time( (opt['value'] | int(opt['value'],16)) * 10 ) }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </td>
 
                 </tr>
                 {% endfor %}
@@ -171,6 +235,7 @@
     {% endif %}
 
 </body>
+
 
 
 {% endblock %}

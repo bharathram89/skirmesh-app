@@ -28,12 +28,9 @@ CMD_ARGS = {'TIME DATA'       : json.load(open("json/timer_values.json")),
 
 # print(json.dumps(CMD_ARGS, indent=4, sort_keys=True))
 
-BROADCAST    = "FFFF"
-
 
 @bp.route('/node_admin')
 def node_admin():
-
 
     field = session.get('field', CP.field)
 
@@ -89,7 +86,155 @@ def node_admin():
     db_session.commit()
 
     return render_template('node_admin.html', **kwargs)
-    # return render_template('fields/' + field +'.html', admin=True, **kwargs)
+
+
+
+@bp.route('/node_admin/set_param', methods=['POST'])
+def set_param():
+
+    data = json.loads(request.data)
+    field = session.get('field', CP.field)
+
+    val_map = {CP.CAPT_TIME:'cap_time',
+               CP.BOMB_TIME:'bomb_time',
+               CP.CAP_PERC :'cap_asst',
+               CP.DIFF_TIME:'diff_time',
+               CP.ARM_TIME :'arm_time'}
+
+    if request.method == 'POST':
+
+        dest = data['dest']
+        cmd  = int(data['cmd'], 16)
+        arg  = int(data['arg'], 16)
+
+        pkt = bytearray([cmd, arg])
+
+        _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
+
+        node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+
+        setattr(node, val_map[cmd], arg)
+
+        db_session.commit()
+
+    return make_response(jsonify({"message": "OK"}), 200)
+
+
+
+@bp.route('/node_admin/set_config', methods=['POST'])
+def set_config():
+
+    data = json.loads(request.data)
+    field = session.get('field', CP.field)
+
+    print(data)
+    if request.method == 'POST':
+
+        dest = data['dest']
+        conf = int(data['conf'], 16)
+
+        pkt = bytearray([0x00, conf])
+
+        node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+
+        if conf == CP.REGISTER:
+
+            pkt = pkt +  bytearray().fromhex(data['team'])
+
+        _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
+
+        node.config = conf
+        node.team   = None if not 'team' in data else data['team']
+
+        db_session.commit()
+
+    return make_response(jsonify({"message": "OK"}), 200)
+
+
+
+@bp.route('/node_admin/set_team', methods=['POST'])
+def set_team():
+
+    data = json.loads(request.data)
+    field = session.get('field', CP.field)
+
+    if request.method == 'POST':
+
+        dest = data['dest']
+        team = data['team']
+
+        pkt = bytearray([0x04]) + bytearray().fromhex(team)
+
+        score = {'node':dest, 'team':team, 'field':field, 'action':'CAPTURE'}
+        db_session.add(Score(**score))
+
+        node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+
+        node.team   = team
+        node.stable = 1
+
+        db_session.commit()
+
+        _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+        _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
+
+        CP.halt_points = True
+
+    return make_response(jsonify({"message": "OK"}), 200)
+
+
+
+@bp.route('/node_admin/set_controller_data', methods=['POST'])
+def set_controller_data():
+
+    data = json.loads(request.data)
+    field = session.get('field', CP.field)
+
+    val_map = {CP.SET_LOCATION :'location',
+               CP.SCALE_PTS    :'point_scale',
+               CP.ALLOW_MED    :'allow_medic',
+               CP.MED_TIME     :'med_time',
+               }
+
+    if request.method == 'POST':
+
+        dest = data['dest']
+        cmd  = int(data['cmd'], 16)
+        arg  = int(data['arg'], 16) if cmd != CP.SET_LOCATION else data['arg']
+
+        node = NodeStatus.query.filter(NodeStatus.node == dest).first()
+
+        setattr(node, val_map[cmd], arg)
+
+        if cmd == CP.SCALE_PTS:
+
+            if node.stable and node.team:
+
+                begin = get_time_capture_complete(node.node)
+                # If a capture started and was not closed out normally
+                # then close it out
+                if begin and not get_is_capture_closed(node.node):
+
+                    held  = int((datetime.utcnow() - begin).total_seconds())
+
+                    tdat = {'node':node.node,'team':node.team,'field':field,
+                            'points':held//node.point_scale,'time_held':held,
+                            'action':'SET SCALE'}
+                    db_session.add(Score(**tdat))
+
+            _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+            _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
+            CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
+            # Only stop points if node was controlled by a team, otherwise
+            # it will prevent the next capture action from earning points
+            CP.halt_points = True if node.team else False
+
+        db_session.commit()
+
+    return make_response(jsonify({"message": "OK"}), 200)
 
 
 
@@ -101,254 +246,12 @@ def issue_command():
 
     if request.method == 'POST':
 
-        dest   = data['dest']
-        config = data['conf']
-        args   = data['args']
         button = data['button']
 
         avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
 
-        pkt    = bytearray(3)
-        pkt[0] = CP.CONFIGURE
-        pkt[1] = int(config, 16)
 
-
-        if int(config, 16) == CP.SET_LOCATION and dest != BROADCAST:
-
-            print(f"Setting {dest} Location to: {data['location']}")
-
-            data = {'location' : data['location'],
-                    'node'     : dest,
-                    'field'    : field}
-
-            node = NodeStatus.query.filter(NodeStatus.node == dest).first()
-            if node:
-                node.field    = field
-                node.location = data['location']
-            else: db_session.add(NodeStatus(**data))
-
-            db_session.commit()
-
-
-        elif button == 'Issue Command':
-
-            try:
-
-                pkt[2:] = bytearray.fromhex(args)  #Grab the team
-                print('tried', pkt)
-            # Catch the case where we pass a single byte-like object for pretty
-            # much everything besides the team stuff and it can't get parsed
-            # into a bytearray
-            except ValueError:
-
-                pkt[2] = int(args, 16)              #Pull int arguments
-                print('failed', pkt)
-
-            _config = int(config, 16)
-
-            # If just setting the configuration for one node
-            if _config in CP.CONFIGURATIONS:
-
-                if dest == BROADCAST:
-
-                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
-
-                    for node in nodes:
-
-                        node.config = _config
-
-                        if _config == CP.REGISTER:
-
-                            node.team = pkt[2:].hex()
-
-                        if _config == CP.CAPTURE:
-
-                            node.team = None
-
-                else:
-
-                    data = {'config'   : _config,
-                            'node'     : dest,
-                            'field'    : field}
-
-                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
-                    if node:
-
-                        node.config    = _config
-
-                        if _config == CP.REGISTER:
-                            node.team = pkt[2:].hex()
-                            data['team'] = pkt[2:].hex()
-
-                        if _config == CP.CAPTURE:
-                            node.team = None
-
-                    else: db_session.add(NodeStatus(**data))
-
-                db_session.commit()
-
-            # Shift the pkt left to remove reconfigure command byte when
-            # setting attributes like timers
-            if CP.CAPT_TIME <= _config <= CP.ARM_TIME:
-
-                pkt.pop(0)
-
-                val_map = {CP.CAPT_TIME:'cap_time',
-                           CP.BOMB_TIME:'bomb_time',
-                           CP.MED_TIME :'med_time',
-                           CP.CAP_PERC :'cap_asst',
-                           CP.DIFF_TIME:'diff_time',
-                           CP.ARM_TIME :'arm_time'}
-
-                val, arg = _config, int(args, 16)
-
-                if dest == BROADCAST:
-
-                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
-                    for node in nodes: setattr(node, val_map[val], arg)
-
-                else:
-
-                    data = {'node':dest, val_map[val]:arg, 'field':field}
-
-                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
-                    if node: setattr(node, val_map[val], arg)
-                    else: db_session.add(NodeStatus(**data))
-
-                db_session.commit()
-
-
-            # medic is handled at the controller level
-            if _config == CP.MED_TIME:
-
-                # Return here because nothing gets sent to the node for this
-                return make_response(jsonify({"message": "OK"}), 200)
-
-
-
-            if _config == CP.SCALE_PTS:
-
-                node = NodeStatus.query.filter(NodeStatus.node == dest).first()
-
-                if node:
-
-                    if node.stable and node.team:
-
-                        begin = get_time_capture_complete(node.node)
-                        # If a capture started and was not closed out normally
-                        # then close it out
-                        if begin and not get_is_capture_closed(node.node):
-
-                            held  = int((datetime.utcnow() - begin).total_seconds())
-
-                            tdat = {'node':node.node,'team':node.team,'field':field,
-                                    'points':held//node.point_scale,'time_held':held,
-                                    'action':'SET SCALE'}
-                            db_session.add(Score(**tdat))
-
-                    _64bit_addr = XBee64BitAddress.from_hex_string(dest)
-                    _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
-                    CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
-                    # Only stop points if node was controlled by a team, otherwise
-                    # it will prevent the next capture action from earning points
-                    CP.halt_points = True if node.team else False
-
-                    node.point_scale = int(args, 16)
-
-                    db_session.commit()
-
-                return make_response(jsonify({"message": "OK"}), 200)
-
-
-
-            if _config == CP.ALLOW_MED:
-
-                if dest == BROADCAST:
-
-                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
-
-                    for node in nodes:
-
-                        node.allow_medic = int(args, 16)
-
-                else:
-
-                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
-                    node.allow_medic = int(args, 16)
-
-                db_session.commit()
-
-                return make_response(jsonify({"message": "OK"}), 200)
-
-            # Blast a few necessary commands to push the node into a
-            # specicic capture configuration
-            if _config == CP.SET_TEAM:
-
-                if dest == BROADCAST:
-
-                    nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
-
-                    for node in nodes:
-                        # Skip nodes that are not in capture
-                        if node.config != CP.CAPTURE: continue
-
-                        node.team      = pkt[2:].hex()
-                        node.stable    = 1
-
-                        data = {'node':node.node, 'team':node.team, 'field':field, 'action':'CAPTURE'}
-                        db_session.add(Score(**data))
-
-                        db_session.commit()
-
-                        # Send command to set the status to desired team in control
-                        _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
-                        _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
-                        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
-                        CP.halt_points = True
-
-                else:
-
-                    data = {'node':dest, 'team':pkt[2:].hex(), 'field':field, 'action':'CAPTURE'}
-                    db_session.add(Score(**data))
-
-                    data = {'node':dest,'team':pkt[2:].hex()}
-                    node = NodeStatus.query.filter(NodeStatus.node == dest).first()
-
-                    if node:
-                        node.team      = pkt[2:].hex()
-                        node.stable    = 1
-                    else:
-                        node = NodeStatus(**data)
-                        db_session.add(node)
-
-                    db_session.commit()
-
-                    _64bit_addr = XBee64BitAddress.from_hex_string(dest)
-                    _pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
-                    CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), _pkt)
-                    CP.halt_points = True
-
-                db_session.commit()
-                # Return here to prevent sending the final
-                return make_response(jsonify({"message": "OK"}), 200)
-
-
-
-            if dest == BROADCAST:
-
-                print(f"BROADCASTING: ", *pkt)
-
-                CP.send_data_broadcast(pkt)
-
-            else:
-
-                print(f"Sending {dest}:", *pkt)
-                _64bit_addr = XBee64BitAddress.from_hex_string(dest)
-                CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
-
-
-
-        elif button == 'Pause Game':
+        if button == 'Pause Game':
 
             CP.is_paused = True
 
@@ -432,13 +335,19 @@ def issue_command():
             # Delete the scores table data for the next game
             # use try/except to allow a rollback option if it gets sideways
             try:
+
                 q = Score.query.filter(Score.node.in_(avail_addr))
                 q.delete(synchronize_session='fetch')
                 db_session.commit()
+
             except Exception as E:
+
                 print(E)
                 db_session.rollback()
 
+            finally:
+
+                db_session.commit()
 
 
         elif button == 'Discover Network':
@@ -446,9 +355,6 @@ def issue_command():
             print("Discovering Network")
             CP.find_nodes()
 
-
-
-    db_session.commit()
 
     return make_response(jsonify({"message": "OK"}), 200)
 

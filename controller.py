@@ -66,23 +66,23 @@ class CONTROL_POINT(XBeeDevice):
     # █░▀░█ ██▄ █░▀█ █▄█   ▄█ ██▄ ░█░ ░█░ ██▄ █▀▄ ▄█
     # This is primarly used to set the menu options
     CMD_DICT = {
-                CONFIGURE   : 'CONFIGURE',
+                # CONFIGURE   : 'CONFIGURE',
                 REGISTER    : 'REGISTER',
                 QUERY       : 'QUERY',
                 CAPTURE     : 'CAPTURE',
                 MEDIC       : 'MEDIC',
                 BOMB        : 'BOMB',
-                SET_LOCATION: 'SET LOCATION',
-                CAPT_TIME   : 'SET CAPTURE TIME',
-                BOMB_TIME   : 'SET BOMB TIMER',
-                DIFF_TIME   : 'SET BOMB DISARM TIME',
-                ARM_TIME    : 'SET BOMB ARM TIME',
+                # SET_LOCATION: 'SET LOCATION',
+                # CAPT_TIME   : 'SET CAPTURE TIME',
+                # BOMB_TIME   : 'SET BOMB TIMER',
+                # DIFF_TIME   : 'SET BOMB DISARM TIME',
+                # ARM_TIME    : 'SET BOMB ARM TIME',
                 PAIR_UID    : 'PAIR UID',
-                MED_TIME    : 'SET MEDIC TIME',
-                SET_TEAM    : 'SET TEAM',
-                CAP_PERC    : 'SET ASSIST %',
-                SCALE_PTS   : 'SET POINT SCALE',
-                ALLOW_MED   : 'ALLOW MEDIC',
+                # MED_TIME    : 'SET MEDIC TIME',
+                # SET_TEAM    : 'SET TEAM',
+                # CAP_PERC    : 'SET ASSIST %',
+                # SCALE_PTS   : 'SET POINT SCALE',
+                # ALLOW_MED   : 'ALLOW MEDIC',
                 }
 
 
