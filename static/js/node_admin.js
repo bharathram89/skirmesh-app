@@ -281,7 +281,7 @@ function update_controller(ele) {
                 'arg'  : arg,
                };
 
-    set_controller_data(data);
+    update_controller_data(data);
 
 }
 
