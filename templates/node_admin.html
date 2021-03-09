@@ -61,9 +61,9 @@
                   <th class="header"> team </th>
                   <th class="header broadcast"> capture time </th>
                   <th class="header broadcast"> capture assist </th>
-                  <th class="header"> point scale </th>
+                  <th class="header "> point scale </th>
                   <th class="header broadcast"> medic time </th>
-                  <th class="header"> medic </th>
+                  <th class="header broadcast"> medic </th>
                   <th class="header broadcast"> Bomb</br>FUS  |  ARM  |  DIS </th>
 
               </tr>
@@ -74,7 +74,7 @@
                 {% for node in node_status %}
                 <tr class="row" id="{{ node.node | safe }}">
 
-                    <td disabled > {{ node.node[12:]                   | safe }} </td>
+                    <td disabled > {{ node.node[12:] | safe }} </td>
                     <td>
 
                         <select onchange="update_controller(this)">

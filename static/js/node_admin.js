@@ -87,7 +87,8 @@ function update_param(ele) {
     broadcast = document.getElementById("do_broadcast").checked;
 
     if (broadcast) {
-    eles = document.getElementsByClassName(ele.className);
+
+        eles = document.getElementsByClassName(ele.className);
 
         for (i = 0; i < eles.length; i++) {
 
@@ -269,19 +270,50 @@ function transmit_team_data(data) {
 
 function update_controller(ele) {
 
-    var node, cmd, arg;
+    var node, cmd, arg, data, broadcast;
 
-    node = ele.parentNode.parentNode.id;
-    cmd  = ele.className;
-    arg  = ele.value;
+    broadcast = document.getElementById("do_broadcast").checked;
 
-    var data = {
+    if (!ele.className || ele.className == "9A") {
+        broadcast = false;
+    }
+
+    if (broadcast) {
+
+        eles = document.getElementsByClassName(ele.className);
+
+        for (i = 0; i < eles.length; i++) {
+
+            node = eles[i].parentNode.parentNode.id;
+            cmd  = eles[i].className;
+
+            eles[i].value = ele.value;
+            arg  = eles[i].value;
+
+            data = {
+                    'dest' : node,
+                    'cmd'  : cmd,
+                    'arg'  : arg,
+                   };
+
+            update_controller_data(data);
+        }
+    }
+    else {
+
+        node = ele.parentNode.parentNode.id;
+        cmd  = ele.className;
+        arg  = ele.value;
+
+        data = {
                 'dest' : node,
                 'cmd'  : cmd,
                 'arg'  : arg,
                };
 
-    update_controller_data(data);
+        update_controller_data(data);
+
+    }
 
 }
 
