@@ -98,11 +98,16 @@ function update_param(ele) {
                       'dest' : eles[i].parentNode.parentNode.id,
                       'arg'  : eles[i].value,
                       'cmd'  : eles[i].className,
+                      'bcst' : true,
                      };
 
               transmit_param_data(data);
 
         }
+
+        data.arg = ele.value;
+        data.cmd = ele.className;
+        broadcast_data(data);
 
     }
 
@@ -112,6 +117,7 @@ function update_param(ele) {
                 'dest' : ele.parentNode.parentNode.id,
                 'arg'  : ele.value,
                 'cmd'  : ele.className,
+                'bcst' : false,
                };
 
         transmit_param_data(data);
@@ -125,6 +131,30 @@ function update_param(ele) {
 function transmit_param_data(data) {
 
     fetch("/node_admin/set_param", {
+      method: "POST",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+    })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status code: ' + response.status);
+          return;
+        }
+        response.json().then(function (data) {
+          // console.log(data);
+        });
+      })
+      .catch(function (error) {
+        console.log("Fetch error: " + error);
+      });
+
+}
+
+
+
+function broadcast_data(data) {
+
+    fetch("/node_admin/send_broadcast", {
       method: "POST",
       body: JSON.stringify(data),
       cache: "no-cache",

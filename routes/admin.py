@@ -109,14 +109,35 @@ def set_param():
 
         pkt = bytearray([cmd, arg])
 
-        _64bit_addr = XBee64BitAddress.from_hex_string(dest)
-        CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
+        if not data['bcst']:
+            _64bit_addr = XBee64BitAddress.from_hex_string(dest)
+            CP.transmit_pkt(CP.XB_net.get_device_by_64(_64bit_addr), pkt)
 
         node = NodeStatus.query.filter(NodeStatus.node == dest).first()
 
         setattr(node, val_map[cmd], arg)
 
         db_session.commit()
+
+    return make_response(jsonify({"message": "OK"}), 200)
+
+
+
+@bp.route('/node_admin/send_broadcast', methods=['POST'])
+def send_broadcast():
+
+    data = json.loads(request.data)
+    field = session.get('field', CP.field)
+
+
+    if request.method == 'POST':
+
+        cmd  = int(data['cmd'], 16)
+        arg  = int(data['arg'], 16)
+
+        if data['bcst']:
+
+            CP.send_data_broadcast(bytearray([cmd, arg]))
 
     return make_response(jsonify({"message": "OK"}), 200)
 
@@ -336,8 +357,8 @@ def issue_command():
             # use try/except to allow a rollback option if it gets sideways
             try:
 
-                q = Score.query.filter(Score.node.in_(avail_addr))
-                q.delete(synchronize_session='fetch')
+                for score in _field.scores:
+                    db_session.delete(score)
                 db_session.commit()
 
             except Exception as E:
