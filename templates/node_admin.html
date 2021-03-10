@@ -79,6 +79,7 @@
 
                         <select onchange="update_controller(this)">
 
+                          <option value=""/>
                           {% for opt in cmd_args['SET LOCATION'] %}
                             <option {{ 'selected' if opt['text'] == node.location }}>
                               {{ opt['text'] }}
