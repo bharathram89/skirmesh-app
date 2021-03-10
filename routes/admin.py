@@ -53,7 +53,7 @@ def node_admin():
 
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
-    loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths] + [{"text":"SWAP","value":(0,0)}])
+    loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths])
 
     # Pull specific arguments for the field
     CMD_ARGS['SET LOCATION'] = json.loads(loc_json)
