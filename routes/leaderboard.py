@@ -18,7 +18,6 @@ def leaderboard():
 
     field = session.get('field', None)
 
-
     if not field:
 
         error = "Please select a Field and return to the Leaderboard"

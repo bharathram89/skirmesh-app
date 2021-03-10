@@ -45,8 +45,8 @@ class UID(db.Model):
     timestamp  = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     uid        = db.Column(db.String, unique=True)
-    team       = db.Column(db.String, db.ForeignKey('team.team'), nullable=False)
-    field      = db.Column(db.String, db.ForeignKey('field.field'), nullable=False)
+    team       = db.Column(db.String, db.ForeignKey('team.team'))
+    field      = db.Column(db.String, db.ForeignKey('field.field'))
 
     scores     = db.relationship('Score', backref='scores_uid', cascade="all, delete-orphan")
     medic      = db.relationship('Medic', backref='medic_uid', uselist=False, cascade="all, delete-orphan")

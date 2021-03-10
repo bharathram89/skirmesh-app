@@ -34,8 +34,8 @@ class UID(Base):
     timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     uid        = Column(String, unique=True)
-    team       = Column(String, ForeignKey('team.team'), nullable=False)
-    field      = Column(String, ForeignKey('field.field'), nullable=False)
+    team       = Column(String, ForeignKey('team.team'))
+    field      = Column(String, ForeignKey('field.field'))
 
     scores     = relationship('Score', backref='scores_uid', cascade="all, delete-orphan")
     medic      = relationship('Medic', backref='medic_uid', uselist=False, cascade="all, delete-orphan")

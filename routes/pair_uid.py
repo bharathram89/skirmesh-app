@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import UID, Field, Player
+from models.db_models import UID, Field, Player, Medic
 from models.forms import RegisterAccountForm, LoginForm
 
 from flask import render_template, flash, jsonify, session
@@ -35,20 +35,30 @@ def assign_uid():
 
         try:
 
-            _uid        = UID.query.filter(UID.uid == uid).first()
-            _uid.player = Player.query.get(player) if _uid else None
-            db_session.commit()
+            _uid = UID.query.filter(UID.uid == uid).first()
 
             if not _uid:
-                error = f'UID[{uid}] did not exist. Rescan and reassign.'
-                flash(error)
-            else:
-                flash(f"UID [{uid}] assigned to {_uid.player.callsign}")
 
-        except:
+                _uid       = UID(uid=uid)
+                _uid.medic = Medic(uid=uid)
 
+            # If the RFID was assigned to another player - remove the
+            # association before giving it to the new player
+            if _uid.player:
+
+                _uid.player.uid = None
+                db_session.commit()
+
+            _uid.player = Player.query.get(player)
+            db_session.commit()
+
+            flash(f"UID {uid} assigned to {_uid.player.callsign}")
+
+        except Exception as E:
+
+            print(E)
             db_session.rollback()
-            error = f'UID already assigned to {_uid.player.callsign}'
+            error = 'Something went terribly wrong!!'
             flash(error)
 
         finally:
