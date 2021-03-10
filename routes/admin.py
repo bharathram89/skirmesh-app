@@ -183,6 +183,7 @@ def set_config():
 
         node.config = conf
         node.team   = None if not 'team' in data else data['team']
+        node.field  = field
 
         db_session.commit()
 
@@ -210,6 +211,7 @@ def set_team():
 
         node.team   = team
         node.stable = 1
+        node.field  = field
 
         db_session.commit()
 
@@ -244,6 +246,7 @@ def set_controller_data():
         node = NodeStatus.query.filter(NodeStatus.node == dest).first()
 
         setattr(node, val_map[cmd], arg)
+        node.field = field
 
         if cmd == CP.SCALE_PTS:
 
