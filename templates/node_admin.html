@@ -77,7 +77,7 @@
                     <td disabled > {{ node.node[12:14] | safe }} {{ node.node[14:] | safe }} </td>
                     <td>
 
-                        <select onchange="update_controller(this)">
+                        <select class="FF" onchange="update_controller(this)">
 
                           <option value=""/>
                           {% for opt in cmd_args['SET LOCATION'] %}
