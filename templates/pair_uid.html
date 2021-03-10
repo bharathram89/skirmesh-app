@@ -9,7 +9,7 @@
           method="post"
           action="{{ url_for('pair_uid.assign_uid') }}">
 
-    <select name="player" id="player" style="width: 65%;">
+    <select name="player" id="player" style="width: 70%;">
 
         {% for player in Players %}
         <option value={{  player.id  }}>
@@ -23,7 +23,7 @@
 
     </select>
 
-    <input type="text" name="uid" value="" id="uidblock"/>
+    <input type="text" name="uid" value="" id="uidblock" autocomplete="off"/>
 
     <input class="button"
            id="assign_uid_button"
