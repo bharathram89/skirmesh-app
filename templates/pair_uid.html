@@ -9,14 +9,18 @@
           method="post"
           action="{{ url_for('pair_uid.assign_uid') }}">
 
-    <select name="player" id="player">
+    <select name="player" id="player" style="width: 65%;">
+
         {% for player in Players %}
         <option value={{  player.id  }}>
-            {{  player.lastname  }},
-            {{  player.firstname  }} &emsp; &emsp;
-            <div style="float:right">uid: {{ player.uid }}</div>
+
+            {% set len = (player.lastname | length) + (player.firstname | length) + 2 %}
+
+            {{  player.lastname  }}, {{  player.firstname }}{{ ('.'*(44-len) + 'UID: ' + player.uid) if player.uid }}
+
         </option>
         {% endfor %}
+
     </select>
 
     <input type="text" name="uid" value="" id="uidblock"/>
