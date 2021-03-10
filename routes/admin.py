@@ -159,6 +159,21 @@ def set_config():
 
         node = NodeStatus.query.filter(NodeStatus.node == dest).first()
 
+        # If shifting away from capture, closeout the capture to award points/time
+        if node.config == CP.CAPTURE and node.status and node.team:
+
+            begin = get_time_capture_complete(node.node)
+            # If a capture started and was not closed out normally
+            # then close it out
+            if begin and not get_is_capture_closed(node.node):
+
+                held  = int((datetime.utcnow() - begin).total_seconds())
+
+                tdat = {'node':node.node,'team':node.team,'field':field,
+                        'points':held//node.point_scale,'time_held':held,
+                        'action':'RECONFIGURE'}
+                db_session.add(Score(**tdat))
+
         if conf == CP.REGISTER:
 
             pkt = pkt +  bytearray().fromhex(data['team'])
