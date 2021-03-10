@@ -48,7 +48,8 @@ body {
     padding: 0;
     vertical-align: top;
     text-align: left;
-    font-family: 'special_eliteregular'
+    font-family: 'special_eliteregular';
+    margin: 0;
 }
 
 header{

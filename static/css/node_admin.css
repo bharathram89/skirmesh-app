@@ -19,3 +19,11 @@ th, input {
     color: #008000;
     font-weight: bolder;
 }
+
+div.node_table {
+    font-size: 80%
+}
+
+label {
+    padding: 0 1em;
+}
