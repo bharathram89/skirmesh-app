@@ -407,7 +407,7 @@ class CONTROL_POINT(XBeeDevice):
 
                 print(f'Team {team} is prosecuting Node_{node}')
 
-                data = {'uid':uid, 'team':team, 'node':node, 'field':self.field}
+                data = {'uid':uid, 'team':team, 'node':node, 'field':self.field, 'game':_game.id}
 
                 if cap_status:
 
