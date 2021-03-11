@@ -27,6 +27,8 @@ def update():
 
         for node in nodes:
 
+            if not date_is_today(node.timestamp): continue
+
             if node.config == CAPTURE and node.team and node.location:
 
                 to_update[node.node] = {
