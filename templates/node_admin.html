@@ -77,13 +77,11 @@
                     <td disabled > {{ node.node[12:14] | safe }} {{ node.node[14:] | safe }} </td>
                     <td>
 
-                        <select class="FF" onchange="update_controller(this)">
+                        <select class="FF" onchange="update_controller(this)" onblur="update_location_tree({{ cmd_args['SET LOCATION'] }})">
 
-                          <option value=""/>
+                          <option/>
                           {% for opt in cmd_args['SET LOCATION'] %}
-                            <option {{ 'selected' if opt['text'] == node.location }}>
-                              {{ opt['text'] }}
-                            </option>
+                            <option {{ 'selected' if opt['text'] == node.location }}>{{ opt['text'] }}</option>
                           {% endfor %}
 
                         </select>

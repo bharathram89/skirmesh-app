@@ -53,6 +53,50 @@ function unlock(ele) {
 
 
 
+function update_location_tree(locations) {
+
+    var i, j, trees, taken, new_, val;
+
+    taken = [];
+    trees = document.getElementsByClassName("FF");
+
+    for (i = 0; i < trees.length; i++) {
+
+        taken.push(trees[i].value);
+
+    }
+
+    for (j = 0; j < trees.length; j++) {
+
+        val = trees[j].value;
+        new_ = "<option/>";
+
+        for (i = 0; i < locations.length; i++) {
+
+            if (!taken.includes(locations[i].text)) {
+
+                new_ += "<option>";
+                new_ += locations[i].text + "</option>";
+
+            }
+
+            if (locations[i].text == val) {
+
+                new_ += "<option selected>";
+                new_ += locations[i].text + "</option>";
+
+            }
+        }
+
+        trees[j].innerHTML = new_;
+
+    }
+}
+
+update_location_tree();
+
+
+
 function enable_broadcast(checkbox) {
 
     var i;
