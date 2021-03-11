@@ -93,8 +93,6 @@ function update_location_tree(locations) {
     }
 }
 
-update_location_tree();
-
 
 
 function enable_broadcast(checkbox) {
