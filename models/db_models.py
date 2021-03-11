@@ -266,6 +266,8 @@ def get_field_scores(field):
     nd_times = {}
     for node in _field.nodes:
 
+        if not date_is_today(node.timestamp): continue
+
         times = {}
         for score in node.scores:
             times.setdefault(score.team, []).append(score.time_held or 0)
