@@ -51,6 +51,10 @@ def node_admin():
         for node in nodes: node.field = field
         CP.field = field
 
+    # If initializing the field, we need to add the first game
+    _field = Field.query.filter(Field.field == field).first()
+    if not _field.games: db_session.add(Game(field=field))
+
     soup = SOUP(open('templates/fields/' + field + '.html'), 'html.parser')
     paths = soup.find_all('path')
     loc_json = json.dumps([{"text":path['id'],"value":(0,0)} for path in paths])
@@ -129,7 +133,6 @@ def send_broadcast():
     data = json.loads(request.data)
     field = session.get('field', CP.field)
 
-
     if request.method == 'POST':
 
         cmd  = int(data['cmd'], 16)
@@ -149,7 +152,9 @@ def set_config():
     data = json.loads(request.data)
     field = session.get('field', CP.field)
 
-    print(data)
+    _field = Field.query.filter(Field.field == field).first()
+    _game  = _field.games[-1]
+
     if request.method == 'POST':
 
         dest = data['dest']
@@ -171,7 +176,7 @@ def set_config():
 
                 tdat = {'node':node.node,'team':node.team,'field':field,
                         'points':held//node.point_scale,'time_held':held,
-                        'action':'RECONFIGURE'}
+                        'action':'RECONFIGURE', 'game':_game.id}
                 db_session.add(Score(**tdat))
 
         if conf == CP.REGISTER:
@@ -197,6 +202,9 @@ def set_team():
     data = json.loads(request.data)
     field = session.get('field', CP.field)
 
+    _field = Field.query.filter(Field.field == field).first()
+    _game  = _field.games[-1]
+
     if request.method == 'POST':
 
         dest = data['dest']
@@ -204,7 +212,8 @@ def set_team():
 
         pkt = bytearray([0x04]) + bytearray().fromhex(team)
 
-        score = {'node':dest, 'team':team, 'field':field, 'action':'CAPTURE'}
+        score = {'node':dest, 'team':team, 'field':field,
+                 'action':'CAPTURE', 'game':_game.id}
         db_session.add(Score(**score))
 
         node = NodeStatus.query.filter(NodeStatus.node == dest).first()
@@ -230,6 +239,9 @@ def set_controller_data():
 
     data = json.loads(request.data)
     field = session.get('field', CP.field)
+
+    _field = Field.query.filter(Field.field == field).first()
+    _game  = _field.games[-1]
 
     val_map = {CP.SET_LOCATION :'location',
                CP.SCALE_PTS    :'point_scale',
@@ -261,7 +273,7 @@ def set_controller_data():
 
                     tdat = {'node':node.node,'team':node.team,'field':field,
                             'points':held//node.point_scale,'time_held':held,
-                            'action':'SET SCALE'}
+                            'action':'SET SCALE', 'game':_game.id}
                     db_session.add(Score(**tdat))
 
             _64bit_addr = XBee64BitAddress.from_hex_string(dest)
@@ -282,6 +294,9 @@ def issue_command():
 
     data = json.loads(request.data)
     field = session.get('field', CP.field)
+
+    _field = Field.query.filter(Field.field == field).first()
+    _game  = _field.games[-1]
 
     if request.method == 'POST':
 
@@ -312,7 +327,7 @@ def issue_command():
 
                         tdat = {'node':node.node,'team':node.team,'field':field,
                                 'points':held//node.point_scale, 'time_held':held,
-                                'action':'PAUSE GAME'}
+                                'action':'PAUSE GAME', 'game':_game.id}
                         db_session.add(Score(**tdat))
 
                         print(f"Ended timer count for {node.node}")
@@ -341,7 +356,7 @@ def issue_command():
 
         elif button == 'Start Game':
 
-            plyr_score, team_score, team_times, nd_times = get_field_scores(field)
+            db_session.add(Game(field=field))
 
             _field = Field.query.filter(Field.field == field).first()
 
@@ -356,37 +371,6 @@ def issue_command():
 
             db_session.commit()
 
-            team_data = json.load(open("json/fields/" + field + ".json"))
-            team_name = {n['value']:n['text'] for n in team_data}
-
-            data = {'field'        :field,
-                    'teams'        :str([team_score.keys()]),
-                    'team_name_map':str(team_name),
-                    'times_by_team':str(team_times),
-                    'times_by_node':str(nd_times),
-                    'score_by_team':str(team_score),
-                    'score_by_uid' :str(plyr_score),
-                    }
-
-            db_session.add(Game(**data))
-            db_session.commit()
-
-            # Delete the scores table data for the next game
-            # use try/except to allow a rollback option if it gets sideways
-            try:
-
-                for score in _field.scores:
-                    db_session.delete(score)
-                db_session.commit()
-
-            except Exception as E:
-
-                print(E)
-                db_session.rollback()
-
-            finally:
-
-                db_session.commit()
 
 
         elif button == 'Discover Network':

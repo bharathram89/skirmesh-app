@@ -81,7 +81,7 @@ class Field(Base):
     scores     = relationship('Score', backref='scores_field', cascade="all, delete-orphan")
     uids       = relationship('UID', backref='uids_field', cascade="all, delete-orphan")
     nodes      = relationship('NodeStatus', backref='nodes_field', cascade="all, delete-orphan")
-
+    games      = relationship('Game', backref='games_field', cascade="all, delete-orphan")
 
     def __repr__(self):
 
@@ -113,6 +113,8 @@ class Score(Base):
     node      = Column(String, ForeignKey('node_status.node'), nullable=False)
     team      = Column(String, ForeignKey('team.team'), nullable=False)
 
+    game      = Column(Integer, ForeignKey('game.id'), nullable=False)
+
     action    = Column(String)
     points    = Column(Integer)
     time_held = Column(Integer)
@@ -123,20 +125,11 @@ class Game(Base):
 
     __tablename__ = 'game'
 
-    id             = Column(Integer, primary_key=True, autoincrement=True)
-    field          = Column(String)
-    # All teams, scores by, and times by are dictionaries or lists converted
-    # to strings. To get it back to the original form, call eval()
-    teams          = Column(String)
-    team_name_map  = Column(String)
+    id        = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
 
-    times_by_team  = Column(String)
-    times_by_node  = Column(String)
-
-    score_by_team  = Column(String)
-    score_by_uid   = Column(String)
-
-    timestamp      = Column(DateTime, default=datetime.utcnow)
+    field     = Column(String, ForeignKey('field.field'), nullable=False)
+    scores    = relationship('Score', backref='scores_game', cascade="all, delete-orphan")
 
 
 
@@ -255,13 +248,15 @@ def get_field_scores(field):
 
     _field = Field.query.filter(Field.field == field).first()
 
-    if not _field: return {}, {}, {}, {}
+    _game = _field.games[-1] if _field.games else None
+
+    if not _field or not _game: return {}, {}, {}, {}
 
     _teams = set(Team.query.filter(Team.team == u.team).first() for u in _field.uids)
 
-    plyr_score = {u:sum((s.points or 0) for s in u.scores) for u in _field.uids if date_is_today(u.timestamp)}
-    team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
-    team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores) for t in _teams}
+    plyr_score = {u:sum((s.points or 0) for s in u.scores if s in _game.scores) for u in _field.uids if date_is_today(u.timestamp)}
+    team_times = {t.team:sum((s.time_held or 0) if not s.uid else 0 for s in t.scores if s in _game.scores) for t in _teams}
+    team_score = {t.team:sum((s.points or 0) if not s.uid else 0 for s in t.scores if s in _game.scores) for t in _teams}
 
     nd_times = {}
     for node in _field.nodes:
@@ -270,6 +265,8 @@ def get_field_scores(field):
 
         times = {}
         for score in node.scores:
+
+            if score not in _game.scores: continue
             times.setdefault(score.team, []).append(score.time_held or 0)
 
         for team in times: times[team] = sum(times[team])
@@ -283,8 +280,15 @@ def get_field_scores(field):
             held  = int((datetime.utcnow() - begin).total_seconds())
 
             nd_times[node][node.team] += held
-            team_times[node.team] += held
-            team_score[node.team] += held//node.point_scale
 
+            if node.team in team_times:
+
+                team_times[node.team] += held
+                team_score[node.team] += held//node.point_scale
+
+            else:
+
+                team_times[node.team] = held
+                team_score[node.team] = held//node.point_scale
 
     return plyr_score, team_score, team_times, nd_times

@@ -92,7 +92,7 @@ class Field(db.Model):
     scores     = db.relationship('Score', backref='scores_field', cascade="all, delete-orphan")
     uids       = db.relationship('UID', backref='uids_field', cascade="all, delete-orphan")
     nodes      = db.relationship('NodeStatus', backref='nodes_field', cascade="all, delete-orphan")
-
+    games      = db.relationship('Game', backref='games_field', cascade="all, delete-orphan")
 
     def __repr__(self):
 
@@ -124,6 +124,8 @@ class Score(db.Model):
     node      = db.Column(db.String, db.ForeignKey('node_status.node'), nullable=False)
     team      = db.Column(db.String, db.ForeignKey('team.team'), nullable=False)
 
+    game      = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+
     action    = db.Column(db.String)
     points    = db.Column(db.Integer)
     time_held = db.Column(db.Integer)
@@ -134,20 +136,11 @@ class Game(db.Model):
 
     __tablename__ = 'game'
 
-    id             = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    field          = db.Column(db.String)
-    # All teams, scores by, and times by are dictionaries or lists converted
-    # to strings. To get it back to the original form, call eval()
-    teams          = db.Column(db.String)
-    team_name_map  = db.Column(db.String)
+    id        = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-    times_by_team  = db.Column(db.String)
-    times_by_node  = db.Column(db.String)
-
-    score_by_team  = db.Column(db.String)
-    score_by_uid   = db.Column(db.String)
-
-    timestamp      = db.Column(db.DateTime, default=datetime.utcnow)
+    field     = db.Column(db.String, db.ForeignKey('field.field'), nullable=False)
+    scores    = db.relationship('Score', backref='scores_game', cascade="all, delete-orphan")
 
 
 

@@ -351,6 +351,9 @@ class CONTROL_POINT(XBeeDevice):
         node       = str(sender.get_64bit_addr())
         cap_status = PG.NodeStatus.query.filter(PG.NodeStatus.node == node).first()
 
+        _field = PG.Field.query.filter(PG.Field.field == self.field).first()
+        _game  = _field.games[-1]
+
         last = PG.Score.query.filter(PG.Score.node == node).order_by(PG.Score.id.desc()).first()
 
         if len(payload[1:5]) == 1 and cap_status:
@@ -375,6 +378,7 @@ class CONTROL_POINT(XBeeDevice):
                         'team'  :orig_captor.team,
                         'points':2 if not self.halt_points else 0,
                         'field' :self.field,
+                        'game'  :_game.id,
                         'action':'CAPTURE COMPLETE'}
 
                 self.DB.add(PG.Score(**data))
@@ -429,6 +433,7 @@ class CONTROL_POINT(XBeeDevice):
                                     # Account for points as scaled by current value
                                     'points'   :held//cap_status.point_scale,
                                     'field'    :self.field,
+                                    'game'     :_game.id,
                                     'action'   :'LOST CONTROL'}
 
                             self.DB.add(PG.Score(**tdat))
