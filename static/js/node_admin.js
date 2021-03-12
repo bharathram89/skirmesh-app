@@ -15,7 +15,7 @@ function form_submit(button) {
     var safe = true;
 
     if (button.value === "Start Game") {
-        safe = confirm("WARNING: This will REMOVE ALL SCORES from previous games!");
+        safe = confirm("!! WARNING !!\nStarting a new game will\nRESET THE FIELD and ALL SCORES!");
     }
 
     if (safe) {
@@ -284,7 +284,7 @@ function transmit_config_data(data) {
 
 function update_team(ele) {
 
-    var node;
+    var node, text;
 
     node = ele.parentNode.parentNode.id;
     conf = ele.parentNode.parentNode.getElementsByClassName("00")[0].value;
@@ -300,10 +300,15 @@ function update_team(ele) {
               // ONLY SET TEAM IF IN CAPTURE MODE
               case '0A':
 
-                  transmit_team_data(data);
+                  text = "!! WARNING !!\nContinuing to set the team\n";
+                  text += "will turnover control of this objective!";
+
+                  var safe = confirm(text);
+
+                  if (safe) { transmit_team_data(data); }
+                  else {location.reload();}
                   break;
 
-              // Place holder for future expansion
               case '01':
                   data.conf = conf;
                   transmit_config_data(data);
