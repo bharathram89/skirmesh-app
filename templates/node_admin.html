@@ -46,6 +46,7 @@
     {% if cmd_dict %}
 
         <label style="float: right;"><input type="checkbox" id="do_broadcast" onclick="enable_broadcast(this)" /> BROADCAST (UPDATE ALL) </label>
+        <label style="float: left;"> Field:  {{ field.replace('_',' ').upper() }} </label>
 
         <div class="node_table">
 
