@@ -18,15 +18,21 @@
 
 {% if uid %}
 <p>
-    Assigned to operations @ {{ uid.field.replace('_',' ') or '_ _ _ _ _'}}. <br/>
+    Assigned to operations @ {{ uid.field.replace('_',' ') if uid.field }}. <br/>
     <br/>
     Objectives held by team: <br/>
 
     {% if team %}
+
         {% for node in team.nodes if (node.config == 10 and node.location) %}
         {{ node.location }} <br/>
-        {% endfor %} <br/>
-    {% endif %}
+        {% endfor %}
+
+    {% else %}
+
+        None <br/>
+        
+    {% endif %} <br/>
 
     {{ 'Discharged from' if uid.medic.alive else 'Checked into'}} the infirmary on {{ uid.medic.timestamp.strftime(' %d %b %Y @ %H%M hours') }}. <br/>
     You are {{ 'FFD' if uid.medic.alive else 'NPQ' }}.
