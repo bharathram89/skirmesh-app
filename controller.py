@@ -2,7 +2,7 @@ from digi.xbee.devices import XBeeDevice, RemoteZigBeeDevice, RemoteXBeeDevice
 from datetime import datetime
 
 import models.db_models as PG
-import time, os
+import time, os, json
 
 
 
@@ -110,20 +110,22 @@ class CONTROL_POINT(XBeeDevice):
         XBeeDevice.__init__(self, serial, baud)
 
         self.DB          = database
-        self.field       = None
-        self.is_paused   = False
+
         self.halt_points = False
 
-        self.end_nodes = set()
-        self.user_reg  = None
+        self.end_nodes   = set()
+        self.user_reg    = None
 
-        if os.path.exists('.controller_config'):
+        if not os.path.exists('.controller_config'):
+            with open('.controller_config', 'w') as f:
+                json.dump({}, f)
+                f.close()
 
-            for line in open('.controller_config'):
+        with open('.controller_config') as f:
 
-                if "field" in line:
-
-                    self.__field = line.split('=')[-1]
+            self._config   = json.load(f)
+            self.field     = self._config.get('field', None)
+            self.is_paused = self._config.get('is_paused', False)
 
         print(f"Initialized with field: {self.field}")
 
@@ -137,10 +139,29 @@ class CONTROL_POINT(XBeeDevice):
 
         if location:
 
+            self._config['field'] = location
+
             with open('.controller_config', 'w') as f:
-                 f.write('field='+location)
+                 json.dump(self._config, f)
 
         self.__field = location
+
+
+    @property
+    def is_paused(self):
+        return self.__is_paused
+
+    @is_paused.setter
+    def is_paused(self, paused):
+
+        if paused:
+
+            self._config['is_paused'] = paused
+
+            with open('.controller_config', 'w') as f:
+                 json.dump(self._config, f)
+
+        self.__is_paused = paused
 
 
     def configure_XB(self):
