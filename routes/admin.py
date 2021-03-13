@@ -41,6 +41,12 @@ def node_admin():
 
         return render_template('field_chooser.html', error=error)
 
+    error = None
+    if CP.is_paused:
+
+        error = "Game is PAUSED. Click RESUME GAME to continue play!"
+        flash(error)
+
     avail_addr = [str(xb.get_64bit_addr()) for xb in CP.XB_net.get_devices()]
     nodes = NodeStatus.query.filter(NodeStatus.node.in_(avail_addr)).all()
 
@@ -85,6 +91,7 @@ def node_admin():
              'field'       : field,
              'is_paused'   : CP.is_paused,
              'team_name'   : team_name,
+             'error'       : error,
              }
 
     db_session.commit()
