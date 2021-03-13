@@ -351,7 +351,7 @@ def issue_command():
 
             for node in nodes:
 
-                if node.config == CP.CAPTURE:
+                if node.config == CP.CAPTURE and node.team:
 
                     _64bit_addr = XBee64BitAddress.from_hex_string(node.node)
                     pkt = CP._status(CP.XB_net.get_device_by_64(_64bit_addr), bytearray([]))
