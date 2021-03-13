@@ -365,6 +365,8 @@ def issue_command():
 
             db_session.add(Game(field=field))
 
+            CP.is_paused = False
+
             _field = Field.query.filter(Field.field == field).first()
 
             for node in _field.nodes if _field else []:

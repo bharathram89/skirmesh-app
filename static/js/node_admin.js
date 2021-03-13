@@ -2,20 +2,25 @@
 function form_submit(button) {
 
     var data = {'button':button.value};
-
-    // console.log(data)
-
-    if (button.value == "Pause Game"){
-        button.value = "Resume Game";
-    }
-    else if (button.value == "Resume Game") {
-        button.value = "Pause Game";
-    }
-
     var safe = true;
 
-    if (button.value === "Start Game") {
-        safe = confirm("!! WARNING !!\nStarting a new game will\nRESET THE FIELD and ALL SCORES!");
+    switch(button.value) {
+
+        case "Pause Game":
+
+            button.value = "Resume Game";
+            break;
+
+        case "Resume Game":
+
+            button.value = "Pause Game";
+            break;
+
+        case "Start Game":
+
+            safe = confirm("!! WARNING !!\nStarting a new game will\nRESET THE FIELD and ALL SCORES!");
+            break;
+
     }
 
     if (safe) {
@@ -31,7 +36,6 @@ function form_submit(button) {
               return;
             }
             response.json().then(function (data) {
-              // console.log(data);
             });
           })
           .catch(function (error) {
