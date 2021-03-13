@@ -17,10 +17,10 @@ bp = Blueprint('registration', __name__, url_prefix='')
 @bp.route('/login', methods=['POST','GET'])
 def login():
 
-    if current_user.is_authenticated:
-        return redirect(url_for('main_page'))
-
     form = LoginForm()
+
+    if current_user.is_authenticated and not form.validate_on_submit():
+        return redirect(url_for('index.main_page'))
 
     if form.validate_on_submit():
 
@@ -36,7 +36,7 @@ def login():
 
         login_user(user)
 
-        return redirect(url_for('index.main_page'))
+        return redirect(url_for('registration.player_profile', callsign=user.callsign))
 
     return render_template('login.html', form=form)
 
