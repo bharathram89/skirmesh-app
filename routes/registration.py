@@ -122,9 +122,13 @@ def register():
 
             db_session.commit()
 
-            if not error:
+            if not error and current_user.is_authenticated:
 
-                return redirect(url_for('index.main_page'))
+                return redirect(url_for('registration.player_profile', callsign=current_user.callsign))
+
+            elif not error:
+
+                return redirect(url_for('registration.login'))
 
     return render_template('register.html', form=form, error=error)
 
@@ -133,7 +137,7 @@ def register():
 @bp.errorhandler(413)
 def image_too_large(e):
 
-    error = 'Oops! Your image was too large (limit 2MB).'
+    error = 'Oops! Your image was too large (limit 5MB).'
     flash(error)
 
     return render_template('something_went_wrong.html', error=error), 413
