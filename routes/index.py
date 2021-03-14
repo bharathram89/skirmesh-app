@@ -20,7 +20,6 @@ def update():
         to_update = dict()
 
         team_data = json.load(open("json/fields/" + field + ".json"))
-        team_cmap = {c['value']:c['color'] for c in team_data}
 
         _field = Field.query.filter(Field.field == field).first()
         nodes = _field.nodes if _field else []
@@ -34,7 +33,7 @@ def update():
                 to_update[node.node] = {
                                        'id'    : node.location,
                                        'team'  : node.team,
-                                       'color' : team_cmap[node.team],
+                                       'color' : '#' + node.team,
                                        'stable': node.stable
                                        }
 
