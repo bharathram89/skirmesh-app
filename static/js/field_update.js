@@ -17,7 +17,6 @@ function update_field() {
                 if (data[node].stable) {
 
                     ele.setAttribute("fill", data[node].color);
-                    ele.setAttribute("opacity", "0.5");
                     ele.setAttribute("class", "owned");
 
                 }
