@@ -215,10 +215,17 @@ class CONTROL_POINT(XBeeDevice):
 
     def transmit_pkt(self, dest, pkt):
 
-        self.log_comm(dest, pkt)
-        self.send_data(dest, pkt)
+        try:
+            self.send_data(dest, pkt)
+            self.log_comm(dest, pkt)
+            print(f"Sent {pkt.hex()} to {dest}")
+            return True
 
-        print(f"Sent {pkt.hex()} to {dest}")
+        except TimeoutException as E:
+            print(E)
+
+        return False
+
 
 
     def log_comm(self, dest, pkt):
