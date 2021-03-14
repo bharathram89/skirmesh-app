@@ -139,4 +139,3 @@ dmypy.json
 
 # misc
 .controller_config
-migrations/
