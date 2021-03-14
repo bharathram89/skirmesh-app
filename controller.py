@@ -648,23 +648,23 @@ class CONTROL_POINT(XBeeDevice):
         _uid   = PG.UID.query.filter(PG.UID.uid == uid).first() if uid else None
         _team  = _uid.team if _uid else None
 
-        if not _team: return None
+        if _team:
 
-        _field = PG.Field.query.filter(PG.Field.field == self.field).first()
-        _game  = _field.games[-1]
+            _field = PG.Field.query.filter(PG.Field.field == self.field).first()
+            _game  = _field.games[-1]
 
-        data = {'node' : node.node,
-                'uid'  : uid,
-                'field': self.field,
-                'team' : _team,
-                'game' : _game.id}
+            data = {'node' : node.node,
+                    'uid'  : uid,
+                    'field': self.field,
+                    'team' : _team,
+                    'game' : _game.id}
 
-        if status == CONTROL_POINT.BOMB_ARMED or status == CONTROL_POINT.BOMB_DISARMED:
+            if status == CONTROL_POINT.BOMB_ARMED or status == CONTROL_POINT.BOMB_DISARMED:
 
-            data['points'] = 1 if status == CONTROL_POINT.BOMB_ARMED else 2
-            data['action'] = 'ARMED BOMB' if status == CONTROL_POINT.BOMB_ARMED else 'DISARMED BOMB'
+                data['points'] = 1 if status == CONTROL_POINT.BOMB_ARMED else 2
+                data['action'] = 'ARMED BOMB' if status == CONTROL_POINT.BOMB_ARMED else 'DISARMED BOMB'
 
-            self.DB.add(PG.Score(**data))
+                self.DB.add(PG.Score(**data))
 
         node.bomb_status = status
         self.DB.commit()

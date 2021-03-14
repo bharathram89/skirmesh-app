@@ -9,6 +9,7 @@ import json
 
 bp = Blueprint('index', __name__, url_prefix='')
 
+BOMB    = 0xBB
 CAPTURE = 0x0A
 
 @bp.route('/index/update', methods=['GET'])
@@ -34,7 +35,15 @@ def update():
                                        'id'    : node.location,
                                        'team'  : node.team,
                                        'color' : '#' + node.team,
-                                       'stable': node.stable
+                                       'stable': node.stable,
+                                       }
+
+            if node.config == BOMB:
+
+                to_update[node.node] = {
+                                       'id'    : node.location,
+                                       'stable': False,
+                                       'demo'  : True if node.bomb_status == 0xDD else False
                                        }
 
         db_session.commit()
