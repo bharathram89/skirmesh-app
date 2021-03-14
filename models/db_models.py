@@ -159,6 +159,8 @@ class NodeStatus(Base):
     # Point scaling
     point_scale = Column(Integer, default=60)
     allow_medic = Column(Boolean, default=1)
+    # Bomb status
+    bomb_status = Column(Integer, default=0xBD) #BOMB_DISARMED
 
     scores    = relationship('Score', backref='node_status_scores', cascade="all, delete-orphan")
 
