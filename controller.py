@@ -169,7 +169,6 @@ class CONTROL_POINT(XBeeDevice):
         self.open()
         self.set_parameter('NI', bytearray('CONTROLLER', 'utf8'))
         self.set_parameter('CE', bytearray([0x01]))
-        self.set_parameter('NJ', bytearray([0xFF]))
         self.apply_changes()
         self.write_changes()
 
