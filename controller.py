@@ -167,7 +167,6 @@ class CONTROL_POINT(XBeeDevice):
     def configure_XB(self):
 
         self.open()
-        self.set_pan_id(bytearray([0x06, 0x01]))
         self.set_parameter('NI', bytearray('CONTROLLER', 'utf8'))
         self.set_parameter('CE', bytearray([0x01]))
         self.set_parameter('NJ', bytearray([0xFF]))
