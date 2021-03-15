@@ -170,6 +170,8 @@ class NodeStatus(db.Model):
     # Point scaling
     point_scale = db.Column(db.Integer, default=60)
     allow_medic = db.Column(db.Boolean, default=1)
+    # Bomb status
+    bomb_status = db.Column(db.Integer, default=0xBD) # BOMB_DISARMED
 
     scores    = db.relationship('Score', backref='node_status_scores', cascade="all, delete-orphan")
 

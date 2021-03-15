@@ -38,6 +38,10 @@ class CONTROL_POINT(XBeeDevice):
     MEDIC     = 0x0E
     BOMB      = 0xBB
 
+    BOMB_ARMED    = 0xBA
+    BOMB_DISARMED = 0xBD
+    BOMB_DETONATE = 0xDD
+
 
     # █▀ ▀█▀ ▄▀█ ▀█▀ █░█ █▀   █▀█ █▀▀ █▀█ █░█ █▀▀ █▀ ▀█▀ █▀
     # ▄█ ░█░ █▀█ ░█░ █▄█ ▄█   █▀▄ ██▄ ▀▀█ █▄█ ██▄ ▄█ ░█░ ▄█
@@ -209,10 +213,17 @@ class CONTROL_POINT(XBeeDevice):
 
     def transmit_pkt(self, dest, pkt):
 
-        self.log_comm(dest, pkt)
-        self.send_data(dest, pkt)
+        try:
+            self.send_data(dest, pkt)
+            self.log_comm(dest, pkt)
+            print(f"Sent {pkt.hex()} to {dest}")
+            return True
 
-        print(f"Sent {pkt.hex()} to {dest}")
+        except TimeoutException as E:
+            print(E)
+
+        return False
+
 
 
     def log_comm(self, dest, pkt):
@@ -263,7 +274,7 @@ class CONTROL_POINT(XBeeDevice):
         sender  = xb_msg.remote_device
         address = str(sender.get_64bit_addr())
 
-        print(f'Received (payload): {payload}')
+        print('Received (payload): ', *payload)
 
         if address not in self.end_nodes:
 
@@ -317,7 +328,8 @@ class CONTROL_POINT(XBeeDevice):
                     CONTROL_POINT.MEDIC     : self.__medic,
                     CONTROL_POINT.QUERY     : self.__query,
                     CONTROL_POINT.ND_STATUS : self._status,
-                    CONTROL_POINT.PAIR_UID  : self.__pair_uid}
+                    CONTROL_POINT.PAIR_UID  : self.__pair_uid,
+                    CONTROL_POINT.BOMB      : self.__bomb_update}
 
         return msg_dict
 
@@ -622,6 +634,38 @@ class CONTROL_POINT(XBeeDevice):
 
         if self.user_reg: return None
         else:             self.user_reg = uid
+
+
+    def __bomb_update(self, sender, payload):
+
+        status = payload[1]
+        uid    = payload[2:6].hex()
+        node   = str(sender.get_64bit_addr())
+        node   = PG.NodeStatus.query.filter(PG.NodeStatus.node == node).first()
+
+        _uid   = PG.UID.query.filter(PG.UID.uid == uid).first() if uid else None
+        _team  = _uid.team if _uid else None
+
+        if _team:
+
+            _field = PG.Field.query.filter(PG.Field.field == self.field).first()
+            _game  = _field.games[-1]
+
+            data = {'node' : node.node,
+                    'uid'  : uid,
+                    'field': self.field,
+                    'team' : _team,
+                    'game' : _game.id}
+
+            if status == CONTROL_POINT.BOMB_ARMED or status == CONTROL_POINT.BOMB_DISARMED:
+
+                data['points'] = 1 if status == CONTROL_POINT.BOMB_ARMED else 2
+                data['action'] = 'ARMED BOMB' if status == CONTROL_POINT.BOMB_ARMED else 'DISARMED BOMB'
+
+                self.DB.add(PG.Score(**data))
+
+        node.bomb_status = status
+        self.DB.commit()
 
 
     # TODO this is not currently in use...save for future possibilities

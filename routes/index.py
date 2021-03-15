@@ -9,6 +9,7 @@ import json
 
 bp = Blueprint('index', __name__, url_prefix='')
 
+BOMB    = 0xBB
 CAPTURE = 0x0A
 
 @bp.route('/index/update', methods=['GET'])
@@ -20,7 +21,6 @@ def update():
         to_update = dict()
 
         team_data = json.load(open("json/fields/" + field + ".json"))
-        team_cmap = {c['value']:c['color'] for c in team_data}
 
         _field = Field.query.filter(Field.field == field).first()
         nodes = _field.nodes if _field else []
@@ -34,8 +34,16 @@ def update():
                 to_update[node.node] = {
                                        'id'    : node.location,
                                        'team'  : node.team,
-                                       'color' : team_cmap[node.team],
-                                       'stable': node.stable
+                                       'color' : '#' + node.team,
+                                       'stable': node.stable,
+                                       }
+
+            if node.config == BOMB:
+
+                to_update[node.node] = {
+                                       'id'    : node.location,
+                                       'stable': False,
+                                       'demo'  : True if node.bomb_status == 0xDD else False
                                        }
 
         db_session.commit()

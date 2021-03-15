@@ -60,3 +60,30 @@ div.roster {
     padding: 0.1em;
     z-index: 10;
 }
+
+
+path.demo {
+    animation: draw 2s infinite linear;
+    stroke-width: 2px;
+    stroke-dasharray: 10;
+    stroke: #FF0000;
+    fill: #CC5500;
+}
+
+@keyframes draw {
+    0% {
+        stroke-dashoffset: 0;
+        opacity: 0.25;
+
+    }
+    50% {
+        stroke-dashoffset: 10;
+        fill: #FF0000;
+        opacity: 0.75;
+        transform: scale(0.9);
+    }
+    100% {
+        stroke-dashoffset: 20;
+        opacity: 0.25;
+    }
+}

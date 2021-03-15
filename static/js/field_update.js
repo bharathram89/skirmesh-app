@@ -14,15 +14,24 @@ function update_field() {
 
                 var ele = document.getElementById(data[node].id);
 
-                if (data[node].stable && ele){
+                if (data[node].stable) {
 
                     ele.setAttribute("fill", data[node].color);
-                    ele.setAttribute("opacity", "0.5");
                     ele.setAttribute("class", "owned");
+
                 }
-                else{
+
+                if (!data[node].stable) {
+
                     ele.setAttribute("fill", data[node].color);
                     ele.setAttribute("class", "beacon");
+
+                }
+
+                if (data[node].demo) {
+
+                    ele.setAttribute("class", "demo");
+
                 }
 
             }
