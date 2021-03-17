@@ -17,9 +17,22 @@ from pretty_print import print_time, print_perc
 from digi.xbee.models.address import XBee64BitAddress
 from controller import CONTROL_POINT
 
+import board, busio
+from digitalio import DigitalInOut, Pull
+from adafruit_pn532.i2c import PN532_I2C
+
+# Setup the NFC Reader
+NFC      = PN532_I2C(busio.I2C(board.SCL, board.SDA), irq=board.D24, debug=False)
+IRQ      = DigitalInOut(NFC._irq)
+IRQ.pull = Pull.UP
+NFC.listen_for_passive_target()
+
 serial = '/dev/ttyUSB0'
 baud   = 115200
-CP = CONTROL_POINT(serial, baud, database=db_session)
+CP     = CONTROL_POINT(serial, baud,
+                       nfc=NFC,
+                       irq=IRQ,
+                       database=db_session)
 
 CMD_ARGS = {'TIME DATA'       : json.load(open("json/timer_values.json")),
             'SET ASSIST %'    : json.load(open("json/percent_values.json")),
@@ -395,6 +408,16 @@ def issue_command():
 
 @bp.route('/pair_uid/get_uid', methods=['POST','GET'])
 def get_uid():
+
+    # PN532 IRQ pulls LOW  when ready
+    if not CP.NFC_IRQ.value:
+        # Pull the queue regardless of whether we keep it to clear the buffer
+        packet = CP.NFC.get_passive_target()
+        # Make sure the reader is looking for the next card
+        CP.NFC.listen_for_passive_target()
+
+        if packet and len(packet) == 4:
+            CP.user_reg = packet.hex()
 
     uid = CP.user_reg
     CP.user_reg = None

@@ -109,11 +109,13 @@ class CONTROL_POINT(XBeeDevice):
     # ▀█▀ █░░█ ▀█▀ ░░█░░ ▀█▀ █▄▄█ █░░ ▀█▀ ▄▀░ ░░█░░ ▀█▀ █░░█ █░░█
     # ▀▀▀ ▀░░▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀░░▀ ▀▀▀ ▀▀▀ ▀▀▀ ░░▀░░ ▀▀▀ ▀▀▀▀ ▀░░▀
 
-    def __init__(self, serial, baud, database):
+    def __init__(self, serial, baud, nfc, irq, database):
 
         XBeeDevice.__init__(self, serial, baud)
 
         self.DB          = database
+        self.NFC         = nfc
+        self.NFC_IRQ     = irq
 
         self.halt_points = False
 
