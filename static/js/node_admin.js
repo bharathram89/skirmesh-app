@@ -304,7 +304,7 @@ function update_team(ele) {
               // ONLY SET TEAM IF IN CAPTURE MODE
               case '0A':
 
-                  text = "!! WARNING !!\nContinuing to set the team\n";
+                  text = "!! WARNING !!\nContinuing to set the team ";
                   text += "will turnover control of this objective!";
 
                   var safe = confirm(text);
