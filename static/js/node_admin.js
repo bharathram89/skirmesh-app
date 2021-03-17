@@ -18,7 +18,7 @@ function form_submit(button) {
 
         case "Start Game":
 
-            safe = confirm("!! WARNING !!\nStarting a new game will\nRESET THE FIELD and ALL SCORES!");
+            safe = confirm("!! WARNING !!\nStarting a new game will RESET THE FIELD and ALL SCORES!");
             break;
 
     }
