@@ -3,6 +3,7 @@ from models.db_models import (UID, Team, Field, Score, Game, NodeStatus,
                               get_time_capture_complete, get_is_capture_closed,
                               get_field_scores)
 
+from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
 from flask import Blueprint
 
@@ -281,7 +282,14 @@ def set_controller_data():
 
         dest = data['dest']
         cmd  = int(data['cmd'], 16)
-        arg  = int(data['arg'], 16) if cmd != SET_LOCATION else data['arg']
+
+        if cmd == SET_LOCATION:
+
+            arg = data['arg'] if data['arg'] else null()
+
+        else:
+
+            arg  = int(data['arg'], 16) 
 
         node = NodeStatus.query.filter(NodeStatus.node == dest).first()
 
