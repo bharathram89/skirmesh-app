@@ -88,9 +88,9 @@
 
                     </td>
 
-                    <td ondblclick="unlock(this)">
+                    <td>
 
-                        <select class="00" disabled onchange="update_config(this)" onblur="this.disabled = true">
+                        <select class="00" onchange="update_config(this)">
 
                         {% for key in cmd_dict %}
                           <option value="{{ '%02X' % key }}" {{ 'selected' if key == node.config }}>
@@ -102,9 +102,9 @@
 
                     </td>
 
-                    <td ondblclick="unlock(this)">
+                    <td>
 
-                        <select class="04" disabled onchange="update_team(this)" onblur="this.disabled = true">
+                        <select class="04" onchange="update_team(this)">
 
                             <option value=""/>
                             {% for team in team_name %}
