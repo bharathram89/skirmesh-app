@@ -92,17 +92,6 @@ if __name__ == '__main__':
     db_session.commit()
 
 
-
-    from routes.admin import CP
-    print("Initializing host controller")
-    CP.configure_XB()
-
-
-    t = time.monotonic()
-    while not CP.end_nodes and (time.monotonic() - t) < 10:
-
-        CP.find_nodes()
-
     # Configure and start the flask application
     application.jinja_env.auto_reload = True
     application.config['TEMPLATES_AUTO_RELOAD'] = True
