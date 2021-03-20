@@ -14,15 +14,13 @@ from flask import Flask, render_template, flash, jsonify, session
 from flask import request, redirect, url_for, make_response
 from flask_login import LoginManager, logout_user
 
-import os, glob
-import time
+import os, glob, json, time
 
 from pretty_print import print_time, print_perc
 
 from dotenv import load_dotenv
 load_dotenv(verbose=True)
 DATABASE_URL = os.environ['DATABASE_URL']
-
 
 
 application = Flask(__name__)

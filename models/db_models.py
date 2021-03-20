@@ -1,18 +1,23 @@
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, LargeBinary
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import func, and_, Boolean, LargeBinary
 from sqlalchemy.orm import relationship
+from sqlalchemy_serializer import SerializerMixin
 
 from database import Base
 
 from datetime import datetime
 
-from sqlalchemy import func, and_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+# Added SerializerMixin to the modesl to make them serializable.
+# To serialize into json format - use jsonify - call jsonify() >> object.data
+# to retrieve the data transferred
+# All relationship data is not serialized to prevent recursion errors. 
 
 
-class CommsData(Base):
+class CommsData(Base, SerializerMixin):
 
     __tablename__ = 'data'
 
@@ -26,9 +31,11 @@ class CommsData(Base):
 
 
 
-class UID(Base):
+class UID(Base, SerializerMixin):
 
     __tablename__ = 'uid'
+
+    serialize_rules = ('-scores', '-nodes')
 
     id         = Column(Integer, primary_key=True, autoincrement=True)
     timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -49,9 +56,11 @@ class UID(Base):
 
 
 
-class Team(Base):
+class Team(Base, SerializerMixin):
 
     __tablename__ = 'team'
+
+    serialize_rules = ('-uids', '-scores', '-nodes')
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -69,9 +78,11 @@ class Team(Base):
 
 
 
-class Field(Base):
+class Field(Base, SerializerMixin):
 
     __tablename__ = 'field'
+
+    serialize_rules = ('-uids', '-scores', '-games', '-nodes')
 
     id         = Column(Integer, primary_key=True, autoincrement=True)
     timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -89,7 +100,7 @@ class Field(Base):
 
 
 
-class Medic(Base):
+class Medic(Base, SerializerMixin):
 
     __tablename__ = 'medic'
 
@@ -101,7 +112,7 @@ class Medic(Base):
 
 
 
-class Score(Base):
+class Score(Base, SerializerMixin):
 
     __tablename__ = 'score'
 
@@ -121,9 +132,11 @@ class Score(Base):
 
 
 
-class Game(Base):
+class Game(Base, SerializerMixin):
 
     __tablename__ = 'game'
+
+    serialize_rules = ('-scores')
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
@@ -133,9 +146,11 @@ class Game(Base):
 
 
 
-class NodeStatus(Base):
+class NodeStatus(Base, SerializerMixin):
 
     __tablename__ = 'node_status'
+
+    serialize_rules = ('-scores')
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -166,9 +181,11 @@ class NodeStatus(Base):
 
 
 
-class Player(UserMixin, Base):
+class Player(Base, UserMixin, SerializerMixin):
 
     __tablename__ = 'player'
+
+    serialize_rules = ('-image', '-password_hash')
 
     id             = Column(Integer, primary_key=True, autoincrement=True)
     timestamp      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -199,7 +216,7 @@ class Player(UserMixin, Base):
 
 
 
-class Images(Base):
+class Images(Base, SerializerMixin):
 
     __tablename__ = 'images'
 
