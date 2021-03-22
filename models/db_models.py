@@ -2,7 +2,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy import func, and_, Boolean, LargeBinary
 from sqlalchemy.orm import relationship
-from sqlalchemy_serializer import SerializerMixin
 
 from database import Base
 from dataclasses import dataclass
@@ -17,7 +16,7 @@ from flask_login import UserMixin
 # All relationship data is not serialized to prevent recursion errors.
 
 
-class CommsData(Base, SerializerMixin):
+class CommsData(Base):
 
     __tablename__ = 'data'
 
@@ -56,7 +55,7 @@ class UID(Base, SerializerMixin):
 
 
 
-class Team(Base, SerializerMixin):
+class Team(Base):
 
     __tablename__ = 'team'
 
@@ -78,7 +77,7 @@ class Team(Base, SerializerMixin):
 
 
 
-class Field(Base, SerializerMixin):
+class Field(Base):
 
     __tablename__ = 'field'
 
@@ -100,7 +99,7 @@ class Field(Base, SerializerMixin):
 
 
 
-class Medic(Base, SerializerMixin):
+class Medic(Base):
 
     __tablename__ = 'medic'
 
@@ -113,7 +112,7 @@ class Medic(Base, SerializerMixin):
 
 
 @dataclass
-class Score(Base, SerializerMixin):
+class Score(Base):
 
     __tablename__ = 'score'
 
@@ -145,7 +144,7 @@ class Score(Base, SerializerMixin):
 
 
 
-class Game(Base, SerializerMixin):
+class Game(Base):
 
     __tablename__ = 'game'
 
@@ -212,7 +211,7 @@ class NodeStatus(Base):
 
 
 
-class Player(Base, UserMixin, SerializerMixin):
+class Player(Base, UserMixin):
 
     __tablename__ = 'player'
 
@@ -247,7 +246,7 @@ class Player(Base, UserMixin, SerializerMixin):
 
 
 
-class Images(Base, SerializerMixin):
+class Images(Base):
 
     __tablename__ = 'images'
 
