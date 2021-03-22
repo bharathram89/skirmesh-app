@@ -1,0 +1,58 @@
+.container {
+  text-align: left;
+  width: 60%
+}
+
+.node_img {
+    display: block;
+    width: 200px;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.LED {
+    fill: #ffffff;
+}
+
+.node {
+    display: inline-block;
+}
+
+path {
+    opacity: 1;
+}
+
+p#introduction {
+    margin: 2em;
+}
+
+h3 {
+    border-bottom: solid black 2px;
+    text-transform: uppercase;
+    padding: 0;
+    margin: 2em 0 0 0;
+}
+
+h4 {
+    text-decoration: underline;
+    text-transform: capitalize;
+    padding: 0;
+    margin: 2em 0 0 0;
+}
+
+h5 {
+    padding: 0;
+    margin: 1em 0 0 0;
+    font-size: medium;
+}
+
+p {
+    margin: 0 0 1em 0;
+}
+
+path:hover {
+  opacity: 1;
+  fill: inherit;
+  transform: scale(1);
+}

@@ -1,0 +1,46 @@
+
+
+.field_link {
+
+    width:         30%;
+    height:        2.5em;
+    font-size:     200%;
+    border-radius: 0.1em;
+
+    display: inline-flex;
+    text-align: left;
+    justify-content: left;
+    align-items: center;
+    vertical-align: middle;
+
+    margin:  0.1em;
+    padding: 0.1em;
+
+    transition: all .2s ease-in-out;
+
+}
+
+.field_link:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 1em rgba(255, 255, 255, 0.25);
+}
+
+.field_link:active {
+    box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);
+    transform: scale(0.98);
+}
+
+
+#ballahack.field_link {
+
+    background-image: url('../img/logos/ballahack.png');
+    background-size: contain;
+    background-position: right center;
+    background-repeat: no-repeat;
+
+    background-color: var(--BLACK);
+    color: var(--WHITE);
+
+    font-family: 'mouse_memoirsregular';
+
+}
