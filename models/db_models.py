@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
 
 from database import Base
-
+from dataclasses import dataclass
 from datetime import datetime
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -14,7 +14,7 @@ from flask_login import UserMixin
 # Added SerializerMixin to the modesl to make them serializable.
 # To serialize into json format - use jsonify - call jsonify() >> object.data
 # to retrieve the data transferred
-# All relationship data is not serialized to prevent recursion errors. 
+# All relationship data is not serialized to prevent recursion errors.
 
 
 class CommsData(Base, SerializerMixin):
@@ -112,9 +112,22 @@ class Medic(Base, SerializerMixin):
 
 
 
+@dataclass
 class Score(Base, SerializerMixin):
 
     __tablename__ = 'score'
+
+    id:             int
+    timestamp:      datetime
+
+    uid:            str
+    field:          str
+    node:           str
+    team:           str
+    game:           int
+    action:         str
+    points:         int
+    time_held:      int
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
@@ -145,12 +158,30 @@ class Game(Base, SerializerMixin):
     scores    = relationship('Score', backref='scores_game', cascade="all, delete-orphan")
 
 
-
-class NodeStatus(Base, SerializerMixin):
+@dataclass
+class NodeStatus(Base):
 
     __tablename__ = 'node_status'
 
-    serialize_rules = ('-scores')
+    id:             int
+    timestamp:      datetime
+    node:           str
+    field:          str
+    location:       str
+    config:         int
+    cap_time:       int
+    med_time:       int
+    bomb_time:      int
+    arm_time:       int
+    diff_time:      int
+    cap_asst:       int
+    uid:            str
+    team:           str
+    stable:         bool
+    point_scale:    int
+    bomb_status:    int
+
+    scores:         Score
 
     id        = Column(Integer, primary_key=True, autoincrement=True)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

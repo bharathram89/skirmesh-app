@@ -14,35 +14,78 @@ from bs4 import BeautifulSoup as SOUP
 import json
 
 
-
-
-@bp.route('/resources/get/node_status/one', methods=['GET'])
-def get_node_status_one():
-
-    params = request.args
-
-    node = params.get('node', None)
-
-    if not node: return "Error - Please specify a node"
-
-    result = NodeStatus.query.filter(NodeStatus.node=node).first()
-
-    return jsonify(result)
+# To interact and extract data from these API methods use
+# requests module
+#
+# example:
+# import requests
+# result = requests.get(url = URL, params = PARAMS)
+# data = result.json()
+#
+#
+# result = requsts.post(url = URL, data = DATA)
+# data = result.json()
 
 
 
+@bp.route('/resources/node_status', methods=['GET','POST','PUT'])
+def node_status():
 
-@bp.route('/resources/get/node_status/all', methods=['GET'])
-def get_node_status_all():
+    """
+    API to interact with the NodeStatus table
 
-    params = request.args
+    GET  - query by node, team, and/or field
+    POST - add node to table
+    PUT  - update node in table
 
-    result = NodeStatus.query
+    :: returns ::       query result
+    """
 
-    field = params.get('node', None)
-    team  = params.get('team', None)
+    if request.method == 'GET':
 
-    if field: result = result.filter(NodeStatus.field = field)
-    if team:  result = result.filter(NodeStatus.team = team)
+        params = request.args
+        result = NodeStatus.query
 
-    return jsonify(result.all())
+        node  = params.get('node',  None)
+        field = params.get('field', None)
+        team  = params.get('team',  None)
+
+        print(team,field,node)
+
+        if node:  result = result.filter(NodeStatus.node  == node)
+        if field: result = result.filter(NodeStatus.field == field)
+        if team:  result = result.filter(NodeStatus.team  == team)
+
+        if node:
+
+            return jsonify(result.first())
+
+        return jsonify(result.all())
+
+
+    if request.method == 'POST':
+
+        data = json.loads(request.data)
+        node = NodeStatus(**data)
+        db_session.add(node)
+
+        db_session.commit()
+
+        return jsonify(node)
+
+
+
+@bp.route('/resources/node_status/<node>', methods=['PUT'])
+def update_node_status(node):
+
+    if request.method == 'PUT':
+
+        _node = NodeStatus.query.filter(NodeStatus.node == node).first()
+
+        for attr in data:
+
+            setattr(_node, attr, data[attr])
+
+        db_session.commit()
+
+        return jsonify(_node)
