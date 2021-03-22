@@ -27,24 +27,6 @@
 </header>
 
 
-    <ul class="nav">
-        <li><a href="/index">Home</a></li>
-        {% if field %}
-        <li><a href="/index/{{ field }}">Field Map</a></li>
-        {% endif %}
-        <li><a href="/leaderboard">Leaderboard</a></li>
-        {% if current_user.is_anonymous %}
-          <li><a href="/login">Login</a></li>
-        {% else %}
-          <li><a href="/player_profile/{{ current_user.callsign }}">Profile</a></li>
-        {% endif %}
-        <li><a href="/pair_uid">Pair UID</a></li>
-        <li><a href="/node_admin">Node Admin</a></li>
-        <li><a href="/comms">Comms Log</a></li>
-        <li><a href="https://skirmesh.net/player-information">About</a></li>
-
-    </ul>
-
 
 <body>
 
