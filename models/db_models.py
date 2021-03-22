@@ -30,7 +30,7 @@ class CommsData(Base):
 
 
 
-class UID(Base, SerializerMixin):
+class UID(Base):
 
     __tablename__ = 'uid'
 
