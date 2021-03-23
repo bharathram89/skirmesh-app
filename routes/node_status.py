@@ -19,12 +19,17 @@ import json
 #
 # example:
 # import requests
+#
+# PARAMS = {key:val}
 # result = requests.get(url = URL, params = PARAMS)
 # data = result.json()
 #
+# DATA = {key:val}
+# result = requsts.post(url = URL, data = DATA (or PARAMS...))
 #
-# result = requsts.post(url = URL, data = DATA)
-# data = result.json()
+#    :: For PUT request, include target update row
+# result = request.put(url = URL, params = PARAMS)
+
 
 
 
@@ -41,9 +46,11 @@ def node_status():
     :: returns ::       query result
     """
 
+    params = request.args.to_dict()
+
     if request.method == 'GET':
 
-        params = request.args
+
         result = NodeStatus.query
 
         node  = params.get('node',  None)
@@ -63,29 +70,29 @@ def node_status():
         return jsonify(result.all())
 
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
 
-        data = json.loads(request.data)
-        node = NodeStatus(**data)
+        node = NodeStatus(**params)
+
         db_session.add(node)
-
         db_session.commit()
 
         return jsonify(node)
 
 
+    elif request.method == 'PUT' and 'node' in params:
 
-@bp.route('/resources/node_status/<node>', methods=['PUT'])
-def update_node_status(node):
-
-    if request.method == 'PUT':
+        node = params.pop('node')
 
         _node = NodeStatus.query.filter(NodeStatus.node == node).first()
 
-        for attr in data:
+        for attr in params:
 
-            setattr(_node, attr, data[attr])
+            setattr(_node, attr, params[attr])
 
         db_session.commit()
 
         return jsonify(_node)
+
+
+    return make_response('', 204)
