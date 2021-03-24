@@ -352,8 +352,6 @@ class Locations(Base):
 
     id:           int
     creationDate: datetime
-    lastChange:   datetime
-    deactivated:  datetime
 
     mapID:       int
 
@@ -361,8 +359,6 @@ class Locations(Base):
 
     id           = Column(Integer, primary_key=True, autoincrement=True)
     creationDate = Column(DateTime, default=datetime.utcnow)
-    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
-    deactivated  = Column(DateTime)
 
     name         = Column(String, nullable=False)
     mapID        = Column(Integer, ForeignKey('maps.id'), nullable=False)
@@ -374,8 +370,6 @@ class Maps(Base):
 
     id:           int
     creationDate: datetime
-    lastChange:   datetime
-    deactivated:  datetime
 
     userID:       int
 
@@ -390,8 +384,6 @@ class Maps(Base):
 
     id           = Column(Integer, primary_key=True, autoincrement=True)
     creationDate = Column(DateTime, default=datetime.utcnow)
-    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
-    deactivated  = Column(DateTime)
 
     name        = Column(String, nullable=False)
     map_image   = Column(LargeBinary, nullable=False)
