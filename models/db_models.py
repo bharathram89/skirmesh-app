@@ -16,247 +16,465 @@ from flask_login import UserMixin
 # All relationship data is not serialized to prevent recursion errors.
 
 
-class CommsData(Base):
+class RFID(Base):
 
-    __tablename__ = 'data'
+    id:           int
+    creationDate: datetime
+    deactivated:  datetime
 
-    id         = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp  = Column(DateTime, default=datetime.utcnow)
+    uid:          str
+    userID:       int
 
-    sender     = Column(String, nullable=False)
-    dest       = Column(String, nullable=False)
-    command    = Column(Integer, nullable=False)
-    payload    = Column(String, nullable=False)
+    __tablename__ = 'rfid'
 
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    deactivated   = Column(DateTime)
 
-
-class UID(Base):
-
-    __tablename__ = 'uid'
-
-    serialize_rules = ('-scores', '-nodes')
-
-    id         = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    uid        = Column(String, unique=True)
-    team       = Column(String, ForeignKey('team.team'))
-    field      = Column(String, ForeignKey('field.field'))
-
-    scores     = relationship('Score', backref='scores_uid', cascade="all, delete-orphan")
-    medic      = relationship('Medic', backref='medic_uid', uselist=False, cascade="all, delete-orphan")
-    player     = relationship('Player', backref='player_uid', uselist=False, cascade="all, delete-orphan")
-    nodes      = relationship('NodeStatus', backref='nodestatus_uid', cascade="all, delete-orphan")
-
-
-    def __repr__(self):
-
-        return self.uid
-
-
-
-class Team(Base):
-
-    __tablename__ = 'team'
-
-    serialize_rules = ('-uids', '-scores', '-nodes')
-
-    id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    team      = Column(String, unique=True, nullable=False)
-
-    scores    = relationship('Score', backref='scores_team', cascade="all, delete-orphan")
-    uids      = relationship('UID', backref='uids_team', cascade="all, delete-orphan")
-    nodes     = relationship('NodeStatus', backref='nodes_team', cascade="all, delete-orphan")
-
-
-    def __repr__(self):
-
-        return self.team
-
-
-
-class Field(Base):
-
-    __tablename__ = 'field'
-
-    serialize_rules = ('-uids', '-scores', '-games', '-nodes')
-
-    id         = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp  = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    field      = Column(String, unique=True, nullable=False)
-
-    scores     = relationship('Score', backref='scores_field', cascade="all, delete-orphan")
-    uids       = relationship('UID', backref='uids_field', cascade="all, delete-orphan")
-    nodes      = relationship('NodeStatus', backref='nodes_field', cascade="all, delete-orphan")
-    games      = relationship('Game', backref='games_field', cascade="all, delete-orphan")
-
-    def __repr__(self):
-
-        return self.field
-
-
-
-class Medic(Base):
-
-    __tablename__ = 'medic'
-
-    id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    uid       = Column(String, ForeignKey('uid.uid'), unique=True, nullable=False)
-    alive     = Column(Boolean, default=1, nullable=False)
+    uid           = Column(String, unique=True)
+    userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
 
 
 
 @dataclass
-class Score(Base):
+class GameAction(Base):
 
-    __tablename__ = 'score'
+    id:           int
+    creationDate: datetime
 
-    id:             int
-    timestamp:      datetime
+    actionID:     int
+    userID:       int
+    gameID:       int
+    teamID:       int
+    deviceID:     int
 
-    uid:            str
-    field:          str
-    node:           str
-    team:           str
-    game:           int
-    action:         str
-    points:         int
-    time_held:      int
+    __tablename__ = 'gameAction'
 
-    id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
 
-    uid       = Column(String, ForeignKey('uid.uid'))
-    field     = Column(String, ForeignKey('field.field'), nullable=False)
-    node      = Column(String, ForeignKey('node_status.node'), nullable=False)
-    team      = Column(String, ForeignKey('team.team'), nullable=False)
+    actionID = Column(Integer, ForeignKey('action.id'), nullable=False)
+    userID   = Column(Integer, ForeignKey('users.id'))
+    gameID   = Column(Integer, ForeignKey('games.id'), nullable=False)
+    teamID   = Column(Integer, ForeignKey('teams.id'), nullable=False)
+    deviceID = Column(Integer, ForeignKey('device.id'), nullable=False)
 
-    game      = Column(Integer, ForeignKey('game.id'), nullable=False)
-
-    action    = Column(String)
-    points    = Column(Integer)
-    time_held = Column(Integer)
-
-
-
-class Game(Base):
-
-    __tablename__ = 'game'
-
-    serialize_rules = ('-scores')
-
-    id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-
-    field     = Column(String, ForeignKey('field.field'), nullable=False)
-    scores    = relationship('Score', backref='scores_game', cascade="all, delete-orphan")
 
 
 @dataclass
-class NodeStatus(Base):
+class Action(Base):
 
-    __tablename__ = 'node_status'
+    id:           int
+    creationDate: datetime
 
-    id:             int
-    timestamp:      datetime
-    node:           str
-    field:          str
-    location:       str
-    config:         int
-    cap_time:       int
-    med_time:       int
-    bomb_time:      int
-    arm_time:       int
-    diff_time:      int
-    cap_asst:       int
-    uid:            str
-    team:           str
-    stable:         bool
-    point_scale:    int
-    bomb_status:    int
+    action:       str
+    actions:      GameAction
 
-    scores:         Score
+    __tablename__ = 'action'
 
-    id        = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
 
-    node      = Column(String, unique=True, nullable=False)
+    action       = Column(String, unique=True, nullable=False)
+    actions      = relationship('GameAction', backref='action_gameAction', uselist=True, cascade="all, delete-orphan")
+
+
+
+@dataclass
+class Games(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+
+    startTime:    datetime
+    endTime:      datetime
+    is_paused:    bool
+
+    userID:       int
+    gameTypeID:   int
+
+    actions:      GameAction
+
+    __tablename__ = 'games'
+
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
+    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
+
+    startTime    = Column(DateTime, default=datetime.utcnow)
+    endTime      = Column(DateTime)
+    is_paused    = Column(Boolean, default=False)
+
+    userID       = Column(Integer, ForeignKey('users.id'), nullable=False)
+    gameTypeID   = Column(Integer, ForeignKey('gameType.id'), nullable=False)
+
+    actions      = relationship('GameAction', backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
+
+
+
+@dataclass
+class GameType(Base):
+
+    id:           int
+    creationDate: datetime
+    deactivated:  datetime
+
+    name:         str
+    games:        Games
+
+    __tablename__ = 'gameType'
+
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    deactivated   = Column(DateTime)
+
+    name          = Column(String, nullable=False)
+    games         = relationship('Games', backref='gameType_games', uselist=True, cascade="all, delete-orphan")
+
+
+
+@dataclass
+class Device(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    address:      str
+
+    location:     int
+    point_scale:  int
+    allow_medic:  bool
+    med_time:     int
+
+    teamID:       int
+
+    config:       int
+    cap_time:     int
+    bomb_time:    int
+    arm_time:     int
+    diff_time:    int
+    cap_asst:     int
+
+    stable:       bool
+    bomb_status:  int
+
+    __tablename__ = 'device'
+
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    lastChange    = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated   = Column(DateTime)
+
+    address     = Column(String, unique=True, nullable=False)
     # General status attributes
-    field     = Column(String, ForeignKey('field.field'))
-    location  = Column(String)
-    config    = Column(Integer, default=0x0A) #CAPTURE
-    # Node timing attributes
-    cap_time  = Column(Integer, default=6)
-    med_time  = Column(Integer, default=6)
-    bomb_time = Column(Integer, default=12)
-    arm_time  = Column(Integer, default=1)
-    diff_time = Column(Integer, default=12)
-    cap_asst  = Column(Integer, default=5)
-    # Capture status attributes
-    uid       = Column(String, ForeignKey('uid.uid'))
-    team      = Column(String, ForeignKey('team.team'))
-    stable    = Column(Integer, default=1)
-    # Point scaling
+    location    = Column(Integer, ForeignKey('locations.id'))
     point_scale = Column(Integer, default=60)
-    allow_medic = Column(Boolean, default=1)
-    # Bomb status
+    allow_medic = Column(Boolean, default=True)
+    med_time    = Column(Integer, default=6)
+    # Ownership attributes
+    teamID      = Column(Integer, ForeignKey('teams.id'))
+    # ------------------------------------------
+    # paramters tracked locally by the node
+    config      = Column(Integer, default=0x0A) #CAPTURE
+    # timing attributes
+    cap_time    = Column(Integer, default=6)
+    bomb_time   = Column(Integer, default=12)
+    arm_time    = Column(Integer, default=1)
+    diff_time   = Column(Integer, default=12)
+    cap_asst    = Column(Integer, default=5)
+    # status attributes
+    stable      = Column(Integer, default=1)
     bomb_status = Column(Integer, default=0xBD) #BOMB_DISARMED
+    # ------------------------------------------
+    actions     = relationship('GameAction', backref='device_gameAction', uselist=True, cascade="all, delete-orphan")
 
-    scores    = relationship('Score', backref='node_status_scores', cascade="all, delete-orphan")
+
+
+@dataclass
+class TeamPlayer(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    is_alive:     bool
+
+    userID:       int
+    teamID:       int
+
+    __tablename__ = 'teamPlayer'
+
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    lastChange    = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated   = Column(DateTime)
+
+    is_alive      = Column(Boolean, default=True)
+
+    userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
+    teamID        = Column(Integer, ForeignKey('teams.id'), nullable=False)
 
 
 
-class Player(Base, UserMixin):
+@dataclass
+class Teams(Base):
 
-    __tablename__ = 'player'
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
 
-    serialize_rules = ('-image', '-password_hash')
+    name:         str
+    color:        str
 
-    id             = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    gameConfigID: int
 
-    image          = relationship('Images', backref='player_image', uselist=False, cascade="all, delete-orphan")
+    teamPlayers:  TeamPlayer
+    devices:      Device
+    actions:      GameAction
 
-    firstname      = Column(String, nullable=False)
-    lastname       = Column(String, nullable=False)
-    callsign       = Column(String, nullable=False, unique=True)
-    outfit         = Column(String, nullable=True)
+    __tablename__ = 'teams'
 
-    email          = Column(String, nullable=False)
-    password_hash  = Column(String, nullable=False)
-    # Point stuff
-    captures       = Column(Integer, nullable=True, default=0)
-    assists        = Column(Integer, nullable=True, default=0)
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
+    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated  = Column(DateTime)
 
-    uid            = Column(String, ForeignKey('uid.uid'), unique=True, nullable=True)
+    name         = Column(String, nullable=False)
+    color        = Column(String, nullable=False)
 
+    gameConfigID = Column(Integer, ForeignKey('gameConfig.id'), nullable=False)
+
+    teamPlayers  = relationship('TeamPlayer', backref='teams_teamPlayer', uselist=True, cascade="all, delete-orphan")
+    devices      = relationship('Device', backref='teams_device', uselist=True, cascade="all, delete-orphan")
+    actions      = relationship('GameAction', backref='teams_gameAction', uselist=True, cascade="all, delete-orphan")
+
+
+
+@dataclass
+class GameConfig(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    description:  str
+    userID:       int
+    teams:        Teams
+    mapID:        int
+
+    __tablename__ = 'gameConfig'
+
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    lastChange    = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated   = Column(DateTime)
+
+    description   = Column(String)
+    userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
+    teams         = relationship('Teams', backref='teams_gameConfig', uselist=True, cascade="all, delete-orphan")
+    mapID         = Column(Integer, ForeignKey('maps.id'), nullable=False)
+
+
+@dataclass
+class PlayerProfile(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    userID:       int
+
+    facebook:     str
+    youTube:      str
+    twitter:      str
+
+    clanTag:      str
+    outfit:       str
+    profilePic:   LargeBinary
+
+    emailAllowed: bool
+
+    __tablename__ = 'playerProfile'
+
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    lastChange    = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated   = Column(DateTime)
+
+    userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
+
+    facebook      = Column(String)
+    youTube       = Column(String)
+    twitter       = Column(String)
+
+    clanTag       = Column(String)
+    outfit        = Column(String)
+    profilePic    = Column(LargeBinary)
+
+    emailAllowed  = Column(Boolean)
+
+
+
+@dataclass
+class FieldProfile(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    userID:       int
+    profilePic:   LargeBinary
+    profile:      str
+
+    __tablename__ = 'fieldProfile'
+
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
+    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated  = Column(DateTime)
+
+    userID       = Column(Integer, ForeignKey('users.id'), nullable=False)
+    profilePic   = Column(LargeBinary)
+    profile      = Column(String)
+
+
+
+@dataclass
+class Locations(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    mapID:       int
+
+    __tablename__ = 'locations'
+
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
+    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated  = Column(DateTime)
+
+    name         = Column(String, nullable=False)
+    mapID        = Column(Integer, ForeignKey('maps.id'), nullable=False)
+
+
+
+@dataclass
+class Maps(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    userID:       int
+
+    name:         str
+    map_image:    LargeBinary
+    map_svg:      str
+
+    locations:    Locations
+    gameConfigs:  GameConfig
+
+    __tablename__ = 'maps'
+
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
+    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated  = Column(DateTime)
+
+    name        = Column(String, nullable=False)
+    map_image   = Column(LargeBinary, nullable=False)
+    map_svg     = Column(String, nullable=False)
+
+    userID      = Column(Integer, ForeignKey('users.id'), nullable=False)
+
+    locations   = relationship('Locations', backref='maps_locations', uselist=True, cascade="all, delete-orphan")
+    gameConfigs = relationship('GameConfig', backref='maps_gameConfig', uselist=True, cascade="all, delete-orphan")
+
+
+
+@dataclass
+class Users(Base, UserMixin):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+    deactivated:  datetime
+
+    email:         str
+    emailVerified: bool
+
+    callSign:      str
+    firstName:     str
+    lastName:      str
+    phoneNumber:   str
+
+    status:        str
+    type:          str
+    password:      str
+
+    playerProfile: PlayerProfile
+    fieldProfile:  FieldProfile
+    actions:       GameAction
+    maps:          Maps
+    games:         Games
+    gameConfig:    GameConfig
+    teamPlayer:    TeamPlayer
+    rfid:          RFID
+
+    __tablename__ = 'users'
+
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate  = Column(DateTime, default=datetime.utcnow)
+    lastChange    = Column(DateTime, onupdate=datetime.utcnow)
+    deactivated   = Column(DateTime)
+
+    email         = Column(String, nullable=False)
+    emailVerified = Column(Boolean)
+
+    callSign      = Column(String, nullable=False, unique=True)
+    firstName     = Column(String, nullable=False)
+    lastName      = Column(String, nullable=False)
+    phoneNumber   = Column(String)
+
+    status        = Column(String)
+    type          = Column(String)
+    password      = Column(String, nullable=False)
+
+    playerProfile = relationship('PlayerProfile', backref='users_playerProfile', uselist=False, cascade="all, delete-orphan")
+    fieldProfile  = relationship('FieldProfile', backref='users_fieldProfile', uselist=False, cascade="all, delete-orphan")
+    actions       = relationship('GameAction', backref='users_gameAction', uselist=True, cascade="all, delete-orphan")
+    maps          = relationship('Maps', backref='users_maps', uselist=True, cascade="all, delete-orphan")
+    games         = relationship('Games', backref='users_games', uselist=True, cascade="all, delete-orphan")
+    gameConfig    = relationship('GameConfig', backref='users_gameConfig', uselist=True, cascade="all, delete-orphan")
+    teamPlayer    = relationship('TeamPlayer', backref='users_teamPlayer', uselist=True, cascade="all, delete-orphan")
+    rfid          = relationship('RFID', backref='users_rfid', uselist=True, cascade="all, delete-orphan")
 
     def set_password(self, password):
 
-        self.password_hash = generate_password_hash(password)
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
 
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password, password)
 
 
 
-class Images(Base):
 
-    __tablename__ = 'images'
 
-    id             = Column(Integer, primary_key=True, autoincrement=True)
-    timestamp      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    player         = Column(Integer, ForeignKey('player.id'), nullable=False)
 
-    data           = Column(LargeBinary, nullable=False)
-    mimetype       = Column(String, nullable=False)
 
 
 

@@ -10,10 +10,7 @@ nodes from which complex realworld gaming scenarios
 can be launched and validated.
 """
 
-from flask import Flask, render_template, flash, jsonify, session
-from flask import request, redirect, url_for, make_response
-from flask_login import LoginManager, logout_user
-
+from flask import Flask
 import os, glob, json, time
 
 from dotenv import load_dotenv
@@ -29,8 +26,8 @@ application.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024      # 5MB max file s
 
 from database import db_session
 
-from routes import node_status
-application.register_blueprint(node_status.bp)
+from routes import device
+application.register_blueprint(device.bp)
 
 
 

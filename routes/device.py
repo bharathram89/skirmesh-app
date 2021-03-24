@@ -1,13 +1,11 @@
 from database import db_session
-from models.db_models import (UID, Team, Field, Score, Game, NodeStatus,
-                              get_time_capture_complete, get_is_capture_closed,
-                              get_field_scores)
+from models.db_models import Device
 
 from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
 from flask import Blueprint
 
-bp = Blueprint('node_status', __name__, url_prefix='')
+bp = Blueprint('device', __name__, url_prefix='')
 
 from datetime import datetime
 from bs4 import BeautifulSoup as SOUP
@@ -33,11 +31,11 @@ import json
 
 
 
-@bp.route('/resources/node_status', methods=['GET','POST','PUT'])
+@bp.route('/resources/device', methods=['GET','POST','PUT'])
 def node_status():
 
     """
-    API to interact with the NodeStatus table
+    API to interact with the Device table
 
     GET  - query by node, team, and/or field
     POST - add node to table
@@ -51,19 +49,15 @@ def node_status():
     if request.method == 'GET':
 
 
-        result = NodeStatus.query
+        result = Device.query
 
-        node  = params.get('node',  None)
-        field = params.get('field', None)
-        team  = params.get('team',  None)
+        addr  = params.get('address', None)
+        team  = params.get('teamColor', None)
 
-        print(team,field,node)
+        if addr:  result = result.filter(Device.address == addr)
+        if team:  result = result.filter(Device.teamColor == team)
 
-        if node:  result = result.filter(NodeStatus.node  == node)
-        if field: result = result.filter(NodeStatus.field == field)
-        if team:  result = result.filter(NodeStatus.team  == team)
-
-        if node:
+        if addr:
 
             return jsonify(result.first())
 
@@ -72,7 +66,7 @@ def node_status():
 
     elif request.method == 'POST':
 
-        node = NodeStatus(**params)
+        node = Device(**params)
 
         db_session.add(node)
         db_session.commit()
@@ -80,11 +74,11 @@ def node_status():
         return jsonify(node)
 
 
-    elif request.method == 'PUT' and 'node' in params:
+    elif request.method == 'PUT' and 'address' in params:
 
-        node = params.pop('node')
+        addr = params.pop('address')
 
-        _node = NodeStatus.query.filter(NodeStatus.node == node).first()
+        _node = Device.query.filter(Device.address == addr).first()
 
         for attr in params:
 
