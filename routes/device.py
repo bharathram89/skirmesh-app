@@ -45,12 +45,14 @@ def node_status():
     if request.method == 'GET':
 
         result = Device.query
-
-        addr  = params.get('address', None)
-        team  = params.get('teamColor', None)
-
-        if addr:  return jsonify(result.filter(Device.address == addr).first())
-        if team:  result = result.filter(Device.teamColor == team)
+        
+        nodeID = params.get('id', None)
+        addr   = params.get('address', None)
+        team   = params.get('teamColor', None)
+        
+        if nodeID: return jsonify(result.get(nodeID))
+        if addr:   return jsonify(result.filter(Device.address == addr).first())
+        if team:   result = result.filter(Device.teamColor == team)
 
         return jsonify(result.all())
 
