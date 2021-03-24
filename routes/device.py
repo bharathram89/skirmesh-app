@@ -49,7 +49,7 @@ def node_status():
         addr  = params.get('address', None)
         team  = params.get('teamColor', None)
 
-        if addr:  return result.filter(Device.address == addr).first()
+        if addr:  return jsonify(result.filter(Device.address == addr).first())
         if team:  result = result.filter(Device.teamColor == team)
 
         return jsonify(result.all())
