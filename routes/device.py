@@ -1,6 +1,7 @@
 from database import db_session
 from models.db_models import Device
 
+import json
 from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
 from flask import Blueprint
@@ -40,7 +41,7 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = request.args.to_dict()
+    params = json.loads(request.args.to_dict())
 
     if request.method == 'GET':
 
