@@ -41,16 +41,16 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = json.loads(request.args.to_dict())
+    params = json.loads(json.dumps(request.args))
 
     if request.method == 'GET':
 
         result = Device.query
-        
+
         nodeID = params.get('id', None)
         addr   = params.get('address', None)
         team   = params.get('teamColor', None)
-        
+
         if nodeID: return jsonify(result.get(nodeID))
         if addr:   return jsonify(result.filter(Device.address == addr).first())
         if team:   result = result.filter(Device.teamColor == team)
