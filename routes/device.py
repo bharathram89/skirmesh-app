@@ -8,8 +8,6 @@ from flask import Blueprint
 bp = Blueprint('device', __name__, url_prefix='')
 
 from datetime import datetime
-from bs4 import BeautifulSoup as SOUP
-import json
 
 
 # To interact and extract data from these API methods use
@@ -29,8 +27,6 @@ import json
 # result = request.put(url = URL, params = PARAMS)
 
 
-
-
 @bp.route('/resources/device', methods=['GET','POST','PUT'])
 def node_status():
 
@@ -47,7 +43,6 @@ def node_status():
     params = request.args.to_dict()
 
     if request.method == 'GET':
-
 
         result = Device.query
 
@@ -68,17 +63,30 @@ def node_status():
 
         node = Device(**params)
 
-        db_session.add(node)
-        db_session.commit()
+        try:
+
+            db_session.add(node)
+            db_session.commit()
+
+        except:
+
+            db_session.rollback()
+            db_session.commit()
+
+            return make_response('ERROR: Device exists', 409)
 
         return jsonify(node)
 
 
     elif request.method == 'PUT' and 'address' in params:
 
-        addr = params.pop('address')
+        addr = params.pop('address', None)
+        id   = params.pop('id', None)
 
-        _node = Device.query.filter(Device.address == addr).first()
+        if id: _node = Device.query.get(id)
+        elif addr: _node = Device.query.filter(Device.address == addr).first()
+
+        if not _node: return make_response('', 204)
 
         for attr in params:
 

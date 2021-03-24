@@ -26,8 +26,11 @@ application.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024      # 5MB max file s
 
 from database import db_session
 
-from routes import device
+from routes import device, users, playerProfile, fieldProfile
 application.register_blueprint(device.bp)
+application.register_blueprint(users.bp)
+application.register_blueprint(playerProfile.bp)
+application.register_blueprint(fieldProfile.bp)
 
 
 
