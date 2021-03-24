@@ -345,6 +345,7 @@ class FieldProfile(Base):
     profilePic   = Column(LargeBinary)
     profile      = Column(String)
 
+    maps         = relationship('Maps', backref='fieldProflie_maps', uselist=True, cascade="all, delete-orphan")
 
 
 @dataclass
@@ -371,11 +372,11 @@ class Maps(Base):
     id:           int
     creationDate: datetime
 
-    userID:       int
-
     name:         str
     map_image:    LargeBinary
     map_svg:      str
+
+    fieldID:      int
 
     locations:    Locations
     gameConfigs:  GameConfig
@@ -389,7 +390,7 @@ class Maps(Base):
     map_image   = Column(LargeBinary, nullable=False)
     map_svg     = Column(String, nullable=False)
 
-    userID      = Column(Integer, ForeignKey('users.id'), nullable=False)
+    fieldID     = Column(Integer, ForeignKey('fieldProfile.id'), nullable=False)
 
     locations   = relationship('Locations', backref='maps_locations', uselist=True, cascade="all, delete-orphan")
     gameConfigs = relationship('GameConfig', backref='maps_gameConfig', uselist=True, cascade="all, delete-orphan")
@@ -417,9 +418,8 @@ class Users(Base, UserMixin):
     password:      str
 
     playerProfile: PlayerProfile
-    fieldProfile:  FieldProfile
+    fieldProfiles: FieldProfile
     actions:       GameAction
-    maps:          Maps
     games:         Games
     gameConfig:    GameConfig
     teamPlayer:    TeamPlayer
@@ -445,21 +445,13 @@ class Users(Base, UserMixin):
     password      = Column(String, nullable=False)
 
     playerProfile = relationship('PlayerProfile', backref='users_playerProfile', uselist=False, cascade="all, delete-orphan")
-    fieldProfile  = relationship('FieldProfile', backref='users_fieldProfile', uselist=False, cascade="all, delete-orphan")
+    fieldProfiles = relationship('FieldProfile', backref='users_fieldProfile', uselist=True, cascade="all, delete-orphan")
     actions       = relationship('GameAction', backref='users_gameAction', uselist=True, cascade="all, delete-orphan")
-    maps          = relationship('Maps', backref='users_maps', uselist=True, cascade="all, delete-orphan")
     games         = relationship('Games', backref='users_games', uselist=True, cascade="all, delete-orphan")
     gameConfig    = relationship('GameConfig', backref='users_gameConfig', uselist=True, cascade="all, delete-orphan")
     teamPlayer    = relationship('TeamPlayer', backref='users_teamPlayer', uselist=True, cascade="all, delete-orphan")
     rfid          = relationship('RFID', backref='users_rfid', uselist=True, cascade="all, delete-orphan")
 
-    def set_password(self, password):
-
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-
-        return check_password_hash(self.password, password)
 
 
 
