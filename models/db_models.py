@@ -31,8 +31,8 @@ class RFID(Base):
     creationDate  = Column(DateTime, default=datetime.utcnow)
     deactivated   = Column(DateTime)
 
-    uid           = Column(String, unique=True)
-    userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
+    uid           = Column(String, unique=True, nullable=False)
+    userID        = Column(Integer, ForeignKey('users.id'))
 
 
 
@@ -76,7 +76,7 @@ class Action(Base):
     creationDate = Column(DateTime, default=datetime.utcnow)
 
     action       = Column(String, unique=True, nullable=False)
-    actions      = relationship('GameAction', backref='action_gameAction', uselist=True, cascade="all, delete-orphan")
+    actions      = relationship('GameAction', lazy="joined", backref='action_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -109,7 +109,7 @@ class Games(Base):
     userID       = Column(Integer, ForeignKey('users.id'), nullable=False)
     gameTypeID   = Column(Integer, ForeignKey('gameType.id'), nullable=False)
 
-    actions      = relationship('GameAction', backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
+    actions      = relationship('GameAction', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -130,7 +130,7 @@ class GameType(Base):
     deactivated   = Column(DateTime)
 
     name          = Column(String, nullable=False)
-    games         = relationship('Games', backref='gameType_games', uselist=True, cascade="all, delete-orphan")
+    games         = relationship('Games', lazy="joined", backref='gameType_games', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -189,7 +189,7 @@ class Device(Base):
     stable      = Column(Integer, default=1)
     bomb_status = Column(Integer, default=0xBD) #BOMB_DISARMED
     # ------------------------------------------
-    actions     = relationship('GameAction', backref='device_gameAction', uselist=True, cascade="all, delete-orphan")
+    actions     = relationship('GameAction', lazy="joined", backref='device_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -249,9 +249,9 @@ class Teams(Base):
 
     gameConfigID = Column(Integer, ForeignKey('gameConfig.id'), nullable=False)
 
-    teamPlayers  = relationship('TeamPlayer', backref='teams_teamPlayer', uselist=True, cascade="all, delete-orphan")
-    devices      = relationship('Device', backref='teams_device', uselist=True, cascade="all, delete-orphan")
-    actions      = relationship('GameAction', backref='teams_gameAction', uselist=True, cascade="all, delete-orphan")
+    teamPlayers  = relationship('TeamPlayer', lazy="joined", backref='teams_teamPlayer', uselist=True, cascade="all, delete-orphan")
+    devices      = relationship('Device', lazy="joined", backref='teams_device', uselist=True, cascade="all, delete-orphan")
+    actions      = relationship('GameAction', lazy="joined", backref='teams_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -277,7 +277,7 @@ class GameConfig(Base):
 
     description   = Column(String)
     userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
-    teams         = relationship('Teams', backref='teams_gameConfig', uselist=True, cascade="all, delete-orphan")
+    teams         = relationship('Teams', lazy="joined", backref='teams_gameConfig', uselist=True, cascade="all, delete-orphan")
     mapID         = Column(Integer, ForeignKey('maps.id'), nullable=False)
 
 
@@ -345,7 +345,7 @@ class FieldProfile(Base):
     profilePic   = Column(LargeBinary)
     profile      = Column(String)
 
-    maps         = relationship('Maps', backref='fieldProflie_maps', uselist=True, cascade="all, delete-orphan")
+    maps         = relationship('Maps', lazy="joined", backref='fieldProflie_maps', uselist=True, cascade="all, delete-orphan")
 
 
 @dataclass
@@ -392,8 +392,8 @@ class Maps(Base):
 
     fieldID     = Column(Integer, ForeignKey('fieldProfile.id'), nullable=False)
 
-    locations   = relationship('Locations', backref='maps_locations', uselist=True, cascade="all, delete-orphan")
-    gameConfigs = relationship('GameConfig', backref='maps_gameConfig', uselist=True, cascade="all, delete-orphan")
+    locations   = relationship('Locations', lazy="joined", backref='maps_locations', uselist=True, cascade="all, delete-orphan")
+    gameConfigs = relationship('GameConfig', lazy="joined", backref='maps_gameConfig', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -423,7 +423,7 @@ class Users(Base, UserMixin):
     games:         Games
     gameConfig:    GameConfig
     teamPlayer:    TeamPlayer
-    rfid:          RFID
+    rfids:         RFID
 
     __tablename__ = 'users'
 
@@ -444,13 +444,13 @@ class Users(Base, UserMixin):
     type          = Column(String)
     password      = Column(String, nullable=False)
 
-    playerProfile = relationship('PlayerProfile', backref='users_playerProfile', uselist=False, cascade="all, delete-orphan")
+    playerProfile = relationship('PlayerProfile', lazy="joined", backref='users_playerProfile', uselist=False, cascade="all, delete-orphan")
     fieldProfiles = relationship('FieldProfile', backref='users_fieldProfile', uselist=True, cascade="all, delete-orphan")
-    actions       = relationship('GameAction', backref='users_gameAction', uselist=True, cascade="all, delete-orphan")
-    games         = relationship('Games', backref='users_games', uselist=True, cascade="all, delete-orphan")
+    actions       = relationship('GameAction', lazy="joined", backref='users_gameAction', uselist=True, cascade="all, delete-orphan")
+    games         = relationship('Games', lazy="joined", backref='users_games', uselist=True, cascade="all, delete-orphan")
     gameConfig    = relationship('GameConfig', backref='users_gameConfig', uselist=True, cascade="all, delete-orphan")
-    teamPlayer    = relationship('TeamPlayer', backref='users_teamPlayer', uselist=True, cascade="all, delete-orphan")
-    rfid          = relationship('RFID', backref='users_rfid', uselist=True, cascade="all, delete-orphan")
+    teamPlayer    = relationship('TeamPlayer', lazy="joined", backref='users_teamPlayer', uselist=True, cascade="all, delete-orphan")
+    rfids         = relationship('RFID', lazy="joined", backref='users_rfid', uselist=True, cascade="all, delete-orphan")
 
 
 

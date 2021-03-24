@@ -66,26 +66,26 @@ def node_status():
 
             return make_response('{E}', 409)
 
-        return jsonify(user)
+        return jsonify(field)
 
 
     elif request.method == 'PUT':
 
         # TODO: This needs to parse data to pass images:
 
-        fieldID   = params.pop('id', None)
+        fieldID = params.pop('id', None)
 
-        if fieldID:     _field = FieldProfile.query.get(fieldID)
+        if fieldID:   field = FieldProfile.query.get(fieldID)
 
-        if not _user: return make_response('', 204)
+        if not field: return make_response('', 204)
 
         for attr in params:
 
-            setattr(_field, attr, params[attr])
+            setattr(field, attr, params[attr])
 
         db_session.commit()
 
-        return jsonify(_field)
+        return jsonify(field)
 
 
     return make_response('', 204)

@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import Users, PlayerProfile, FieldProfile
+from models.db_models import Users, PlayerProfile
 
 from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
@@ -81,18 +81,18 @@ def node_status():
         userID   = params.pop('id', None)
         callSign = params.pop('callSign', None)
 
-        if userID:     _user = Users.query.get(userID)
-        elif callSign: _user = Users.query.filter(Users.callSign == callSign).first()
+        if userID:     user = Users.query.get(userID)
+        elif callSign: user = Users.query.filter(Users.callSign == callSign).first()
 
-        if not _user: return make_response('', 204)
+        if not user: return make_response('', 204)
 
         for attr in params:
 
-            setattr(_user, attr, params[attr])
+            setattr(user, attr, params[attr])
 
         db_session.commit()
 
-        return jsonify(_user)
+        return jsonify(user)
 
 
     return make_response('', 204)

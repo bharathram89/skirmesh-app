@@ -77,23 +77,23 @@ def node_status():
         return jsonify(node)
 
 
-    elif request.method == 'PUT' and 'address' in params:
+    elif request.method == 'PUT':
 
-        addr = params.pop('address', None)
-        id   = params.pop('id', None)
+        addr   = params.pop('address', None)
+        nodeID = params.pop('id', None)
 
-        if id: _node = Device.query.get(id)
-        elif addr: _node = Device.query.filter(Device.address == addr).first()
+        if nodeID: node = Device.query.get(nodeID)
+        elif addr: node = Device.query.filter(Device.address == addr).first()
 
-        if not _node: return make_response('', 204)
+        if not node: return make_response('', 204)
 
         for attr in params:
 
-            setattr(_node, attr, params[attr])
+            setattr(node, attr, params[attr])
 
         db_session.commit()
 
-        return jsonify(_node)
+        return jsonify(node)
 
 
     return make_response('', 204)
@@ -118,7 +118,7 @@ def node_statuses():
 
         result = Device.query
 
-        addrs   = params.get('address', None)
+        addrs  = params.get('address', None)
 
         if addrs:
 

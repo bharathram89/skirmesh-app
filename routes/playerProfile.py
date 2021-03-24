@@ -42,9 +42,9 @@ def node_status():
 
     if request.method == 'GET':
 
-        result   = Users.query
-
-        userID   = params.get('id', None)
+        result = Users.query
+        
+        userID = params.get('id', None)
 
         if userID: return jsonify(result.get(userID))
         else: return make_response('ERROR: Query Player Profile with User ID', 409)
@@ -56,19 +56,19 @@ def node_status():
 
         # TODO: This needs to parse data to pass images:
 
-        userID   = params.pop('id', None)
+        userID = params.pop('id', None)
 
-        if userID:     _user = Users.query.get(userID)
+        if userID: user = Users.query.get(userID)
 
-        if not _user: return make_response('', 204)
+        if not user: return make_response('', 204)
 
         for attr in params:
 
-            setattr(_user.playerProfile, attr, params[attr])
+            setattr(user.playerProfile, attr, params[attr])
 
         db_session.commit()
 
-        return jsonify(_user)
+        return jsonify(user)
 
 
     return make_response('', 204)
