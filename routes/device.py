@@ -97,3 +97,32 @@ def node_status():
 
 
     return make_response('', 204)
+
+
+
+
+@bp.route('/resources/devices', methods=['GET'])
+def node_statuses():
+
+    """
+    API to interact with the Device table
+
+    GET  - query by node addresses - bulk
+
+    :: returns ::       query result
+    """
+
+    params = request.json
+
+    if request.method == 'GET':
+
+        result = Device.query
+
+        addrs   = params.get('address', None)
+
+        if addrs:
+
+            result = result.filter(Device.address.in_(addrs))
+            return jsonify(result.all())
+
+    return make_response('', 204)
