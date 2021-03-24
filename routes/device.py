@@ -41,7 +41,7 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = json.loads(request.json)
+    params = request.json
 
     if request.method == 'GET':
 
