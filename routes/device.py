@@ -120,9 +120,8 @@ def node_statuses():
 
         addrs  = params.get('address', None)
 
-        if addrs:
-
-            result = result.filter(Device.address.in_(addrs))
-            return jsonify(result.all())
+        if addrs: result = result.filter(Device.address.in_(addrs))
+            
+        return jsonify(result.all())
 
     return make_response('', 204)
