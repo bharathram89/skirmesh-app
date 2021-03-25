@@ -41,10 +41,9 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = request.json
-
     if request.method == 'GET':
 
+        params = request.args
         result = Device.query
 
         nodeID = params.get('id', None)
@@ -60,7 +59,8 @@ def node_status():
 
     elif request.method == 'POST':
 
-        node = Device(**params)
+        params = request.json
+        node   = Device(**params)
 
         try:
 
@@ -79,6 +79,7 @@ def node_status():
 
     elif request.method == 'PUT':
 
+        params = request.json
         addr   = params.pop('address', None)
         nodeID = params.pop('id', None)
 
@@ -112,7 +113,7 @@ def node_statuses():
     :: returns ::       query result
     """
 
-    params = request.json
+    params = request.args
 
     if request.method == 'GET':
 
@@ -121,7 +122,7 @@ def node_statuses():
         addrs  = params.get('address', None)
 
         if addrs: result = result.filter(Device.address.in_(addrs))
-            
+
         return jsonify(result.all())
 
     return make_response('', 204)

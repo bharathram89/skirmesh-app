@@ -38,20 +38,20 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = request.json
-
     if request.method == 'GET':
 
-        result   = FieldProfile.query
+        params = request.args
+        result = FieldProfile.query
+
         fieldID   = params.get('id', None)
 
         if fieldID: return jsonify(result.get(fieldID))
         else: return make_response('ERROR: Query Field Profiles with Field ID', 409)
 
-    # Player Profiles are generated when the User is created
-    # elif request.method == 'POST':
+
     elif request.method == 'POST':
 
+        params = request.json
         field = FieldProfile(**params)
 
         try:
@@ -71,8 +71,7 @@ def node_status():
 
     elif request.method == 'PUT':
 
-        # TODO: This needs to parse data to pass images:
-
+        params = request.json
         fieldID = params.pop('id', None)
 
         if fieldID:   field = FieldProfile.query.get(fieldID)

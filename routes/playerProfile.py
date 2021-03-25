@@ -38,12 +38,11 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = request.json
-
     if request.method == 'GET':
 
+        params = request.args
         result = Users.query
-        
+
         userID = params.get('id', None)
 
         if userID: return jsonify(result.get(userID))
@@ -51,11 +50,9 @@ def node_status():
 
     # Player Profiles are generated when the User is created
     # elif request.method == 'POST':
-
     elif request.method == 'PUT':
 
-        # TODO: This needs to parse data to pass images:
-
+        params = request.json
         userID = params.pop('id', None)
 
         if userID: user = Users.query.get(userID)

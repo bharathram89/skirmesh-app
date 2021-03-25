@@ -38,11 +38,10 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = request.json
-
     if request.method == 'GET':
 
-        result   = Users.query
+        params = request.args
+        result = Users.query
 
         userID   = params.get('id', None)
         callSign = params.get('callSign', None)
@@ -57,6 +56,8 @@ def node_status():
 
 
     elif request.method == 'POST':
+
+        params = request.json
 
         user               = Users(**params)
         user.playerProfile = PlayerProfile()
@@ -77,6 +78,8 @@ def node_status():
 
 
     elif request.method == 'PUT':
+
+        params = request.json
 
         userID   = params.pop('id', None)
         callSign = params.pop('callSign', None)

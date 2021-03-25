@@ -41,12 +41,11 @@ def node_status():
     :: returns ::       query result
     """
 
-    params = request.json
-
     if request.method == 'GET':
 
+        params = request.args
         result = RFID.query
-
+    
         rfidID = params.get('id', None)
         uid    = params.get('uid', None)
 
@@ -56,7 +55,8 @@ def node_status():
 
     elif request.method == 'POST':
 
-        rfid = RFID(**params)
+        params = request.json
+        rfid   = RFID(**params)
 
         default_user = Users.query.get(1)
         default_user.rfids.append(rfid)
@@ -75,8 +75,9 @@ def node_status():
 
     elif request.method == 'PUT':
 
+        params = request.json
+
         new_user_id = params.pop('new_user_id', None)
-        
         rfidID      = params.pop('id', None)
         uid         = params.pop('uid', None)
 
