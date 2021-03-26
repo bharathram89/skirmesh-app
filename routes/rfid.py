@@ -27,8 +27,8 @@ from datetime import datetime
 #    :: For PUT request, include target update row
 # result = request.put(url = URL, params = PARAMS)
 
-
 @bp.route('/resources/rfid', methods=['GET','POST','PUT'])
+@bp.route('/resources/rfids', methods=['GET','POST','PUT'])
 def node_status():
 
     """

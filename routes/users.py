@@ -24,7 +24,7 @@ bp = Blueprint('users', __name__, url_prefix='')
 #    :: For PUT request, include target update row
 # result = request.put(url = URL, params = PARAMS)
 
-
+@bp.route('/resources/user', methods=['GET','POST','PUT'])
 @bp.route('/resources/users', methods=['GET','POST','PUT'])
 def node_status():
 
