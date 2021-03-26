@@ -53,6 +53,8 @@ def node_status():
         if nodeID: return jsonify(result.get(nodeID))
         if addr:   return jsonify(result.filter(Device.address == addr).first())
         if team:   result = result.filter(Device.teamColor == team)
+            
+        db_session.commit()
 
         return jsonify(result.all())
 
@@ -122,7 +124,9 @@ def node_statuses():
         addrs  = params.get('address', None)
 
         if addrs: result = result.filter(Device.address.in_(addrs))
-
+        
+        db_session.commit()
+        
         return jsonify(result.all())
 
     return make_response('', 204)
