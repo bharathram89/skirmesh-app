@@ -60,6 +60,10 @@ def receive_after_update(mapper, connection, target):
         socketio.emit('update', jsonify(target).json, broadcast=True)
 
 
+@application.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
 
 if __name__ == '__main__':
 
