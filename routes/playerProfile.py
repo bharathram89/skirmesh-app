@@ -45,8 +45,12 @@ def node_status():
 
         userID = params.get('id', None)
 
-        if userID: return jsonify(result.get(userID))
-        else: return make_response('ERROR: Query Player Profile with User ID', 409)
+        if userID: result = jsonify(result.get(userID))
+        else:      result = make_response('Query with User ID', 409)
+
+        db_session.commit()
+
+        return result
 
     # Player Profiles are generated when the User is created
     # elif request.method == 'POST':

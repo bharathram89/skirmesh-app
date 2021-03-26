@@ -43,10 +43,14 @@ def node_status():
         params = request.args
         result = FieldProfile.query
 
-        fieldID   = params.get('id', None)
+        fieldID = params.get('id', None)
 
-        if fieldID: return jsonify(result.get(fieldID))
-        else: return make_response('ERROR: Query Field Profiles with Field ID', 409)
+        if fieldID: result = jsonify(result.get(fieldID))
+        else:       result = make_response('Query with Field ID', 409)
+
+        db_session.commit()
+
+        return result
 
 
     elif request.method == 'POST':

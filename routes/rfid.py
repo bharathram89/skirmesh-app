@@ -45,12 +45,16 @@ def node_status():
 
         params = request.args
         result = RFID.query
-    
+
         rfidID = params.get('id', None)
         uid    = params.get('uid', None)
 
-        if rfidID: return jsonify(result.get(rfidID))
-        if uid:    return jsonify(result.filter(RFID.uid == uid).first())
+        if rfidID: result = jsonify(result.get(rfidID))
+        if uid:    result = jsonify(result.filter(RFID.uid == uid).first())
+
+        db_session.commit()
+
+        return result
 
 
     elif request.method == 'POST':

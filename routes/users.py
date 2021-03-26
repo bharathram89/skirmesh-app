@@ -47,12 +47,13 @@ def node_status():
         callSign = params.get('callSign', None)
         email    = params.get('email', None)
 
-        if userID: return jsonify(result.get(userID))
+        if userID:     result = result.get(userID)
+        elif callSign: result = result.filter(Users.callSign == callSign).first()
+        elif email:    result = result.filter(Users.email == email).all()
 
-        if callSign: return result.filter(Users.callSign == callSign).first()
-        if email:    result = result.filter(Users.email == email)
+        db_session.commit()
 
-        return jsonify(result.all())
+        return jsonify(result)
 
 
     elif request.method == 'POST':

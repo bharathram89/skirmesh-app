@@ -50,13 +50,13 @@ def node_status():
         addr   = params.get('address', None)
         team   = params.get('teamColor', None)
 
-        if nodeID: return jsonify(result.get(nodeID))
-        if addr:   return jsonify(result.filter(Device.address == addr).first())
-        if team:   result = result.filter(Device.teamColor == team)
-            
+        if nodeID: result = result.get(nodeID)
+        elif addr: result = result.filter(Device.address == addr).first()
+        elif team: result = result.filter(Device.teamColor == team).all()
+
         db_session.commit()
 
-        return jsonify(result.all())
+        return jsonify(result)
 
 
     elif request.method == 'POST':
@@ -124,9 +124,11 @@ def node_statuses():
         addrs  = params.get('address', None)
 
         if addrs: result = result.filter(Device.address.in_(addrs))
-        
+
+        result = result.all()
+
         db_session.commit()
-        
-        return jsonify(result.all())
+
+        return jsonify(result)
 
     return make_response('', 204)
