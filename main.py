@@ -37,6 +37,7 @@ socketio = SocketIO(application)
 
 from sqlalchemy import event
 from models.db_models import Device
+from database import db_session
 
 
 # TODO: Wrap this behind blueprints for cleanliness
