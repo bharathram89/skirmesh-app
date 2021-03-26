@@ -50,6 +50,7 @@ def node_status():
         if userID:     result = result.get(userID)
         elif callSign: result = result.filter(Users.callSign == callSign).first()
         elif email:    result = result.filter(Users.email == email).all()
+        else:          result = result.all()
 
         db_session.commit()
 

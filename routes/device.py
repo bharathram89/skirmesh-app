@@ -53,6 +53,7 @@ def node_status():
         if nodeID: result = result.get(nodeID)
         elif addr: result = result.filter(Device.address == addr).first()
         elif team: result = result.filter(Device.teamColor == team).all()
+        else:      result = result.all()
 
         db_session.commit()
 
