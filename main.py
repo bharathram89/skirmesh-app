@@ -54,10 +54,8 @@ def test_connect():
 def receive_after_update(mapper, connection, target):
     """listen for the 'after_update' event"""
 
-    print('updated Device', type(target), jsonify(target).json)
-
     if isinstance(target, Device):
-        print('emitting')
+        print('Pushing updated Device')
         socketio.emit('update', jsonify(target).json, broadcast=True)
 
 
@@ -71,5 +69,6 @@ if __name__ == '__main__':
     application.jinja_env.auto_reload = True
     application.config['TEMPLATES_AUTO_RELOAD'] = True
 
-    #application.run(host='0.0.0.0')
-    socketio.run(application, host='0.0.0.0', debug=True)
+    # application.run(host='0.0.0.0')
+    socketio.run(application, host='0.0.0.0')
+    # socketio.run(application, host='0.0.0.0', debug=True)
