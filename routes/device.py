@@ -70,12 +70,12 @@ def node_status():
             db_session.add(node)
             db_session.commit()
 
-        except:
+        except Exception as E:
 
             db_session.rollback()
             db_session.commit()
 
-            return make_response('ERROR: Device exists', 409)
+            return make_response(f'{E}', 409)
 
         return jsonify(node)
 
