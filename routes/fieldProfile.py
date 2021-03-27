@@ -68,7 +68,7 @@ def node_status():
             db_session.rollback()
             db_session.commit()
 
-            return make_response('{E}', 409)
+            return make_response(f'{E}', 409)
 
         return jsonify(field)
 
