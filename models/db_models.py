@@ -216,7 +216,7 @@ class TeamPlayer(Base):
     is_alive      = Column(Boolean, default=True)
 
     userID        = Column(Integer, ForeignKey('users.id'), nullable=False)
-    teamID        = Column(Integer, ForeignKey('teams.id'), nullable=False)
+    teamID        = Column(Integer, ForeignKey('teams.id'), nullable=True)
 
 
 

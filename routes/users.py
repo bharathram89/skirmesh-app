@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import Users, PlayerProfile
+from models.db_models import Users, PlayerProfile, TeamPlayer
 
 from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
@@ -63,6 +63,7 @@ def node_status():
 
         user               = Users(**params)
         user.playerProfile = PlayerProfile()
+        user.teamPlayer    = TeamPlayer()
 
         try:
 
