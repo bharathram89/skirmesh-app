@@ -421,7 +421,7 @@ class Users(Base, UserMixin):
     fieldProfiles: FieldProfile
     actions:       GameAction
     games:         Games
-    gameConfig:    GameConfig
+    gameConfigs:   GameConfig
     teamPlayer:    TeamPlayer
     rfids:         RFID
 
@@ -448,8 +448,8 @@ class Users(Base, UserMixin):
     fieldProfiles = relationship('FieldProfile', backref='users_fieldProfile', uselist=True, cascade="all, delete-orphan")
     actions       = relationship('GameAction', lazy="joined", backref='users_gameAction', uselist=True, cascade="all, delete-orphan")
     games         = relationship('Games', lazy="joined", backref='users_games', uselist=True, cascade="all, delete-orphan")
-    gameConfig    = relationship('GameConfig', backref='users_gameConfig', uselist=True, cascade="all, delete-orphan")
-    teamPlayer    = relationship('TeamPlayer', lazy="joined", backref='users_teamPlayer', uselist=True, cascade="all, delete-orphan")
+    gameConfigs   = relationship('GameConfig', backref='users_gameConfig', uselist=True, cascade="all, delete-orphan")
+    teamPlayer    = relationship('TeamPlayer', lazy="joined", backref='users_teamPlayer', uselist=False, cascade="all, delete-orphan")
     rfids         = relationship('RFID', lazy="joined", backref='users_rfid', uselist=True, cascade="all, delete-orphan")
 
 
