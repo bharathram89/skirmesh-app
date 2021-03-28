@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import Users, RFID
+from models.db_models import Users, RFID, TeamPlayer
 
 import json
 from sqlalchemy import null
@@ -11,25 +11,10 @@ bp = Blueprint('rfid', __name__, url_prefix='')
 from datetime import datetime
 
 
-# To interact and extract data from these API methods use
-# requests module
-#
-# example:
-# import requests
-#
-# PARAMS = {key:val}
-# result = requests.get(url = URL, params = PARAMS)
-# data = result.json()
-#
-# DATA = {key:val}
-# result = requsts.post(url = URL, data = DATA (or PARAMS...))
-#
-#    :: For PUT request, include target update row
-# result = request.put(url = URL, params = PARAMS)
 
 @bp.route('/resources/rfid', methods=['GET','POST','PUT'])
 @bp.route('/resources/rfids', methods=['GET','POST','PUT'])
-def node_status():
+def rfid():
 
     """
     API to interact with the RFID table
@@ -61,10 +46,9 @@ def node_status():
     elif request.method == 'POST':
 
         params = request.json
-        rfid   = RFID(**params)
 
-        default_user = Users.query.get(1)
-        default_user.rfids.append(rfid)
+        rfid            = RFID(**params)
+        rfid.teamPlayer = TeamPlayer()
 
         try: db_session.commit()
 

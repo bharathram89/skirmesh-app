@@ -8,25 +8,10 @@ from flask import Blueprint
 bp = Blueprint('users', __name__, url_prefix='')
 
 
-# To interact and extract data from these API methods use
-# requests module
-#
-# example:
-# import requests
-#
-# PARAMS = {key:val}
-# result = requests.get(url = URL, params = PARAMS)
-# data = result.json()
-#
-# DATA = {key:val}
-# result = requsts.post(url = URL, data = DATA (or PARAMS...))
-#
-#    :: For PUT request, include target update row
-# result = request.put(url = URL, params = PARAMS)
 
 @bp.route('/resources/user', methods=['GET','POST','PUT'])
 @bp.route('/resources/users', methods=['GET','POST','PUT'])
-def node_status():
+def users():
 
     """
     API to interact with the Users table
