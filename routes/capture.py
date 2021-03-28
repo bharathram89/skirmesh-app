@@ -3,9 +3,8 @@ from database import db_session
 from models.db_models import (Users, PlayerProfile, TeamPlayer, Device, Teams,
                               FieldProfile, GameConfig, Action, GameAction)
 
-from models.queries import (get_orig_captor, get_last_action, get_capture_begin,
-                            is_capture_closed, captureID, lost_controlID,
-                            assistID, completeID)
+from models.queries import (get_orig_captor, get_capture_begin, captureID,
+                            lost_controlID, assistID, completeID)
 
 from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
@@ -44,11 +43,6 @@ def handle_capture():
     # If the game is paused, ignore all capture requests
     if game.is_paused or game.endTime: return make_response('', 204)
 
-    complete     = Action.query.filter(Action.action == 'CAPTURE COMPLETE').first()
-    capture      = Action.query.filter(Action.action == 'CAPTURE').first()
-    assist       = Action.query.filter(Action.action == 'ASSIST').first()
-    lost_control = Action.query.filter(Action.action == 'LOST CONTROL').first()
-
     if stable:
         # If the payload does not contain a UID, it's passing the status
         # byte to indicate that capture is complete
@@ -62,7 +56,7 @@ def handle_capture():
         orig_captor = get_orig_captor(node.id)
         # If there was an originating captor and the node is now STABLE
         # (...The node will only ever be considered stable here)
-        last = get_last_action(node.id)
+        last = node.gameActions[-1]
         # If the last action was CAPTURE COMPLETE, the node is coming
         # online in the middle and this avoids duplicate scores
         if orig_captor and stable and (last.actionID != completeID if last else True):
@@ -97,16 +91,14 @@ def handle_capture():
         if node.teamID:
 
             data['actionID'] = captureID if rfid.teamPlayer.teamID != node.teamID else assistID
-            data['points'] = 2 if rfid.teamPlayer.teamID != node.teamID else 1
+            # data['points'] = 2 if rfid.teamPlayer.teamID != node.teamID else 1
 
             if data['actionID'] == captureID:
 
                 begin = get_capture_begin(node.id)
                 # ONLY figure out the score if the score has not already
                 # been figured out (i.e. the capture was closed out)
-                is_closed = is_capture_closed(node.id)
-
-                if begin and not is_closed:
+                if begin and not node.gameActions[-1].time_held:
 
                     held  = int((datetime.utcnow() - begin).total_seconds())
 
@@ -126,7 +118,7 @@ def handle_capture():
             # If there was no status for the node - this is a capture
             # and the capture should be instant
             data['actionID'] = captureID
-            data['points'] = 2
+            # data['points'] = 2
 
         # If the ACTION is to "CAPTURE" then always add score data.  If it is an assist
         # ONLY add score data if the node IS NOT STABLE - can only be an ASSIST if cap_status is

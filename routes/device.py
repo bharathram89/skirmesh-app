@@ -1,5 +1,6 @@
 from database import db_session
-from models.db_models import Device
+from models.db_models import Device, Action, GameAction
+from models.queries import get_capture_begin, closeout_capture
 
 import json
 from sqlalchemy import null
@@ -74,6 +75,22 @@ def node_status():
         elif addr: node = Device.query.filter(Device.address == addr).first()
 
         if not node: return make_response('', 204)
+        # Handle the case where we shift away from CAPTURE (0x0A = 10) and
+        # we need to closeout the score
+        if 'config' in params and node.config == 10 and params['config'] != 10:
+
+            closeout_capture(node)
+
+        # If setting the team when in capture - closeout the previous CAPTURE
+        elif 'team' in params and node.config == 10:
+
+            closeout_capture(node)
+
+        # If shifting point scales - closeout points from previous point scale
+        # and start a "new" capture under the new point scale.
+        elif 'point_scale' in params and node.config == 10 and node.stable and node.teamID:
+
+            reset_capture(node)
 
         for attr in params:
 

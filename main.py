@@ -69,6 +69,12 @@ def shutdown_session(exception=None):
     db_session.remove()
 
 
+# from models.db_models import Action
+# act = ['RECONFIGURE']
+# for a in act:
+#     db_session.add(Action(action=a))
+# db_session.commit()
+
 
 if __name__ == '__main__':
 
@@ -80,5 +86,6 @@ if __name__ == '__main__':
     application.config['TEMPLATES_AUTO_RELOAD'] = True
 
     # application.run(host='0.0.0.0')
-    socketio.run(application, host='0.0.0.0')
-    # socketio.run(application, host='0.0.0.0', debug=True)
+    print('API running')
+    # socketio.run(application, host='0.0.0.0')
+    socketio.run(application, host='0.0.0.0', debug=True)
