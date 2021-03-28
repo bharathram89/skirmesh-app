@@ -474,6 +474,13 @@ class Users(Base, UserMixin):
     rfids         = relationship('RFID', lazy="joined", backref='users_rfid', uselist=True, cascade="all, delete-orphan")
 
 
+    def set_password(self, password):
+
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+
+        return check_password_hash(self.password, password)
 
 
 

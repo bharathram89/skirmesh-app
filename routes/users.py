@@ -46,7 +46,11 @@ def users():
 
         params = request.json
 
+        password = params.pop('password', None)
+        if not password: return make_response('', 204)
+
         user               = Users(**params)
+        user.set_password(password) 
         user.playerProfile = PlayerProfile()
         user.teamPlayer    = TeamPlayer()
 

@@ -39,7 +39,7 @@ application.register_blueprint(capture.bp)
 socketio = SocketIO(application)
 
 from sqlalchemy import event
-from models.db_models import Device
+from models.db_models import Device, Users
 from database import db_session
 
 
@@ -66,6 +66,7 @@ def receive_after_update(mapper, connection, target):
 @application.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
+
 
 
 if __name__ == '__main__':
