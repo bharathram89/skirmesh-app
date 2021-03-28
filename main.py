@@ -40,7 +40,7 @@ application.register_blueprint(login.bp)
 socketio = SocketIO(application)
 
 from sqlalchemy import event
-from models.db_models import Device, Users
+from models.db_models import Device
 from database import db_session
 
 

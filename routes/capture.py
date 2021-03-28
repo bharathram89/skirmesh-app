@@ -1,6 +1,11 @@
 from database import db_session
+
 from models.db_models import (Users, PlayerProfile, TeamPlayer, Device, Teams,
                               FieldProfile, GameConfig, Action, GameAction)
+
+from models.queries import (get_orig_captor, get_last_action, get_capture_begin,
+                            is_capture_closed, captureID, lost_controlID,
+                            assistID, completeID)
 
 from sqlalchemy import null
 from flask import render_template, flash, jsonify, session, request, make_response
@@ -54,23 +59,19 @@ def handle_capture():
         node.stable = stable
         # Grab the last captor from SCORE, to determine who the points are
         # awarded to when/if capture is completed
-        orig_captor = GameAction.query.filter(GameAction.actionID == capture.id)
-        orig_captor = orig_captor.filter(GameAction.deviceID == node.id)
-        orig_captor = orig_captor.order_by(GameAction.id.desc()).first()
+        orig_captor = get_orig_captor(node.id)
         # If there was an originating captor and the node is now STABLE
         # (...The node will only ever be considered stable here)
-        last = GameAction.query.filter(GameAction.deviceID == node.id)
-        last = last.order_by(GameAction.id.desc()).first()
-        last_action = Action.query.get(last.actionID) if last else None
+        last = get_last_action(node.id)
         # If the last action was CAPTURE COMPLETE, the node is coming
         # online in the middle and this avoids duplicate scores
-        if orig_captor and stable and (last_action.action != 'CAPTURE COMPLETE' if last else True):
+        if orig_captor and stable and (last.actionID != completeID if last else True):
 
             data = {'deviceID' : node.id,
                     'rfidID'   : orig_captor.rfidID,
                     'teamID'   : orig_captor.teamID,
                     'gameID'   : node.gameID,
-                    'actionID' : complete.id}
+                    'actionID' : completeID}
 
             db_session.add(GameAction(**data))
 
@@ -95,35 +96,28 @@ def handle_capture():
         # If his teams was already there, he only assists
         if node.teamID:
 
-            data['actionID'] = capture.id if rfid.teamPlayer.teamID != node.teamID else assist.id
+            data['actionID'] = captureID if rfid.teamPlayer.teamID != node.teamID else assistID
             data['points'] = 2 if rfid.teamPlayer.teamID != node.teamID else 1
 
-            if data['actionID'] == capture.id:
+            if data['actionID'] == captureID:
 
-                begin = GameAction.query.filter(GameAction.actionID == complete.id)
-                begin = begin.filter(GameAction.deviceID == node.id)
-                begin = begin.order_by(GameAction.id.desc()).first()
-                begin = begin.creationDate if begin else None
+                begin = get_capture_begin(node.id)
                 # ONLY figure out the score if the score has not already
                 # been figured out (i.e. the capture was closed out)
-                is_closed = GameAction.query.filter(GameAction.deviceID == node.id)
-                is_closed = is_closed.order_by(GameAction.id.desc()).first()
-                is_closed = is_closed.time_held if is_closed else None
+                is_closed = is_capture_closed(node.id)
 
                 if begin and not is_closed:
 
                     held  = int((datetime.utcnow() - begin).total_seconds())
 
-                    orig_captor = GameAction.query.filter(GameAction.actionID == capture.id)
-                    orig_captor = orig_captor.filter(GameAction.deviceID == node.id)
-                    orig_captor = orig_captor.order_by(GameAction.id.desc()).first()
+                    orig_captor = get_orig_captor(node.id)
 
                     tdat = {'deviceID'  : node.id,
                             'teamID'    : orig_captor.teamID,
                             'time_held' : held,
                             # Account for points as scaled by current value
                             'points'    : held//node.point_scale,
-                            'actionID'  : lost_control.id,
+                            'actionID'  : lost_controlID,
                             'gameID'    : node.gameID}
 
                     db_session.add(GameAction(**data))
@@ -131,13 +125,13 @@ def handle_capture():
         else:
             # If there was no status for the node - this is a capture
             # and the capture should be instant
-            data['actionID'] = capture.id
+            data['actionID'] = captureID
             data['points'] = 2
 
         # If the ACTION is to "CAPTURE" then always add score data.  If it is an assist
         # ONLY add score data if the node IS NOT STABLE - can only be an ASSIST if cap_status is
         # known
-        if data['actionID'] == capture.id or (data['actionID'] == assist.id and not node.stable):
+        if data['actionID'] == captureID or (data['actionID'] == assistID and not node.stable):
 
             db_session.add(GameAction(**data))
 
