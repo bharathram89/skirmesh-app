@@ -26,13 +26,15 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 application.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024      # 5MB max file size limit on photos
 
 
-from routes import device, users, playerProfile, fieldProfile, rfid, game
+from routes import (device, users, playerProfile, fieldProfile, rfid, game,
+                    capture)
 application.register_blueprint(device.bp)
 application.register_blueprint(users.bp)
 application.register_blueprint(playerProfile.bp)
 application.register_blueprint(fieldProfile.bp)
 application.register_blueprint(rfid.bp)
 application.register_blueprint(game.bp)
+application.register_blueprint(capture.bp)
 
 socketio = SocketIO(application)
 

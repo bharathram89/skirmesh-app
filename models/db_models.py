@@ -23,6 +23,7 @@ class GameAction(Base):
     gameID:       int
     teamID:       int
     deviceID:     int
+    points:       int
     time_held:    int
 
     __tablename__ = 'gameAction'
@@ -35,6 +36,7 @@ class GameAction(Base):
     gameID    = Column(Integer, ForeignKey('games.id'), nullable=False)
     teamID    = Column(Integer, ForeignKey('teams.id'), nullable=False)
     deviceID  = Column(Integer, ForeignKey('device.id'))
+    points    = Column(Integer)
     time_held = Column(Integer)
 
 
@@ -116,7 +118,7 @@ class Device(Base):
     diff_time   = Column(Integer, default=12)
     cap_asst    = Column(Integer, default=5)
     # status attributes
-    stable      = Column(Integer, default=1)
+    stable      = Column(Boolean, default=True)
     bomb_status = Column(Integer, default=0xBD) #BOMB_DISARMED
     # ------------------------------------------
     gameActions    = relationship('GameAction', lazy="joined", backref='device_gameAction', uselist=True, cascade="all, delete-orphan")
