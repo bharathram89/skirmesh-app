@@ -59,37 +59,6 @@ class Action(Base):
 
 
 @dataclass
-class Games(Base):
-
-    id:           int
-    creationDate: datetime
-    lastChange:   datetime
-
-    startTime:    datetime
-    endTime:      datetime
-    is_paused:    bool
-
-    gameConfigID: int
-
-    actions:      GameAction
-
-    __tablename__ = 'games'
-
-    id           = Column(Integer, primary_key=True, autoincrement=True)
-    creationDate = Column(DateTime, default=datetime.utcnow)
-    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
-
-    startTime    = Column(DateTime)
-    endTime      = Column(DateTime)
-    is_paused    = Column(Boolean, default=False)
-
-    gameConfigID = Column(Integer, ForeignKey('gameConfig.id'), nullable=False)
-
-    actions      = relationship('GameAction', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
-
-
-
-@dataclass
 class Device(Base):
 
     id:           int
@@ -119,6 +88,7 @@ class Device(Base):
 
     gameActions:    GameAction
     fieldProfileID: int
+    gameID:         int
 
     __tablename__ = 'device'
 
@@ -151,6 +121,40 @@ class Device(Base):
     # ------------------------------------------
     gameActions    = relationship('GameAction', lazy="joined", backref='device_gameAction', uselist=True, cascade="all, delete-orphan")
     fieldProfileID = Column(Integer, ForeignKey('fieldProfile.id'))
+    gameID         = Column(Integer, ForeignKey('games.id'))
+
+
+
+@dataclass
+class Games(Base):
+
+    id:           int
+    creationDate: datetime
+    lastChange:   datetime
+
+    startTime:    datetime
+    endTime:      datetime
+    is_paused:    bool
+
+    gameConfigID: int
+
+    actions:      GameAction
+    devices:      Device
+
+    __tablename__ = 'games'
+
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    creationDate = Column(DateTime, default=datetime.utcnow)
+    lastChange   = Column(DateTime, onupdate=datetime.utcnow)
+
+    startTime    = Column(DateTime)
+    endTime      = Column(DateTime)
+    is_paused    = Column(Boolean, default=False)
+
+    gameConfigID = Column(Integer, ForeignKey('gameConfig.id'), nullable=False)
+
+    actions      = relationship('GameAction', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
+    devices      = relationship('Device', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
 
