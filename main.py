@@ -45,7 +45,6 @@ from database import db_session
 @socketio.on('connect')
 def test_connect():
     print("socket connected")
-    socketio.emit('my response', {'data':'Connected'})
 
 
 @socketio.on('disconnect')
