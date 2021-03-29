@@ -37,7 +37,7 @@ def register_team():
         if not rfid:
 
             rfid = RFID(uid=uid)
-            rfid.teamPlayer = TeamPlayer()
+            rfid.teamPlayer = TeamPlayer(teamID = teamID)
 
         else:
 
