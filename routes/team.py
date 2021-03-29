@@ -29,12 +29,14 @@ def rfid():
     if request.method == 'GET':
 
         params = request.args
-        result = RFID.query
+        result = Teams.query
 
         teamID = params.get('id', None)
+        color  = params.get('color', None)
 
-        if rfidID: result = result.get(rfidID)
-        else:      result = result.all()
+        if teamID:  result = result.get(teamID)
+        elif color: result = result.filter(Teams.color == color).all()
+        else:       result = result.all()
 
         db_session.commit()
 
