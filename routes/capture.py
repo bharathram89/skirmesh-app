@@ -1,13 +1,12 @@
 from database import db_session
 
-from models.db_models import (Users, PlayerProfile, TeamPlayer, Device, Teams,
-                              FieldProfile, GameConfig, Action, GameAction)
+from models.db_models import Device, Teams, Action, GameAction, RFID, Games
 
 from models.queries import (get_orig_captor, get_capture_begin, captureID,
                             lost_controlID, assistID, completeID)
 
 from sqlalchemy import null
-from flask import render_template, flash, jsonify, session, request, make_response
+from flask import jsonify, request, make_response
 from flask import Blueprint
 
 from datetime import datetime

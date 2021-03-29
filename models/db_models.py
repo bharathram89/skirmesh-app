@@ -241,7 +241,7 @@ class Teams(Base):
     name         = Column(String, nullable=False)
     color        = Column(String, nullable=False)
 
-    gameConfigID = Column(Integer, ForeignKey('gameConfig.id'), nullable=False)
+    gameConfigID = Column(Integer, ForeignKey('gameConfig.id'))
 
     teamPlayers  = relationship('TeamPlayer', lazy="joined", backref='teams_teamPlayer', uselist=True, cascade="all, delete-orphan")
     devices      = relationship('Device', lazy="joined", backref='teams_device', uselist=True, cascade="all, delete-orphan")

@@ -3,7 +3,7 @@ from models.db_models import Users, RFID, TeamPlayer
 
 import json
 from sqlalchemy import null
-from flask import render_template, flash, jsonify, session, request, make_response
+from flask import jsonify, request, make_response
 from flask import Blueprint
 
 bp = Blueprint('rfid', __name__, url_prefix='')
@@ -59,7 +59,7 @@ def rfid():
 
             return make_response(f'{E}', 409)
 
-        return jsonify(default_user)
+        return jsonify(rfid)
 
 
     elif request.method == 'PUT':

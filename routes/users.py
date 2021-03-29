@@ -2,7 +2,7 @@ from database import db_session
 from models.db_models import Users, PlayerProfile, TeamPlayer
 
 from sqlalchemy import null
-from flask import render_template, flash, jsonify, session, request, make_response
+from flask import jsonify, request, make_response
 from flask import Blueprint
 
 bp = Blueprint('users', __name__, url_prefix='')
@@ -50,7 +50,7 @@ def users():
         if not password: return make_response('', 204)
 
         user               = Users(**params)
-        user.set_password(password) 
+        user.set_password(password)
         user.playerProfile = PlayerProfile()
         user.teamPlayer    = TeamPlayer()
 

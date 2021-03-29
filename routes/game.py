@@ -1,7 +1,7 @@
 from database import db_session
-from models.db_models import Users, PlayerProfile, TeamPlayer
+from models.db_models import RFID
 
-from flask import render_template, flash, jsonify, session, request, make_response
+from flask import jsonify, request, make_response
 from flask import Blueprint
 
 from datetime import datetime

@@ -2,7 +2,7 @@ from database import db_session
 from models.db_models import Users, FieldProfile
 
 from sqlalchemy import null
-from flask import render_template, flash, jsonify, session, request, make_response
+from flask import jsonify, request, make_response
 from flask import Blueprint
 
 bp = Blueprint('fieldProfile', __name__, url_prefix='')

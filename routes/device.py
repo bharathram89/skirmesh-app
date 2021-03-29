@@ -1,10 +1,10 @@
 from database import db_session
-from models.db_models import Device, Action, GameAction
+from models.db_models import Device
 from models.queries import get_capture_begin, closeout_capture
 
 import json
 from sqlalchemy import null
-from flask import render_template, flash, jsonify, session, request, make_response
+from flask import jsonify, request, make_response
 from flask import Blueprint
 
 bp = Blueprint('device', __name__, url_prefix='')
