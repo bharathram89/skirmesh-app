@@ -1,5 +1,5 @@
 from database import db_session
-from models.db_models import RFID
+from models.db_models import RFID, TeamPlayer
 
 from flask import jsonify, request, make_response
 from flask import Blueprint
