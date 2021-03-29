@@ -10,6 +10,8 @@ from flask import Blueprint
 bp = Blueprint('login', __name__, url_prefix='')
 
 
+TIME_FMT = '%Y-%m-%d %H:%M:%S.%f'
+
 @bp.route('/login', methods=['POST'])
 def users():
 
@@ -31,12 +33,15 @@ def users():
 
         password = params.pop('password', None)
 
-        if userID:     result = Users.query.get(userID)
-        elif callSign: result = Users.query.filter(Users.callSign == callSign).first()
+        if userID:     user = Users.query.get(userID)
+        elif callSign: user = Users.query.filter(Users.callSign == callSign).first()
 
         if result and result.check_password(password):
 
-            data  = {'callSign':'callSign','timestamp':str(datetime.utcnow())}
+            data  = {'callSign' : user.callSign,
+                     'userID'   : user.id,
+                     'timestamp': str(datetime.utcnow())}
+
             token = jwt.encode(data, "skirmesh", "HS256")
 
             return jsonify({'token': token})
@@ -44,6 +49,53 @@ def users():
         else:
 
             return make_response('Password or Login information is incorrect', 400)
+
+
+    return make_response('', 204)
+
+
+
+@bp.route('/login/is_valid', methods=['POST'])
+def is_valid():
+
+    """
+    API to authenticate JWT token given at login
+
+    POST - valid JWT
+
+    :: returns ::       authentic, updated JWT
+    """
+    #          hrs min  sec
+    MAX_TIME = 4 * 60 * 60
+
+    if request.method == 'POST':
+
+        params = request.json
+        token  = params.get('token', None)
+
+        if not token: return make_response('', 204)
+
+
+        try:
+
+            data = jwt.decode(token, "skirmesh", "HS256")
+
+        except Exception as E:
+
+            return make_response(f'{E}', 400)
+
+
+        if not 'userID' in data: return make_response('', 204)
+
+        user = Users.query.get(data['userID'])
+        time = datetime.strptime(data['timestamp'], TIME_FMT)
+        d_t  = (datetime.utcnow() - time).total_seconds()
+
+        if d_t > MAX_TIME: return make_response('Token expired', 400)
+
+        data['timestamp'] = str( datetime.utcnow() )
+
+        return jsonify({'token': jwt.encode(data, "skirmesh", "HS256")})
 
 
     return make_response('', 204)
