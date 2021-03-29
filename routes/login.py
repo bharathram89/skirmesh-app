@@ -36,19 +36,17 @@ def users():
         if userID:     user = Users.query.get(userID)
         elif callSign: user = Users.query.filter(Users.callSign == callSign).first()
 
-        if result and result.check_password(password):
+        if user and user.check_password(password):
 
             data  = {'callSign' : user.callSign,
                      'userID'   : user.id,
                      'timestamp': str(datetime.utcnow())}
 
-            token = jwt.encode(data, "skirmesh", "HS256")
-
-            return jsonify({'token': token})
+            return jsonify({'token': jwt.encode(data, "skirmesh", "HS256")})
 
         else:
 
-            return make_response('Password or Login information is incorrect', 400)
+            return make_response('Password or Login are invalid', 400)
 
 
     return make_response('', 204)
@@ -90,6 +88,8 @@ def is_valid():
         user = Users.query.get(data['userID'])
         time = datetime.strptime(data['timestamp'], TIME_FMT)
         d_t  = (datetime.utcnow() - time).total_seconds()
+
+        print(data['timestamp'], time, 'delta time', d_t)
 
         if d_t > MAX_TIME: return make_response('Token expired', 400)
 
