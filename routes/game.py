@@ -31,8 +31,7 @@ def register_team():
 
         if not uid or not teamID: return make_response('', 204)
 
-        rfid = RFID.query.filter('uid' == uid).first()
-
+        rfid = RFID.query.filter(RFID.uid == uid).first()
         # If the RFID didn't exist, register it - update otherwise
         if not rfid:
 
