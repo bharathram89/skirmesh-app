@@ -37,10 +37,10 @@ def handle_capture():
     node = Device.query.filter(Device.address == addr).first()
 
     game = Games.query.get(node.gameID) if node else None
-    if not game: return make_response('', 204)
+    if not game: return make_response({'success':False}, 204)
 
     # If the game is paused, ignore all capture requests
-    if game.is_paused or game.endTime: return make_response('', 204)
+    if game.is_paused or game.endTime: return make_response({'success':False}, 204)
 
     if stable:
         # If the payload does not contain a UID, it's passing the status
@@ -76,7 +76,7 @@ def handle_capture():
 
         if not rfid.teamPlayer or not rfid.teamPlayer.teamID:
 
-            return make_response('', 204)
+            return make_response({'success':False}, 204)
 
         print(f'Team {rfid.teamPlayer.teamID} is prosecuting Node_{node}')
 
