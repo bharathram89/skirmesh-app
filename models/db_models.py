@@ -188,6 +188,7 @@ class TeamPlayer(Base):
 
 
 
+@dataclass
 class RFID(Base):
 
     id:           int

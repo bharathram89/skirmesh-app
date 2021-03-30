@@ -33,18 +33,19 @@ def register_team():
 
         rfid = RFID.query.filter('uid' == uid).first()
 
-        # If the RFID didn't exist, register it
+        # If the RFID didn't exist, register it - update otherwise
         if not rfid:
 
             rfid = RFID(uid=uid)
             rfid.teamPlayer = TeamPlayer(teamID = teamID)
+            db_session.add(rfid)
 
         else:
 
             rfid.teamPlayer.teamID    = teamID
             rfid.teamPlayer.is_alive  = True
             rfid.teamPlayer.lastMedic = datetime.utcnow()
-            
+
         db_session.commit()
 
     return make_response('', 204)

@@ -49,6 +49,7 @@ def rfid():
 
         try:
 
+            db_session.add(team)
             db_session.commit()
 
         except Exception as E:

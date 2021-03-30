@@ -50,6 +50,7 @@ def rfid():
 
         try:
 
+            db_session.add(rfid)
             db_session.commit()
 
         except Exception as E:
