@@ -29,7 +29,6 @@ def fieldProfile():
         fieldID = params.get('id', None)
 
         if fieldID: result = jsonify(result.get(fieldID))
-        else:       result = make_response('Query with Field ID', 409)
 
         db_session.commit()
 
@@ -63,7 +62,7 @@ def fieldProfile():
 
         if fieldID:   field = FieldProfile.query.get(fieldID)
 
-        if not field: return make_response('', 204)
+        if not field: return None
 
         for attr in params:
 
@@ -74,4 +73,4 @@ def fieldProfile():
         return jsonify(field)
 
 
-    return make_response('', 204)
+    return None

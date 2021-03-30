@@ -45,7 +45,7 @@ def users():
         params = request.json
 
         password = params.pop('password', None)
-        if not password: return make_response('', 204)
+        if not password: return None
 
         user               = Users(**params)
         user.set_password(password)
@@ -77,7 +77,7 @@ def users():
         if userID:     user = Users.query.get(userID)
         elif callSign: user = Users.query.filter(Users.callSign == callSign).first()
 
-        if not user: return make_response('', 204)
+        if not user: return None
 
         for attr in params:
 
@@ -88,4 +88,4 @@ def users():
         return jsonify(user)
 
 
-    return make_response('', 204)
+    return None

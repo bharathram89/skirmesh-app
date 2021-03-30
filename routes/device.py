@@ -72,7 +72,7 @@ def node_status():
         if nodeID: node = Device.query.get(nodeID)
         elif addr: node = Device.query.filter(Device.address == addr).first()
 
-        if not node: return make_response('', 204)
+        if not node: return None
         # Handle the case where we shift away from CAPTURE (0x0A = 10) and
         # we need to closeout the score
         if 'config' in params and node.config == 10 and params['config'] != 10:
@@ -99,7 +99,7 @@ def node_status():
         return jsonify(node)
 
 
-    return make_response('', 204)
+    return None
 
 
 
@@ -127,4 +127,4 @@ def node_statuses():
 
         return jsonify(result.all())
 
-    return make_response('', 204)
+    return None

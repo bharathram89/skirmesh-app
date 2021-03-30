@@ -72,7 +72,7 @@ def rfid():
 
         if teamID: team = Teams.query.get(id)
 
-        if not team: return make_response('', 204)
+        if not team: return None
 
         if color: team.color = color
         if name:  team.name  = name
@@ -82,4 +82,4 @@ def rfid():
         return jsonify(team)
 
 
-    return make_response('', 204)
+    return None

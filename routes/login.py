@@ -49,7 +49,7 @@ def users():
             return make_response('Password or Login are invalid', 400)
 
 
-    return make_response('', 204)
+    return None
 
 
 
@@ -71,7 +71,7 @@ def is_valid():
         params = request.json
         token  = params.get('token', None)
 
-        if not token: return make_response('', 204)
+        if not token: return None
 
 
         try:
@@ -83,7 +83,7 @@ def is_valid():
             return make_response(f'{E}', 400)
 
 
-        if not 'userID' in data: return make_response('', 204)
+        if not 'userID' in data: return None
 
         user = Users.query.get(data['userID'])
         time = datetime.strptime(data['timestamp'], TIME_FMT)
@@ -98,4 +98,4 @@ def is_valid():
         return jsonify({'token': jwt.encode(data, "skirmesh", "HS256")})
 
 
-    return make_response('', 204)
+    return None

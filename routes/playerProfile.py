@@ -43,7 +43,7 @@ def playerProfile():
 
         if userID: user = Users.query.get(userID)
 
-        if not user: return make_response('', 204)
+        if not user: return None
 
         for attr in params:
 
@@ -54,4 +54,4 @@ def playerProfile():
         return jsonify(user)
 
 
-    return make_response('', 204)
+    return None

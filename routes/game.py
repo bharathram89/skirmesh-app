@@ -29,7 +29,7 @@ def register_team():
         uid    = params.pop('uid', None)
         teamID = params.pop('teamID', None)
 
-        if not uid or not teamID: return make_response('', 204)
+        if not uid or not teamID: return None
 
         rfid = RFID.query.filter(RFID.uid == uid).first()
         # If the RFID didn't exist, register it - update otherwise
@@ -47,4 +47,4 @@ def register_team():
 
         db_session.commit()
 
-    return make_response('', 204)
+    return None

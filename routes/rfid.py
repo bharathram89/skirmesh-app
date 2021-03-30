@@ -76,7 +76,7 @@ def rfid():
 
         new_user = Users.query.get(new_user_id)
 
-        if not rfid or not new_user: return make_response('', 204)
+        if not rfid or not new_user: return None
 
         new_user.rfids.append(rfid)
 
@@ -85,4 +85,4 @@ def rfid():
         return jsonify(new_user)
 
 
-    return make_response('', 204)
+    return None
