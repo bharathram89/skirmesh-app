@@ -37,8 +37,6 @@ def users():
         elif email:    result = result.filter(Users.email == email).all()
         else:          result = result.all()
 
-        db_session.commit()
-
         return jsonify(result)
 
 

@@ -38,8 +38,6 @@ def rfid():
         elif color: result = result.filter(Teams.color == color).all()
         else:       result = result.all()
 
-        db_session.commit()
-
         return jsonify(result)
 
 
@@ -49,7 +47,9 @@ def rfid():
 
         team = Teams(**params)
 
-        try: db_session.commit()
+        try:
+
+            db_session.commit()
 
         except Exception as E:
 

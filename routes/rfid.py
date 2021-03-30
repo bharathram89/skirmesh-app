@@ -38,8 +38,6 @@ def rfid():
         elif uid:  result = result.filter(RFID.uid == uid).first()
         else:      result = result.all()
 
-        db_session.commit()
-
         return jsonify(result)
 
 
@@ -50,7 +48,9 @@ def rfid():
         rfid            = RFID(**params)
         rfid.teamPlayer = TeamPlayer()
 
-        try: db_session.commit()
+        try:
+
+            db_session.commit()
 
         except Exception as E:
 

@@ -32,8 +32,6 @@ def playerProfile():
         if userID: result = jsonify(result.get(userID))
         else:      result = make_response('Query with User ID', 409)
 
-        db_session.commit()
-
         return result
 
     # Player Profiles are generated when the User is created

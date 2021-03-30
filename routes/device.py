@@ -40,8 +40,6 @@ def node_status():
         elif team: result = result.filter(Device.teamColor == team).all()
         else:      result = result.all()
 
-        db_session.commit()
-
         return jsonify(result)
 
 
@@ -127,10 +125,6 @@ def node_statuses():
 
         if addrs: result = result.filter(Device.address.in_(addrs))
 
-        result = result.all()
-
-        db_session.commit()
-
-        return jsonify(result)
+        return jsonify(result.all())
 
     return make_response('', 204)
