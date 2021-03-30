@@ -43,7 +43,6 @@ def register_team():
 
             rfid.teamPlayer.teamID    = teamID
             rfid.teamPlayer.is_alive  = True
-            rfid.teamPlayer.lastMedic = datetime.utcnow()
 
         db_session.commit()
 

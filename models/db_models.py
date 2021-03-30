@@ -181,7 +181,6 @@ class TeamPlayer(Base):
     deactivated   = Column(DateTime)
 
     is_alive      = Column(Boolean, default=True)
-    lastMedic     = Column(DateTime, default=datetime.utcnow)
 
     rfidID        = Column(Integer, ForeignKey('rfid.id'), nullable=False)
     teamID        = Column(Integer, ForeignKey('teams.id'), nullable=True)
