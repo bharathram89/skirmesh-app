@@ -12,6 +12,7 @@ can be launched and validated.
 
 from flask import Flask, jsonify
 from flask_socketio import SocketIO
+from flask_cors import CORS
 import os, glob, json, time
 from dataclasses import asdict
 
@@ -39,6 +40,7 @@ application.register_blueprint(login.bp)
 application.register_blueprint(team.bp)
 
 socketio = SocketIO(application)
+cors = CORS(application, resources={r"/*": {"Access-Control-Allow-Origin": "*"}})
 
 from sqlalchemy import event
 from models.db_models import Device
