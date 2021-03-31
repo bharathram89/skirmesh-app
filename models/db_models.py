@@ -275,8 +275,8 @@ class GameConfig(Base):
     description    = Column(String)
     fieldProfileID = Column(Integer, ForeignKey('fieldProfile.id'), nullable=False)
     teams          = relationship('Teams', lazy="joined", backref='teams_gameConfig', uselist=True, cascade="all, delete-orphan")
-    mapID          = Column(Integer, ForeignKey('maps.id'), nullable=False)
-    gameTypeID     = Column(Integer, ForeignKey('gameType.id'), nullable=False)
+    mapID          = Column(Integer, ForeignKey('maps.id'))
+    gameTypeID     = Column(Integer, ForeignKey('gameType.id'))
     games          = relationship('Games', lazy="joined", backref='games_gameConfig', uselist=True, cascade="all, delete-orphan")
     deviceMap      = Column(String)
 

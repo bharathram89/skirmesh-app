@@ -27,7 +27,7 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 from routes import (device, users, playerProfile, fieldProfile,
-                    rfid, game, capture, login, team, maps)
+                    rfid, game, capture, login, team, maps, gameConfig)
 
 application.register_blueprint(device.bp)
 application.register_blueprint(users.bp)
@@ -39,6 +39,8 @@ application.register_blueprint(capture.bp)
 application.register_blueprint(login.bp)
 application.register_blueprint(team.bp)
 application.register_blueprint(maps.bp)
+application.register_blueprint(gameConfig.bp)
+
 
 socketio = SocketIO(application)
 cors = CORS(application, resources={r"/*": {"Access-Control-Allow-Origin": "*"}})
