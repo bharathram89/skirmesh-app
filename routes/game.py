@@ -1,5 +1,6 @@
 from database import db_session
-from models.db_models import RFID, TeamPlayer, Device
+from models.db_models import RFID, TeamPlayer, Device, GameAction
+from models.queries import armedID, disarmedID
 
 from flask import jsonify, request, make_response
 from flask import Blueprint
@@ -109,3 +110,51 @@ def check_medic():
 
 
     return None
+
+
+
+BOMB_ARMED    = 0xBA
+BOMB_DISARMED = 0xBD
+BOMB_DETONATE = 0xDD
+
+@bp.route('/gameplay/update_bomb', methods=['PUT'])
+def update_bomb():
+
+    """
+    API to handle bomb action.
+
+    PUT  - update bomb status
+
+    :: args    ::       uid, address
+
+    :: returns ::       medic status  {'alive':bool,'lights':int}
+    """
+
+    if request.method == 'PUT':
+
+        params = request.json
+
+        uid    = params.pop('uid', None)
+        node   = params.pop('address', None)
+        status = params.pop('status', None)
+
+        if not uid or not node: return None
+
+        rfid = RFID.query.filter(RFID.uid == uid).first()
+        node = Device.query.filter(Device.address == node).first()
+
+        if rfid and node and rfid.teamID and status:
+
+            data = {'deviceID' : node.id,
+                    'rfidID'   : rfid.id,
+                    'teamID'   : rfid.teamID,
+                    'gameID'   : node.gameID}
+
+            if status == BOMB_ARMED or status == BOMB_DISARMED:
+
+                data['actionID'] = armedID if status == BOMB_ARMED else disarmedID
+
+            db_session.add(GameAction(**data))
+            node.bomb_status = status
+
+            db_session.commit()

@@ -3,6 +3,8 @@ from database import db_session
 
 
 completeID = captureID = assistID = lost_controlID = None
+armedID = disarmedID = None
+
 for action in Action.query.all():
 
     name, ID = action.action, action.id
@@ -12,6 +14,8 @@ for action in Action.query.all():
     elif name == 'ASSIST':         assistID = ID
     elif name == 'LOST CONTROL':   lost_controlID = ID
     elif name == 'RECONFIGURE':    reconfigID = ID
+    elif name == 'ARM BOMB':       armedID = ID
+    elif name == 'DISARM BOMB':    disarmedID = ID
 
 
 
