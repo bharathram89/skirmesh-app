@@ -350,6 +350,10 @@ class Locations(Base):
     id:           int
     creationDate: datetime
 
+    name:        str
+    path:        str
+    marker:      str
+
     mapID:       int
 
     __tablename__ = 'locations'
@@ -358,6 +362,9 @@ class Locations(Base):
     creationDate = Column(DateTime, default=datetime.utcnow)
 
     name         = Column(String, nullable=False)
+    path         = Column(String)
+    marker       = Column(String)
+
     mapID        = Column(Integer, ForeignKey('maps.id'), nullable=False)
 
 
@@ -386,7 +393,7 @@ class Maps(Base):
     map_image   = Column(LargeBinary)
     map_svg     = Column(String)
 
-    fieldID     = Column(Integer, ForeignKey('fieldProfile.id'), nullable=False)
+    fieldID     = Column(Integer, ForeignKey('fieldProfile.id'))
 
     locations   = relationship('Locations', lazy="joined", backref='maps_locations', uselist=True, cascade="all, delete-orphan")
     gameConfigs = relationship('GameConfig', lazy="joined", backref='maps_gameConfig', uselist=True, cascade="all, delete-orphan")
