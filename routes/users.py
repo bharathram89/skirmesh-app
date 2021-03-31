@@ -1,6 +1,7 @@
 from database import db_session
 from models.db_models import Users, PlayerProfile, TeamPlayer
 
+import jwt
 from sqlalchemy import null
 from flask import jsonify, request, make_response
 from flask import Blueprint
