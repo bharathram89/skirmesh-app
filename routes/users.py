@@ -31,11 +31,19 @@ def users():
         userID   = params.get('id', None)
         callSign = params.get('callSign', None)
         email    = params.get('email', None)
+        token    = params.get('token', None)
+
+        if token:
+
+            try:    data = jwt.decode(token, "skirmesh", "HS256")
+            except: return jsonify(None)
+
+            userID = data['userID']
 
         if userID:     result = result.get(userID)
         elif callSign: result = result.filter(Users.callSign == callSign).first()
         elif email:    result = result.filter(Users.email == email).all()
-        else:          result = result.all()
+        else:          result = None
 
         return jsonify(result)
 
