@@ -10,7 +10,6 @@ bp = Blueprint('fieldProfile', __name__, url_prefix='')
 
 @bp.route('/resources/fieldProfile', methods=['POST','PUT'])
 def fieldProfile():
-
     """
     API to interact with the PlayerProfile table
 
@@ -19,8 +18,6 @@ def fieldProfile():
 
     :: returns ::       query result
     """
-
-
     if request.method == 'POST':
 
         params = request.json

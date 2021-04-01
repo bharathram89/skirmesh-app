@@ -13,7 +13,6 @@ bp = Blueprint('users', __name__, url_prefix='')
 @bp.route('/resources/user', methods=['GET','POST','PUT'])
 @bp.route('/resources/users', methods=['GET','POST','PUT'])
 def users():
-
     """
     API to interact with the Users table
 
@@ -23,7 +22,6 @@ def users():
 
     :: returns ::       query result
     """
-
     if request.method == 'GET':
 
         params = request.args

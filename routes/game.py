@@ -12,7 +12,6 @@ bp = Blueprint('game', __name__, url_prefix='')
 
 @bp.route('/gameplay/register_team', methods=['PUT'])
 def register_team():
-
     """
     API to register RFID to a team.
 
@@ -22,38 +21,32 @@ def register_team():
 
     :: returns ::       Nothing
     """
+    params = request.json
 
-    if request.method == 'PUT':
+    uid    = params.pop('uid', None)
+    teamID = params.pop('teamID', None)
 
-        params = request.json
+    if not uid or not teamID: return None
 
-        uid    = params.pop('uid', None)
-        teamID = params.pop('teamID', None)
+    rfid = RFID.query.filter(RFID.uid == uid).first()
+    # If the RFID didn't exist, register it - update otherwise
+    if not rfid:
 
-        if not uid or not teamID: return None
+        rfid = RFID(uid=uid)
+        rfid.teamPlayer = TeamPlayer(teamID = teamID)
+        db_session.add(rfid)
 
-        rfid = RFID.query.filter(RFID.uid == uid).first()
-        # If the RFID didn't exist, register it - update otherwise
-        if not rfid:
+    else:
 
-            rfid = RFID(uid=uid)
-            rfid.teamPlayer = TeamPlayer(teamID = teamID)
-            db_session.add(rfid)
+        rfid.teamPlayer.teamID    = teamID
+        rfid.teamPlayer.is_alive  = True
 
-        else:
-
-            rfid.teamPlayer.teamID    = teamID
-            rfid.teamPlayer.is_alive  = True
-
-        db_session.commit()
-
-    return None
+    db_session.commit()
 
 
 
 @bp.route('/gameplay/check_medic', methods=['PUT'])
 def check_medic():
-
     """
     API to handle medic action.
 
@@ -63,53 +56,47 @@ def check_medic():
 
     :: returns ::       medic status  {'alive':bool,'lights':int}
     """
+    params = request.json
 
-    if request.method == 'PUT':
+    uid    = params.pop('uid', None)
+    node   = params.pop('address', None)
 
-        params = request.json
+    if not uid or not node: return None
 
-        uid    = params.pop('uid', None)
-        node   = params.pop('address', None)
+    rfid = RFID.query.filter(RFID.uid == uid).first()
+    node = Device.query.filter(Device.address == node).first()
 
-        if not uid or not node: return None
+    if not rfid or not node: return None
 
-        rfid = RFID.query.filter(RFID.uid == uid).first()
-        node = Device.query.filter(Device.address == node).first()
+    ALL      = 5
+    med_time = node.med_time * 10
+    d_t      = datetime.utcnow() - rfid.teamPlayer.lastChange
 
-        if not rfid or not node: return None
+    if not rfid.teamPlayer.is_alive and d_t.total_seconds() >= med_time:
+        # If he was dead and has waited the correct amount of time,
+        # bring him back to life
+        rfid.teamPlayer.is_alive = True
+        db_session.commit()
 
-        ALL      = 5
-        med_time = node.med_time * 10
-        d_t      = datetime.utcnow() - rfid.teamPlayer.lastChange
+        return jsonify({'alive':True,'lights':ALL})
+    # If he's DEAD and not enough time has passed to bring him back
+    # to life, then let him knows how close he is to being alive.
+    if not rfid.teamPlayer.is_alive and d_t.total_seconds() < med_time:
 
-        if not rfid.teamPlayer.is_alive and d_t.total_seconds() >= med_time:
-            # If he was dead and has waited the correct amount of time,
-            # bring him back to life
-            rfid.teamPlayer.is_alive = True
-            db_session.commit()
+        time_rem = med_time - d_t.total_seconds()
+        time_rem = min(max(0, time_rem), med_time)
 
-            return jsonify({'alive':True,'lights':ALL})
-        # If he's DEAD and not enough time has passed to bring him back
-        # to life, then let him knows how close he is to being alive.
-        if not rfid.teamPlayer.is_alive and d_t.total_seconds() < med_time:
+        num_lights = int(5 * (time_rem/med_time))
 
-            time_rem = med_time - d_t.total_seconds()
-            time_rem = min(max(0, time_rem), med_time)
-
-            num_lights = int(5 * (time_rem/med_time))
-
-            return jsonify({'alive':False,'lights':num_lights})
+        return jsonify({'alive':False,'lights':num_lights})
 
 
-        if rfid.teamPlayer.is_alive:
-            # If he was alive, and he's at the medic, he probably died...
-            rfid.teamPlayer.is_alive = False
-            db_session.commit()
+    if rfid.teamPlayer.is_alive:
+        # If he was alive, and he's at the medic, he probably died...
+        rfid.teamPlayer.is_alive = False
+        db_session.commit()
 
-            return jsonify({'alive':False,'lights':ALL})
-
-
-    return None
+        return jsonify({'alive':False,'lights':ALL})
 
 
 
@@ -119,7 +106,6 @@ BOMB_DETONATE = 0xDD
 
 @bp.route('/gameplay/update_bomb', methods=['PUT'])
 def update_bomb():
-
     """
     API to handle bomb action.
 
@@ -129,32 +115,29 @@ def update_bomb():
 
     :: returns ::       medic status  {'alive':bool,'lights':int}
     """
+    params = request.json
 
-    if request.method == 'PUT':
+    uid    = params.pop('uid', None)
+    node   = params.pop('address', None)
+    status = params.pop('status', None)
 
-        params = request.json
+    if not uid or not node: return None
 
-        uid    = params.pop('uid', None)
-        node   = params.pop('address', None)
-        status = params.pop('status', None)
+    rfid = RFID.query.filter(RFID.uid == uid).first()
+    node = Device.query.filter(Device.address == node).first()
 
-        if not uid or not node: return None
+    if rfid and node and rfid.teamID and status:
 
-        rfid = RFID.query.filter(RFID.uid == uid).first()
-        node = Device.query.filter(Device.address == node).first()
+        data = {'deviceID' : node.id,
+                'rfidID'   : rfid.id,
+                'teamID'   : rfid.teamID,
+                'gameID'   : node.gameID}
 
-        if rfid and node and rfid.teamID and status:
+        if status == BOMB_ARMED or status == BOMB_DISARMED:
 
-            data = {'deviceID' : node.id,
-                    'rfidID'   : rfid.id,
-                    'teamID'   : rfid.teamID,
-                    'gameID'   : node.gameID}
+            data['actionID'] = armedID if status == BOMB_ARMED else disarmedID
 
-            if status == BOMB_ARMED or status == BOMB_DISARMED:
+        db_session.add(GameAction(**data))
+        node.bomb_status = status
 
-                data['actionID'] = armedID if status == BOMB_ARMED else disarmedID
-
-            db_session.add(GameAction(**data))
-            node.bomb_status = status
-
-            db_session.commit()
+        db_session.commit()

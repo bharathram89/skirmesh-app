@@ -9,36 +9,28 @@ bp = Blueprint('playerProfile', __name__, url_prefix='')
 
 
 
-@bp.route('/resources/playerProfile', methods=['POST','PUT'])
+@bp.route('/resources/playerProfile', methods=['PUT'])
 def playerProfile():
 
     """
     API to interact with the PlayerProfile table
 
-    POST - add node to table
-    PUT  - update node in table
+    PUT  - update playerProfile in table
 
     :: returns ::       query result
     """
 
-    # Player Profiles are generated when the User is created
-    # elif request.method == 'POST':
-    if request.method == 'PUT':
+    params = request.json
+    userID = params.pop('id', None)
 
-        params = request.json
-        userID = params.pop('id', None)
+    if userID: user = Users.query.get(userID)
 
-        if userID: user = Users.query.get(userID)
+    if not user: return None
 
-        if not user: return None
+    for attr in params:
 
-        for attr in params:
+        setattr(user.playerProfile, attr, params[attr])
 
-            setattr(user.playerProfile, attr, params[attr])
+    db_session.commit()
 
-        db_session.commit()
-
-        return jsonify(user)
-
-
-    return None
+    return jsonify(user)

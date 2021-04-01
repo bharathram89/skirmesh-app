@@ -16,7 +16,6 @@ bp = Blueprint('capture', __name__, url_prefix='')
 
 @bp.route('/gameplay/handle_capture', methods=['PUT'])
 def handle_capture():
-
     """
     API to handle CAPTURE action.
 
@@ -26,7 +25,6 @@ def handle_capture():
 
     :: returns ::       updated device
     """
-
     params = request.json
 
     addr   = params.pop('address', None)

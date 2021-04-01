@@ -15,7 +15,6 @@ from datetime import datetime
 @bp.route('/resources/rfid', methods=['GET','POST','PUT'])
 @bp.route('/resources/rfids', methods=['GET','POST','PUT'])
 def rfid():
-
     """
     API to interact with the RFID table
 
@@ -25,7 +24,6 @@ def rfid():
 
     :: returns ::       query result
     """
-
     if request.method == 'GET':
 
         params = request.args

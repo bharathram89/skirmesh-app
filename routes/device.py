@@ -15,7 +15,6 @@ from datetime import datetime
 
 @bp.route('/resources/device', methods=['GET','POST','PUT'])
 def node_status():
-
     """
     API to interact with the Device table
 
@@ -25,7 +24,6 @@ def node_status():
 
     :: returns ::       query result
     """
-
     if request.method == 'GET':
 
         params = request.args
@@ -106,7 +104,6 @@ def node_status():
 
 @bp.route('/resources/devices', methods=['GET'])
 def node_statuses():
-
     """
     API to interact with the Device table
 
@@ -114,17 +111,11 @@ def node_statuses():
 
     :: returns ::       query result
     """
-
     params = request.args
+    result = Device.query
 
-    if request.method == 'GET':
+    addrs  = params.get('address', None)
 
-        result = Device.query
+    if addrs: result = result.filter(Device.address.in_(addrs))
 
-        addrs  = params.get('address', None)
-
-        if addrs: result = result.filter(Device.address.in_(addrs))
-
-        return jsonify(result.all())
-
-    return None
+    return jsonify(result.all())
