@@ -1,114 +1,27 @@
-# IRL Systems - Battlefield
+# SkirmeshUi
 
-This projct aims to provide stationary or mobile nodes throughout gameplay, which enhance obsevability from a controlling station. Examples are team control of certain objectives, medic validation, or even follow a unit as they traverse the battlefield.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.3.
 
-## Nodes
+## Development server
 
-Nodes can serve various functions. For the beta stages, nodes will serve as a stationary control point used for tracking team control over an objective. As the project progresses, nodes will become mobile and utilize additional features---gps, etc.---to enhance gameplay.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Base Station
+## Code scaffolding
 
-The base station will communicate with and direct node functions. During beta, the base station will communicate and manage database structures for validating team capture. In the future, the base station will be used to reconfigure each node for a specific purpose. The base station will also provide a GUI that can monitor team action via top-down GPS views.
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
+## Build
 
-### Define Payload structure
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-Payload is defined for Ballahack as follows:  
-* payload[0] = COMMAND  
-* payload[1:] = UID or other to get parsed by the command dictionary
+## Running unit tests
 
-Controller to Node structure:
-* payload[0] = COMMAND
-* payload[1] = Configuration
-* payload[2] = Configuration arguments
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-### Command Dictionary
+## Running end-to-end tests
 
-0x00 - CONFIGURE  
-0x01 - REGISTER  
-0x02 - QUERY  
-...  
-0x0A - CAPTURE  
-0x0B -      
-...  
-0x0E - MEDIC  
-0x53 - NODE STATUS  
-0xDD - DISCOVERY  
-0x0F -   
-...  
-0xFF  
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-### systemd file contents
+## Further help
 
-Generate a service file with contents as shown:  
-
-    sudo nano /etc/systemd/system/battlefield.service
-
-Cut and paste the following into the file created above:
-
-    [Unit]
-    Description=Battlefield Init Service
-
-    [Service]
-    WorkingDirectory=/home/pi/Coding/battlefield/
-    ExecStart=/home/pi/Coding/battlefield/venv/bin/python main.py
-    StandardOutput=inherit
-    StandardError=inherit
-    Restart=on-failure
-    RestartSec=15
-
-    [Install]
-    WantedBy=multi-user.target
-    Alias=battlefield.service
-
-Start/Stop the service with:  
-
-    sudo systemctl start battlefield.service
-    sudo systemctl stop battlefield.service
-
-Enable the service with:
-
-    sudo systemctl enable battlefield.service
-
-For some reason, syslog takes an inordinate amount of space and seems to fill my syslog in one night of constant running. To preven this, run:
-
-    sudo nano /etc/rsyslog.conf 
-    
-In the section titled:
-
-    ###############
-    #### RULES ####
-    ###############
-    
-Comment out the following lines by prepending a "#":
-
-    #*.*;auth,authpriv.none         -/var/log/syslog
-    #daemon.*                       -/var/log/daemon.log
-
-Finally, add the following to the bottom:
-
-    *.*     ~
-
-Then run:
-
-    sudo service rsyslog restart
-    
-To compile micropython files, run:
-
-    for file in *.py; do python3 -m mpy_cross -mno-unicode -msmall-int-bits=31 $file; done
-    
-## TimeLapse video commands for ffmpeg
-
-    mkdir images
-
-Take a bunch of screenshots with:
-
-    ffmpeg -f (avfoundation on OSX || x11grab for Linux) -i "1" -r 1 images/out%06d.jpg
-    
-Put those together into a timelapse with:
-
-    ffmpeg -f image2 -i out%06d.jpg -pix_fmt yuv420p out.mov       
-
-    
-    
-    
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
