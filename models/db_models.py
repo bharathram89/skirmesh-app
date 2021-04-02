@@ -48,7 +48,7 @@ class Action(Base):
     creationDate: datetime
 
     action:       str
-    actions:      GameAction
+    gameActions:  GameAction
 
     __tablename__ = 'action'
 
@@ -56,7 +56,7 @@ class Action(Base):
     creationDate = Column(DateTime, default=datetime.utcnow)
 
     action       = Column(String, unique=True, nullable=False)
-    actions      = relationship('GameAction', lazy="joined", backref='action_gameAction', uselist=True, cascade="all, delete-orphan")
+    gameActions  = relationship('GameAction', lazy="joined", backref='action_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
 
@@ -140,7 +140,7 @@ class Games(Base):
 
     gameConfigID: int
 
-    actions:      GameAction
+    gameActions:  GameAction
     devices:      Device
 
     __tablename__ = 'games'
@@ -155,7 +155,7 @@ class Games(Base):
 
     gameConfigID = Column(Integer, ForeignKey('gameConfig.id'), nullable=False)
 
-    actions      = relationship('GameAction', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
+    gameActions  = relationship('GameAction', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
     devices      = relationship('Device', lazy="joined", backref='games_gameAction', uselist=True, cascade="all, delete-orphan")
 
 
