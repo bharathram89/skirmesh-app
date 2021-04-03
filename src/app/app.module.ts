@@ -12,7 +12,7 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from 'angularx-social-login';
-import { SecurePlayerModule } from './secure-player/secure-player.module';
+import { UserServiceService } from 'src/service/user-service.service';
 
 
 @NgModule({
@@ -23,10 +23,10 @@ import { SecurePlayerModule } from './secure-player/secure-player.module';
     BrowserModule,
     AppRoutingModule,
     GlobalModule,
-    HttpClientModule,
-    SecurePlayerModule
+    HttpClientModule
   ],
   providers: [
+    UserServiceService,
     NodeConfigService,
     AuthService,
     SocialAuthService,

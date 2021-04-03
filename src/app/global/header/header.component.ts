@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -10,12 +11,16 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 export class HeaderComponent implements OnInit {
   isSideNavOpen: boolean = false;
-  isSecure:boolean = false;
+  isSecure:boolean = true;
   isPlayer = false;
   isField=false;
   userSvc:UserServiceService;
   tokenSvc:TokenStorageService;
-  constructor(userService:UserServiceService,tokenService:TokenStorageService) {
+
+
+  
+  constructor(userService:UserServiceService,tokenService:TokenStorageService,
+    private router: Router) {
     this.userSvc = userService;
     this.tokenSvc = tokenService;
    }
@@ -42,9 +47,25 @@ export class HeaderComponent implements OnInit {
     })
   } 
   signOut(){
-    this.tokenSvc.signOut()
+    this.tokenSvc.signOut();
+    this.userSvc.setSignIn(false);
+
+    this.router.navigate(['/secure-player']);
   }
-  openInfoMenu(){}
+  closeInfoMenu(){
+    let menu = document.getElementById("infoDropdown")
+    menu.style.display=='none'
+  }
+  openInfoMenu(){
+    let menu = document.getElementById("infoDropdown")
+    if(menu.style.display=='none'){
+      menu.style.display='block';
+    }else{
+      menu.style.display='none';
+    }
+    
+
+  }
   openMenu(){
     let menu = document.getElementById("navdrop")
     menu.classList.toggle('collapse')

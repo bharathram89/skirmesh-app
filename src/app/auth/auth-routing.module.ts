@@ -5,22 +5,24 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
 const routes: Routes = [
- { path: '',
- component: AuthComponent,
- children: [
-   {
-     path: '',
-     redirectTo: 'login',
-   },
-   {
-     path: 'login',
-     component: SignInComponent,
-   },
-   {
-     path: 'sign-up',
-     component: SignUpComponent,
-   },
- ]}
+  {
+    path: '',
+    component: AuthComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'login',
+      },
+      {
+        path: 'login',
+        component: SignInComponent,
+      },
+      {
+        path: 'sign-up',
+        component: SignUpComponent,
+      },
+    ]
+  }
 ];
 
 @NgModule({

@@ -12,9 +12,7 @@ import { UserServiceService } from 'src/service/user-service.service';
   imports: [
     RouterModule,
     CommonModule
-    
   ],
-  providers: [UserServiceService],
   exports: [FooterComponent, HeaderComponent]
 })
 export class GlobalModule { }

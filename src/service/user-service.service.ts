@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserServiceService {
-  signedIn: Subject<boolean>;
-  userType: Subject<String>;
+  signedIn: BehaviorSubject<boolean>;
+  userType: BehaviorSubject<String>;
   constructor() {
-    this.signedIn = new Subject<false>();
-    this.userType = new Subject();
+    
+    this.signedIn = new BehaviorSubject(false);
+    this.userType = new BehaviorSubject('');
   }
   setUserData(userData){
-    console.log(userData,"all user data")
-    this.userType.next(userData.type);
+    this.userType.next(userData.user.type);
   }
   setSignIn(val: boolean) {
     this.signedIn.next(val);
@@ -24,4 +24,5 @@ export class UserServiceService {
   getUserTye(){
     return this.userType;
   }
+
 }

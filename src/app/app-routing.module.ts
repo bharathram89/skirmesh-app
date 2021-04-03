@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router'; 
-import { AuthComponent } from './auth/auth.component';
+import { RouterModule, Routes } from '@angular/router';  
 import { AuthGuardGuard } from './helpers/auth-guard.guard';
 
 const routes: Routes = [
   { 
-    path: 'secure-player', 
-    loadChildren: () => import('./secure-player/secure-player.module').then(m => m.SecurePlayerModule),  
+    path: 'secure', 
+    loadChildren: () => import('./secure/secure.module').then(m => m.SecureModule),  
     canActivate: [AuthGuardGuard] 
   },
   { 

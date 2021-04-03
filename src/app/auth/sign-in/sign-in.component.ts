@@ -86,9 +86,7 @@ export class SignInComponent implements OnInit {
           userData=>{
             console.log(userData);
             this.tokenStorage.saveToken(respData['token'])
-            this.userSvc.setSignIn(true);
-            this.userSvc.setUserData(userData);
-            this.router.navigate(['/secure-player']);
+            this.router.navigate(['/secure']);
           },
           err=>{
             document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')

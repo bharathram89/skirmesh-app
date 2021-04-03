@@ -6,85 +6,94 @@
         </button>
         <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
             alt="user" />
-
         <div class="collapse navbar-collapse" id="navdrop">
+
+            <!-- NON SECURE LINKS DURING SECURE SESSION -->
             <!-- <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> -->
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure">
-                    <li *ngIf="isSecure | async" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
-                            (click)="openInfoMenu()" aria-haspopup="true" aria-expanded="false">
-                            Info
-                        </a>
-                        <div id="infoDropdown" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" [routerLink]="['/non-secure/home']">Home</a>
-                            <a class="dropdown-item" [routerLink]="['/non-secure/feature-list']">Features</a>
-                            <a class="dropdown-item" [routerLink]="['/non-secure/player-info']">Player Info</a>
-                            <a class="dropdown-item" [routerLink]="['/non-secure/field-info']">Field Info</a>
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- NON SECURE LINKS BELOW -->
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="!isSecure">
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav_home" [routerLink]="['/non-secure/home']">Home </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/feature-list']">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav_playerInfo" [routerLink]="['/non-secure/player-info']">Player Info</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Info</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Register</a>
-                    </li>
-    
-                </ul>
-                
-                <!-- SECURE LINKS BELOW -->
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure && (isPlayer ||isField)">
-                    <li class="nav-item">
-                        <a class="nav-link" id="secure_nav_dashboard" [routerLink]="['/non-secure/home']">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="secure_nav_profile" [routerLink]="['/non-secure/feature-list']">Profile</a>
-                    </li>
-                </ul>
-
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure && (isPlayer ||isField)">
-                    <li class="nav-item">
-                        <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/non-secure/field-info']">Current
-                            Games</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/auth/sign-up']">My Games</a>
-                    </li>
-                </ul>
-                
-
-
-
-
-
-                <ul class="navbar-nav  my-2 my-lg-0" *ngIf="!isSecure">
-                    <div class="form-inline">
-                        <button class="btn btn-outline-success my-2 my-sm-0" [routerLink]="['/auth/login']" type="submit">Sign
-                            In</button>
+            <ul *ngIf="isSecure" class="navbar-nav mt-2 mt-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
+                        (click)="openInfoMenu()" aria-haspopup="true" aria-expanded="false">
+                        Info
+                    </a>
+                    <div id="infoDropdown" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/home']">Home</a>
+                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/feature-list']">Features</a>
+                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/player-info']">Player Info</a>
+                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/field-info']">Field Info</a>
                     </div>
+                </li>
+            </ul>
 
-                    </ul>
+            <!-- NON SECURE LINKS BELOW -->
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="!isSecure">
+                <li class="nav-item">
+                    <a class="nav-link" id="nav_home" [routerLink]="['/non-secure/home']">Home </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/feature-list']">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav_playerInfo" [routerLink]="['/non-secure/player-info']">Player Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Register</a>
+                </li>
+
+            </ul>
+
+            <!-- SECURE LINKS BELOW -->
+            <ul class="navbar-nav mt-2 mt-lg-0" *ngIf="isSecure">
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_dashboard" [routerLink]="['/secure/dashboard']">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/find-game']">Find Games</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/current-game']">Current Games</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isField">
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/start-game']">Start Games</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manage-game']">Manage Games</a>
+                </li>
+            </ul>
 
 
-                <ul class="navbar-nav my-2 my-lg-0" *ngIf="isSecure">
-                    <div class="form-inline my-2 my-lg-0">
-                        <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign
-                            Out</button>
-                    </div>
 
-                    </ul>
+
+            <!-- SIGN-IN / SIGN-OUT -->
+            <ul class="navbar-nav my-2 my-lg-0" *ngIf="!isSecure">
+                <div class="form-inline">
+                    <button class="btn btn-outline-success my-2 my-sm-0" [routerLink]="['/auth/login']"
+                        type="submit">Sign
+                        In</button>
+                </div>
+
+            </ul>
+
+
+            <ul class="navbar-nav my-2 my-lg-0" *ngIf="isSecure">
+                <div class="form-inline my-2 my-lg-0">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign
+                        Out</button>
+                </div>
+
+            </ul>
             <!-- </ul> -->
         </div>
 
