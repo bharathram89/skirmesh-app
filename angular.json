@@ -5,7 +5,7 @@
   "projects": {
     "skirmesh-ui": {
       "projectType": "application",
-      "serve": { "options" : { "port" : 5001 } },
+      "serve": { "options" : { "port" : 5000 } },
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
