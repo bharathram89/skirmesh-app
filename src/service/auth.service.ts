@@ -28,4 +28,8 @@ export class AuthService {
   getUser(token){
     return this.http.get('http://api.skirmesh.net'+'/resources/user?token='+token)
   }
+
+  saveProfile(token,data){
+    return this.http.put('http://api.skirmesh.net'+'/resources/user?token='+token,data,this.options)
+  }
 }

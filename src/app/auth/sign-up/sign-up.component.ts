@@ -113,7 +113,8 @@ export class SignUpComponent implements OnInit {
       "firstName": this.addUser.value.fname,
       "lastName": this.addUser.value.lname,
       "password": this.addUser.value.password,
-      "email": this.addUser.value.email
+      "email": this.addUser.value.email,
+      "type": type
     }
     this.authSvc.createUser(data).subscribe(data=>{
       document.getElementById('userCreatedMessage').classList.toggle('d-none')

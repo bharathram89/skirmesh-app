@@ -1,0 +1,146 @@
+<div class="container">
+    <div class="">
+        <div class="row">
+            <div *ngFor="let device of (devices| async); let i = index" class="card user-card">
+                <div class="card-header">
+                    <h5>Device Name: </h5>
+                    <h7>Device Address: {{device.address}}</h7><br>
+                    <h7>Device ID: {{device.id}}</h7>
+                </div>
+                <div class="card-body form-group">
+                    <label for="pointScale">Point Scale</label>
+                    <input class="form-control-range" id="pointScale" type="range" min="10" max="300" [value]="device.point_scale"
+                        step="10" (input)="pointScale(i,$event.target.value)">
+                        {{device.point_scale}}
+                </div>
+                <div class="card-body form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableMedic(i)" type="checkbox" class="custom-control-input" [id]="'medicSwitch-' + i" [checked]="device.allow_medic">
+                        <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic Enabled:</label>{{device.allow_medic}}
+                    </div>
+                    <div *ngIf="device.allow_medic === true">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="medTime">Medic Time</label>
+                                <input class="form-control-range" id="medTime" type="range" min="1" max="10" [value]="device.med_time"
+                                    step="1" (input)="medicTime(i,$event.target.value)">
+                                    {{device.med_time}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="card-body form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableBomb(i)" type="checkbox" class="custom-control-input" [id]="'bombSwitch-' + i" [checked]="bombEnable">
+                        <label class="custom-control-label" [for]="'bombSwitch-' + i">Bomb Mode Enabled:</label>
+                        {{bombEnable}}
+                    </div>
+                    <div *ngIf="bombEnable">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="armTime">Arm Time</label>
+                                <input class="form-control-range" id="armTime" type="range" min="1" max="10" [value]="device.arm_time"
+                                    step="1" (input)="armTime(i,$event.target.value)">
+                                    {{device.arm_time}}
+                            </div>
+                            <div class="form-group">
+                                <label for="blastTime">Time till blast</label>
+                                <input class="form-control-range" id="blastTime" type="range" min="1" max="30" [value]="device.bomb_time"
+                                    step="1" (input)="bombTime(i,$event.target.value)">
+                                    {{device.bomb_time}}
+                            </div>
+                            <div class="form-group">
+                                <label for="difuseTime">Difuse Time</label>
+                                <input class="form-control-range" id="difuseTime" type="range" min="1" max="30" [value]="device.diff_time"
+                                    step="1" (input)="difuseTime(i,$event.target.value)">
+                                    {{device.diff_time}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="card-body form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableCapture(i)" type="checkbox" class="custom-control-input" [id]="'captureSwitch-' + i" [checked]="captureEnable">
+                        <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture Mode Enabled:</label>
+                        {{captureEnable}}
+                    </div>
+                    <div *ngIf="captureEnable">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="captime">Time to Capture Point</label>
+                                <input class="form-control-range" id="captime" type="range" min="1" max="10" [value]="device.cap_time"
+                                    step="1" (input)="capTime(i,$event.target.value)">
+                                    {{device.cap_time}}
+                            </div>
+                            <div class="form-group">
+                                <label for="capasst">Capture Assist</label>
+                                <input class="form-control-range" id="capasst" type="range" min="1" max="30" [value]="device.cap_asst"
+                                    step="1" (input)="capasst(i,$event.target.value)">
+                                    {{device.cap_asst}}%
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 
+//below are constants
+address: "0013A20041A66B3F"
+id: 7
+
+
+//below change per game
+location: null
+gameActions: []
+gameID: null
+
+
+//below can change anytime during game
+
+
+point_scale: 60 -range
+
+
+allow_medic: true - switch
+med_time: 3 -range
+
+
+
+where is allow_bomb to show the node is a bomb?
+arm_time: 1 - range
+bomb_status: 189 ??? what is this for?
+bomb_time: 18 - range
+diff_time: 12 - range
+
+
+
+where is allow_capture to show the node is a capture point?
+cap_asst: 20 -range
+cap_time: 1 - range
+
+
+config: 10 ?
+stable: 1 -range? is this how long it take to be stable? 
+
+
+
+fieldProfileID: 1
+lastChange: "Sun, 04 Apr 2021 17:40:43 GMT"
+creationDate: "Sat, 27 Mar 2021 00:35:08 GMT"
+deactivated: null
+
+team: "3333cc"
+teamID: null -->

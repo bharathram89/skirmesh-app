@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';  
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';  
 import { AuthGuardGuard } from './helpers/auth-guard.guard';
 
 const routes: Routes = [
@@ -21,9 +21,13 @@ const routes: Routes = [
     redirectTo:'/auth/login'
   }
 ];
-
+const routerOptions: ExtraOptions = {
+  useHash: false,
+  anchorScrolling: 'enabled',
+  // ...any other options you'd like to use
+};
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,routerOptions)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
