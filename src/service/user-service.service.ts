@@ -28,7 +28,7 @@ export class UserServiceService {
     }else if (userData.user.type =='player'){
       this.isPlayer = true;
     }
-    this.token= userData.token;
+    this.token = userData.token;
     this.userType.next(userData.user.type);
     this.userData.next(userData.user)
     this.tokenSvc.saveToken(userData.token)
