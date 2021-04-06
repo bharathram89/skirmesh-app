@@ -10,7 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+# dist/
 downloads/
 eggs/
 .eggs/
@@ -143,4 +143,3 @@ test.*
 /node_modules
 node_modules/*
 npm-debug.log
-
