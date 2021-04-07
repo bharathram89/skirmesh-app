@@ -19,9 +19,6 @@ export class DeviceListComponent implements OnInit {
 
   devices: BehaviorSubject<any>;
 
-  captureEnable:boolean;
-  bombEnable:boolean;
-
   REGISTER = 0x01;
   QUERY    = 0x02;
   PAIR_UID = 0x03;
@@ -29,6 +26,10 @@ export class DeviceListComponent implements OnInit {
   MEDIC    = 0x0E;
   BOMB     = 0xBB;
 
+
+  @Input() config;
+ 
+  locationsToSet: BehaviorSubject<any>;
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
@@ -36,14 +37,27 @@ export class DeviceListComponent implements OnInit {
     this.userSvc  = userService;
     this.tokenSvc = tokenService;
     this.devices  = new BehaviorSubject({});
+    this.locationsToSet  = new BehaviorSubject({});
   }
 
 
   ngOnInit(): void {
-    this.userSvc.getUserData().subscribe(userData => {
-
-      this.devices.next(userData.fieldProfiles[0].devices);
-    })
+    
+    this.config.subscribe(
+      modeConfig=>{
+        this.userSvc.getUserData().subscribe(userData => {
+          console.log(modeConfig,"config",userData.fieldProfiles[0].devices)
+          if(modeConfig.mode == 'createMode'){
+            this.locationsToSet.next(modeConfig.location);
+            // this.devices = new Array
+            //devices = turned off.   
+          }
+          this.devices.next(userData.fieldProfiles[0].devices);
+        })
+        
+      }
+    )
+    
   }
 
   pointScale(index,value){

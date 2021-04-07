@@ -43,7 +43,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <app-device-list ></app-device-list>
+        <app-device-list [config]="deviceListConfigs" ></app-device-list>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
