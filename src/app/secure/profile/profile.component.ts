@@ -19,23 +19,33 @@ export class ProfileComponent implements OnInit {
   settingsSection: HTMLElement;
 
   profileForm: FormGroup;
-  fields = { fname: '', lname: '', email: '', clanTag: '', phone: '', bio: '', profile: '',fieldName:'',callSign:'' }
+  fields = { firstName:    '',
+             lastName:    '',
+             email:    '',
+             clanTag:  '',
+             phone:    '',
+             bio:      '',
+             profile:  '',
+             fieldName:'',
+             callSign: ''
+           }
 
   isField: boolean;
   isPlayer: boolean;
 
   currentVals = {
-    fName: "",
-    lName: "",
-    clanTag: "",
-    email: "",
-    phone: "",
-    bio: '',
-    profile: '',
-    fieldName:'',
-    callSign:''
-
-  }
+                  firstName:    '',
+                  lastName:    '',
+                  clanTag:  '',
+                  email:    '',
+                  phone:    '',
+                  bio:      '',
+                  profile:  '',
+                  fieldName:'',
+                  callSign: '',
+                  fieldProfileID:  '',
+                  userID:  ''
+                }
 
 
   userSvc: UserServiceService;
@@ -61,45 +71,39 @@ export class ProfileComponent implements OnInit {
 
     this.profileForm = new FormGroup({
 
-      "fname": new FormControl(this.fields.fname, [
-        Validators.required
-      ]),
-      "lname": new FormControl(this.fields.lname, [
-        Validators.required
-      ]),
-      "email": new FormControl(this.fields.email, [
-        Validators.required,
-        Validators.email
-      ]),
-      "clanTag": new FormControl(this.fields.clanTag, [
-      ]),
-      "phone": new FormControl(this.fields.phone, [
-      ]),
-      "bio": new FormControl(this.fields.bio, [
-      ]),
-      "profile": new FormControl(this.fields.profile, [
-      ]),
-      "fieldName": new FormControl(this.fields.fieldName, [
-      ]),
-      "callSign": new FormControl(this.fields.callSign, [
-      ])
+      "firstName": new FormControl(this.fields.firstName, [Validators.required]),
+      "lastName":  new FormControl(this.fields.lastName, [Validators.required]),
+      "email":     new FormControl(this.fields.email, [Validators.required,Validators.email]),
+      "clanTag":   new FormControl(this.fields.clanTag, []),
+      "phone":     new FormControl(this.fields.phone, []),
+      "bio":       new FormControl(this.fields.bio, []),
+      "profile":   new FormControl(this.fields.profile, []),
+      "fieldName": new FormControl(this.fields.fieldName, []),
+      "callSign":  new FormControl(this.fields.callSign, [])
+
     })
 
 
     this.userSvc.getUserData().subscribe(
       userData => {
+
         if (this.isField) {
-          this.currentVals.profile = userData.fieldProfiles.profile ? userData.fieldProfiles.profile : 'Describe your field';
+          this.currentVals.profile = userData.fieldProfiles[0].profile ? userData.fieldProfiles[0].profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
-        } else if (this.isPlayer) {
+          this.currentVals.fieldProfileID = userData.fieldProfiles[0].id;
+        }
+        else if (this.isPlayer) {
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-          this.currentVals.callSign = userData.playerProfile.callSign ? userData.playerProfile.callSign : 'Whats your callsign!';
+          this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
         }
-        this.currentVals.fName = userData.firstName ? userData.firstName : 'First Name';
-        this.currentVals.lName = userData.lastName ? userData.lastName : 'Last Name';
+        this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
+        this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
         this.currentVals.email = userData.email ? userData.email : 'E-mail';
         this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
+
+        this.currentVals.userID = userData.id;
+
       }
     )
   }
@@ -132,23 +136,30 @@ export class ProfileComponent implements OnInit {
 
   onSubmit() {
 
-    let data = {}
-    this.profileForm.value.fname ? data['firstName'] = this.profileForm.value.fname : null;
-    this.profileForm.value.lname ? data['lastName'] = this.profileForm.value.lname : null;
-    this.profileForm.value.email ? data['email'] = this.profileForm.value.email : null;
-    this.profileForm.value.phone ? data['phoneNumber'] = this.profileForm.value.phone : null;
-    if (this.isField) {
-      this.profileForm.value.fieldName ? data['callSign'] = this.profileForm.value.fieldName:null;
-      this.profileForm.value.profile ? data['profile'] = this.profileForm.value.profile : null;
-    } else if (this.isPlayer) {
-      this.profileForm.value.callSign ? data['callSign'] = this.profileForm.value.callSign:null;
-      this.profileForm.value.bio ? data['outfit'] = this.profileForm.value.bio : null;
-      this.profileForm.value.clanTag ? data['clanTag'] = this.profileForm.value.clanTag : null;
+    let data  = {"user":{}, "field":{}, "player":{}}
+    this.profileForm.value.firstName ? data.user['firstName'] = this.profileForm.value.firstName : null;
+    this.profileForm.value.lastName ? data.user['lastName'] = this.profileForm.value.lastName : null;
+    this.profileForm.value.email ? data.user['email'] = this.profileForm.value.email : null;
+    this.profileForm.value.phone ? data.user['phoneNumber'] = this.profileForm.value.phone : null;
 
+    if (this.isField) {
+      this.profileForm.value.fieldName ? data.user['callSign'] = this.profileForm.value.fieldName:null;
+      this.profileForm.value.profile ? data.field['profile'] = this.profileForm.value.profile : null;
+      // Need to include the fieldProfiles[...].id  --- we're just taking the first for now
+      data.field['id'] = this.currentVals.fieldProfileID;
+      console.log(data.field);
+
+    } else if (this.isPlayer) {
+      this.profileForm.value.callSign ? data.user['callSign'] = this.profileForm.value.callSign:null;
+      this.profileForm.value.bio ? data.player['outfit'] = this.profileForm.value.bio : null;
+      this.profileForm.value.clanTag ? data.player['clanTag'] = this.profileForm.value.clanTag : null;
+      // Need to include the playerProfile.id
+      data.player['id'] = this.currentVals.userID;
     }
+    console.log(data.player)
     this.authSvc.saveProfile(this.userSvc.getToken(), data).subscribe(
       resp => {
-        this.profileForm.reset();
+        // this.profileForm.reset();
         document.getElementById('userCreatedMessage').classList.remove('d-none')
         console.log(resp, "resp")
       },

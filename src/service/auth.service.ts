@@ -16,20 +16,40 @@ export class AuthService {
   });
   options = { headers: this.headers };
 
- 
+  BASE = 'http://api.skirmesh.net/';
+
+
   createUser(data){
-    return this.http.post('http://api.skirmesh.net/resources'+'/users',data,this.options)
+    return this.http.post(this.BASE + 'resources/users',data,this.options)
   }
 
   userLogin(data){
-    return this.http.post('http://api.skirmesh.net'+'/login',data,this.options)
+    return this.http.post(this.BASE + 'login',data,this.options)
   }
 
   getUser(token){
-    return this.http.get('http://api.skirmesh.net'+'/resources/user?token='+token)
+    return this.http.get(this.BASE + 'resources/user?token='+token)
   }
 
-  saveProfile(token,data){
-    return this.http.put('http://api.skirmesh.net'+'/resources/user?token='+token,data,this.options)
+  saveProfile(token, data){
+
+    var user   = data.user;
+    var player = data.player;
+    var field  = data.field;
+
+    if (Object.keys(field).length) {
+      this.http.put(this.BASE + 'resources/fieldProfile', field, this.options).subscribe(
+        resp => { console.log(resp, "resp") },
+        err => { console.log(err, "err in update field profile") }
+      )
+    }
+    if (Object.keys(player).length) {
+      this.http.put(this.BASE + 'resources/playerProfile', player, this.options).subscribe(
+        resp => { console.log(resp, "resp") },
+        err => { console.log(err, "err in update player profile") }
+      )
+    }
+
+    return this.http.put(this.BASE + 'resources/user?token='+token, user, this.options)
   }
 }
