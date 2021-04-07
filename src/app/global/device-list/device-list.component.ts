@@ -11,14 +11,14 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 export class DeviceListComponent implements OnInit {
   p: number = 1;
-  
+
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
 
   devices: BehaviorSubject<any>;
 
   captureEnable:boolean;
-  bombEnable:boolean; 
+  bombEnable:boolean;
 
 
   constructor(
@@ -30,7 +30,7 @@ export class DeviceListComponent implements OnInit {
     this.devices  = new BehaviorSubject({});
   }
 
-  
+
   ngOnInit(): void {
     this.userSvc.getUserData().subscribe(userData => {
 
@@ -55,6 +55,33 @@ export class DeviceListComponent implements OnInit {
 
     return new_val
 
+  }
+
+
+  getTimeIndex(value) {
+
+    var int_map = [1,2,3,4,5,6,7,8,9,10,11,12,
+                   15,18,21,24,27,30,
+                   36,42,48,54,60,66,72,78,84,90,
+                   120,150,180,210,240];
+
+    return int_map.indexOf(value)
+  }
+
+  getPercIndex(value) {
+
+    var int_map = [0x64,0x32,0x19,0x14,0x0a,
+                   0x05,0x04,0x02,0x01];
+
+    return int_map.indexOf(value)
+  }
+
+  getScaleIndex(value) {
+
+    var int_map = [0x0f,0x14,0x1e,0x28,0x30,0x3c,
+                   0x4b,0x50,0x64,0x78,0x96,0xf0].reverse();
+
+    return int_map.indexOf(value)
   }
 
   medicTime(index,value) {
