@@ -10,12 +10,9 @@
                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                 </div>
 
-                <div class="card-body form-group">
-                    <div class="custom-control custom-switch">
-                        <input (click)="enableMedic(i)" type="checkbox" class="custom-control-input"
-                            [id]="'medicSwitch-' + i" [checked]="device.allow_medic">
-                        <label class="custom-control-label" [for]="'medicSwitch-' + i">Allow Medic</label>
-                    </div>
+                <!-- Turn this back on when fixed for MEDIC mode -->
+                <!-- <div class="card-body form-group">
+
                     <div *ngIf="device.allow_medic === true">
                         <div class="card card-body">
                             <div class="form-group">
@@ -26,7 +23,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
 
 
@@ -90,6 +87,12 @@
                                 <input class="form-control-range" id="pointScale" type="range" min="0" max="11"
                                     [value]="getScaleIndex(device.point_scale)" step="1" (input)="pointScale(i,$event.target.value)">
                                 {{convertPointScale(device.point_scale)}}
+                            </div>
+
+                            <div class="custom-control custom-switch">
+                                <input (click)="enableMedic(i)" type="checkbox" class="custom-control-input"
+                                    [id]="'medicSwitch-' + i" [checked]="device.allow_medic">
+                                <label class="custom-control-label" [for]="'medicSwitch-' + i">Allow Medic</label>
                             </div>
 
                         </div>
