@@ -10,14 +10,21 @@
                 class="card user-card">
 
                 <div class="card-header">
-                    <h5>Location: {{device.location}} </h5>
+                        
+                    
+                    <h4>Location: 
+                        <select class="form-control" (change)="locationSelected($event)">
+                        <option disabled selected value> -- select an option -- </option>
+                        <option [value]="location.name" *ngFor="let location of (locationsToSet | async); let i = index">{{location.name}}</option>
+                      </select>
+                    </h4>
                     <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}} </h7><br>
                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                 </div>
 
-                <div class="card-body">
+                <div class="card-body"> 
                     
-                <div class="form-group">
+                <div  *ngIf="mode !== 'createMode'"  class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableQuery(i)" [disabled]="isQueryEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'querySwitch-' + i" [checked]="isQueryEnabled(i)">
@@ -35,7 +42,7 @@
                 </div>
 
 
-                <div class="form-group">
+                <div *ngIf="mode !== 'createMode'" class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableRegister(i)" [disabled]="isRegisterEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'registerSwitch-' + i" [checked]="isRegisterEnabled(i)">
@@ -49,7 +56,7 @@
                     </div>
                 </div>
 
-
+                
                 <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableBomb(i)" [disabled]="isBombEnabled(i)" type="checkbox" class="custom-control-input"
