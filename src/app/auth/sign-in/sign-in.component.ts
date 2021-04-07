@@ -21,7 +21,7 @@ export class SignInComponent implements OnInit {
     private userSvc: UserServiceService,
     private tokenStorage: TokenStorageService,
     private router: Router) {
-
+    
    }
 
   ngOnInit(): void {
@@ -42,7 +42,7 @@ export class SignInComponent implements OnInit {
     this.login.controls['fieldName'].disable();
   }
 
-
+  
   fieldSignIn() {
     let fieldSignUp = document.getElementById("fieldSignIn");
     let playerSignUp = document.getElementById("playerSignIn");

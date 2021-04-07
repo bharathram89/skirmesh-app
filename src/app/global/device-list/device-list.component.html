@@ -1,0 +1,137 @@
+<div class="container">
+    <div class="">
+        <div class="center-cust row">
+            <div *ngFor="let device of (devices | async) | paginate: { itemsPerPage: 4, currentPage: p }; let i = index"
+                class="card user-card">
+
+                <div class="card-header">
+                    <h5>Location: {{device.location}} </h5>
+                    <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}} </h7><br>
+                    <h7>Device ID: {{device.id}}</h7>
+                </div>
+
+                <div class="card-body form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableMedic(i)" type="checkbox" class="custom-control-input"
+                            [id]="'medicSwitch-' + i" [checked]="device.allow_medic">
+                        <label class="custom-control-label" [for]="'medicSwitch-' + i">Allow Medic</label>
+                    </div>
+                    <div *ngIf="device.allow_medic === true">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="medTime">Medic Time</label>
+                                <input class="form-control-range" id="medTime" type="range" min="0" max="32"
+                                    [value]="device.med_time" step="1" (input)="medicTime(i,$event.target.value)">
+                                {{convertTime(device.med_time)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="card-body form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableBomb(i)" [disabled]="isBombEnabled(i)" type="checkbox" class="custom-control-input"
+                            [id]="'bombSwitch-' + i" [checked]="isBombEnabled(i)">
+                        <label class="custom-control-label" [for]="'bombSwitch-' + i">Bomb Mode</label>
+                    </div>
+                    <div *ngIf="isBombEnabled(i)">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="armTime">Arm Time</label>
+                                <input class="form-control-range" id="armTime" type="range" min="0" max="11"
+                                    [value]="device.arm_time" step="1" (input)="armTime(i,$event.target.value)">
+                                {{convertTime(device.arm_time)}}
+                            </div>
+                            <div class="form-group">
+                                <label for="blastTime">Fuse Timer</label>
+                                <input class="form-control-range" id="blastTime" type="range" min="0" max="32"
+                                    [value]="device.bomb_time" step="1" (input)="bombTime(i,$event.target.value)">
+                                {{convertTime(device.bomb_time)}}
+                            </div>
+                            <div class="form-group">
+                                <label for="difuseTime">Diffuse Time</label>
+                                <input class="form-control-range" id="difuseTime" type="range" min="0" max="11"
+                                    [value]="device.diff_time" step="1" (input)="difuseTime(i,$event.target.value)">
+                                {{convertTime(device.diff_time)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="card-body form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableCapture(i)" [disabled]="isCaptureEnabled(i)" type="checkbox" class="custom-control-input"
+                            [id]="'captureSwitch-' + i" [checked]="isCaptureEnabled(i)">
+                        <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture Mode</label>
+                    </div>
+                    <div *ngIf="isCaptureEnabled(i)">
+                        <div class="card card-body">
+
+                            <div class="form-group">
+                                <label for="captime">Stabilization Time</label>
+                                <input class="form-control-range" id="captime" type="range" min="0" max="32"
+                                    [value]="device.cap_time" step="1" (input)="capTime(i,$event.target.value)">
+                                {{convertTime(device.cap_time)}}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="capasst">Capture Assist</label>
+                                <input class="form-control-range" id="capasst" type="range" min="0" max="8"
+                                    [value]="device.cap_asst" step="1" (input)="capasst(i,$event.target.value)">
+                                {{convertPerc(device.cap_asst)}} %
+                            </div>
+
+                            <div class="card-body form-group">
+                                <label for="pointScale">Point Scale</label>
+                                <input class="form-control-range" id="pointScale" type="range" min="0" max="11"
+                                    [value]="device.point_scale" step="1" (input)="pointScale(i,$event.target.value)">
+                                {{convertPointScale(device.point_scale)}}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+        <div class="row center-cust ">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!--
+//below are constants
+address: "0013A20041A66B3F"
+id: 7
+//below change per game
+location: null
+gameActions: []
+gameID: null
+//below can change anytime during game
+point_scale: 60 -range
+allow_medic: true - switch
+med_time: 3 -range
+where is allow_bomb to show the node is a bomb?
+arm_time: 1 - range
+bomb_status: 189 ??? what is this for?
+bomb_time: 18 - range
+diff_time: 12 - range
+where is allow_capture to show the node is a capture point?
+cap_asst: 20 -range
+cap_time: 1 - range
+config: 10 ?
+stable: 1 -range? is this how long it take to be stable?
+fieldProfileID: 1
+lastChange: "Sun, 04 Apr 2021 17:40:43 GMT"
+creationDate: "Sat, 27 Mar 2021 00:35:08 GMT"
+deactivated: null
+team: "3333cc"
+teamID: null -->

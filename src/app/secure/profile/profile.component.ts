@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit {
         } else if (this.isPlayer) {
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-          this.currentVals.callSign = userData.playerProfile.callSign ? userData.playerProfile.callSign : 'Whats your callsign?';
+          this.currentVals.callSign = userData.playerProfile.callSign ? userData.playerProfile.callSign : 'Whats your callsign!';
         }
         this.currentVals.fName = userData.firstName ? userData.firstName : 'First Name';
         this.currentVals.lName = userData.lastName ? userData.lastName : 'Last Name';
