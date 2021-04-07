@@ -1,6 +1,11 @@
 <div class="container">
     <div class="">
+
+        <div class="row center-cust ">
+            Locations To Set: [<div *ngFor="let location of (locationsToSet | async); let i = index"><a class="badge badge-pill badge-light">{{ location.name }} </a></div>]
+        </div>
         <div class="center-cust row">
+
             <div *ngFor="let device of (devices | async) | paginate: { itemsPerPage: 4, currentPage: p }; let i = index"
                 class="card user-card">
 
@@ -10,8 +15,9 @@
                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                 </div>
 
-
-                <div class="card-body form-group">
+                <div class="card-body">
+                    
+                <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableQuery(i)" [disabled]="isQueryEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'querySwitch-' + i" [checked]="isQueryEnabled(i)">
@@ -20,7 +26,7 @@
                 </div>
 
 
-                <div class="card-body form-group">
+                <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableMedic(i)" [disabled]="isMedicEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'medicSwitch-' + i" [checked]="isMedicEnabled(i)">
@@ -29,7 +35,7 @@
                 </div>
 
 
-                <div class="card-body form-group">
+                <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableRegister(i)" [disabled]="isRegisterEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'registerSwitch-' + i" [checked]="isRegisterEnabled(i)">
@@ -44,7 +50,7 @@
                 </div>
 
 
-                <div class="card-body form-group">
+                <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableBomb(i)" [disabled]="isBombEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'bombSwitch-' + i" [checked]="isBombEnabled(i)">
@@ -58,12 +64,14 @@
                                     [value]="getTimeIndex(device.arm_time)" step="1" (input)="armTime(i,$event.target.value)">
                                 {{convertTime(device.arm_time)}}
                             </div>
+                            <hr>
                             <div class="form-group">
                                 <label for="blastTime">Fuse Timer</label>
                                 <input class="form-control-range" id="blastTime" type="range" min="0" max="32"
                                     [value]="getTimeIndex(device.bomb_time)" step="1" (input)="bombTime(i,$event.target.value)">
                                 {{convertTime(device.bomb_time)}}
                             </div>
+                            <hr>
                             <div class="form-group">
                                 <label for="difuseTime">Diffuse Time</label>
                                 <input class="form-control-range" id="difuseTime" type="range" min="0" max="11"
@@ -76,7 +84,7 @@
 
 
 
-                <div class="card-body form-group">
+                <div class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableCapture(i)" [disabled]="isCaptureEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'captureSwitch-' + i" [checked]="isCaptureEnabled(i)">
@@ -91,21 +99,21 @@
                                     [value]="getTimeIndex(device.cap_time)" step="1" (input)="capTime(i,$event.target.value)">
                                 {{convertTime(device.cap_time)}}
                             </div>
-
+                            <hr>
                             <div class="form-group">
                                 <label for="capasst">Capture Assist</label>
                                 <input class="form-control-range" id="capasst" type="range" min="0" max="8"
                                     [value]="getPercIndex(device.cap_asst)" step="1" (input)="capasst(i,$event.target.value)">
                                 {{convertPerc(device.cap_asst)}} %
                             </div>
-
-                            <div class="card-body form-group">
+                            <hr>
+                            <div class="form-group">
                                 <label for="pointScale">Point Scale</label>
                                 <input class="form-control-range" id="pointScale" type="range" min="0" max="11"
                                     [value]="getScaleIndex(device.point_scale)" step="1" (input)="pointScale(i,$event.target.value)">
                                 {{convertPointScale(device.point_scale)}}
                             </div>
-
+                            <hr>
                             <div class="custom-control custom-switch">
                                 <input (click)="enableAllowMedic(i)" type="checkbox" class="custom-control-input"
                                     [id]="'allowMedicSwitch-' + i" [checked]="device.allow_medic">
@@ -116,6 +124,7 @@
                     </div>
                 </div>
 
+                </div>
 
             </div>
 

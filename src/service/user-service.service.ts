@@ -14,6 +14,7 @@ export class UserServiceService {
   isField:boolean=false;
   isPlayer:boolean=false;
   token;
+  fieldProfile: BehaviorSubject<any>;
   constructor(
     tokenService: TokenStorageService
   ) {
@@ -21,10 +22,12 @@ export class UserServiceService {
     this.signedIn = new BehaviorSubject(false);
     this.userType = new BehaviorSubject('');
     this.userData = new BehaviorSubject({});
+    this.fieldProfile = new BehaviorSubject({});
   }
   setUserData(userData){
     if(userData.user.type=='field'){
       this.isField = true;
+      this.fieldProfile.next(userData.user.fieldProfiles[0]);// set field profile to first by default for now
     }else if (userData.user.type =='player'){
       this.isPlayer = true;
     }
@@ -32,6 +35,9 @@ export class UserServiceService {
     this.userType.next(userData.user.type);
     this.userData.next(userData.user)
     this.tokenSvc.saveToken(userData.token)
+  }
+  getFieldProfile(){
+    return this.fieldProfile;
   }
   setSignIn(val: boolean) {
     this.signedIn.next(val);
