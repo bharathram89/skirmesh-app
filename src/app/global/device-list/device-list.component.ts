@@ -28,8 +28,10 @@ export class DeviceListComponent implements OnInit {
 
 
   @Input() config;
- 
+  mode:String;
   locationsToSet: BehaviorSubject<any>;
+  setLocation: BehaviorSubject<any>;
+  leftLocations: BehaviorSubject<any>;
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
@@ -38,6 +40,7 @@ export class DeviceListComponent implements OnInit {
     this.tokenSvc = tokenService;
     this.devices  = new BehaviorSubject({});
     this.locationsToSet  = new BehaviorSubject({});
+    this.setLocation  = new BehaviorSubject({});
   }
 
 
@@ -47,6 +50,7 @@ export class DeviceListComponent implements OnInit {
       modeConfig=>{
         this.userSvc.getUserData().subscribe(userData => {
           console.log(modeConfig,"config",userData.fieldProfiles[0].devices)
+          this.mode = modeConfig.mode;
           if(modeConfig.mode == 'createMode'){
             this.locationsToSet.next(modeConfig.location);
             // this.devices = new Array
@@ -56,10 +60,21 @@ export class DeviceListComponent implements OnInit {
         })
         
       }
-    )
-    
+    ) 
   }
+  locationSelected(e){
+    //e.target.value
+    this.locationsToSet.subscribe(currentLocationList=>{
+      console.log(e.target.value,currentLocationList)
+      this.setLocation.next(currentLocationList.filter(list=>{
+          list['name']==e.target.value
+        }))
+      // this.locationsToSet.next(currentLocationList.filter(list=>{
+      //   list['name']==e.target.value
+      // }))
+    }) 
 
+  }
   pointScale(index,value){
 
     var int_map = [0x0f,0x14,0x1e,0x28,0x30,0x3c,
