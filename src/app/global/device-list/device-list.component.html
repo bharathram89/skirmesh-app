@@ -22,9 +22,9 @@
                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                 </div>
 
-                <div class="card-body">
+                <div class="card-body"> 
                     
-                <div  *ngIf="mode == 'createMode'"  class="form-group">
+                <div  *ngIf="mode !== 'createMode'"  class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableQuery(i)" [disabled]="isQueryEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'querySwitch-' + i" [checked]="isQueryEnabled(i)">
@@ -42,7 +42,7 @@
                 </div>
 
 
-                <div *ngIf="mode == 'createMode'" class="form-group">
+                <div *ngIf="mode !== 'createMode'" class="form-group">
                     <div class="custom-control custom-switch">
                         <input (click)="enableRegister(i)" [disabled]="isRegisterEnabled(i)" type="checkbox" class="custom-control-input"
                             [id]="'registerSwitch-' + i" [checked]="isRegisterEnabled(i)">
