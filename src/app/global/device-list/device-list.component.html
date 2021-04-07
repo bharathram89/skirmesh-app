@@ -10,20 +10,6 @@
                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                 </div>
 
-                <!-- Turn this back on when fixed for MEDIC mode -->
-                <!-- <div class="card-body form-group">
-
-                    <div *ngIf="device.allow_medic === true">
-                        <div class="card card-body">
-                            <div class="form-group">
-                                <label for="medTime">Medic Time</label>
-                                <input class="form-control-range" id="medTime" type="range" min="0" max="32"
-                                    [value]="getTimeIndex(device.med_time)" step="1" (input)="medicTime(i,$event.target.value)">
-                                {{convertTime(device.med_time)}}
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
                 <div class="card-body form-group">
                     <div class="custom-control custom-switch">
