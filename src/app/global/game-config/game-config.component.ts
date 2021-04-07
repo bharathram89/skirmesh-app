@@ -14,7 +14,7 @@ export class GameConfigComponent implements OnInit {
     {
       id: 1,
       name: 'Weekend Morning Game 1',
-      numNodes: '4',
+      teams: '4',
       nodeModes: 'Capture/Medic',
       map: 'Town'
     }

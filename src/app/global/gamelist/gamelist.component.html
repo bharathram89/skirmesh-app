@@ -1,7 +1,7 @@
 <table class="table table-striped">
     <thead>
       <th>Name</th>
-      <th>Number of Nodes For Game</th>
+      <th>Teams</th>
       <th>Node Modes Enabled</th>
       <th>Map</th>
       <th></th>
@@ -10,7 +10,7 @@
     <tbody>
       <tr *ngFor="let p of gamemodes">
         <td>{{ p.name }}</td>
-        <td>{{ p.numNodes }}</td>
+        <td>{{ p.teams }}</td>
         <td>{{ p.nodeModes }}</td>
         <td>{{ p.map }}</td>
         <td><button class="btn btn-sm btn-default" (click)="editMode.emit(p)">Edit</button></td>
