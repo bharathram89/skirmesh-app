@@ -9,6 +9,8 @@ import { UserServiceService } from 'src/service/user-service.service';
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss']
 })
+
+
 export class DeviceListComponent implements OnInit {
   p: number = 1;
 
@@ -20,6 +22,12 @@ export class DeviceListComponent implements OnInit {
   captureEnable:boolean;
   bombEnable:boolean;
 
+  REGISTER = 0x01;
+  QUERY    = 0x02;
+  PAIR_UID = 0x03;
+  CAPTURE  = 0x0A;
+  MEDIC    = 0x0E;
+  BOMB     = 0xBB;
 
   constructor(
     userService: UserServiceService,
@@ -111,7 +119,7 @@ export class DeviceListComponent implements OnInit {
 
   }
 
-  enableMedic(num) {
+  enableAllowMedic(num) {
     this.devices.subscribe(data=>{
       if(data[num].allow_medic){
         data[num].allow_medic = false;
@@ -122,18 +130,75 @@ export class DeviceListComponent implements OnInit {
 
   }
 
+  enableMedic(num){
+
+      this.devices.subscribe(data=>{
+        if (!this.isMedicEnabled(num)) {
+          data[num].config = this.MEDIC;
+        }
+      })
+  }
+  isMedicEnabled(num){
+
+    var configured = false;
+
+    this.devices.subscribe(data=>{
+      configured = data[num].config == this.MEDIC;
+    })
+    return configured
+  }
+
+
+  enableQuery(num){
+
+      this.devices.subscribe(data=>{
+        if (!this.isQueryEnabled(num)) {
+          data[num].config = this.QUERY;
+        }
+      })
+  }
+  isQueryEnabled(num){
+
+    var configured = false;
+
+    this.devices.subscribe(data=>{
+      configured = data[num].config == this.QUERY;
+    })
+    return configured
+  }
+
+  enableRegister(num){
+
+      this.devices.subscribe(data=>{
+        if (!this.isRegisterEnabled(num)) {
+          data[num].config = this.REGISTER;
+        }
+      })
+  }
+  isRegisterEnabled(num){
+
+    var configured = false;
+
+    this.devices.subscribe(data=>{
+      configured = data[num].config == this.REGISTER;
+    })
+    return configured
+  }
+
   enableBomb(num){
 
       this.devices.subscribe(data=>{
         if (!this.isBombEnabled(num)) {
-          data[num].config = 0xBB;
+          data[num].config = this.BOMB;
         }
       })
   }
   isBombEnabled(num){
+
     var configured = false;
+
     this.devices.subscribe(data=>{
-      configured = data[num].config == 0xBB;
+      configured = data[num].config == this.BOMB;
     })
     return configured
   }
@@ -142,14 +207,16 @@ export class DeviceListComponent implements OnInit {
 
     this.devices.subscribe(data=>{
       if (!this.isCaptureEnabled(num)) {
-        data[num].config = 0x0A;
+        data[num].config = this.CAPTURE;
       }
     })
   }
   isCaptureEnabled(num) {
+
     var configured = false;
+
     this.devices.subscribe(data=>{
-      configured = data[num].config == 0x0A;
+      configured = data[num].config == this.CAPTURE;
     })
 
     return configured
