@@ -19,7 +19,6 @@ export class ProfileComponent implements OnInit {
   securitySection: HTMLElement;
   settingsSection: HTMLElement;
 
-  fileToUpload: File = null;
   base64toUpload;
 
   profileForm: FormGroup;
@@ -39,17 +38,19 @@ export class ProfileComponent implements OnInit {
   isPlayer: boolean;
 
   currentVals = {
-                  firstName:    '',
-                  lastName:    '',
-                  clanTag:  '',
-                  email:    '',
-                  phone:    '',
-                  bio:      '',
-                  profile:  '',
-                  fieldName:'',
-                  callSign: '',
-                  fieldProfileID:  '',
-                  userID:  ''
+                  firstName:      '',
+                  lastName:       '',
+                  clanTag:        '',
+                  email:          '',
+                  phone:          '',
+                  bio:            '',
+                  profile:        '',
+                  fieldName:      '',
+                  callSign:       '',
+                  fieldProfileID: '',
+                  userID:         '',
+                  imageID:        '',
+                  imageData:      ''
                 }
 
 
@@ -100,11 +101,13 @@ export class ProfileComponent implements OnInit {
           this.currentVals.profile = userData.fieldProfiles[0].profile ? userData.fieldProfiles[0].profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
           this.currentVals.fieldProfileID = userData.fieldProfiles[0].id;
+          this.currentVals.imageID = userData.fieldProfiles[0].imageID;
         }
         else if (this.isPlayer) {
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
           this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
+          this.currentVals.imageID = userData.fieldProfiles[0].imageID;
         }
         this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
         this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
@@ -113,6 +116,12 @@ export class ProfileComponent implements OnInit {
 
         this.currentVals.userID = userData.id;
 
+      }
+    )
+
+    this.authSvc.getImage(this.currentVals.imageID).subscribe(
+      imageData => {
+        this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
       }
     )
   }
@@ -182,12 +191,10 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  getImage(event) {
+  getFile(event) {
 
     const fileReader = new FileReader();
     const file = event.target.files[0]
-
-    this.fileToUpload = file
 
     fileReader.addEventListener("load", function () {
       // convert image file to base64 string
@@ -206,7 +213,7 @@ export class ProfileComponent implements OnInit {
     let data  = {'user':{'id':this.currentVals.userID,
                          'fieldProfileID':this.currentVals.fieldProfileID},
                          // NEED THE IMAGE BINARY TO GO IN DATA
-                 'image':{'data':this.base64toUpload,'mimetype':this.fileToUpload.type}};
+                 'image':{'data':this.base64toUpload}};
 
 
     this.authSvc.saveImage(this.userSvc.getToken(), data);
