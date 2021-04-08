@@ -59,8 +59,6 @@ export class AuthService {
 
   saveImage(token, data) {
 
-    console.log(data);
-
     this.http.put(this.BASE + 'resources/image', data).subscribe(
       resp => { console.log(resp, "resp") },
       err => { console.log(err, "err in update image") }

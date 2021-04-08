@@ -210,9 +210,8 @@ export class ProfileComponent implements OnInit {
 
   saveImage() {
 
-    let data  = {'user':{'id':this.currentVals.userID,
-                         'fieldProfileID':this.currentVals.fieldProfileID},
-                         // NEED THE IMAGE BINARY TO GO IN DATA
+    let data  = {'user' :{'id':            this.currentVals.userID,
+                          'fieldProfileID':this.currentVals.fieldProfileID},
                  'image':{'data':this.base64toUpload}};
 
 
