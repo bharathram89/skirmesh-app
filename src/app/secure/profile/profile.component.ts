@@ -9,6 +9,7 @@ import { UserServiceService } from 'src/service/user-service.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
+
 export class ProfileComponent implements OnInit {
 
   pfNav: HTMLElement;
@@ -177,11 +178,21 @@ export class ProfileComponent implements OnInit {
     //saveProfile
   }
 
-  updateImage() {
+  getImage(event) {
 
-    let reader = new FileReader();
+    this.profileForm.value.profileImage = event.target.files[0];
 
-    this.authSvc.saveImage(this.userSvc.getToken(), this.profileForm)
+  }
+
+  saveImage() {
+
+    let image = this.profileForm.value.profileImage;
+    let data  = {'user':{'id':this.currentVals.userID,
+                         'fieldProfileID':this.currentVals.fieldProfileID},
+                         // NEED THE IMAGE BINARY TO GO IN DATA
+                 'image':{'data':image,'mimetype':image.type}};
+
+    this.authSvc.saveImage(this.userSvc.getToken(), data);
 
   }
 

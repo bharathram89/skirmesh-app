@@ -61,8 +61,10 @@ export class AuthService {
 
     console.log(data);
 
-    // this.http.put(this.BASE + 'resources/images')
-
+    this.http.put(this.BASE + 'resources/image', data).subscribe(
+      resp => { console.log(resp, "resp") },
+      err => { console.log(err, "err in update image") }
+    );
 
   }
 }
