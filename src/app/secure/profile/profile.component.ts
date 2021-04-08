@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   securitySection: HTMLElement;
   settingsSection: HTMLElement;
 
+  fileToUpload: File = null;
+
   profileForm: FormGroup;
   fields = { firstName:    '',
              lastName:     '',
@@ -180,17 +182,16 @@ export class ProfileComponent implements OnInit {
 
   getImage(event) {
 
-    this.profileForm.value.profileImage = event.target.files[0];
+    this.fileToUpload = event.target.files[0];
 
   }
 
   saveImage() {
 
-    let image = this.profileForm.value.profileImage;
     let data  = {'user':{'id':this.currentVals.userID,
                          'fieldProfileID':this.currentVals.fieldProfileID},
                          // NEED THE IMAGE BINARY TO GO IN DATA
-                 'image':{'data':image,'mimetype':image.type}};
+                 'image':{'data':this.fileToUpload,'mimetype':this.fileToUpload.type}};
 
     this.authSvc.saveImage(this.userSvc.getToken(), data);
 
