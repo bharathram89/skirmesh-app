@@ -23,13 +23,16 @@ export class AuthService {
     return this.http.post(this.BASE + 'resources/users',data,this.options)
   }
 
+
   userLogin(data){
     return this.http.post(this.BASE + 'login',data,this.options)
   }
 
+
   getUser(token){
     return this.http.get(this.BASE + 'resources/user?token='+token)
   }
+
 
   saveProfile(token, data){
 
@@ -43,7 +46,7 @@ export class AuthService {
         err => { console.log(err, "err in update field profile") }
       )
     }
-    if (Object.keys(player).length) {
+    else if (Object.keys(player).length) {
       this.http.put(this.BASE + 'resources/playerProfile', player, this.options).subscribe(
         resp => { console.log(resp, "resp") },
         err => { console.log(err, "err in update player profile") }
@@ -51,5 +54,15 @@ export class AuthService {
     }
 
     return this.http.put(this.BASE + 'resources/user?token='+token, user, this.options)
+  }
+
+
+  saveImage(token, data) {
+
+    console.log(data);
+
+    // this.http.put(this.BASE + 'resources/images')
+
+
   }
 }

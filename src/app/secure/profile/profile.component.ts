@@ -20,14 +20,15 @@ export class ProfileComponent implements OnInit {
 
   profileForm: FormGroup;
   fields = { firstName:    '',
-             lastName:    '',
-             email:    '',
-             clanTag:  '',
-             phone:    '',
-             bio:      '',
-             profile:  '',
-             fieldName:'',
-             callSign: ''
+             lastName:     '',
+             email:        '',
+             clanTag:      '',
+             phone:        '',
+             bio:          '',
+             profile:      '',
+             fieldName:    '',
+             callSign:     '',
+             profileImage: ''
            }
 
   isField: boolean;
@@ -58,28 +59,32 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.pfNav = document.getElementById('profileNav');
-    this.securityNav = document.getElementById('securityNav');
-    this.settingsNav = document.getElementById('settingsNav');
-    this.pfSection = document.getElementById('profile');
+
+    this.pfNav           = document.getElementById('profileNav');
+    this.securityNav     = document.getElementById('securityNav');
+    this.settingsNav     = document.getElementById('settingsNav');
+    this.pfSection       = document.getElementById('profile');
     this.securitySection = document.getElementById('security');
     this.settingsSection = document.getElementById('settings');
+
     this.pfSection.style.display = 'block';
-    this.isPlayer = this.userSvc.isPlayer;
-    this.isField = this.userSvc.isField;
+
+    this.isPlayer        = this.userSvc.isPlayer;
+    this.isField         = this.userSvc.isField;
 
 
     this.profileForm = new FormGroup({
 
-      "firstName": new FormControl(this.fields.firstName, [Validators.required]),
-      "lastName":  new FormControl(this.fields.lastName, [Validators.required]),
-      "email":     new FormControl(this.fields.email, [Validators.required,Validators.email]),
-      "clanTag":   new FormControl(this.fields.clanTag, []),
-      "phone":     new FormControl(this.fields.phone, []),
-      "bio":       new FormControl(this.fields.bio, []),
-      "profile":   new FormControl(this.fields.profile, []),
-      "fieldName": new FormControl(this.fields.fieldName, []),
-      "callSign":  new FormControl(this.fields.callSign, [])
+      "firstName":    new FormControl(this.fields.firstName, [Validators.required]),
+      "lastName":     new FormControl(this.fields.lastName, [Validators.required]),
+      "email":        new FormControl(this.fields.email, [Validators.required,Validators.email]),
+      "clanTag":      new FormControl(this.fields.clanTag, []),
+      "phone":        new FormControl(this.fields.phone, []),
+      "bio":          new FormControl(this.fields.bio, []),
+      "profile":      new FormControl(this.fields.profile, []),
+      "fieldName":    new FormControl(this.fields.fieldName, []),
+      "callSign":     new FormControl(this.fields.callSign, []),
+      "profileImage": new FormControl(this.fields.profileImage, [])
 
     })
 
@@ -172,5 +177,12 @@ export class ProfileComponent implements OnInit {
     //saveProfile
   }
 
+  updateImage() {
+
+    let reader = new FileReader();
+
+    this.authSvc.saveImage(this.userSvc.getToken(), this.profileForm)
+
+  }
 
 }
