@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
   settingsSection: HTMLElement;
 
   fileToUpload: File = null;
+  base64toUpload;
 
   profileForm: FormGroup;
   fields = { firstName:    '',
@@ -180,9 +181,23 @@ export class ProfileComponent implements OnInit {
     //saveProfile
   }
 
+
   getImage(event) {
 
-    this.fileToUpload = event.target.files[0];
+    const fileReader = new FileReader();
+    const file = event.target.files[0]
+
+    this.fileToUpload = file
+
+    fileReader.addEventListener("load", function () {
+      // convert image file to base64 string
+      this.base64toUpload = fileReader.result;
+      // console.log(this.base64toUpload);
+    }.bind(this), false);
+
+    if (file) {
+      fileReader.readAsDataURL(file);
+    }
 
   }
 
@@ -191,7 +206,8 @@ export class ProfileComponent implements OnInit {
     let data  = {'user':{'id':this.currentVals.userID,
                          'fieldProfileID':this.currentVals.fieldProfileID},
                          // NEED THE IMAGE BINARY TO GO IN DATA
-                 'image':{'data':this.fileToUpload,'mimetype':this.fileToUpload.type}};
+                 'image':{'data':this.base64toUpload,'mimetype':this.fileToUpload.type}};
+
 
     this.authSvc.saveImage(this.userSvc.getToken(), data);
 
