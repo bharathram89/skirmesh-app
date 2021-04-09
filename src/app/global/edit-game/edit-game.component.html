@@ -14,13 +14,13 @@
 
   <table class="table table-bordered" formArrayName="teams">
     <tr>
-      <th colspan="2">Add Multiple Quantity:</th>
+      <th colspan="2">Add Multiple Teams:</th>
       <th width="150px"><button type="button" (click)="addTeam()" class="btn btn-primary">Add More</button></th>
     </tr>
     <div >
-      <tr *ngFor="let team of teams.controls; let i=index" [formGroupName]="i" >
+      <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i" >
         <td>
-            Name :{{i}} {{teams.controls[0].value.name}}
+            Name :{{i}} {{teams.controls[1].value.name}}{{team.value.name}}
             <input type="text" formControlName="name"  class="form-control">
         </td>
         <td>

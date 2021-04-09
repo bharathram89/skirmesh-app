@@ -68,21 +68,18 @@ export class EditGameComponent implements OnInit {
     return this.gameModeForm.get("teams") as FormArray
   }
    
-  newTeam(): FormControl {
-    return this.fb.control({
+  newTeam(): FormGroup {
+    return this.fb.group({
      name:'kl',
      color:'mk'
     })
   }
   
-  addTeam() {
-    // this.teams.setValue([this.newTeam()])
-
-    // this.teams = this.gameModeForm.get('teams') as FormArray;
-    // this.teams.push(this.newTeam());
-    // // this.teams.controls.push(this.newTeam())
-    // // this.teams.push(this.newTeam())
-    // console.log(this.teams.value)
+  addTeam() { 
+    // let newTm = this.newTeam();
+    // newTm.setValue({name:'val',color:'col'})
+    this.teams.push(this.newTeam());
+    // this.gameModeForm.get('teams')
   }
   removeTeam(i:number) {
     // this.teams.removeAt(i);
@@ -118,7 +115,7 @@ export class EditGameComponent implements OnInit {
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
-      teams: [{name:'val',color:'val2'},{name:'val',color:'val2'}],
+      teams: [{name:'val',color:'col'},{name:'val2',color:'col2'}],
       nodeModes: this.gameMode.nodeModes || '',
       map: this.gameMode.map || ''
     });
