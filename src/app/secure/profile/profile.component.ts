@@ -199,7 +199,7 @@ export class ProfileComponent implements OnInit {
     fileReader.addEventListener("load", function () {
       // convert image file to base64 string
       this.base64toUpload = fileReader.result;
-      console.log(event);
+      document.getElementById('profileImage').setAttribute("src", this.base64toUpload)
       // console.log(this.base64toUpload);
     }.bind(this), false);
 
