@@ -7,10 +7,28 @@
 .center-cust{
     justify-content: center;
     text-align: center;
-  }
-  .cust_btn{
-    margin: 10px;
-  }
-  .color-picker{
-    margin: 5px;
-  }
+}
+
+.cust_btn{
+  margin: 10px;
+}
+
+.color-picker{
+  margin: 5px;
+}
+
+.table-bordered{
+  border: none;
+}
+
+.table-bordered td{
+  border: none;
+}
+
+.table td{
+  vertical-align: middle;
+}
+
+.btn.btn-primary {
+  float: right;
+}

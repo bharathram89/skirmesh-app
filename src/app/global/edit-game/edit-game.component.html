@@ -7,15 +7,15 @@
   <div class="form-group">
     <label for="map">Map</label>
     <select formControlName="map" class="form-control" (change)="changeMap($event)">
-      <option disabled selected value> -- select an option -- </option>
+      <option disabled selected value> -- Select your Map -- </option>
       <option [value]="map.name" *ngFor="let map of maps">{{map.name}}</option>
     </select>
   </div>
 
   <table class="table table-bordered" formArrayName="teams">
     <tr>
-      <th colspan="2">Add Multiple Teams:</th>
-      <th width="150px"><button type="button" (click)="addTeam()" class="btn btn-primary">Add More</button></th>
+      <th colspan="2">Assemble the Teams: &nbsp; &nbsp;<button type="button" (click)="addTeam()" class="btn btn-primary">Add More</button></th>
+      <!-- <th width="150px"></th> -->
     </tr>
     <div >
       <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i" >
@@ -34,7 +34,7 @@
     </div>
 
   </table>
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label for="nodeModes">Setup Nodes:</label>
 
     <br>
@@ -43,7 +43,7 @@
       <input disabled type="text" class="form-control" id="nodeModes" placeholder="Node Config:"
         formControlName="nodeModes">
     </div>
-  </div>
+  </div> -->
 
 
   <!-- <div class="form-group">
@@ -51,7 +51,7 @@
     <input type="text" class="form-control" id="teams" placeholder="teams" formControlName="teams">
   </div> -->
   <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
-    to Edit</button> &nbsp; <button type="submit" class="btn btn-primary">Save</button>
+    to Edit Device Configurations</button> &nbsp; <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
