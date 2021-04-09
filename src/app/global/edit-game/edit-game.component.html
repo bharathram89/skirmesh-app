@@ -50,7 +50,8 @@
     <label for="teams">Teams</label>
     <input type="text" class="form-control" id="teams" placeholder="teams" formControlName="teams">
   </div> -->
-  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
+    to Edit</button> &nbsp; <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
