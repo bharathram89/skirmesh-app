@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -13,20 +13,29 @@ export class EditGameComponent implements OnInit {
   gameModeForm: FormGroup;
   maps:[];
   locations:[];
+  values = [];
   // deviceListConfigs;
   isMapSelected:boolean=false;
   @Input() gameMode;
-
  deviceListConfigs :BehaviorSubject<any>;
-
+ arrayInputs = [{name : ['a',Validators.required]}, {color: ['b',Validators.required]}];
   @Output() saveGameMode = new EventEmitter<any>();
   userSvc:UserServiceService;
-  gameModeFrm={id:'',name:'',teams:'',nodeModes:'',map:''}
+  gameModeFrm={id:'',name:'',teams:[],nodeModes:'',map:'',quantities:[]}
+
+  orderForm: FormGroup;
+  // teams: FormArray;
+
+
+
+
   constructor(private fb: FormBuilder,
     private authSvc: AuthService,
     private userService: UserServiceService, ) {
       this.deviceListConfigs =new BehaviorSubject({});
       this.userSvc =userService;
+
+
     this.gameModeForm = this.fb.group({
       id: new FormControl(this.gameModeFrm.id, [
         Validators.required
@@ -34,24 +43,51 @@ export class EditGameComponent implements OnInit {
       name: new FormControl(this.gameModeFrm.name, [
         Validators.required
       ]),
-      teams: new FormControl(this.gameModeFrm.teams, [
-        Validators.required
-      ]),
+      teams: this.fb.array([this.newTeam(),this.newTeam()]),
+      
       nodeModes: new FormControl(this.gameModeFrm.nodeModes, [
         Validators.required
       ]),
       map:new FormControl(this.gameModeFrm.map, [
         Validators.required
-      ]),
+      ])
     });
     this.userSvc.getFieldProfile().subscribe(data=>{
       this.maps = data.maps;
     })
     this.deviceListConfigs.next({
       mode:"createMode"
-    })
-   
+    }) 
+    // this.teams.patchValue(
+    //   [this.newTeam()])
+    // this.gameModeForm.get('teams').patchValue()
+    // this.values.push(this.gameModeForm.get('teams') as FormArray)
   }
+
+  get teams() : FormArray {
+    return this.gameModeForm.get("teams") as FormArray
+  }
+   
+  newTeam(): FormControl {
+    return this.fb.control({
+     name:'kl',
+     color:'mk'
+    })
+  }
+  
+  addTeam() {
+    // this.teams.setValue([this.newTeam()])
+
+    // this.teams = this.gameModeForm.get('teams') as FormArray;
+    // this.teams.push(this.newTeam());
+    // // this.teams.controls.push(this.newTeam())
+    // // this.teams.push(this.newTeam())
+    // console.log(this.teams.value)
+  }
+  removeTeam(i:number) {
+    // this.teams.removeAt(i);
+  }
+
   changeMap(e){
     this.gameModeForm.controls['map'].setValue(e.target.value)
     this.locations = this.maps.find(locs=>{
@@ -76,10 +112,13 @@ export class EditGameComponent implements OnInit {
     document.getElementById("exampleModal").className += document.getElementById("exampleModal").className.replace("show", "")
   }
   ngOnInit() {
-    this.gameModeForm.setValue({
+    // this.teams.setValue([{name:'val',color:'val2'},{name:'val',color:'val2'}])
+    // console.log(this.gameModeForm.get('teams')['controls'])
+    // this.setArrayInputs(this.arrayInputs) 
+    this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
-      teams: this.gameMode.teams || '',
+      teams: [{name:'val',color:'val2'},{name:'val',color:'val2'}],
       nodeModes: this.gameMode.nodeModes || '',
       map: this.gameMode.map || ''
     });
