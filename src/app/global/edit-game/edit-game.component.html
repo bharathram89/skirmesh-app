@@ -14,7 +14,7 @@
 
   <table class="table table-bordered" formArrayName="teams">
     <tr>
-      <th colspan="2">Assemble the Teams: &nbsp; &nbsp;<button type="button" (click)="addTeam()" class="btn btn-primary">Add More</button></th>
+      <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">Add More</button></th>
       <!-- <th width="150px"></th> -->
     </tr>
     <div >
@@ -51,7 +51,9 @@
     <input type="text" class="form-control" id="teams" placeholder="teams" formControlName="teams">
   </div> -->
   <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
-    to Edit Device Configurations</button> &nbsp; <button type="submit" class="btn btn-primary">Save</button>
+    to Edit Device Configurations</button>
+    <br/>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
@@ -59,7 +61,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Configure your nodes for this game mode</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Configure nodes for this game mode.</h5>
         <button type="button" class="close" aria-label="Close" (click)="closeModal()">
           <span aria-hidden="true">×</span>
         </button>

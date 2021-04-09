@@ -26,11 +26,18 @@
 }
 
 .table td{
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 .btn.btn-primary {
+  margin: 1rem 0 0 0;
+}
+.btn.btn-secondary {
+  margin: 1rem 1rem 0 0;
+}
+.btn.btn-primary.keepRight {
   float: right;
+  margin: 0;
 }
 
 .btn.btn-success.cust_btn {

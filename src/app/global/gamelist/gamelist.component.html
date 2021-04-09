@@ -1,20 +1,20 @@
 <table class="table table-striped">
     <thead>
       <th>Name</th>
-      <th>Teams</th>
+      <!-- <th>Teams</th>
       <th>Node Modes Enabled</th>
-      <th>Map</th>
+      <th>Map</th> -->
       <th></th>
       <th></th>
     </thead>
     <tbody>
       <tr *ngFor="let p of gamemodes">
         <td>{{ p.name }}</td>
-        <td>{{ p.teams }}</td>
+        <!-- <td>{{ p.teams }}</td>
         <td>{{ p.nodeModes }}</td>
-        <td>{{ p.map }}</td>
-        <td><button class="btn btn-sm btn-default" (click)="editMode.emit(p)">Edit</button></td>
-        <td><button class="btn btn-sm btn-default" (click)="deleteMode.emit(p)">Delete</button></td>
+        <td>{{ p.map }}</td> -->
+        <td><button class="btn btn-sm btn-default btn-primary" (click)="editMode.emit(p)">Edit</button></td>
+        <td><button class="btn btn-sm btn-default btn-danger" (click)="deleteMode.emit(p)">Delete</button></td>
       </tr>
     </tbody>
   </table>

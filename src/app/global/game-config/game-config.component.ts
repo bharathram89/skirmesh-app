@@ -7,8 +7,8 @@ import { TabsComponent } from '../tabs/tabs.component';
   styleUrls: ['./game-config.component.scss']
 })
 export class GameConfigComponent implements OnInit {
-  
-  @ViewChild('gameModeEdit') editModeTemplate; 
+
+  @ViewChild('gameModeEdit') editModeTemplate;
   @ViewChild(TabsComponent) tabsComponent;
   gameModes = [
     {
@@ -23,8 +23,8 @@ export class GameConfigComponent implements OnInit {
 
   ngOnInit(): void {
     // this.savedGames.push({name:"Salina",numDevice:13,nodeTypes:"Bomb/Medic/Capture"})
-  } 
-  
+  }
+
   onDeleteMode(gameMode){
     console.log(gameMode,"options")
     this.gameModes = this.gameModes.filter(function( obj ) {
@@ -62,6 +62,6 @@ export class GameConfigComponent implements OnInit {
     // close the tab
     this.tabsComponent.closeActiveTab();
   }
- 
+
 
 }
