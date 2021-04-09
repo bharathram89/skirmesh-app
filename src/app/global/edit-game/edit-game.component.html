@@ -12,6 +12,28 @@
     </select>
   </div>
 
+  <table class="table table-bordered" formArrayName="teams">
+    <tr>
+      <th colspan="2">Add Multiple Teams:</th>
+      <th width="150px"><button type="button" (click)="addTeam()" class="btn btn-primary">Add More</button></th>
+    </tr>
+    <div >
+      <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i" >
+        <td>
+            Name :{{i}} {{teams.controls[1].value.name}}{{team.value.name}}
+            <input type="text" formControlName="name"  class="form-control">
+        </td>
+        <td>
+            Color:
+            <input type="text" formControlName="color" class="form-control">
+        </td>
+        <td>
+            <button (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
+        </td>
+      </tr>
+    </div>
+
+  </table>
   <div class="form-group">
     <label for="nodeModes">Setup Nodes:</label>
 
@@ -24,12 +46,11 @@
   </div>
 
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label for="teams">Teams</label>
     <input type="text" class="form-control" id="teams" placeholder="teams" formControlName="teams">
-  </div>
-  <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
-    to Edit</button> &nbsp; <button type="submit" class="btn btn-primary">Save</button>
+  </div> -->
+  <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
