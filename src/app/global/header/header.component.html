@@ -1,11 +1,16 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
     <div class="container-fluid">
+
+      <!-- <div id="particles-js" onload="particlesJS(this.id)"> </div> -->
+
         <button class="navbar-toggler" type="button" (click)="openMenu()" aria-controls="navbarTogglerDemo03"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
             alt="user" />
+
         <div class="collapse navbar-collapse" id="navdrop">
 
             <!-- NON SECURE LINKS DURING SECURE SESSION -->
@@ -77,9 +82,6 @@
                 </li>
             </ul>
 
-
-
-
             <!-- SIGN-IN / SIGN-OUT -->
             <ul class="navbar-nav my-2 my-lg-0" *ngIf="!isSecure">
                 <div class="form-inline">
@@ -89,7 +91,6 @@
                 </div>
 
             </ul>
-
 
             <ul class="navbar-nav my-2 my-lg-0" *ngIf="isSecure">
                 <div class="form-inline my-2 my-lg-0">
@@ -101,11 +102,6 @@
             <!-- </ul> -->
         </div>
 
-
-
-
-
-
-
     </div>
+
 </nav>
