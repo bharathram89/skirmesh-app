@@ -24,6 +24,7 @@ export class EditGameComponent implements OnInit {
   values = [];
   // deviceListConfigs;
   isMapSelected:boolean=false;
+  configSet:boolean=false;
   @Input() gameMode;
  deviceListConfigs :BehaviorSubject<any>;
  arrayInputs = [{name : ['a',Validators.required]}, {color: ['b',Validators.required]}];
@@ -120,10 +121,10 @@ export class EditGameComponent implements OnInit {
         return locs['locations'];
       }
     })
-    this.deviceListConfigs.next({
-      mode:"createMode",
-      location:this.locations['locations']
-    })
+    // this.deviceListConfigs.next({
+    //   mode:"createMode",
+    //   location:this.locations['locations']
+    // })
     this.isMapSelected=true;
   }
   changeColor(e,i){
@@ -132,6 +133,13 @@ export class EditGameComponent implements OnInit {
      this.color.next(color)
   }
   setNodes(){
+
+    console.log(this.gameModeForm.get('teams')['controls'][0].value)
+    this.deviceListConfigs.next({
+      mode:"createMode",
+      location:this.locations['locations'],
+      teams:this.gameModeForm.get('teams')['controls']
+    })
     // document.getElementById("backdrop").style.display = "block"
     document.getElementById("exampleModal").style.display = "block"
     document.getElementById("exampleModal").className += "show"

@@ -32,6 +32,7 @@ export class DeviceListComponent implements OnInit {
   locationsToSet: BehaviorSubject<any>;
   setLocation: BehaviorSubject<any>;
   leftLocations: BehaviorSubject<any>;
+  teamsAvaliable: BehaviorSubject<any>;
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
@@ -41,6 +42,7 @@ export class DeviceListComponent implements OnInit {
     this.devices  = new BehaviorSubject({});
     this.locationsToSet  = new BehaviorSubject({});
     this.setLocation  = new BehaviorSubject({});
+    this.teamsAvaliable = new BehaviorSubject([])
   }
 
 
@@ -53,6 +55,15 @@ export class DeviceListComponent implements OnInit {
           this.mode = modeConfig.mode;
           if(modeConfig.mode == 'createMode'){
             this.locationsToSet.next(modeConfig.location);
+            if(modeConfig.teams){
+              const teams = [];
+              modeConfig.teams.forEach(element => {
+                console.log(element,element.value.name)
+                teams.push({'name':element.value.name})
+              });
+              this.teamsAvaliable.next(teams)
+            }
+           
             // this.devices = new Array
             //devices = turned off.   
           }

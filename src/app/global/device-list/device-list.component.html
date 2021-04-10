@@ -1,9 +1,12 @@
 <div class="container">
     <div class="">
 
-        <!-- <div class="row center-cust ">
+        <div class="row center-cust ">
             Locations To Set: [<div *ngFor="let location of (locationsToSet | async); let i = index"><a class="badge badge-pill badge-light">{{ location.name }} </a></div>]
-        </div> -->
+        </div>
+        <div class="row center-cust ">
+            Teams Avaliable To Set: [<div *ngFor="let team of (teamsAvaliable | async); let x = index"><a class="badge badge-pill badge-light">{{ team.name }} </a></div>]
+        </div>
         <div class="center-cust row">
 
             <div *ngFor="let device of (devices | async) | paginate: { itemsPerPage: 4, currentPage: p }; let i = index"

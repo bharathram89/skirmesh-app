@@ -14,55 +14,37 @@
 
   <table class="table table-bordered" formArrayName="teams">
     <tr>
-      <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">Add More</button></th>
+      <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">Add
+          More</button></th>
       <!-- <th width="150px"></th> -->
     </tr>
-    <div style="max-width:80%" >
-      <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i" >
+    <div style="max-width:80%">
+      <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
         <td>
-            Name :
-            <input type="text" formControlName="name"  class="form-control">
+          Name :
+          <input type="text" formControlName="name" class="form-control">
         </td>
         <td>
-            Color:
-            <br>
-            <select  [ngModel]="i" class="form-control" formControlName="color" [id]="'colorPicker'+i" (change)="changeColor($event)">
-              <option disabled selected value> -- select an option -- </option>
-              <option [style.background-color]="color.value" [value]="color.id" *ngFor="let color of colors">{{color.name}}</option>
-            </select>
-            <!-- <input formControlName="color"[style.background]="color"
-       [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"
-       [(colorPicker)]="color" [value]="color"/> -->
-      
-            <!-- <input type="text" formControlName="color" class="form-control"> -->
+          Color:
+          <br>
+          <select [ngModel]="i" class="form-control" formControlName="color" [id]="'colorPicker'+i"
+            (change)="changeColor($event)">
+
+            <option [style.background-color]="color.value" [value]="color.id" *ngFor="let color of colors">
+              {{color.name}}</option>
+          </select>
         </td>
         <td *ngIf="i > 1">
-            <button (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
+          <button (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
         </td>
       </tr>
     </div>
 
   </table>
-  <!-- <div class="form-group">
-    <label for="nodeModes">Setup Nodes:</label>
-
-    <br>
-
-    <div class="input-group">
-      <input disabled type="text" class="form-control" id="nodeModes" placeholder="Node Config:"
-        formControlName="nodeModes">
-    </div>
-  </div> -->
-
-
-  <!-- <div class="form-group">
-    <label for="teams">Teams</label>
-    <input type="text" class="form-control" id="teams" placeholder="teams" formControlName="teams">
-  </div> -->
   <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
     to Edit Device Configurations</button>
-    <br/>
-    <button type="submit" class="btn btn-primary">Save</button>
+  <br />
+  <button type="submit" [disabled]="!isMapSelected || !configSet" class="btn btn-primary">Save</button>
 </form>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
@@ -76,7 +58,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <app-device-list [config]="deviceListConfigs" ></app-device-list>
+        <app-device-list [config]="deviceListConfigs"></app-device-list>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
