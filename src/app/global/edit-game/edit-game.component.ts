@@ -4,6 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
 
+export class ColorPalette {
+  name: string;
+  value: string;
+  foreground: string;
+  id:number
+}
+
+
 @Component({
   selector: 'app-edit-game',
   templateUrl: './edit-game.component.html',
@@ -23,9 +31,29 @@ export class EditGameComponent implements OnInit {
   userSvc:UserServiceService;
   gameModeFrm={id:'',name:'',teams:[],nodeModes:'',map:'',quantities:[]}
 
-  orderForm: FormGroup;
-  // teams: FormArray;
-
+  color:BehaviorSubject<ColorPalette>;
+  colors: ColorPalette[] = [
+    { name: 'Red', value: '#ff1744', foreground: 'white' ,id:0},
+    { name: 'Pink', value: '#ff80ab', foreground: 'black',id:1 },
+    { name: 'Purple', value: '#d500f9', foreground: 'white' ,id:2},
+    { name: 'Deep Purple', value: '#7c4dff', foreground: 'white' ,id:3},
+    { name: 'Indigo', value: '#3d5afe', foreground: 'white' ,id:4},
+    { name: 'Blue', value: '#2979ff', foreground: 'white' ,id:5},
+    { name: 'Light Blue', value: '#00b0ff', foreground: 'black',id:6 },
+    { name: 'Cyan', value: '#00e5ff', foreground: 'black' ,id:7},
+    { name: 'Teal', value: '#1de9b6', foreground: 'black' ,id:8},
+    { name: 'Green', value: '#00e676', foreground: 'black' ,id:9},
+    { name: 'Light Green', value: '#76ff03', foreground: 'black',id:10 },
+    { name: 'Lime', value: '#c6ff00', foreground: 'black' ,id:11 },
+    { name: 'Yellow', value: '#ffea00', foreground: 'black' ,id:12},
+    { name: 'Amber', value: '#ffc400', foreground: 'black' ,id:13},
+    { name: 'Orange', value: '#ff9100', foreground: 'black' ,id:14},
+    { name: 'Deep Orange', value: '#ff3d00', foreground: 'white' ,id:15},
+    { name: 'Brown', value: '#8d6e63', foreground: 'white' ,id:16},
+    { name: 'Light Gray', value: '#bdbdbd', foreground: 'black' ,id:17},
+    { name: 'Dark Gray', value: '#616161', foreground: 'white' ,id:18},
+    { name: 'Blue Gray', value: '#78909c', foreground: 'white' ,id:19}
+  ];
 
 
 
@@ -35,7 +63,7 @@ export class EditGameComponent implements OnInit {
       this.deviceListConfigs =new BehaviorSubject({});
       this.userSvc =userService;
 
-
+      this.color = new BehaviorSubject(new ColorPalette())
     this.gameModeForm = this.fb.group({
       id: new FormControl(this.gameModeFrm.id, [
         Validators.required
@@ -82,7 +110,7 @@ export class EditGameComponent implements OnInit {
     // this.gameModeForm.get('teams')
   }
   removeTeam(i:number) {
-    // this.teams.removeAt(i);
+    this.teams.removeAt(i);
   }
 
   changeMap(e){
@@ -97,6 +125,11 @@ export class EditGameComponent implements OnInit {
       location:this.locations['locations']
     })
     this.isMapSelected=true; 
+  }
+  changeColor(e,i){
+    let color = this.colors.filter(color=>{return color.name==e.target.value})[0]
+    console.log(color,e.target.value,i,'selected color')
+     this.color.next(color)
   }
   setNodes(){
     // document.getElementById("backdrop").style.display = "block"
@@ -115,7 +148,7 @@ export class EditGameComponent implements OnInit {
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
-      teams: [{name:'val',color:'col'},{name:'val2',color:'col2'}],
+      teams: [{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
       nodeModes: this.gameMode.nodeModes || '',
       map: this.gameMode.map || ''
     });
