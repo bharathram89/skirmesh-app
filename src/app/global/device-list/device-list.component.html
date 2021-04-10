@@ -17,10 +17,10 @@
                 <div class="card-header">
 
                     <h4>Location:
-                        <select class="form-control" (change)="locationSelected($event)">
+                        <select class="form-control" (change)="locationSelected($event,i)">
                             <option selected value> -- select an option -- </option>
                             <option [value]="location.name"
-                                *ngFor="let location of (locationsToSet | async); let i = index">{{location.name}}
+                                *ngFor="let location of (getLocationList(i) | async); let i = index">{{location.name}}
                             </option>
                         </select>
                     </h4>
@@ -28,7 +28,7 @@
                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                 </div>
 
-                <div class="card-body">
+                <div *ngIf="isNodeEnabled(i)" class="card-body">
 
                     <div *ngIf="mode !== 'createMode'" class="form-group">
                         <div class="custom-control custom-switch">
