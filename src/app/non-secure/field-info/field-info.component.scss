@@ -1,4 +1,4 @@
-  
+
 .custom_skirmesh{
     background-image: url('../../../assets/images/soldierB.jpg');
     min-height: 500px;
@@ -6,13 +6,13 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    
+
 }
 .container{
     margin-top: 10px;
 }
-.cust_skirmesh_board{   
-    border-radius: 6px;
+.cust_skirmesh_board{
+    // border-radius: 6px;
     background-color:  #e3d1b3;
     max-width: 1140px;
     margin-right: auto;
@@ -119,11 +119,11 @@
       color: #333;
       text-decoration: none;
   }
-  
+
   p {
       color: #3C4857;
   }
-  
+
   p {
       margin-top: 0;
       margin-bottom: 1rem;
@@ -134,7 +134,7 @@
   .blog-card .ftr .author {
       color: #888;
   }
-  
+
   .blog-card .ftr div {
       display: inline-block;
   }

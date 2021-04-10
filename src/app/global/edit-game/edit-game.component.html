@@ -7,15 +7,15 @@
   <div class="form-group">
     <label for="map">Map</label>
     <select formControlName="map" class="form-control" (change)="changeMap($event)">
-      <option disabled selected value> -- select an option -- </option>
+      <option disabled selected value> -- Select your Map -- </option>
       <option [value]="map.name" *ngFor="let map of maps">{{map.name}}</option>
     </select>
   </div>
 
   <table class="table table-bordered" formArrayName="teams">
     <tr>
-      <th colspan="2">Add Multiple Teams:</th>
-      <th width="150px"><button type="button" (click)="addTeam()" class="btn btn-primary">Add More</button></th>
+      <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">Add More</button></th>
+      <!-- <th width="150px"></th> -->
     </tr>
     <div style="max-width:80%" >
       <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i" >
@@ -41,26 +41,28 @@
         </td>
       </tr>
     </div>
-    
+
   </table>
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label for="nodeModes">Setup Nodes:</label>
-    <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
-      to Edit</button>
+
     <br>
 
     <div class="input-group">
       <input disabled type="text" class="form-control" id="nodeModes" placeholder="Node Config:"
         formControlName="nodeModes">
     </div>
-  </div>
+  </div> -->
 
 
   <!-- <div class="form-group">
     <label for="teams">Teams</label>
     <input type="text" class="form-control" id="teams" placeholder="teams" formControlName="teams">
   </div> -->
-  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="button" class="btn btn-success cust_btn" [disabled]="!isMapSelected" (click)="setNodes()">Click here
+    to Edit Device Configurations</button>
+    <br/>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
@@ -68,7 +70,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Configure your nodes for this game mode</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Configure nodes for this game mode.</h5>
         <button type="button" class="close" aria-label="Close" (click)="closeModal()">
           <span aria-hidden="true">×</span>
         </button>

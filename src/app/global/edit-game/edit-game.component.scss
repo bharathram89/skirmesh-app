@@ -7,10 +7,39 @@
 .center-cust{
     justify-content: center;
     text-align: center;
-  }
-  .cust_btn{
-    margin: 10px;
-  }
-  .color-picker{
-    margin: 5px;
-  }
+}
+
+.cust_btn{
+  margin: 10px;
+}
+
+.color-picker{
+  margin: 5px;
+}
+
+.table-bordered{
+  border: none;
+}
+
+.table-bordered td{
+  border: none;
+}
+
+.table td{
+  vertical-align: bottom;
+}
+
+.btn.btn-primary {
+  margin: 1rem 0 0 0;
+}
+.btn.btn-secondary {
+  margin: 1rem 1rem 0 0;
+}
+.btn.btn-primary.keepRight {
+  float: right;
+  margin: 0;
+}
+
+.btn.btn-success.cust_btn {
+  margin: 0;
+}

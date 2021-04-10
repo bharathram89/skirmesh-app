@@ -72,7 +72,7 @@ export class EditGameComponent implements OnInit {
         Validators.required
       ]),
       teams: this.fb.array([this.newTeam(),this.newTeam()]),
-      
+
       nodeModes: new FormControl(this.gameModeFrm.nodeModes, [
         Validators.required
       ]),
@@ -85,7 +85,7 @@ export class EditGameComponent implements OnInit {
     })
     this.deviceListConfigs.next({
       mode:"createMode"
-    }) 
+    })
     // this.teams.patchValue(
     //   [this.newTeam()])
     // this.gameModeForm.get('teams').patchValue()
@@ -95,15 +95,15 @@ export class EditGameComponent implements OnInit {
   get teams() : FormArray {
     return this.gameModeForm.get("teams") as FormArray
   }
-   
+
   newTeam(): FormGroup {
     return this.fb.group({
      name:'kl',
      color:'mk'
     })
   }
-  
-  addTeam() { 
+
+  addTeam() {
     // let newTm = this.newTeam();
     // newTm.setValue({name:'val',color:'col'})
     this.teams.push(this.newTeam());
@@ -119,12 +119,12 @@ export class EditGameComponent implements OnInit {
       if(locs['name']==e.target.value){
         return locs['locations'];
       }
-    })  
+    })
     this.deviceListConfigs.next({
       mode:"createMode",
       location:this.locations['locations']
     })
-    this.isMapSelected=true; 
+    this.isMapSelected=true;
   }
   changeColor(e,i){
     let color = this.colors.filter(color=>{return color.name==e.target.value})[0]
@@ -144,7 +144,7 @@ export class EditGameComponent implements OnInit {
   ngOnInit() {
     // this.teams.setValue([{name:'val',color:'val2'},{name:'val',color:'val2'}])
     // console.log(this.gameModeForm.get('teams')['controls'])
-    // this.setArrayInputs(this.arrayInputs) 
+    // this.setArrayInputs(this.arrayInputs)
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
