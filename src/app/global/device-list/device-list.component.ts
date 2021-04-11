@@ -28,6 +28,9 @@ export class DeviceListComponent implements OnInit {
 
 
   @Input() config;
+
+  @Output() nodeConfigs = new EventEmitter<string>();
+  @Output() modalClose = new EventEmitter<boolean>();
   mode: String;
   locationsToSet=[];
   setLocation=[];
@@ -39,12 +42,7 @@ export class DeviceListComponent implements OnInit {
     tokenService: TokenStorageService,
     private router: Router) {
     this.userSvc = userService;
-    this.tokenSvc = tokenService;
-    // this.devices = ''//new BehaviorSubject({});
-    // this.locationsToSet = new BehaviorSubject({});
-    // this.setLocation = new BehaviorSubject({});
-    // this.teamsAvaliable = new BehaviorSubject([])
-    // this.selectedLocations = new BehaviorSubject([])
+    this.tokenSvc = tokenService; 
   }
 
 
@@ -75,8 +73,13 @@ export class DeviceListComponent implements OnInit {
       }
     )
   }
-  isSelectedValue(){
+  closeModal(){
+    this.modalClose.emit(true)
   }
+  saveNodeConfigs(){
+    console.log(this.devices,"final configs")
+    this.nodeConfigs.emit(JSON.stringify(this.devices))
+  } 
   makeDeviceModals(alldevices): DeviceSettings[] {
     let arr: DeviceSettings[]=[];
     alldevices.forEach(element => {
@@ -102,16 +105,12 @@ export class DeviceListComponent implements OnInit {
   }
   getLocationList(){
     let arr=[];
-    // combineLatest([this.locationsToSet ]).subscribe(
-    //   ([locations])=>{
         this.selectedLocations
-        // console.log(locations,' locations ',setLocations)
         if(this.locationsToSet){
           this.locationsToSet.forEach(loc => {
              // setLocations.includes(loc.name)
-             console.log(loc.name,"inner",this.selectedLocations,' split ',this.selectedLocations,' split ',this.selectedLocations.indexOf(loc.name));
-             // setLocations.includes(loc.name)
-             // return setLocations.indexOf(loc.name) !== -1
+            //  console.log(loc.name,"inner",this.selectedLocations,' split ',this.selectedLocations,' split ',this.selectedLocations.indexOf(loc.name));
+ 
              if(this.selectedLocations.indexOf(loc.name) == -1){
                if(arr) {
                 arr.push({'name':loc.name, 'isDisabled': false}); 
@@ -122,20 +121,12 @@ export class DeviceListComponent implements OnInit {
               }
              }
           }); 
-          console.log(arr,"filtered list 2")
+          // console.log(arr,"filtered list 2")
         }else{
           arr = this.locationsToSet;
         }
-      
-    
-
-    console.log(arr,"filtered list")
-    // let arr = this.locationsToSet.subscribe(
-    //   locs=>{
-        
-    //     // locs.filter(loca=>{})
-    //   }
-    // )
+       
+    // console.log(arr,"filtered list") 
     return arr;
   }
 

@@ -96,7 +96,15 @@ export class EditGameComponent implements OnInit {
   get teams() : FormArray {
     return this.gameModeForm.get("teams") as FormArray
   }
-
+  nodeConfigs(e){
+    this.configSet = true;
+    console.log(e," node Cofings receieved")
+    this.gameModeForm.value.nodeModes = e;
+    this.closeModal('')
+  }
+  saveConfigs(){
+    console.log(this.gameModeForm.value)
+  }
   newTeam(): FormGroup {
     return this.fb.group({
      name:'Team Name',
@@ -144,7 +152,7 @@ export class EditGameComponent implements OnInit {
     document.getElementById("exampleModal").style.display = "block"
     document.getElementById("exampleModal").className += "show"
   }
-  closeModal(){
+  closeModal(e){
     // document.getElementById("backdrop").style.display = "none"
     document.getElementById("exampleModal").style.display = "none"
     document.getElementById("exampleModal").className += document.getElementById("exampleModal").className.replace("show", "")
@@ -164,6 +172,7 @@ export class EditGameComponent implements OnInit {
 
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
+    console.log(dataModel)
     this.saveGameMode.emit(dataModel);
   }
 

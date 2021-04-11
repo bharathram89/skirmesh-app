@@ -47,24 +47,12 @@
   <button type="submit" [disabled]="!isMapSelected || !configSet" class="btn btn-primary">Save</button>
 </form>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
-  role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Configure nodes for this game mode.</h5>
-        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-device-list [config]="deviceListConfigs"></app-device-list>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
+
+
+
+<!--  EDIT MODAL NEEDS TO MOVE TO NEW COMPONENT -->
+<div style="max-width:100%">
+  <app-device-list (modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+    
 </div>
-<div class="modal-backdrop fade show" id="backdrop" style="display: none;"></div>
+       
