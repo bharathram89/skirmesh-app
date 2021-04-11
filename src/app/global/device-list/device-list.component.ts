@@ -114,7 +114,6 @@ export class DeviceListComponent implements OnInit {
     this.devices[index].medic.team = teamName.target.value
   }
 
-  
   enableQuery(num) {
     this.devices[num].query.enable=true;
   } 
@@ -123,9 +122,7 @@ export class DeviceListComponent implements OnInit {
     this.devices[num].register.enable= true;
   } 
 
-
-
-
+ 
   convertPointScale(value) {
 
     var new_val
@@ -234,6 +231,7 @@ export class DeviceListComponent implements OnInit {
 }
 
 
+  //save data for bomb all works
   enableBomb(num) { 
     this.devices[num].medic.enabled=false;
     this.devices[num].bomb.enabled =true;
