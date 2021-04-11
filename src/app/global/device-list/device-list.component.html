@@ -64,11 +64,11 @@
                                             <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
                                                 Station</label>
                                         </div>
-                                        <div *ngIf="isMedicEnabled(i)">
+                                        <div *ngIf="devices[i].medic.enable">
                                             <div class="card card-body">
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
-                                                    <select class="form-control" (change)="locationSelected($event)">
+                                                    <select class="form-control" >
                                                         <option [value]="team.name"
                                                             *ngFor="let team of teamsAvaliable; let i = index">
                                                             {{team.name}}
@@ -95,8 +95,7 @@
                                                     <div class="card card-body">
                                                         <div class="form-group">
                                                             <label for="armTime">Team</label>
-                                                            <select class="form-control"
-                                                                (change)="locationSelected($event)">
+                                                            <select class="form-control" >
                                                                 <option selected value> -- select an option -- </option>
                                                                 <option [value]="team.name"
                                                                     *ngFor="let team of teamsAvaliable; let i = index">

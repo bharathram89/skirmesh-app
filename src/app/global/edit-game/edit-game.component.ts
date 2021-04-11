@@ -89,10 +89,6 @@ deviceConfigs;
     this.deviceListConfigs.next({
       mode:"createMode"
     })
-    // this.teams.patchValue(
-    //   [this.newTeam()])
-    // this.gameModeForm.get('teams').patchValue()
-    // this.values.push(this.gameModeForm.get('teams') as FormArray)
   }
 
   get teams() : FormArray {
@@ -116,10 +112,7 @@ deviceConfigs;
   }
 
   addTeam() {
-    // let newTm = this.newTeam();
-    // newTm.setValue({name:'val',color:'col'})
     this.teams.push(this.newTeam());
-    // this.gameModeForm.get('teams')
   }
   removeTeam(i:number) {
     this.teams.removeAt(i);
@@ -132,10 +125,6 @@ deviceConfigs;
         return locs['locations'];
       }
     })
-    // this.deviceListConfigs.next({
-    //   mode:"createMode",
-    //   location:this.locations['locations']
-    // })
     this.isMapSelected=true;
   }
   changeColor(e,i){
@@ -153,19 +142,14 @@ deviceConfigs;
       teams:this.gameModeForm.get('teams')['controls'],
       nodeConfigs:this.deviceConfigs
     })
-    // document.getElementById("backdrop").style.display = "block"
     document.getElementById("exampleModal").style.display = "block"
     document.getElementById("exampleModal").className += "show"
   }
   closeModal(e){
-    // document.getElementById("backdrop").style.display = "none"
     document.getElementById("exampleModal").style.display = "none"
     document.getElementById("exampleModal").className += document.getElementById("exampleModal").className.replace("show", "")
   }
   ngOnInit() {
-    // this.teams.setValue([{name:'val',color:'val2'},{name:'val',color:'val2'}])
-    // console.log(this.gameModeForm.get('teams')['controls'])
-    // this.setArrayInputs(this.arrayInputs)
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
@@ -185,10 +169,10 @@ deviceConfigs;
   makeDeviceModals(alldevices): DeviceSettings[] {
     let arr: DeviceSettings[]=[];
     alldevices.forEach(element => {
-      let med = new MedicSettings(null)
-      let bmb = new BombSettings(null,null,null)
-      let cap = new CaptureSettings(null,null,null,null)
-      let ds = new DeviceSettings(element.address,null,med,bmb,cap)
+      let med = new MedicSettings(false,null)
+      let bmb = new BombSettings(false,null,null,null)
+      let cap = new CaptureSettings(false,null,null,null,null)
+      let ds = new DeviceSettings(false,element.address,null,med,bmb,cap)
       arr.push(ds)
     });
 

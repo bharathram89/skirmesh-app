@@ -74,6 +74,7 @@ export class DeviceListComponent implements OnInit {
       }
     )
   }
+
   closeModal(){
     this.modalClose.emit(true)
   }
@@ -84,7 +85,7 @@ export class DeviceListComponent implements OnInit {
   
   isNodeEnabled(index) { 
     var enabled = false; 
-      if(this.devices[index].location){
+      if(this.devices[index].enabled){
         enabled = true;
       } 
     return enabled;
@@ -92,10 +93,11 @@ export class DeviceListComponent implements OnInit {
   locationSelected(event,index) { 
     this.selectedLocations.push(event.target.value)
     this.devices[index].location = event.target.value;
+    this.devices[index].enabled =true;
   }
   getLocationList(){
     let arr=[];
-        this.selectedLocations
+        // this.selectedLocations
         if(this.locationsToSet){
           this.locationsToSet.forEach(loc => {
              // setLocations.includes(loc.name)
@@ -112,9 +114,7 @@ export class DeviceListComponent implements OnInit {
              }
           }); 
           // console.log(arr,"filtered list 2")
-        }else{
-          arr = this.locationsToSet;
-        }
+        } 
        
     // console.log(arr,"filtered list") 
     return arr;
@@ -128,19 +128,11 @@ export class DeviceListComponent implements OnInit {
       } 
   }
   enableMedic(num) {
- 
-      if (!this.isMedicEnabled(num)) {
-        this.devices[num].config = this.MEDIC;
-      } 
+    this.devices[num].medic.enabled=true;
   }
   isMedicEnabled(num) {
-
-    var configured = false;
- 
-      configured = this.devices[num].config == this.MEDIC; 
-    return configured
+    return this.devices[num].medic.enabled
   }
-
 
   enableQuery(num) {
     this.devices[num].config = this.QUERY;
