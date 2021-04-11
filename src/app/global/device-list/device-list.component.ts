@@ -107,7 +107,7 @@ export class DeviceListComponent implements OnInit {
         devices[index].location = event.target.value;
         console.log(devices,event.target.value,"data",index)
       }
-    ) 
+    )
   }
   getLocationList(){
     let arr=[];
@@ -122,7 +122,13 @@ export class DeviceListComponent implements OnInit {
              // setLocations.includes(loc.name)
              // return setLocations.indexOf(loc.name) !== -1
              if(this.selectedLocations.indexOf(loc.name) == -1){
-                arr.push({'name':loc.name}); 
+               if(arr) {
+                arr.push({'name':loc.name, 'isDisabled': false}); 
+               }
+             } else {
+              if(arr) {
+              arr.push({'name':loc.name, 'isDisabled': true});
+              }
              }
           }); 
           console.log(arr,"filtered list 2")

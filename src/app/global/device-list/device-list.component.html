@@ -18,10 +18,10 @@
                 <div class="card-header">
 
                     <h4>Location:
-                        <select class="form-control" (change)="locationSelected($event,i)">
+                        <select class="form-control" (change)="locationSelected($event,i)" [(ngModel)]="device.location">
                             <option selected value> -- select an option -- </option>
                             <option [value]="location.name"
-                                *ngFor="let location of getLocationList() ; let i = index">
+                                *ngFor="let location of getLocationList() ; let i = index" [disabled] ="location.isDisabled" >
                                 <a *ngIf="isSelectedValue(i)"> isSelectedValue(i)</a>{{location.name}}
                             </option>
                         </select>
