@@ -2,13 +2,14 @@
     <div class="">
 
         <div class="row center-cust ">
-            Locations To Set: [<div *ngFor="let location of (locationsToSet | async); let i = index"><a
+            Locations To Set: [<div *ngFor="let location of  getLocationList(); let i = index"><a
                     class="badge badge-pill badge-light">{{ location.name }} </a></div>]
         </div>
         <div class="row center-cust ">
             Teams Avaliable To Set: [<div *ngFor="let team of (teamsAvaliable | async); let x = index"><a
                     class="badge badge-pill badge-light">{{ team.name }} </a></div>]
         </div>
+        Warning: you looses the changes if you dont save them!
         <div class="center-cust row">
 
             <div *ngFor="let device of (devices | async) | paginate: { itemsPerPage: 4, currentPage: p }; let i = index"
@@ -20,7 +21,8 @@
                         <select class="form-control" (change)="locationSelected($event,i)">
                             <option selected value> -- select an option -- </option>
                             <option [value]="location.name"
-                                *ngFor="let location of (getLocationList(i) | async); let i = index">{{location.name}}
+                                *ngFor="let location of getLocationList() ; let i = index">
+                                <a *ngIf="isSelectedValue(i)"> isSelectedValue(i)</a>{{location.name}}
                             </option>
                         </select>
                     </h4>

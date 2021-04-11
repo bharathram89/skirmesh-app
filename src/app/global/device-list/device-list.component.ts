@@ -1,68 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
-
-export class DeviceSettings {
-  address: string;
-  location: string;
-  medic: MedicSettings;
-  bomb: BombSettings;
-  capture: CaptureSettings;
-  constructor(
-    address: string,
-    location: string,
-    medic: MedicSettings,
-    bomb: BombSettings,
-    capture: CaptureSettings
-  ) {
-    this.address = address;
-    this.location = location;
-    this.medic = medic;
-    this.bomb = bomb;
-    this.capture = capture;
-  }
-}
-export class MedicSettings {
-  team: string;
-  constructor(
-    team: string
-  ) {
-    this.team = team;
-  }
-}
-export class BombSettings {
-  armTime: number;
-  fuseTime: number;
-  defuseTime: number;
-  constructor(
-    armTime: number,
-    fuseTime: number,
-    defuseTime: number
-  ) {
-    this.armTime = armTime;
-    this.fuseTime = fuseTime;
-    this.defuseTime = defuseTime;
-  }
-}
-export class CaptureSettings {
-  stablizeTime: number;
-  captureAssist: number;
-  pointScale: number;
-  allowMedic: boolean;
-  constructor(
-    stablizeTime: number,
-    captureAssist: number,
-    pointScale: number,
-    allowMedic: boolean,
-  ){
-    this.stablizeTime = stablizeTime;
-    this.captureAssist = captureAssist;
-    this.pointScale = pointScale;
-    this.allowMedic = allowMedic;
-  }
-}
+import { combineLatest, of } from 'rxjs';
 
 @Component({
   selector: 'app-device-list',
@@ -92,6 +33,7 @@ export class DeviceListComponent implements OnInit {
   setLocation: BehaviorSubject<any>;
   leftLocations: BehaviorSubject<any>;
   teamsAvaliable: BehaviorSubject<any>;
+  selectedLocations= [];
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
@@ -102,6 +44,7 @@ export class DeviceListComponent implements OnInit {
     this.locationsToSet = new BehaviorSubject({});
     this.setLocation = new BehaviorSubject({});
     this.teamsAvaliable = new BehaviorSubject([])
+    // this.selectedLocations = new BehaviorSubject([])
   }
 
 
@@ -110,8 +53,10 @@ export class DeviceListComponent implements OnInit {
     this.config.subscribe(
       modeConfig => {
         this.userSvc.getUserData().subscribe(userData => {
+
           console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
           this.mode = modeConfig.mode;
+          this.selectedLocations=[];//this resets the selcted locations
           if (modeConfig.mode == 'createMode') {
             this.locationsToSet.next(modeConfig.location);
             if (modeConfig.teams) {
@@ -122,19 +67,17 @@ export class DeviceListComponent implements OnInit {
               });
               this.teamsAvaliable.next(teams)
             }
-
-            //get list of devices
-
           }
           this.devices.next(this.makeDeviceModals(userData.fieldProfiles[0].devices));
-
           
         })
 
       }
     )
   }
+  isSelectedValue(){
 
+  }
   makeDeviceModals(alldevices): DeviceSettings[] {
     let arr: DeviceSettings[]=[];
     alldevices.forEach(element => {
@@ -158,12 +101,45 @@ export class DeviceListComponent implements OnInit {
     return enabled;
   }
   locationSelected(event,index) { 
+    this.selectedLocations.push(event.target.value)
     this.devices.subscribe(
       devices=>{
         devices[index].location = event.target.value;
         console.log(devices,event.target.value,"data",index)
       }
     ) 
+  }
+  getLocationList(){
+    let arr=[];
+    combineLatest([this.locationsToSet ]).subscribe(
+      ([locations])=>{
+        this.selectedLocations
+        // console.log(locations,' locations ',setLocations)
+        if(locations){
+           locations.forEach(loc => {
+             // setLocations.includes(loc.name)
+             console.log(loc.name,"inner",this.selectedLocations,' split ',this.selectedLocations,' split ',this.selectedLocations.indexOf(loc.name));
+             // setLocations.includes(loc.name)
+             // return setLocations.indexOf(loc.name) !== -1
+             if(this.selectedLocations.indexOf(loc.name) == -1){
+                arr.push({'name':loc.name}); 
+             }
+          }); 
+          console.log(arr,"filtered list 2")
+        }else{
+          arr = locations;
+        }
+      }
+    )
+
+    console.log(arr,"filtered list")
+    // let arr = this.locationsToSet.subscribe(
+    //   locs=>{
+        
+    //     // locs.filter(loca=>{})
+    //   }
+    // )
+    return arr;
   }
   pointScale(index, value) {
 
@@ -247,9 +223,6 @@ export class DeviceListComponent implements OnInit {
       }
     })
 
-  }
-  getLocationList(){
-    return this.locationsToSet;
   }
   enableMedic(num) {
 
@@ -400,3 +373,62 @@ export class DeviceListComponent implements OnInit {
   }
 }
 
+export class DeviceSettings {
+  address: string;
+  location: string;
+  medic: MedicSettings;
+  bomb: BombSettings;
+  capture: CaptureSettings;
+  constructor(
+    address: string,
+    location: string,
+    medic: MedicSettings,
+    bomb: BombSettings,
+    capture: CaptureSettings
+  ) {
+    this.address = address;
+    this.location = location;
+    this.medic = medic;
+    this.bomb = bomb;
+    this.capture = capture;
+  }
+}
+export class MedicSettings {
+  team: string;
+  constructor(
+    team: string
+  ) {
+    this.team = team;
+  }
+}
+export class BombSettings {
+  armTime: number;
+  fuseTime: number;
+  defuseTime: number;
+  constructor(
+    armTime: number,
+    fuseTime: number,
+    defuseTime: number
+  ) {
+    this.armTime = armTime;
+    this.fuseTime = fuseTime;
+    this.defuseTime = defuseTime;
+  }
+}
+export class CaptureSettings {
+  stablizeTime: number;
+  captureAssist: number;
+  pointScale: number;
+  allowMedic: boolean;
+  constructor(
+    stablizeTime: number,
+    captureAssist: number,
+    pointScale: number,
+    allowMedic: boolean,
+  ){
+    this.stablizeTime = stablizeTime;
+    this.captureAssist = captureAssist;
+    this.pointScale = pointScale;
+    this.allowMedic = allowMedic;
+  }
+}
