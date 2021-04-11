@@ -66,7 +66,8 @@ export class DeviceListComponent implements OnInit {
               this.teamsAvaliable=teams//set teams
             }
           }
-          this.devices=this.makeDeviceModals(userData.fieldProfiles[0].devices);
+          console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
+          this.devices=modeConfig.nodeConfigs
           
         })
 
@@ -80,18 +81,7 @@ export class DeviceListComponent implements OnInit {
     console.log(this.devices,"final configs")
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   } 
-  makeDeviceModals(alldevices): DeviceSettings[] {
-    let arr: DeviceSettings[]=[];
-    alldevices.forEach(element => {
-      let med = new MedicSettings(null)
-      let bmb = new BombSettings(null,null,null)
-      let cap = new CaptureSettings(null,null,null,null)
-      let ds = new DeviceSettings(element.address,null,med,bmb,cap)
-      arr.push(ds)
-    });
-
-    return arr;
-  }
+  
   isNodeEnabled(index) { 
     var enabled = false; 
       if(this.devices[index].location){
@@ -322,65 +312,4 @@ export class DeviceListComponent implements OnInit {
 
   }
   
-}
-
-export class DeviceSettings {
-  address: string;
-  location: string;
-  medic: MedicSettings;
-  bomb: BombSettings;
-  capture: CaptureSettings;
-  constructor(
-    address: string,
-    location: string,
-    medic: MedicSettings,
-    bomb: BombSettings,
-    capture: CaptureSettings
-  ) {
-    this.address = address;
-    this.location = location;
-    this.medic = medic;
-    this.bomb = bomb;
-    this.capture = capture;
-  }
-}
-export class MedicSettings {
-  id:number;
-  team: string;
-  constructor(
-    team: string
-  ) {
-    this.team = team;
-  }
-}
-export class BombSettings {
-  armTime: number;
-  fuseTime: number;
-  defuseTime: number;
-  constructor(
-    armTime: number,
-    fuseTime: number,
-    defuseTime: number
-  ) {
-    this.armTime = armTime;
-    this.fuseTime = fuseTime;
-    this.defuseTime = defuseTime;
-  }
-}
-export class CaptureSettings {
-  stablizeTime: number;
-  captureAssist: number;
-  pointScale: number;
-  allowMedic: boolean;
-  constructor(
-    stablizeTime: number,
-    captureAssist: number,
-    pointScale: number,
-    allowMedic: boolean,
-  ){
-    this.stablizeTime = stablizeTime;
-    this.captureAssist = captureAssist;
-    this.pointScale = pointScale;
-    this.allowMedic = allowMedic;
-  }
 }

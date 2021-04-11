@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
+import { BombSettings, CaptureSettings, DeviceSettings, MedicSettings } from '../node.modal';
 
 export class ColorPalette {
   name: string;
@@ -27,11 +28,10 @@ export class EditGameComponent implements OnInit {
   configSet:boolean=false;
   @Input() gameMode;
  deviceListConfigs :BehaviorSubject<any>;
- arrayInputs = [{name : ['a',Validators.required]}, {color: ['b',Validators.required]}];
   @Output() saveGameMode = new EventEmitter<any>();
   userSvc:UserServiceService;
   gameModeFrm={id:'',name:'',teams:[],nodeModes:'',map:'',quantities:[]}
-
+  devices;
   color:BehaviorSubject<ColorPalette>;
   colors: ColorPalette[] = [
     { name: 'Red', value: '#ff1744', foreground: 'white' ,id:0},
@@ -57,7 +57,7 @@ export class EditGameComponent implements OnInit {
   ];
 
 
-
+deviceConfigs;
   constructor(private fb: FormBuilder,
     private authSvc: AuthService,
     private userService: UserServiceService, ) {
@@ -83,6 +83,8 @@ export class EditGameComponent implements OnInit {
     });
     this.userSvc.getFieldProfile().subscribe(data=>{
       this.maps = data.maps;
+      this.devices = data.devices
+      this.deviceConfigs = this.makeDeviceModals(this.devices)
     })
     this.deviceListConfigs.next({
       mode:"createMode"
@@ -100,6 +102,7 @@ export class EditGameComponent implements OnInit {
     this.configSet = true;
     console.log(e," node Cofings receieved")
     this.gameModeForm.value.nodeModes = e;
+    this.deviceConfigs = e;
     this.closeModal('')
   }
   saveConfigs(){
@@ -143,10 +146,12 @@ export class EditGameComponent implements OnInit {
   setNodes(){
 
     console.log(this.gameModeForm.get('teams')['controls'][0].value)
+
     this.deviceListConfigs.next({
       mode:"createMode",
       location:this.locations['locations'],
-      teams:this.gameModeForm.get('teams')['controls']
+      teams:this.gameModeForm.get('teams')['controls'],
+      nodeConfigs:this.deviceConfigs
     })
     // document.getElementById("backdrop").style.display = "block"
     document.getElementById("exampleModal").style.display = "block"
@@ -175,5 +180,23 @@ export class EditGameComponent implements OnInit {
     console.log(dataModel)
     this.saveGameMode.emit(dataModel);
   }
+
+
+  makeDeviceModals(alldevices): DeviceSettings[] {
+    let arr: DeviceSettings[]=[];
+    alldevices.forEach(element => {
+      let med = new MedicSettings(null)
+      let bmb = new BombSettings(null,null,null)
+      let cap = new CaptureSettings(null,null,null,null)
+      let ds = new DeviceSettings(element.address,null,med,bmb,cap)
+      arr.push(ds)
+    });
+
+    return arr;
+  }
+
+
+  //
+
 
 }

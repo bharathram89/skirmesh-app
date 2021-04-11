@@ -31,7 +31,6 @@
                                     <h4>Location:
                                         <select class="form-control" (change)="locationSelected($event,i)"
                                             [(ngModel)]="device.location">
-                                            <option selected value> -- select an option -- </option>
                                             <option [value]="location.name"
                                                 *ngFor="let location of getLocationList() ; let i = index"
                                                 [disabled]="location.isDisabled">
@@ -70,7 +69,6 @@
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
                                                     <select class="form-control" (change)="locationSelected($event)">
-                                                        <option selected value> -- select an option -- </option>
                                                         <option [value]="team.name"
                                                             *ngFor="let team of teamsAvaliable; let i = index">
                                                             {{team.name}}

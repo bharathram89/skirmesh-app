@@ -45,14 +45,14 @@
     to Edit Device Configurations</button>
   <br />
   <button type="submit" [disabled]="!isMapSelected || !configSet" class="btn btn-primary">Save</button>
+  <div style="max-width:100%">
+    <app-device-list (modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+      
+  </div>
+         
 </form>
 
 
 
 
 <!--  EDIT MODAL NEEDS TO MOVE TO NEW COMPONENT -->
-<div style="max-width:100%">
-  <app-device-list (modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
-    
-</div>
-       
