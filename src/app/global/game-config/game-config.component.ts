@@ -61,7 +61,7 @@ export class GameConfigComponent implements OnInit {
     }
 
     // close the tab
-    this.tabsComponent.closeActiveTab();
+    // this.tabsComponent.closeActiveTab();
   }
 
 

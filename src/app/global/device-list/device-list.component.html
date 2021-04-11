@@ -32,7 +32,7 @@
                                         <select class="form-control" (change)="locationSelected($event,i)"
                                             [(ngModel)]="device.location">
                                             <option [value]="location.name"
-                                                *ngFor="let location of getLocationList() ; let i = index"
+                                                *ngFor="let location of getLocationList() ;"
                                                 [disabled]="location.isDisabled">
                                                 {{location.name}}
                                             </option>
@@ -43,7 +43,7 @@
                                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                                 </div>
 
-                                <div *ngIf="isNodeEnabled(i)" class="card-body">
+                                <div *ngIf="devices[i].enabled" class="card-body">
 
                                     <div *ngIf="mode !== 'createMode'" class="form-group">
                                         <div class="custom-control custom-switch">

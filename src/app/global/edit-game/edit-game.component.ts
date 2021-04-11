@@ -98,7 +98,7 @@ deviceConfigs;
     this.configSet = true;
     console.log(e," node Cofings receieved")
     this.gameModeForm.value.nodeModes = e;
-    this.deviceConfigs = e;
+    this.deviceConfigs = JSON.parse(e);
     this.closeModal('')
   }
   saveConfigs(){
