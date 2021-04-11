@@ -67,10 +67,8 @@ export class DeviceListComponent implements OnInit {
             }
           }
           console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
-          this.devices=modeConfig.nodeConfigs
-          
-        })
-
+          this.devices=modeConfig.nodeConfigs;
+        }) 
       }
     )
   }
@@ -83,26 +81,15 @@ export class DeviceListComponent implements OnInit {
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   } 
   
-  isNodeEnabled(index) { 
-    var enabled = false; 
-      if(this.devices[index].enabled){
-        enabled = true;
-      } 
-    return enabled;
-  }
   locationSelected(event,index) { 
     this.selectedLocations.push(event.target.value)
     this.devices[index].location = event.target.value;
     this.devices[index].enabled =true;
   }
   getLocationList(){
-    let arr=[];
-        // this.selectedLocations
+    let arr=[]; 
         if(this.locationsToSet){
-          this.locationsToSet.forEach(loc => {
-             // setLocations.includes(loc.name)
-            //  console.log(loc.name,"inner",this.selectedLocations,' split ',this.selectedLocations,' split ',this.selectedLocations.indexOf(loc.name));
- 
+          this.locationsToSet.forEach(loc => { 
              if(this.selectedLocations.indexOf(loc.name) == -1){
                if(arr) {
                 arr.push({'name':loc.name, 'isDisabled': false}); 
@@ -112,90 +99,33 @@ export class DeviceListComponent implements OnInit {
               arr.push({'name':loc.name, 'isDisabled': true});
               }
              }
-          }); 
-          // console.log(arr,"filtered list 2")
+          });  
         } 
-       
-    // console.log(arr,"filtered list") 
+        
     return arr;
   }
 
-  enableAllowMedic(num) { 
-      if (this.devices[num].allow_medic) {
-        this.devices[num].allow_medic = false;
-      } else {
-        this.devices[num].allow_medic = true;
-      } 
-  }
   enableMedic(num) {
     this.devices[num].medic.enabled=true;
+    this.devices[num].bomb.enabled =false;
+    this.devices[num].capture.enabled =false;
   }
-  isMedicEnabled(num) {
-    return this.devices[num].medic.enabled
+  medicNodeTeamSelected(teamName,index){
+    this.devices[index].medic.team = teamName.target.value
   }
 
+  
   enableQuery(num) {
-    this.devices[num].config = this.QUERY;
-  }
-  isQueryEnabled(num) {
-
-    var configured = false;
-
-      configured = this.devices[num].config == this.QUERY;
-    return configured
-  }
+    this.devices[num].query.enable=true;
+  } 
+ 
+  enableRegister(num) { 
+    this.devices[num].register.enable= true;
+  } 
 
 
 
-  enableRegister(num) {
-      if (!this.isRegisterEnabled(num)) {
-        this.devices[num].config = this.REGISTER;
-      }
-  }
-  isRegisterEnabled(num) {
 
-    var configured = false;
-
-      configured = this.devices[num].config == this.REGISTER;
-    return configured
-  }
-
-  enableBomb(num) {
-
-      if (!this.isBombEnabled(num)) {
-        this.devices[num].config = this.BOMB;
-      }
-  }
-  isBombEnabled(num) {
-
-    var configured = false;
-      configured = this.devices[num].config == this.BOMB;
-    return configured
-  }
-
-  enableCapture(num) {
-
-      if (!this.isCaptureEnabled(num)) {
-        this.devices[num].config = this.CAPTURE;
-      }
-  }
-  isCaptureEnabled(num) {
-
-    var configured = false;
-
-      configured = this.devices[num].config == this.CAPTURE;
-
-    return configured
-  }
-
-
-  pointScale(index, value) {
-
-    var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
-      0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
-
-      this.devices[index].point_scale = int_map[value];
-  }
   convertPointScale(value) {
 
     var new_val
@@ -257,45 +187,6 @@ export class DeviceListComponent implements OnInit {
     return new_val
 
   }
-
-  armTime(index, value) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-      this.devices[index].arm_time = int_map[value];
-  }
-  capTime(index, value) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-      15, 18, 21, 24, 27, 30,
-      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
-      120, 150, 180, 210, 240]
-
-      this.devices[index].cap_time = int_map[value];
-  }
-  bombTime(index, value) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-      15, 18, 21, 24, 27, 30,
-      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
-      120, 150, 180, 210, 240]
-
-      this.devices[index].bomb_time = int_map[value];
-  }
-  difuseTime(index, value) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-      this.devices[index].diff_time = int_map[value];
-  }
-  capasst(index, value) {
-
-    var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
-      0x05, 0x04, 0x02, 0x01]
-
-      this.devices[index].cap_asst = int_map[value];
-  }
-
   convertPerc(value) {
 
     var new_val
@@ -304,4 +195,70 @@ export class DeviceListComponent implements OnInit {
 
   }
   
+
+  //save data for capture all works
+  enableCapture(num) {
+    this.devices[num].medic.enabled=false;
+    this.devices[num].bomb.enabled =false;
+    this.devices[num].capture.enabled =true;
+  } 
+  capTime(index, value) {
+
+    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+      15, 18, 21, 24, 27, 30,
+      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
+      120, 150, 180, 210, 240]
+
+      this.devices[index].capture.cap_time = int_map[value];
+  }
+  capasst(index, value) {
+
+    var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
+      0x05, 0x04, 0x02, 0x01]
+
+      this.devices[index].capture.cap_asst = int_map[value];
+  }
+  pointScale(index, value) {
+
+    var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
+      0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
+
+      this.devices[index].capture.point_scale = int_map[value];
+  }
+  enableAllowMedic(num) { 
+    if (this.devices[num].capture.allow_medic) {
+      this.devices[num].capture.allow_medic = false;
+    } else {
+      this.devices[num].capture.allow_medic = true;
+    } 
+}
+
+
+  enableBomb(num) { 
+    this.devices[num].medic.enabled=false;
+    this.devices[num].bomb.enabled =true;
+    this.devices[num].capture.enabled =false;
+  } 
+  armTime(index, value) {
+
+    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+      this.devices[index].bomb.arm_time = int_map[value];
+  }
+  bombTime(index, value) {
+
+    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+      15, 18, 21, 24, 27, 30,
+      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
+      120, 150, 180, 210, 240]
+
+      this.devices[index].bomb.bomb_time = int_map[value];//fusetimer?
+  }
+  difuseTime(index, value) {
+
+    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+      this.devices[index].bomb.diff_time = int_map[value];
+  }
+
 }

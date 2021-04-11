@@ -6,6 +6,9 @@ export class DeviceSettings {
     medic: MedicSettings;
     bomb: BombSettings;
     capture: CaptureSettings;
+    queryPlayer:QueryPlayerSettings;
+    registerPlayer:RegisterPlayer;
+    config:string;
     constructor(
       enabled:boolean,
       address: string,
@@ -35,40 +38,63 @@ export class DeviceSettings {
   }
   export class BombSettings {
     enabled:boolean;
-    armTime: number;
-    fuseTime: number;
-    defuseTime: number;
+    arm_time: number;
+    bomb_time: number;
+    diff_time: number;
     constructor(
         enabled:boolean,
-      armTime: number,
-      fuseTime: number,
-      defuseTime: number
+        arm_time: number,
+        bomb_time: number,
+        diff_time: number
     ) {
         this.enabled =enabled;
-      this.armTime = armTime;
-      this.fuseTime = fuseTime;
-      this.defuseTime = defuseTime;
+      this.arm_time = arm_time;
+      this.bomb_time = bomb_time;
+      this.diff_time = diff_time;
     }
   }
   export class CaptureSettings {
 
     enabled:boolean;
-    stablizeTime: number;
-    captureAssist: number;
-    pointScale: number;
-    allowMedic: boolean;
+    cap_time: number;
+    cap_asst: number;
+    point_scale: number;
+    allow_medic: boolean;
     constructor(
         enabled:boolean,
-      stablizeTime: number,
-      captureAssist: number,
-      pointScale: number,
-      allowMedic: boolean,
+        cap_time: number,
+        cap_asst: number,
+        point_scale: number,
+        allow_medic: boolean,
     ){
         this.enabled =enabled;
-      this.stablizeTime = stablizeTime;
-      this.captureAssist = captureAssist;
-      this.pointScale = pointScale;
-      this.allowMedic = allowMedic;
+      this.cap_time = cap_time;
+      this.cap_asst = cap_asst;
+      this.point_scale = point_scale;
+      this.allow_medic = allow_medic;
     }
   }
-  
+  export class RegisterPlayer {
+    enabled:boolean;
+    team:string;
+    constructor(
+      enabled:boolean,
+    team: string
+  ) {
+      this.enabled =enabled;
+    this.team = team;
+  }
+  }
+
+
+  export class QueryPlayerSettings {
+    enabled:boolean;
+    team:string;
+    constructor(
+      enabled:boolean,
+    team: string
+  ) {
+      this.enabled =enabled;
+    this.team = team;
+  }
+  }
