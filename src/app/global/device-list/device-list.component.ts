@@ -17,7 +17,7 @@ export class DeviceListComponent implements OnInit {
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
 
-  devices: BehaviorSubject<any>;
+  devices:any;// BehaviorSubject<any>;
 
   REGISTER = 0x01;
   QUERY = 0x02;
@@ -29,10 +29,10 @@ export class DeviceListComponent implements OnInit {
 
   @Input() config;
   mode: String;
-  locationsToSet: BehaviorSubject<any>;
-  setLocation: BehaviorSubject<any>;
-  leftLocations: BehaviorSubject<any>;
-  teamsAvaliable: BehaviorSubject<any>;
+  locationsToSet=[];
+  setLocation=[];
+  leftLocations=[];
+  teamsAvaliable=[];
   selectedLocations= [];
   constructor(
     userService: UserServiceService,
@@ -40,10 +40,10 @@ export class DeviceListComponent implements OnInit {
     private router: Router) {
     this.userSvc = userService;
     this.tokenSvc = tokenService;
-    this.devices = new BehaviorSubject({});
-    this.locationsToSet = new BehaviorSubject({});
-    this.setLocation = new BehaviorSubject({});
-    this.teamsAvaliable = new BehaviorSubject([])
+    // this.devices = ''//new BehaviorSubject({});
+    // this.locationsToSet = new BehaviorSubject({});
+    // this.setLocation = new BehaviorSubject({});
+    // this.teamsAvaliable = new BehaviorSubject([])
     // this.selectedLocations = new BehaviorSubject([])
   }
 
@@ -58,17 +58,17 @@ export class DeviceListComponent implements OnInit {
           this.mode = modeConfig.mode;
           this.selectedLocations=[];//this resets the selcted locations
           if (modeConfig.mode == 'createMode') {
-            this.locationsToSet.next(modeConfig.location);
+            this.locationsToSet=modeConfig.location;//set locations
             if (modeConfig.teams) {
               const teams = [];
               modeConfig.teams.forEach(element => {
                 console.log(element, element.value.name)
                 teams.push({ 'name': element.value.name })
               });
-              this.teamsAvaliable.next(teams)
+              this.teamsAvaliable=teams//set teams
             }
           }
-          this.devices.next(this.makeDeviceModals(userData.fieldProfiles[0].devices));
+          this.devices=this.makeDeviceModals(userData.fieldProfiles[0].devices);
           
         })
 
@@ -76,7 +76,6 @@ export class DeviceListComponent implements OnInit {
     )
   }
   isSelectedValue(){
-
   }
   makeDeviceModals(alldevices): DeviceSettings[] {
     let arr: DeviceSettings[]=[];
@@ -90,33 +89,25 @@ export class DeviceListComponent implements OnInit {
 
     return arr;
   }
-
   isNodeEnabled(index) { 
-    var enabled = false;
-    this.devices.subscribe(data => {
-      if(data[index].location){
+    var enabled = false; 
+      if(this.devices[index].location){
         enabled = true;
-      }
-    })
+      } 
     return enabled;
   }
   locationSelected(event,index) { 
     this.selectedLocations.push(event.target.value)
-    this.devices.subscribe(
-      devices=>{
-        devices[index].location = event.target.value;
-        console.log(devices,event.target.value,"data",index)
-      }
-    )
+    this.devices[index].location = event.target.value;
   }
   getLocationList(){
     let arr=[];
-    combineLatest([this.locationsToSet ]).subscribe(
-      ([locations])=>{
+    // combineLatest([this.locationsToSet ]).subscribe(
+    //   ([locations])=>{
         this.selectedLocations
         // console.log(locations,' locations ',setLocations)
-        if(locations){
-           locations.forEach(loc => {
+        if(this.locationsToSet){
+          this.locationsToSet.forEach(loc => {
              // setLocations.includes(loc.name)
              console.log(loc.name,"inner",this.selectedLocations,' split ',this.selectedLocations,' split ',this.selectedLocations.indexOf(loc.name));
              // setLocations.includes(loc.name)
@@ -133,10 +124,10 @@ export class DeviceListComponent implements OnInit {
           }); 
           console.log(arr,"filtered list 2")
         }else{
-          arr = locations;
+          arr = this.locationsToSet;
         }
-      }
-    )
+      
+    
 
     console.log(arr,"filtered list")
     // let arr = this.locationsToSet.subscribe(
@@ -147,14 +138,90 @@ export class DeviceListComponent implements OnInit {
     // )
     return arr;
   }
+
+  enableAllowMedic(num) { 
+      if (this.devices[num].allow_medic) {
+        this.devices[num].allow_medic = false;
+      } else {
+        this.devices[num].allow_medic = true;
+      } 
+  }
+  enableMedic(num) {
+ 
+      if (!this.isMedicEnabled(num)) {
+        this.devices[num].config = this.MEDIC;
+      } 
+  }
+  isMedicEnabled(num) {
+
+    var configured = false;
+ 
+      configured = this.devices[num].config == this.MEDIC; 
+    return configured
+  }
+
+
+  enableQuery(num) {
+    this.devices[num].config = this.QUERY;
+  }
+  isQueryEnabled(num) {
+
+    var configured = false;
+
+      configured = this.devices[num].config == this.QUERY;
+    return configured
+  }
+
+
+
+  enableRegister(num) {
+      if (!this.isRegisterEnabled(num)) {
+        this.devices[num].config = this.REGISTER;
+      }
+  }
+  isRegisterEnabled(num) {
+
+    var configured = false;
+
+      configured = this.devices[num].config == this.REGISTER;
+    return configured
+  }
+
+  enableBomb(num) {
+
+      if (!this.isBombEnabled(num)) {
+        this.devices[num].config = this.BOMB;
+      }
+  }
+  isBombEnabled(num) {
+
+    var configured = false;
+      configured = this.devices[num].config == this.BOMB;
+    return configured
+  }
+
+  enableCapture(num) {
+
+      if (!this.isCaptureEnabled(num)) {
+        this.devices[num].config = this.CAPTURE;
+      }
+  }
+  isCaptureEnabled(num) {
+
+    var configured = false;
+
+      configured = this.devices[num].config == this.CAPTURE;
+
+    return configured
+  }
+
+
   pointScale(index, value) {
 
     var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
       0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
 
-    this.devices.subscribe(data => {
-      data[index].point_scale = int_map[value];
-    })
+      this.devices[index].point_scale = int_map[value];
   }
   convertPointScale(value) {
 
@@ -165,8 +232,6 @@ export class DeviceListComponent implements OnInit {
     return new_val
 
   }
-
-
   getTimeIndex(value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
@@ -200,9 +265,9 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]                 // TODO: convert text based on range
 
-    this.devices.subscribe(data => {
-      data[index].med_time = int_map[value];
-    })
+    
+      this.devices[index].med_time = int_map[value];
+    
   }
 
   convertTime(value) {
@@ -220,115 +285,11 @@ export class DeviceListComponent implements OnInit {
 
   }
 
-  enableAllowMedic(num) {
-    this.devices.subscribe(data => {
-      if (data[num].allow_medic) {
-        data[num].allow_medic = false;
-      } else {
-        data[num].allow_medic = true;
-      }
-    })
-
-  }
-  enableMedic(num) {
-
-    this.devices.subscribe(data => {
-      if (!this.isMedicEnabled(num)) {
-        data[num].config = this.MEDIC;
-      }
-    })
-  }
-  isMedicEnabled(num) {
-
-    var configured = false;
-
-    this.devices.subscribe(data => {
-      configured = data[num].config == this.MEDIC;
-    })
-    return configured
-  }
-
-
-  enableQuery(num) {
-
-    this.devices.subscribe(data => {
-      if (!this.isQueryEnabled(num)) {
-        data[num].config = this.QUERY;
-      }
-    })
-  }
-  isQueryEnabled(num) {
-
-    var configured = false;
-
-    this.devices.subscribe(data => {
-      configured = data[num].config == this.QUERY;
-    })
-    return configured
-  }
-
-  enableRegister(num) {
-
-    this.devices.subscribe(data => {
-      if (!this.isRegisterEnabled(num)) {
-        data[num].config = this.REGISTER;
-      }
-    })
-  }
-  isRegisterEnabled(num) {
-
-    var configured = false;
-
-    this.devices.subscribe(data => {
-      configured = data[num].config == this.REGISTER;
-    })
-    return configured
-  }
-
-  enableBomb(num) {
-
-    this.devices.subscribe(data => {
-      if (!this.isBombEnabled(num)) {
-        data[num].config = this.BOMB;
-      }
-    })
-  }
-  isBombEnabled(num) {
-
-    var configured = false;
-
-    this.devices.subscribe(data => {
-      configured = data[num].config == this.BOMB;
-    })
-    return configured
-  }
-
-  enableCapture(num) {
-
-    this.devices.subscribe(data => {
-      if (!this.isCaptureEnabled(num)) {
-        data[num].config = this.CAPTURE;
-      }
-    })
-  }
-  isCaptureEnabled(num) {
-
-    var configured = false;
-
-    this.devices.subscribe(data => {
-      configured = data[num].config == this.CAPTURE;
-    })
-
-    return configured
-  }
-
   armTime(index, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-    this.devices.subscribe(data => {
-      data[index].arm_time = int_map[value];
-    })
+      this.devices[index].arm_time = int_map[value];
   }
   capTime(index, value) {
 
@@ -337,9 +298,7 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-    this.devices.subscribe(data => {
-      data[index].cap_time = int_map[value];
-    })
+      this.devices[index].cap_time = int_map[value];
   }
   bombTime(index, value) {
 
@@ -348,26 +307,20 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-    this.devices.subscribe(data => {
-      data[index].bomb_time = int_map[value];
-    })
+      this.devices[index].bomb_time = int_map[value];
   }
   difuseTime(index, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-    this.devices.subscribe(data => {
-      data[index].diff_time = int_map[value];
-    })
+      this.devices[index].diff_time = int_map[value];
   }
   capasst(index, value) {
 
     var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
       0x05, 0x04, 0x02, 0x01]
 
-    this.devices.subscribe(data => {
-      data[index].cap_asst = int_map[value];
-    })
+      this.devices[index].cap_asst = int_map[value];
   }
 
   convertPerc(value) {
@@ -377,6 +330,7 @@ export class DeviceListComponent implements OnInit {
     return 100 / value
 
   }
+  
 }
 
 export class DeviceSettings {
@@ -400,6 +354,7 @@ export class DeviceSettings {
   }
 }
 export class MedicSettings {
+  id:number;
   team: string;
   constructor(
     team: string
