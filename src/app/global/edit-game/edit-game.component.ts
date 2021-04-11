@@ -99,8 +99,8 @@ export class EditGameComponent implements OnInit {
 
   newTeam(): FormGroup {
     return this.fb.group({
-     name:'kl',
-     color:'mk'
+     name:'Team Name',
+     color:''
     })
   }
 

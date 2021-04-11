@@ -27,9 +27,11 @@ export class UserServiceService {
   setUserData(userData){
     if(userData.user.type=='field'){
       this.isField = true;
+      this.isPlayer = false;
       this.fieldProfile.next(userData.user.fieldProfiles[0]);// set field profile to first by default for now
     }else if (userData.user.type =='player'){
       this.isPlayer = true;
+      this.isField = false;
     }
     this.token= userData.token;
     this.userType.next(userData.user.type);

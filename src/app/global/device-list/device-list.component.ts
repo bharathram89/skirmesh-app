@@ -54,7 +54,7 @@ export class DeviceListComponent implements OnInit {
       modeConfig => {
         this.userSvc.getUserData().subscribe(userData => {
 
-          console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
+          // console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
           this.mode = modeConfig.mode;
           this.selectedLocations=[];//this resets the selcted locations
           if (modeConfig.mode == 'createMode') {
