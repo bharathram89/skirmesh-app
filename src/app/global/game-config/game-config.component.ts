@@ -32,6 +32,7 @@ export class GameConfigComponent implements OnInit {
     });
   }
   onEditMode(gameMode) {
+    console.log(this.tabsComponent);
     this.tabsComponent.openTab(
       `Editing ${gameMode.name}`,
       this.editModeTemplate,
