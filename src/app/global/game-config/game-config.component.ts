@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { DeviceService } from 'src/service/device.service';
+import { UserServiceService } from 'src/service/user-service.service';
 import { TabsComponent } from '../tabs/tabs.component';
 
 @Component({
@@ -19,9 +21,15 @@ export class GameConfigComponent implements OnInit {
       map: 'Town'
     }
   ];
-  constructor() { }
+  userSvc:UserServiceService
+  deviceSvc:DeviceService
+  constructor(deviceSvc:DeviceService,userSvc:UserServiceService) { 
+    this.deviceSvc = deviceSvc;
+    this.userSvc = userSvc;
+  }
 
   ngOnInit(): void {
+    
     // this.savedGames.push({name:"Salina",numDevice:13,nodeTypes:"Bomb/Medic/Capture"})
   }
 
@@ -32,6 +40,7 @@ export class GameConfigComponent implements OnInit {
     });
   }
   onEditMode(gameMode) {
+    console.log(this.tabsComponent);
     this.tabsComponent.openTab(
       `Editing ${gameMode.name}`,
       this.editModeTemplate,
@@ -57,6 +66,7 @@ export class GameConfigComponent implements OnInit {
       // create a new one
       dataModel.id = Math.round(Math.random() * 100);
       this.gameModes.push(dataModel);
+      this.deviceSvc.saveGameConfigs(dataModel,this.userSvc.getToken())
     }
 
     // close the tab

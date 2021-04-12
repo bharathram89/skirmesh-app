@@ -46,6 +46,7 @@ export class TabsComponent  implements AfterContentInit {
   }
 
   openTab(title: string, template, data, isCloseable = false) {
+    // this.dynamicTabs = [];
     // get a component factory for our TabComponent
     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
       TabComponent

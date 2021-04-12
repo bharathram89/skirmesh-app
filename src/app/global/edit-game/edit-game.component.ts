@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
+import { BombSettings, CaptureSettings, DeviceSettings, MedicSettings } from '../node.modal';
 
 export class ColorPalette {
   name: string;
@@ -27,11 +28,10 @@ export class EditGameComponent implements OnInit {
   configSet:boolean=false;
   @Input() gameMode;
  deviceListConfigs :BehaviorSubject<any>;
- arrayInputs = [{name : ['a',Validators.required]}, {color: ['b',Validators.required]}];
   @Output() saveGameMode = new EventEmitter<any>();
   userSvc:UserServiceService;
   gameModeFrm={id:'',name:'',teams:[],nodeModes:'',map:'',quantities:[]}
-
+  devices;
   color:BehaviorSubject<ColorPalette>;
   colors: ColorPalette[] = [
     { name: 'Red', value: '#ff1744', foreground: 'white' ,id:0},
@@ -57,7 +57,7 @@ export class EditGameComponent implements OnInit {
   ];
 
 
-
+deviceConfigs;
   constructor(private fb: FormBuilder,
     private authSvc: AuthService,
     private userService: UserServiceService, ) {
@@ -83,32 +83,36 @@ export class EditGameComponent implements OnInit {
     });
     this.userSvc.getFieldProfile().subscribe(data=>{
       this.maps = data.maps;
+      this.devices = data.devices
+      this.deviceConfigs = this.makeDeviceModals(this.devices)
     })
     this.deviceListConfigs.next({
       mode:"createMode"
     })
-    // this.teams.patchValue(
-    //   [this.newTeam()])
-    // this.gameModeForm.get('teams').patchValue()
-    // this.values.push(this.gameModeForm.get('teams') as FormArray)
   }
 
   get teams() : FormArray {
     return this.gameModeForm.get("teams") as FormArray
   }
-
+  nodeConfigs(e){
+    this.configSet = true;
+    console.log(e," node Cofings receieved")
+    this.gameModeForm.value.nodeModes = e;
+    this.deviceConfigs = JSON.parse(e);
+    this.closeModal('')
+  }
+  saveConfigs(){
+    console.log(this.gameModeForm.value)
+  }
   newTeam(): FormGroup {
     return this.fb.group({
-     name:'kl',
-     color:'mk'
+     name:'Team Name',
+     color:''
     })
   }
 
   addTeam() {
-    // let newTm = this.newTeam();
-    // newTm.setValue({name:'val',color:'col'})
     this.teams.push(this.newTeam());
-    // this.gameModeForm.get('teams')
   }
   removeTeam(i:number) {
     this.teams.removeAt(i);
@@ -121,10 +125,6 @@ export class EditGameComponent implements OnInit {
         return locs['locations'];
       }
     })
-    // this.deviceListConfigs.next({
-    //   mode:"createMode",
-    //   location:this.locations['locations']
-    // })
     this.isMapSelected=true;
   }
   changeColor(e,i){
@@ -135,24 +135,21 @@ export class EditGameComponent implements OnInit {
   setNodes(){
 
     console.log(this.gameModeForm.get('teams')['controls'][0].value)
+
     this.deviceListConfigs.next({
       mode:"createMode",
       location:this.locations['locations'],
-      teams:this.gameModeForm.get('teams')['controls']
+      teams:this.gameModeForm.get('teams')['controls'],
+      nodeConfigs:this.deviceConfigs
     })
-    // document.getElementById("backdrop").style.display = "block"
     document.getElementById("exampleModal").style.display = "block"
     document.getElementById("exampleModal").className += "show"
   }
-  closeModal(){
-    // document.getElementById("backdrop").style.display = "none"
+  closeModal(e){
     document.getElementById("exampleModal").style.display = "none"
     document.getElementById("exampleModal").className += document.getElementById("exampleModal").className.replace("show", "")
   }
   ngOnInit() {
-    // this.teams.setValue([{name:'val',color:'val2'},{name:'val',color:'val2'}])
-    // console.log(this.gameModeForm.get('teams')['controls'])
-    // this.setArrayInputs(this.arrayInputs)
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
@@ -164,7 +161,26 @@ export class EditGameComponent implements OnInit {
 
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
+    console.log(dataModel)
     this.saveGameMode.emit(dataModel);
   }
+
+
+  makeDeviceModals(alldevices): DeviceSettings[] {
+    let arr: DeviceSettings[]=[];
+    alldevices.forEach(element => {
+      let med = new MedicSettings(false,null)
+      let bmb = new BombSettings(false,null,null,null)
+      let cap = new CaptureSettings(false,null,null,null,null)
+      let ds = new DeviceSettings(false,element.address,null,med,bmb,cap)
+      arr.push(ds)
+    });
+
+    return arr;
+  }
+
+
+  //
+
 
 }
