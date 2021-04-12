@@ -17,7 +17,7 @@ export class DeviceListComponent implements OnInit {
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
 
-  devices:any;// BehaviorSubject<any>;
+  devices: any;// BehaviorSubject<any>;
 
   REGISTER = 0x01;
   QUERY = 0x02;
@@ -32,97 +32,96 @@ export class DeviceListComponent implements OnInit {
   @Output() nodeConfigs = new EventEmitter<string>();
   @Output() modalClose = new EventEmitter<boolean>();
   mode: String;
-  locationsToSet=[];
-  setLocation=[];
-  leftLocations=[];
-  teamsAvaliable=[];
-  selectedLocations= [];
+  locationsToSet = [];
+  setLocation = [];
+  leftLocations = [];
+  teamsAvaliable = [];
+  selectedLocations = [];
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
     private router: Router) {
     this.userSvc = userService;
-    this.tokenSvc = tokenService; 
+    this.tokenSvc = tokenService;
   }
 
 
   ngOnInit(): void {
-
     this.config.subscribe(
       modeConfig => {
+        console.log(modeConfig);
         this.userSvc.getUserData().subscribe(userData => {
-
           // console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
           this.mode = modeConfig.mode;
-          this.selectedLocations=[];//this resets the selcted locations
+          this.selectedLocations = [];//this resets the selcted locations
           if (modeConfig.mode == 'createMode') {
-            this.locationsToSet=modeConfig.location;//set locations
+            this.locationsToSet = modeConfig.location;//set locations
             if (modeConfig.teams) {
               const teams = [];
               modeConfig.teams.forEach(element => {
                 console.log(element, element.value.name)
                 teams.push({ 'name': element.value.name })
               });
-              this.teamsAvaliable=teams//set teams
+              this.teamsAvaliable = teams//set teams
             }
           }
-          console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
-          this.devices=modeConfig.nodeConfigs;
-        }) 
+          console.log(modeConfig.nodeConfigs, 'passed in config in devicelist')
+          this.devices = modeConfig.nodeConfigs;
+        })
       }
     )
   }
 
-  closeModal(){
+  closeModal() {
     this.modalClose.emit(true)
   }
-  saveNodeConfigs(){
-    console.log(this.devices,"final configs")
+  saveNodeConfigs() {
+    console.log(this.devices, "final configs")
     this.nodeConfigs.emit(JSON.stringify(this.devices))
-  } 
-  
-  locationSelected(event,device) { 
+  }
+
+  locationSelected(event, device) {
     this.selectedLocations.push(event.target.value)
     device.location = event.target.value;
-    device.enabled =true;
+    device.enabled = true;
   }
-  getLocationList(){
-    let arr=[]; 
-        if(this.locationsToSet){
-          this.locationsToSet.forEach(loc => { 
-             if(this.selectedLocations.indexOf(loc.name) == -1){
-               if(arr) {
-                arr.push({'name':loc.name, 'isDisabled': false}); 
-               }
-             } else {
-              if(arr) {
-              arr.push({'name':loc.name, 'isDisabled': true});
-              }
-             }
-          });  
-        } 
-        
+  getLocationList() {
+    let arr = [];
+    if (this.locationsToSet) {
+      this.locationsToSet.forEach(loc => {
+        if (this.selectedLocations.indexOf(loc.name) == -1) {
+          if (arr) {
+            arr.push({ 'name': loc.name, 'isDisabled': false });
+          }
+        } else {
+          if (arr) {
+            arr.push({ 'name': loc.name, 'isDisabled': true });
+          }
+        }
+      });
+    }
+
     return arr;
   }
 
   enableMedic(device) {
-    device.medic.enabled=true;
-    device.bomb.enabled =false;
-    device.capture.enabled =false;
+    device.medic.enabled = true;
+    device.bomb.enabled = false;
+    device.capture.enabled = false;
   }
-  medicNodeTeamSelected(teamName,device){
+  medicNodeTeamSelected(teamName, device) {
     device.medic.team = teamName.target.value
   }
 
   enableQuery(device) {
-    device.query.enable=true;
-  } 
- 
-  enableRegister(device) { 
-    device.register.enable= true;
-  } 
+    device.query.enable = true;
+  }
 
- 
+  enableRegister(device) {
+    device.register.enable = true;
+  }
+
+
   convertPointScale(value) {
 
     var new_val
@@ -165,9 +164,9 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]                 // TODO: convert text based on range
 
-    
-      device.med_time = int_map[value];
-    
+
+    device.med_time = int_map[value];
+
   }
 
   convertTime(value) {
@@ -191,14 +190,14 @@ export class DeviceListComponent implements OnInit {
     return 100 / value
 
   }
-  
+
 
   //save data for capture all works
   enableCapture(device) {
-    device.medic.enabled=false;
-    device.bomb.enabled =false;
-    device.capture.enabled =true;
-  } 
+    device.medic.enabled = false;
+    device.bomb.enabled = false;
+    device.capture.enabled = true;
+  }
   capTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
@@ -206,37 +205,37 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-      device.capture.cap_time = int_map[value];
+    device.capture.cap_time = int_map[value];
   }
   capasst(device, value) {
 
     var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
       0x05, 0x04, 0x02, 0x01]
 
-      device.capture.cap_asst = int_map[value];
+    device.capture.cap_asst = int_map[value];
   }
   pointScale(device, value) {
 
     var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
       0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
 
-      device.capture.point_scale = int_map[value];
+    device.capture.point_scale = int_map[value];
   }
-  enableAllowMedic(device) { 
+  enableAllowMedic(device) {
     if (device.capture.allow_medic) {
       device.capture.allow_medic = false;
     } else {
       device.capture.allow_medic = true;
-    } 
-}
+    }
+  }
 
 
   //save data for bomb all works
-  enableBomb(device) { 
-    device.medic.enabled=false;
-    device.bomb.enabled =true;
-    device.capture.enabled =false;
-  } 
+  enableBomb(device) {
+    device.medic.enabled = false;
+    device.bomb.enabled = true;
+    device.capture.enabled = false;
+  }
   armTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -250,7 +249,7 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-      device.bomb.bomb_time = int_map[value];//fusetimer?
+    device.bomb.bomb_time = int_map[value];//fusetimer?
   }
   difuseTime(device, value) {
 

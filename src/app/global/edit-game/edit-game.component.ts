@@ -58,6 +58,7 @@ export class EditGameComponent implements OnInit {
 
 
 deviceConfigs;
+gameConfigs;
   constructor(private fb: FormBuilder,
     private authSvc: AuthService,
     private userService: UserServiceService, ) {
@@ -82,9 +83,11 @@ deviceConfigs;
       ])
     });
     this.userSvc.getFieldProfile().subscribe(data=>{
+      console.log(data);
       this.maps = data.maps;
-      this.devices = data.devices
-      this.deviceConfigs = this.makeDeviceModals(this.devices)
+      this.devices = data.devices;
+      this.gameConfigs = data.gameConfigs;
+      this.deviceConfigs = this.makeDeviceModals(this.devices, this.gameConfigs)
     })
     this.deviceListConfigs.next({
       mode:"createMode"
@@ -134,13 +137,11 @@ deviceConfigs;
   }
   setNodes(){
 
-    console.log(this.gameModeForm.get('teams')['controls'][0].value)
-
     this.deviceListConfigs.next({
       mode:"createMode",
       location:this.locations['locations'],
       teams:this.gameModeForm.get('teams')['controls'],
-      nodeConfigs:this.deviceConfigs
+      nodeConfigs: JSON.parse(this.gameModeForm.get('nodeModes').value)
     })
     document.getElementById("exampleModal").style.display = "block"
     document.getElementById("exampleModal").className += "show"
@@ -166,7 +167,7 @@ deviceConfigs;
   }
 
 
-  makeDeviceModals(alldevices): DeviceSettings[] {
+  makeDeviceModals(alldevices, gameConfigs): DeviceSettings[] {
     let arr: DeviceSettings[]=[];
     alldevices.forEach(element => {
       let med = new MedicSettings(false,null)
