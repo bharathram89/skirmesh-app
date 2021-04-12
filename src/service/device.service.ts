@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tokenName } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { TokenStorageService } from './token-storage.service';
+import { UserServiceService } from './user-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +17,28 @@ export class DeviceService {
 
   BASE = 'http://api.skirmesh.net/';
 
+userSvc:UserServiceService;
 
   constructor(private http:HttpClient,
-    tokenSvc:TokenStorageService) { 
-
+    tokenSvc:TokenStorageService,
+    userSvc: UserServiceService) { 
+      this.userSvc = userSvc;
   }
   saveGameConfigs(data,token){
-console.log(data,"data to send back")
-    // this.http.post(this.BASE+'resources/gameConfig?token='+token,data,this.options)
+    let stuff = {
+      description:data.name,
+      mapID:'',//get mapid
+      deviceMap:data.nodeModes,
+      fieldProfileID:this.userSvc.getFieldProfile()['id']
+    }
+    console.log(data,"data to send back",stuff)
+
+    return this.http.post(this.BASE+'resources/gameConfig?token='+token,data,this.options)
   }
   modifyGameConfig(data, token){
-    this.http.put(this.BASE+'resources/gameConfig?token='+token,data,this.options)
+    return this.http.put(this.BASE+'resources/gameConfig?token='+token,data,this.options)
+  }
+  getGameConfigs(token){
+    return this.http.get(this.BASE+'resources/gameConfig?token='+token)
   }
 }
