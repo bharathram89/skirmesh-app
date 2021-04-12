@@ -40,13 +40,12 @@ export class HeaderComponent implements OnInit {
       this.isSecure = isSignedIn;
     })
 
-    this.userSvc.getUserTye().subscribe(userType=>{
+    let userType = this.userSvc.getUserTye()
       if(userType=='field'){
         this.isField=true;
       }else if(userType =='player'){
         this.isPlayer=true;
-      }
-    })
+      } 
 
     // particlesJS( "particles-js", {
     //   "particles": {

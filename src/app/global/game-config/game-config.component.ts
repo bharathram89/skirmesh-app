@@ -23,6 +23,7 @@ export class GameConfigComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.deviceSvc.getGameConfigs(this.userSvc.getToken()).subscribe(savedConfigs=>{
       console.log(savedConfigs[0],"savedConfigs");
       JSON.parse(JSON.stringify(savedConfigs)).forEach(savedConfig => { 
@@ -44,7 +45,7 @@ export class GameConfigComponent implements OnInit {
     });
   }
   onEditMode(gameMode) {
-    console.log(this.tabsComponent);
+    console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
     this.tabsComponent.openTab(
       `Editing ${gameMode.name}`,
       this.editModeTemplate,
@@ -68,9 +69,19 @@ export class GameConfigComponent implements OnInit {
       });
     } else {
       // create a new one
+      console.log(dataModel,"data to be send to api")
+      let apiData ={
+        mapID:this.userSvc.findMapID(dataModel.map),
+        fieldProfileID:this.userSvc.getFieldProfileID(),
+        description:dataModel.name,
+        deviceMap:dataModel.nodeModes
+      }
+
       dataModel.id = Math.round(Math.random() * 100);
       this.gameModes.push(dataModel);
-      this.deviceSvc.saveGameConfigs(dataModel,this.userSvc.getToken())
+      this.deviceSvc.saveGameConfigs(apiData,this.userSvc.getToken()).subscribe(data=>{
+
+      })
     }
 
     // close the tab

@@ -8,19 +8,21 @@ import { TokenStorageService } from './token-storage.service';
 })
 export class UserServiceService {
   signedIn: BehaviorSubject<boolean>;
-  userType: BehaviorSubject<String>;
+  userType;
   userData: BehaviorSubject<any>;
   tokenSvc:TokenStorageService;
   isField:boolean=false;
   isPlayer:boolean=false;
   token;
+  fieldProfileID;
   fieldProfile: BehaviorSubject<any>;
+  fieldPf;
   constructor(
     tokenService: TokenStorageService
   ) {
     this.tokenSvc= tokenService;
     this.signedIn = new BehaviorSubject(false);
-    this.userType = new BehaviorSubject('');
+    // this.userType = new BehaviorSubject('');
     this.userData = new BehaviorSubject({});
     this.fieldProfile = new BehaviorSubject({});
   }
@@ -28,15 +30,28 @@ export class UserServiceService {
     if(userData.user.type=='field'){
       this.isField = true;
       this.isPlayer = false;
+      this.fieldProfileID = userData.user.fieldProfiles[0].id;
+      this.fieldPf = userData.user.fieldProfiles[0];
       this.fieldProfile.next(userData.user.fieldProfiles[0]);// set field profile to first by default for now
     }else if (userData.user.type =='player'){
       this.isPlayer = true;
       this.isField = false;
     }
     this.token= userData.token;
-    this.userType.next(userData.user.type);
+    this.userType = userData.user.type;
     this.userData.next(userData.user)
     this.tokenSvc.saveToken(userData.token)
+  }
+  findMapID(mapName){
+    this.fieldPf.maps.forEach(map => {
+      if(map.name == mapName){
+        return map.id;
+      } 
+    });
+    return 
+  }
+  getFieldProfileID(){
+    return this.fieldProfileID;
   }
   getFieldProfile(){
     return this.fieldProfile;

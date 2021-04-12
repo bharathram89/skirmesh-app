@@ -141,7 +141,7 @@ gameConfigs;
       mode:"createMode",
       location:this.locations['locations'],
       teams:this.gameModeForm.get('teams')['controls'],
-      nodeConfigs: JSON.parse(this.gameModeForm.get('nodeModes').value)
+      nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
     })
     document.getElementById("exampleModal").style.display = "block"
     document.getElementById("exampleModal").className += "show"
@@ -154,10 +154,19 @@ gameConfigs;
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
-      teams: [{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
+      teams: this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
       nodeModes: this.gameMode.nodeModes || '',
       map: this.gameMode.map || ''
     });
+    
+    if(this.gameMode.map){
+      this.locations = this.maps.find(locs=>{
+        if(locs['name']==this.gameMode.map){
+          return locs['locations'];
+        }
+      })
+
+    }
   }
 
   onNewGameModeFormSubmit() {

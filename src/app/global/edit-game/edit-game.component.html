@@ -45,7 +45,7 @@
   <button type="button" class="btn btn-success cust_btn" [disabled]="!gameModeForm.controls['map'].valid " (click)="setNodes()">Click here
     to Edit Device Configurations</button>
   <br />
-  <button type="submit" [disabled]="!gameModeForm.controls['map'].valid || !gameModeForm.controls['teams'].valid || !gameModeForm.controls['nodeModes'].valid" class="btn btn-primary">Save</button>
+  <button type="submit" [disabled]="" class="btn btn-primary">Save</button>
   <div style="max-width:100%">
     <app-device-list (modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
       
