@@ -128,7 +128,7 @@ export class DeviceListComponent implements OnInit {
           }
           this.devices.next(this.makeDeviceModals(userData.fieldProfiles[0].devices));
 
-          
+
         })
 
       }
@@ -148,7 +148,7 @@ export class DeviceListComponent implements OnInit {
     return arr;
   }
 
-  isNodeEnabled(index) { 
+  isNodeEnabled(index) {
     var enabled = false;
     this.devices.subscribe(data => {
       if(data[index].location){
@@ -157,13 +157,13 @@ export class DeviceListComponent implements OnInit {
     })
     return enabled;
   }
-  locationSelected(event,index) { 
+  locationSelected(event,index) {
     this.devices.subscribe(
       devices=>{
         devices[index].location = event.target.value;
         console.log(devices,event.target.value,"data",index)
       }
-    ) 
+    )
   }
   pointScale(index, value) {
 
@@ -238,6 +238,12 @@ export class DeviceListComponent implements OnInit {
 
   }
 
+  enableGlobal() {
+    
+  }
+  isGlobalEnabled() {
+
+  }
   enableAllowMedic(num) {
     this.devices.subscribe(data => {
       if (data[num].allow_medic) {
@@ -399,4 +405,3 @@ export class DeviceListComponent implements OnInit {
 
   }
 }
-

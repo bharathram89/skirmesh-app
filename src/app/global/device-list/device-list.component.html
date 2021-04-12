@@ -9,9 +9,14 @@
             Teams Avaliable To Set: [<div *ngFor="let team of (teamsAvaliable | async); let x = index"><a
                     class="badge badge-pill badge-light">{{ team.name }} </a></div>]
         </div>
+        <div class="custom-control custom-switch">
+            <input (click)="enableGlobal" [disabled]="isGlobalEnabled()" type="checkbox"
+                class="custom-control-input" id="enableGlobalSwitch" [checked]="isGlobalEnabled()">
+            <label class="custom-control-label" for="enableGlobalSwitch">Update ALL</label>
+        </div>
         <div class="center-cust row">
 
-            <div *ngFor="let device of (devices | async) | paginate: { itemsPerPage: 4, currentPage: p }; let i = index"
+            <div *ngFor="let device of (devices | async); let i = index"
                 class="card user-card">
 
                 <div class="card-header">
@@ -177,9 +182,9 @@
 
 
         </div>
-        <div class="row center-cust ">
+        <!-- <div class="row center-cust ">
             <pagination-controls (pageChange)="p = $event"></pagination-controls>
-        </div>
+        </div> -->
     </div>
 </div>
 
