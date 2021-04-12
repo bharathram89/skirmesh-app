@@ -74,7 +74,7 @@
                                                     (change)="medicNodeTeamSelected($event,device)"
                                                     [(ngModel)]="device.medic.team" >
                                                         <option value="none" selected disabled hidden>Select Team</option>
-                                                        <option [value]="team.name" 
+                                                        <option [value]="team.name"
                                                             *ngFor="let team of teamsAvaliable; let i = index">
                                                             {{team.name}}
                                                         </option>

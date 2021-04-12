@@ -42,7 +42,7 @@ export class DeviceListComponent implements OnInit {
     tokenService: TokenStorageService,
     private router: Router) {
     this.userSvc = userService;
-    this.tokenSvc = tokenService; 
+    this.tokenSvc = tokenService;
   }
 
 
@@ -68,7 +68,7 @@ export class DeviceListComponent implements OnInit {
           }
           console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
           this.devices=modeConfig.nodeConfigs;
-        }) 
+        })
       }
     )
   }
@@ -87,21 +87,21 @@ export class DeviceListComponent implements OnInit {
     device.enabled =true;
   }
   getLocationList(){
-    let arr=[]; 
+    let arr=[];
         if(this.locationsToSet){
-          this.locationsToSet.forEach(loc => { 
+          this.locationsToSet.forEach(loc => {
              if(this.selectedLocations.indexOf(loc.name) == -1){
                if(arr) {
-                arr.push({'name':loc.name, 'isDisabled': false}); 
+                arr.push({'name':loc.name, 'isDisabled': false});
                }
              } else {
               if(arr) {
               arr.push({'name':loc.name, 'isDisabled': true});
               }
              }
-          });  
-        } 
-        
+          });
+        }
+
     return arr;
   }
 
@@ -122,7 +122,6 @@ export class DeviceListComponent implements OnInit {
     device.register.enable= true;
   } 
 
- 
   convertPointScale(value) {
 
     var new_val
@@ -191,7 +190,7 @@ export class DeviceListComponent implements OnInit {
     return 100 / value
 
   }
-  
+
 
   //save data for capture all works
   enableCapture(device) {
