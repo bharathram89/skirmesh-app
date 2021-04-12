@@ -65,8 +65,8 @@ export class DeviceListComponent implements OnInit {
               this.teamsAvaliable = teams//set teams
             }
           }
-          console.log(modeConfig.nodeConfigs, 'passed in config in devicelist')
-          this.devices = modeConfig.nodeConfigs;
+          console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
+          this.devices=modeConfig.nodeConfigs;
         })
       }
     )
@@ -85,22 +85,21 @@ export class DeviceListComponent implements OnInit {
     device.location = event.target.value;
     device.enabled = true;
   }
-  getLocationList() {
-    let arr = [];
-    if (this.locationsToSet) {
-      this.locationsToSet.forEach(loc => {
-        if (this.selectedLocations.indexOf(loc.name) == -1) {
-          if (arr) {
-            arr.push({ 'name': loc.name, 'isDisabled': false });
-          }
-        } else {
-          if (arr) {
-            arr.push({ 'name': loc.name, 'isDisabled': true });
-          }
+  getLocationList(){
+    let arr=[];
+        if(this.locationsToSet){
+          this.locationsToSet.forEach(loc => {
+             if(this.selectedLocations.indexOf(loc.name) == -1){
+               if(arr) {
+                arr.push({'name':loc.name, 'isDisabled': false});
+               }
+             } else {
+              if(arr) {
+              arr.push({'name':loc.name, 'isDisabled': true});
+              }
+             }
+          });
         }
-      });
-    }
-
     return arr;
   }
 
@@ -114,13 +113,12 @@ export class DeviceListComponent implements OnInit {
   }
 
   enableQuery(device) {
-    device.query.enable = true;
-  }
-
-  enableRegister(device) {
-    device.register.enable = true;
-  }
-
+    device.query.enable=true;
+  } 
+ 
+  enableRegister(device) { 
+    device.register.enable= true;
+  } 
 
   convertPointScale(value) {
 
