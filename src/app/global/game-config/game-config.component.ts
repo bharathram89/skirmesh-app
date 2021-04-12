@@ -13,13 +13,7 @@ export class GameConfigComponent implements OnInit {
   @ViewChild('gameModeEdit') editModeTemplate;
   @ViewChild(TabsComponent) tabsComponent;
   gameModes = [
-    {
-      id: 1,
-      name: 'Weekend Morning Game 1',
-      teams: '4',
-      nodeModes: 'Capture/Medic',
-      map: 'Town'
-    }
+ 
   ];
   userSvc:UserServiceService
   deviceSvc:DeviceService
@@ -29,8 +23,18 @@ export class GameConfigComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-    // this.savedGames.push({name:"Salina",numDevice:13,nodeTypes:"Bomb/Medic/Capture"})
+    this.deviceSvc.getGameConfigs(this.userSvc.getToken()).subscribe(savedConfigs=>{
+      console.log(savedConfigs[0],"savedConfigs");
+      JSON.parse(JSON.stringify(savedConfigs)).forEach(savedConfig => { 
+        this.gameModes.push({
+          id:savedConfig.id,
+          name:savedConfig.description,
+          teams:savedConfig.teams,
+          nodeModes:savedConfig.deviceMap,
+          map:savedConfig.mapID
+        }); 
+      }); 
+    }) 
   }
 
   onDeleteMode(gameMode){
