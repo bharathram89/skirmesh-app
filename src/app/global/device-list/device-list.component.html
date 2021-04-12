@@ -29,7 +29,7 @@
                                 <div class="card-header">
 
                                     <h4>Location:
-                                        <select class="form-control" (change)="locationSelected($event,i)"
+                                        <select class="form-control" (change)="locationSelected($event,device)"
                                             [(ngModel)]="device.location"> 
                                             <option value="none" selected disabled hidden>Select Location</option>
                                             <option [value]="location.name"
@@ -45,13 +45,13 @@
                                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                                 </div>
 
-                                <div *ngIf="devices[i].enabled" class="card-body">
+                                <div *ngIf="device.enabled" class="card-body">
 
                                     <div *ngIf="mode !== 'createMode'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableQuery(i)" [disabled]="isQueryEnabled(i)"
+                                            <input (click)="enableQuery(device)" [disabled]="isQueryEnabled(device)"
                                                 type="checkbox" class="custom-control-input" [id]="'querySwitch-' + i"
-                                                [checked]="isQueryEnabled(i)">
+                                                [checked]="isQueryEnabled(device)">
                                             <label class="custom-control-label" [for]="'querySwitch-' + i">Player
                                                 Query</label>
                                         </div>
@@ -60,19 +60,19 @@
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableMedic(i)"  
+                                            <input (click)="enableMedic(device)"  
                                                 type="checkbox" class="custom-control-input" [id]="'medicSwitch-' + i"
-                                                [checked]="devices[i].medic.enabled">
+                                                [checked]="device.medic.enabled">
                                             <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
                                                 Station</label>
                                         </div>
-                                        <div *ngIf="devices[i].medic.enabled">
+                                        <div *ngIf="device.medic.enabled">
                                             <div class="card card-body">
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
                                                     <select class="form-control"
-                                                    (change)="medicNodeTeamSelected($event,i)"
-                                                    [(ngModel)]="devices[i].medic.team" >
+                                                    (change)="medicNodeTeamSelected($event,device)"
+                                                    [(ngModel)]="device.medic.team" >
                                                         <option value="none" selected disabled hidden>Select Team</option>
                                                         <option [value]="team.name" 
                                                             *ngFor="let team of teamsAvaliable; let i = index">
@@ -87,16 +87,16 @@
 
                                     <div *ngIf="mode !== 'createMode'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableRegister(i)" [disabled]="isRegisterEnabled(i)"
+                                            <input (click)="enableRegister(device)" [disabled]="isRegisterEnabled(device)"
                                                 type="checkbox" class="custom-control-input"
-                                                [id]="'registerSwitch-' + i" [checked]="isRegisterEnabled(i)">
+                                                [id]="'registerSwitch-' + i" [checked]="isRegisterEnabled(device)">
                                             <label class="custom-control-label" [for]="'registerSwitch-' + i">Register
                                                 Team</label>
                                         </div>
-                                        <div *ngIf="isRegisterEnabled(i)">
+                                        <div *ngIf="isRegisterEnabled(device)">
                                             <div class="card card-body">
                                                 <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS -->
-                                                <div *ngIf="isMedicEnabled(i)">
+                                                <div *ngIf="isMedicEnabled(device)">
                                                     <div class="card card-body">
                                                         <div class="form-group">
                                                             <label for="armTime">Team</label>
@@ -116,19 +116,19 @@
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableBomb(i)"  type="checkbox"
+                                            <input (click)="enableBomb(device)"  type="checkbox"
                                                 class="custom-control-input" [id]="'bombSwitch-' + i"
-                                                [checked]="devices[i].bomb.enabled">
+                                                [checked]="device.bomb.enabled">
                                             <label class="custom-control-label"
                                                 [for]="'bombSwitch-' + i">Bomb/IED</label>
                                         </div>
-                                        <div *ngIf="devices[i].bomb.enabled">
+                                        <div *ngIf="device.bomb.enabled">
                                             <div class="card card-body">
                                                 <div class="form-group">
                                                     <label for="armTime">Arm Time</label>
                                                     <input class="form-control-range" id="armTime" type="range" min="0"
                                                         max="11" [value]="getTimeIndex(device.bomb.arm_time)" step="1"
-                                                        (input)="armTime(i,$event.target.value)">
+                                                        (input)="armTime(device,$event.target.value)">
                                                     {{convertTime(device.bomb.arm_time)}}
                                                 </div>
                                                 <hr>
@@ -136,7 +136,7 @@
                                                     <label for="blastTime">Fuse Timer</label>
                                                     <input class="form-control-range" id="blastTime" type="range"
                                                         min="0" max="32" [value]="getTimeIndex(device.bomb.bomb_time)"
-                                                        step="1" (input)="bombTime(i,$event.target.value)">
+                                                        step="1" (input)="bombTime(device,$event.target.value)">
                                                     {{convertTime(device.bomb.bomb_time)}}
                                                 </div>
                                                 <hr>
@@ -144,7 +144,7 @@
                                                     <label for="difuseTime">Diffuse Time</label>
                                                     <input class="form-control-range" id="difuseTime" type="range"
                                                         min="0" max="11" [value]="getTimeIndex(device.bomb.diff_time)"
-                                                        step="1" (input)="difuseTime(i,$event.target.value)">
+                                                        step="1" (input)="difuseTime(device,$event.target.value)">
                                                     {{convertTime(device.bomb.diff_time)}}
                                                 </div>
                                             </div>
@@ -155,20 +155,20 @@
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableCapture(i)" 
+                                            <input (click)="enableCapture(device)" 
                                                 type="checkbox" class="custom-control-input" [id]="'captureSwitch-' + i"
-                                                [checked]="devices[i].capture.enabled">
+                                                [checked]="device.capture.enabled">
                                             <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
                                                 Point</label>
                                         </div>
-                                        <div *ngIf="devices[i].capture.enabled">
+                                        <div *ngIf="device.capture.enabled">
                                             <div class="card card-body">
 
                                                 <div class="form-group">
                                                     <label for="captime">Stabilization Time</label>
                                                     <input class="form-control-range" id="captime" type="range" min="0"
                                                         max="32" [value]="getTimeIndex(device.capture.cap_time)" step="1"
-                                                        (input)="capTime(i,$event.target.value)">
+                                                        (input)="capTime(device,$event.target.value)">
                                                     {{convertTime(device.capture.cap_time)}}
                                                 </div>
                                                 <hr>
@@ -176,7 +176,7 @@
                                                     <label for="capasst">Capture Assist</label>
                                                     <input class="form-control-range" id="capasst" type="range" min="0"
                                                         max="8" [value]="getPercIndex(device.capture.cap_asst)" step="1"
-                                                        (input)="capasst(i,$event.target.value)">
+                                                        (input)="capasst(device,$event.target.value)">
                                                     {{convertPerc(device.capture.cap_asst)}} %
                                                 </div>
                                                 <hr>
@@ -184,12 +184,12 @@
                                                     <label for="pointScale">Point Scale</label>
                                                     <input class="form-control-range" id="pointScale" type="range"
                                                         min="0" max="11" [value]="getScaleIndex(device.capture.point_scale)"
-                                                        step="1" (input)="pointScale(i,$event.target.value)">
+                                                        step="1" (input)="pointScale(device,$event.target.value)">
                                                     {{convertPointScale(device.capture.point_scale)}}
                                                 </div>
                                                 <hr>
                                                 <div class="custom-control custom-switch">
-                                                    <input (click)="enableAllowMedic(i)" type="checkbox"
+                                                    <input (click)="enableAllowMedic(device)" type="checkbox"
                                                         class="custom-control-input" [id]="'allowMedicSwitch-' + i"
                                                         [checked]="device.capture.allow_medic">
                                                     <label class="custom-control-label"

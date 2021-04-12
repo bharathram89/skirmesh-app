@@ -81,10 +81,10 @@ export class DeviceListComponent implements OnInit {
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   } 
   
-  locationSelected(event,index) { 
+  locationSelected(event,device) { 
     this.selectedLocations.push(event.target.value)
-    this.devices[index].location = event.target.value;
-    this.devices[index].enabled =true;
+    device.location = event.target.value;
+    device.enabled =true;
   }
   getLocationList(){
     let arr=[]; 
@@ -105,21 +105,21 @@ export class DeviceListComponent implements OnInit {
     return arr;
   }
 
-  enableMedic(num) {
-    this.devices[num].medic.enabled=true;
-    this.devices[num].bomb.enabled =false;
-    this.devices[num].capture.enabled =false;
+  enableMedic(device) {
+    device.medic.enabled=true;
+    device.bomb.enabled =false;
+    device.capture.enabled =false;
   }
-  medicNodeTeamSelected(teamName,index){
-    this.devices[index].medic.team = teamName.target.value
+  medicNodeTeamSelected(teamName,device){
+    device.medic.team = teamName.target.value
   }
 
-  enableQuery(num) {
-    this.devices[num].query.enable=true;
+  enableQuery(device) {
+    device.query.enable=true;
   } 
  
-  enableRegister(num) { 
-    this.devices[num].register.enable= true;
+  enableRegister(device) { 
+    device.register.enable= true;
   } 
 
  
@@ -158,7 +158,7 @@ export class DeviceListComponent implements OnInit {
     return int_map.indexOf(value)
   }
 
-  medicTime(index, value) {
+  medicTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,          // Use discrete values to convert
       15, 18, 21, 24, 27, 30,                   // to simple times used for gameplay
@@ -166,7 +166,7 @@ export class DeviceListComponent implements OnInit {
       120, 150, 180, 210, 240]                 // TODO: convert text based on range
 
     
-      this.devices[index].med_time = int_map[value];
+      device.med_time = int_map[value];
     
   }
 
@@ -194,69 +194,69 @@ export class DeviceListComponent implements OnInit {
   
 
   //save data for capture all works
-  enableCapture(num) {
-    this.devices[num].medic.enabled=false;
-    this.devices[num].bomb.enabled =false;
-    this.devices[num].capture.enabled =true;
+  enableCapture(device) {
+    device.medic.enabled=false;
+    device.bomb.enabled =false;
+    device.capture.enabled =true;
   } 
-  capTime(index, value) {
+  capTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
       15, 18, 21, 24, 27, 30,
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-      this.devices[index].capture.cap_time = int_map[value];
+      device.capture.cap_time = int_map[value];
   }
-  capasst(index, value) {
+  capasst(device, value) {
 
     var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
       0x05, 0x04, 0x02, 0x01]
 
-      this.devices[index].capture.cap_asst = int_map[value];
+      device.capture.cap_asst = int_map[value];
   }
-  pointScale(index, value) {
+  pointScale(device, value) {
 
     var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
       0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
 
-      this.devices[index].capture.point_scale = int_map[value];
+      device.capture.point_scale = int_map[value];
   }
-  enableAllowMedic(num) { 
-    if (this.devices[num].capture.allow_medic) {
-      this.devices[num].capture.allow_medic = false;
+  enableAllowMedic(device) { 
+    if (device.capture.allow_medic) {
+      device.capture.allow_medic = false;
     } else {
-      this.devices[num].capture.allow_medic = true;
+      device.capture.allow_medic = true;
     } 
 }
 
 
   //save data for bomb all works
-  enableBomb(num) { 
-    this.devices[num].medic.enabled=false;
-    this.devices[num].bomb.enabled =true;
-    this.devices[num].capture.enabled =false;
+  enableBomb(device) { 
+    device.medic.enabled=false;
+    device.bomb.enabled =true;
+    device.capture.enabled =false;
   } 
-  armTime(index, value) {
+  armTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-      this.devices[index].bomb.arm_time = int_map[value];
+    device.bomb.arm_time = int_map[value];
   }
-  bombTime(index, value) {
+  bombTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
       15, 18, 21, 24, 27, 30,
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-      this.devices[index].bomb.bomb_time = int_map[value];//fusetimer?
+      device.bomb.bomb_time = int_map[value];//fusetimer?
   }
-  difuseTime(index, value) {
+  difuseTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-      this.devices[index].bomb.diff_time = int_map[value];
+    device.bomb.diff_time = int_map[value];
   }
 
 }
