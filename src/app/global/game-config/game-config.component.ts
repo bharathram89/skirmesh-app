@@ -25,7 +25,7 @@ export class GameConfigComponent implements OnInit {
   ngOnInit(): void {
     
     this.deviceSvc.getGameConfigs(this.userSvc.getToken()).subscribe(savedConfigs=>{
-      console.log(savedConfigs[0],"savedConfigs");
+      // console.log(savedConfigs[0],"savedConfigs");
       JSON.parse(JSON.stringify(savedConfigs)).forEach(savedConfig => { 
         this.gameModes.push({
           id:savedConfig.id,
@@ -40,14 +40,14 @@ export class GameConfigComponent implements OnInit {
 
   onDeleteMode(gameMode){
     this.deviceSvc.deleteGameConfig(this.userSvc.getToken(),gameMode.id).subscribe(data=>{
-      console.log(data,"delete")
+      // console.log(data,"delete")
       this.gameModes = this.gameModes.filter(function( obj ) {
         return obj.id !== gameMode.id;
       });
     })
   }
   onEditMode(gameMode) {
-    console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
+    // console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
     this.tabsComponent.openTab(
       `Editing ${gameMode.name}`,
       this.editModeTemplate,
@@ -62,6 +62,17 @@ export class GameConfigComponent implements OnInit {
 
   onGameModeFormSubmit(dataModel) {
     if (dataModel.id > 0) {
+      let apiData ={ 
+        mapID:this.userSvc.findMapID(dataModel.map),
+        fieldProfileID:this.userSvc.getFieldProfileID(),
+        description:dataModel.name,
+        deviceMap:dataModel.nodeModes,
+        teams:dataModel.teams
+      }
+      // console.log('edit gameconfig',apiData)
+      this.deviceSvc.modifyGameConfig(apiData,this.userSvc.getToken()).subscribe(data=>{
+
+      })
       this.gameModes = this.gameModes.map(gameMode => {
         if (gameMode.id === dataModel.id) {
           return dataModel;
@@ -78,7 +89,7 @@ export class GameConfigComponent implements OnInit {
         deviceMap:dataModel.nodeModes,
         teams:dataModel.teams
       }
-      console.log(dataModel,"data to be send to api",apiData)
+      // console.log('create gameconfig',apiData)
 
       dataModel.id = Math.round(Math.random() * 100); 
       this.gameModes.push(dataModel);

@@ -83,7 +83,7 @@ gameConfigs;
       ])
     });
     this.userSvc.getFieldProfile().subscribe(data=>{
-      console.log(data);
+      // console.log(data);
       this.maps = data.maps;
       this.devices = data.devices;
       this.gameConfigs = data.gameConfigs;
@@ -99,13 +99,13 @@ gameConfigs;
   }
   nodeConfigs(e){
     this.configSet = true;
-    console.log(e," node Cofings receieved")
+    // console.log(e," node Cofings receieved")
     this.gameModeForm.value.nodeModes = e;
     this.deviceConfigs = JSON.parse(e);
     this.closeModal('')
   }
   saveConfigs(){
-    console.log(this.gameModeForm.value)
+    // console.log(this.gameModeForm.value)
   }
   newTeam(): FormGroup {
     return this.fb.group({
@@ -132,7 +132,7 @@ gameConfigs;
   }
   changeColor(e,i){
     let color = this.colors.filter(color=>{return color.name==e.target.value})[0]
-    console.log(color,e.target.value,i,'selected color')
+    // console.log(color,e.target.value,i,'selected color')
      this.color.next(color)
   }
   setNodes(){
@@ -171,7 +171,7 @@ gameConfigs;
 
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
-    console.log(dataModel)
+    // console.log(dataModel)
     this.saveGameMode.emit(dataModel);
   }
 

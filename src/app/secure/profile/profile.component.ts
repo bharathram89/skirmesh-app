@@ -165,7 +165,7 @@ export class ProfileComponent implements OnInit {
       this.profileForm.value.profile ? data.field['profile'] = this.profileForm.value.profile : null;
       // Need to include the fieldProfiles[...].id  --- we're just taking the first for now
       data.field['id'] = this.currentVals.fieldProfileID;
-      console.log(data.field);
+      // console.log(data.field);
 
     } else if (this.isPlayer) {
       this.profileForm.value.callSign ? data.user['callSign'] = this.profileForm.value.callSign:null;
@@ -174,12 +174,12 @@ export class ProfileComponent implements OnInit {
       // Need to include the playerProfile.id
       data.player['id'] = this.currentVals.userID;
     }
-    console.log(data.player)
+    // console.log(data.player)
     this.authSvc.saveProfile(this.userSvc.getToken(), data).subscribe(
       resp => {
         // this.profileForm.reset();
         document.getElementById('userCreatedMessage').classList.remove('d-none')
-        console.log(resp, "resp")
+        // console.log(resp, "resp")
       },
       err=>{
         this.profileForm.reset();
@@ -216,7 +216,7 @@ export class ProfileComponent implements OnInit {
                           'fieldProfileID':this.currentVals.fieldProfileID},
                  'image':{'data':this.base64toUpload}};
 
-    console.log(data)
+    // console.log(data)
 
     this.authSvc.saveImage(this.userSvc.getToken(), data);
 

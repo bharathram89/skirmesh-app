@@ -49,7 +49,7 @@ export class DeviceListComponent implements OnInit {
   ngOnInit(): void {
     this.config.subscribe(
       modeConfig => {
-        console.log(modeConfig);
+        // console.log(modeConfig);
         this.userSvc.getUserData().subscribe(userData => {
           // console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
           this.mode = modeConfig.mode;
@@ -59,7 +59,7 @@ export class DeviceListComponent implements OnInit {
             if (modeConfig.teams) {
               const teams = [];
               modeConfig.teams.forEach(element => {
-                console.log(element, element.value.name)
+                // console.log(element, element.value.name)
                 teams.push({ 'name': element.value.name })
               });
               this.teamsAvaliable = teams//set teams
@@ -70,7 +70,7 @@ export class DeviceListComponent implements OnInit {
           }else{
             this.devices=modeConfig.nodeConfigs;
           }
-          console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
+          // console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
         })
       }
     )
@@ -80,7 +80,7 @@ export class DeviceListComponent implements OnInit {
     this.modalClose.emit(true)
   }
   saveNodeConfigs() {
-    console.log(this.devices, "final configs")
+    // console.log(this.devices, "final configs")
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   }
 
