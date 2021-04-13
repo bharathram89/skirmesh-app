@@ -14,6 +14,7 @@ import {
 } from 'angularx-social-login';
 import { UserServiceService } from 'src/service/user-service.service';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { UserServiceService } from 'src/service/user-service.service';
     BrowserModule,
     AppRoutingModule,
     GlobalModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [
     UserServiceService,

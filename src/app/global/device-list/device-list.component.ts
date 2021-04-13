@@ -17,7 +17,7 @@ export class DeviceListComponent implements OnInit {
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
 
-  devices: any;// BehaviorSubject<any>;
+  devices=[];// BehaviorSubject<any>;
 
   REGISTER = 0x01;
   QUERY = 0x02;
@@ -29,8 +29,7 @@ export class DeviceListComponent implements OnInit {
 
   @Input() config;
 
-  @Output() nodeConfigs = new EventEmitter<string>();
-  @Output() modalClose = new EventEmitter<boolean>();
+  @Output() nodeConfigs = new EventEmitter<string>(); 
   mode: String;
   locationsToSet = [];
   setLocation = [];
@@ -65,22 +64,18 @@ export class DeviceListComponent implements OnInit {
               this.teamsAvaliable = teams//set teams
             }
           }
-          if(typeof modeConfig.nodeConfigs =='string'){//this mean coming from device map
-            this.devices=JSON.parse(modeConfig.nodeConfigs);
-          }else{
-            this.devices=modeConfig.nodeConfigs;
+          if (typeof modeConfig.nodeConfigs == 'string') {//this mean coming from device map
+            this.devices = JSON.parse(modeConfig.nodeConfigs);
+          } else {
+            this.devices = modeConfig.nodeConfigs;
           }
           // console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
         })
       }
     )
   }
-
-  closeModal() {
-    this.modalClose.emit(true)
-  }
-  saveNodeConfigs() {
-    // console.log(this.devices, "final configs")
+ 
+  saveNodeConfigs() { 
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   }
 
@@ -89,21 +84,21 @@ export class DeviceListComponent implements OnInit {
     device.location = event.target.value;
     device.enabled = true;
   }
-  getLocationList(){
-    let arr=[];
-        if(this.locationsToSet){
-          this.locationsToSet.forEach(loc => {
-             if(this.selectedLocations.indexOf(loc.name) == -1){
-               if(arr) {
-                arr.push({'name':loc.name, 'isDisabled': false});
-               }
-             } else {
-              if(arr) {
-              arr.push({'name':loc.name, 'isDisabled': true});
-              }
-             }
-          });
+  getLocationList() {
+    let arr = [];
+    if (this.locationsToSet) {
+      this.locationsToSet.forEach(loc => {
+        if (this.selectedLocations.indexOf(loc.name) == -1) {
+          if (arr) {
+            arr.push({ 'name': loc.name, 'isDisabled': false });
+          }
+        } else {
+          if (arr) {
+            arr.push({ 'name': loc.name, 'isDisabled': true });
+          }
         }
+      });
+    }
     return arr;
   }
 
@@ -117,12 +112,12 @@ export class DeviceListComponent implements OnInit {
   }
 
   enableQuery(device) {
-    device.query.enable=true;
-  } 
- 
-  enableRegister(device) { 
-    device.register.enable= true;
-  } 
+    device.query.enable = true;
+  }
+
+  enableRegister(device) {
+    device.register.enable = true;
+  }
 
   convertPointScale(value) {
 

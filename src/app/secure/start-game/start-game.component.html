@@ -1,1 +1,21 @@
 <p>start-game works!</p>
+
+<select  class="form-control" (change)="changeGame($event)">
+    <option disabled selected value> -- Select to Start Game -- </option>
+    <option [value]="gameMode.description" *ngFor="let gameMode of gameModes">{{gameMode.description}}</option>
+  </select>
+
+  <div class="collapsible" [@collapse]="!gameBoardCollapsed" id="gameManagementBoard">
+    <div id="activeInGameNodes"> 
+<!-- <app-device-list></app-device-list> -->
+<!-- //(modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)" -->
+    </div>
+    <div id="gameAdminNodes">
+        <!-- <app-device-list></app-device-list> -->
+
+    </div>
+    <div id="avaliableNodes">
+        <!-- <app-device-list></app-device-list> -->
+
+    </div>
+  </div>

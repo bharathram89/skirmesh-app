@@ -75,7 +75,9 @@ gameConfigs;
       ]),
       teams: this.fb.array([this.newTeam(),this.newTeam()]),
 
-      nodeModes: new FormControl(this.gameModeFrm.nodeModes, [
+      nodeModes: 
+      
+      new FormControl(this.gameModeFrm.nodeModes, [
         Validators.required
       ]),
       map:new FormControl(this.gameModeFrm.map, [
@@ -89,9 +91,9 @@ gameConfigs;
       this.gameConfigs = data.gameConfigs;
       this.deviceConfigs = this.makeDeviceModals(this.devices, this.gameConfigs)
     })
-    this.deviceListConfigs.next({
-      mode:"createMode"
-    })
+    // this.deviceListConfigs.next({
+    //   mode:"createMode"
+    // })
   }
 
   get teams() : FormArray {
@@ -101,8 +103,7 @@ gameConfigs;
     this.configSet = true;
     // console.log(e," node Cofings receieved")
     this.gameModeForm.value.nodeModes = e;
-    this.deviceConfigs = JSON.parse(e);
-    this.closeModal('')
+    this.deviceConfigs = JSON.parse(e); 
   }
   saveConfigs(){
     // console.log(this.gameModeForm.value)
@@ -116,11 +117,16 @@ gameConfigs;
 
   addTeam() {
     this.teams.push(this.newTeam());
+    this.setNodes();
   }
   removeTeam(i:number) {
     this.teams.removeAt(i);
+    this.setNodes();
   }
-
+  onChangeOfTeamList(){
+    this.setNodes();
+  }
+//setNodes
   changeMap(e){
     this.gameModeForm.controls['map'].setValue(e.target.value)
     this.locations = this.maps.find(locs=>{
@@ -128,6 +134,7 @@ gameConfigs;
         return locs['locations'];
       }
     })
+    this.setNodes()
     this.isMapSelected=true;
   }
   changeColor(e,i){
@@ -135,21 +142,16 @@ gameConfigs;
     // console.log(color,e.target.value,i,'selected color')
      this.color.next(color)
   }
-  setNodes(){
-
+  setNodes(){ 
     this.deviceListConfigs.next({
       mode:"createMode",
       location:this.locations['locations'],
       teams:this.gameModeForm.get('teams')['controls'],
       nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
     })
-    document.getElementById("exampleModal").style.display = "block"
-    document.getElementById("exampleModal").className += "show"
-  }
-  closeModal(e){
-    document.getElementById("exampleModal").style.display = "none"
-    document.getElementById("exampleModal").className += document.getElementById("exampleModal").className.replace("show", "")
-  }
+    // document.getElementById("exampleModal").style.display = "block"
+    // document.getElementById("exampleModal").className += "show"
+  } 
   ngOnInit() {
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
@@ -160,12 +162,18 @@ gameConfigs;
     });
     
     if(this.gameMode.map){
+      this.isMapSelected=true;
       this.locations = this.maps.find(locs=>{
         if(locs['id']==this.gameMode.map){
           return locs['locations'];
         }
       })
-
+      this.deviceListConfigs.next({
+        mode:"createMode",
+        location:this.locations['locations'],
+        teams:this.gameModeForm.get('teams')['controls'],
+        nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
+      })
     }
   }
 

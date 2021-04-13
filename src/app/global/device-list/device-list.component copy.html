@@ -1,10 +1,12 @@
-<div class="" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
     role="dialog">
-    <div class="" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Configure nodes for this game mode.</h5>
-                  
+                <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -18,7 +20,7 @@
                             Teams Avaliable To Set: [<div *ngFor="let team of teamsAvaliable ; let x = index"><a
                                     class="badge badge-pill badge-light">{{ team.name }} </a></div>]
                         </div>
-                        WARNING: SAVE your changes!
+                        
                         <div class="center-cust row">
 
                             <div *ngFor="let device of devices; let i = index"
@@ -29,8 +31,8 @@
                                     <h4>Location:
                                         <select class="form-control" (change)="locationSelected($event,device)"
                                             [(ngModel)]="device.location">
-                                            <option disabled selected value="none"> -- Select your Device Location -- </option>
-                                            <option  
+                                            <option value="none" selected disabled hidden>Select Location</option>
+                                            <option [value]="location.name"
                                                 *ngFor="let location of getLocationList() ;"
                                                 [disabled]="location.isDisabled">
 
@@ -210,36 +212,11 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer"> 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="saveNodeConfigs()">Save changes</button>
             </div>
         </div>
     </div>
-</div> <!--
-//below are constants
-address: "0013A20041A66B3F"
-id: 7
-//below change per game
-location: null
-gameActions: []
-gameID: null
-//below can change anytime during game
-point_scale: 60 -range
-allow_medic: true - switch
-med_time: 3 -range
-where is allow_bomb to show the node is a bomb?
-arm_time: 1 - range
-bomb_status: 189 ??? what is this for?
-bomb_time: 18 - range
-diff_time: 12 - range
-where is allow_capture to show the node is a capture point?
-cap_asst: 20 -range
-cap_time: 1 - range
-config: 10 ?
-stable: 1 -range? is this how long it take to be stable?
-fieldProfileID: 1
-lastChange: "Sun, 04 Apr 2021 17:40:43 GMT"
-creationDate: "Sat, 27 Mar 2021 00:35:08 GMT"
-deactivated: null
-team: "3333cc"
-teamID: null -->
+</div>
+<div class="modal-backdrop fade show" id="backdrop" style="display: none;"></div>

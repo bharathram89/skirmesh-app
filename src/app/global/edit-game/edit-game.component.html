@@ -22,7 +22,7 @@
       <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
         <td>
           Name :
-          <input type="text" formControlName="name" class="form-control">
+          <input (change)="onChangeOfTeamList()" type="text" formControlName="name" class="form-control">
         </td>
         <td>
           Color:
@@ -36,20 +36,18 @@
           </select> -->
         </td>
         <td *ngIf="i > 1">
-          <button (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
+          <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
         </td>
       </tr>
     </div>
 
   </table>
-  <button type="button" class="btn btn-success cust_btn" [disabled]="!gameModeForm.controls['map'].valid " (click)="setNodes()">Click here
-    to Edit Device Configurations</button>
+  <div *ngIf="isMapSelected"> 
+    <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+  </div>
   <br />
   <button type="submit" [disabled]="" class="btn btn-primary">Save</button>
-  <div style="max-width:100%">
-    <app-device-list (modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
-      
-  </div>
+ 
          
 </form>
 

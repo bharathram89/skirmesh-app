@@ -21,7 +21,6 @@ import { MydevicesComponent } from './mydevices/mydevices.component';
     GlobalModule,
     FormsModule,
     ReactiveFormsModule
-
   ]
 })
 export class SecureModule { }

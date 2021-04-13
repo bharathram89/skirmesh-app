@@ -81,5 +81,8 @@ export class UserServiceService {
   getToken(){
     return this.token;
   }
-
+  // fieldPf
+  getGameModes(){
+    return this.fieldPf.gameConfigs;
+  }
 }
