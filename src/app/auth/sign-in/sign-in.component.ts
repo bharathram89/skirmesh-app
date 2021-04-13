@@ -78,7 +78,7 @@ export class SignInComponent implements OnInit {
     }
     this.authSvc.userLogin(data).subscribe(
       respData=>{
-        console.log("login response",respData)
+        // console.log("login response",respData)
         // this.tokenStorage.
         // window.sessionStorage.setItem("token",JSON.stringify(data))
 

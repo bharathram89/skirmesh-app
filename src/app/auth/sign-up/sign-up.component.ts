@@ -121,7 +121,7 @@ export class SignUpComponent implements OnInit {
     },
     err=>{
       document.getElementById('userCreatFaileddMessage').classList.toggle('d-none')
-      console.log(data,"resp")
+      // console.log(data,"resp")
     })
   }
 

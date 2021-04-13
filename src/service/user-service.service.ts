@@ -51,6 +51,15 @@ export class UserServiceService {
     }); 
     return id;
   }
+  findMapName(mapID){
+    let name ;
+    this.fieldPf.maps.forEach(map => {
+      if(map.id == mapID){
+        name= map.name;
+      } 
+    }); 
+    return name;
+  }
   getFieldProfileID(){
     return this.fieldProfileID;
   }
