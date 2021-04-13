@@ -83,7 +83,7 @@ export class GameConfigComponent implements OnInit {
     } else {
       // create a new one
       let apiData ={
-        mapID:this.userSvc.findMapID(dataModel.map),
+        mapID: dataModel.map,
         fieldProfileID:this.userSvc.getFieldProfileID(),
         description:dataModel.name,
         deviceMap:dataModel.nodeModes,

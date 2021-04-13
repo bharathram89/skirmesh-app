@@ -156,7 +156,7 @@ gameConfigs;
       name: this.gameMode.name || '',
       teams: this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
       nodeModes: this.gameMode.nodeModes || '',
-      map: this.gameMode.map || ''
+      map: this.userSvc.findMapName(this.gameMode.map) || ''
     });
     
     if(this.gameMode.map){
@@ -172,6 +172,7 @@ gameConfigs;
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
     // console.log(dataModel)
+    dataModel.map = this.userSvc.findMapID(dataModel.map)
     this.saveGameMode.emit(dataModel);
   }
 
