@@ -65,8 +65,12 @@ export class DeviceListComponent implements OnInit {
               this.teamsAvaliable = teams//set teams
             }
           }
+          if(typeof modeConfig.nodeConfigs =='string'){//this mean coming from device map
+            this.devices=JSON.parse(modeConfig.nodeConfigs);
+          }else{
+            this.devices=modeConfig.nodeConfigs;
+          }
           console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
-          this.devices=modeConfig.nodeConfigs;
         })
       }
     )

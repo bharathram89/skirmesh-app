@@ -161,7 +161,7 @@ gameConfigs;
     
     if(this.gameMode.map){
       this.locations = this.maps.find(locs=>{
-        if(locs['name']==this.gameMode.map){
+        if(locs['id']==this.gameMode.map){
           return locs['locations'];
         }
       })

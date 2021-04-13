@@ -69,15 +69,16 @@ export class GameConfigComponent implements OnInit {
       });
     } else {
       // create a new one
-      console.log(dataModel,"data to be send to api")
       let apiData ={
         mapID:this.userSvc.findMapID(dataModel.map),
         fieldProfileID:this.userSvc.getFieldProfileID(),
         description:dataModel.name,
-        deviceMap:dataModel.nodeModes
+        deviceMap:dataModel.nodeModes,
+        teams:dataModel.teams
       }
+      console.log(dataModel,"data to be send to api",apiData)
 
-      dataModel.id = Math.round(Math.random() * 100);
+      dataModel.id = Math.round(Math.random() * 100); 
       this.gameModes.push(dataModel);
       this.deviceSvc.saveGameConfigs(apiData,this.userSvc.getToken()).subscribe(data=>{
 

@@ -24,15 +24,7 @@ userSvc:UserServiceService;
     userSvc: UserServiceService) { 
       this.userSvc = userSvc;
   }
-  saveGameConfigs(data,token){
-    // let stuff = {
-    //   description:data.name,
-    //   mapID:'',//get mapid
-    //   deviceMap:data.nodeModes,
-    //   fieldProfileID:this.userSvc.getFieldProfile()['id']
-    // }
-    console.log(data,"data to send back")
-
+  saveGameConfigs(data,token){  
     return this.http.post(this.BASE+'resources/gameConfig?token='+token,data,this.options)
   }
   modifyGameConfig(data, token){

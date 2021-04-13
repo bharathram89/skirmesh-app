@@ -43,12 +43,13 @@ export class UserServiceService {
     this.tokenSvc.saveToken(userData.token)
   }
   findMapID(mapName){
+    let id ;
     this.fieldPf.maps.forEach(map => {
       if(map.name == mapName){
-        return map.id;
+        id= map.id;
       } 
-    });
-    return 
+    }); 
+    return id;
   }
   getFieldProfileID(){
     return this.fieldProfileID;
