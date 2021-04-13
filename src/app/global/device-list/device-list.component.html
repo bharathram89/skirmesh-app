@@ -20,17 +20,17 @@
                             Teams Avaliable To Set: [<div *ngFor="let team of teamsAvaliable ; let x = index"><a
                                     class="badge badge-pill badge-light">{{ team.name }} </a></div>]
                         </div>
-                        Warning: you looses the changes if you dont save them!
+                        WARNING: SAVE your changes!
                         <div class="center-cust row">
 
-                            <div *ngFor="let device of devices | paginate: { itemsPerPage: 4, currentPage: p }; let i = index"
+                            <div *ngFor="let device of devices; let i = index"
                                 class="card user-card">
 
                                 <div class="card-header">
 
                                     <h4>Location:
                                         <select class="form-control" (change)="locationSelected($event,device)"
-                                            [(ngModel)]="device.location"> 
+                                            [(ngModel)]="device.location">
                                             <option value="none" selected disabled hidden>Select Location</option>
                                             <option [value]="location.name"
                                                 *ngFor="let location of getLocationList() ;"
@@ -60,7 +60,7 @@
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableMedic(device)"  
+                                            <input (click)="enableMedic(device)"
                                                 type="checkbox" class="custom-control-input" [id]="'medicSwitch-' + i"
                                                 [checked]="device.medic.enabled">
                                             <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
@@ -155,7 +155,7 @@
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableCapture(device)" 
+                                            <input (click)="enableCapture(device)"
                                                 type="checkbox" class="custom-control-input" [id]="'captureSwitch-' + i"
                                                 [checked]="device.capture.enabled">
                                             <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
@@ -207,9 +207,7 @@
 
 
                         </div>
-                        <div class="row center-cust ">
-                            <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                        </div>
+
 
                     </div>
                 </div>
