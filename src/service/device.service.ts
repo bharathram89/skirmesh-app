@@ -33,4 +33,7 @@ userSvc:UserServiceService;
   getGameConfigs(token){
     return this.http.get(this.BASE+'resources/gameConfig?token='+token)
   }
+  deleteGameConfig(token,gameConfigID){
+    return this.http.delete(this.BASE+'resources/gameConfig?token='+token+'&id='+gameConfigID)
+  }
 }

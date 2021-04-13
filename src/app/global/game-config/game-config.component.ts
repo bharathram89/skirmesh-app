@@ -39,10 +39,12 @@ export class GameConfigComponent implements OnInit {
   }
 
   onDeleteMode(gameMode){
-    console.log(gameMode,"options")
-    this.gameModes = this.gameModes.filter(function( obj ) {
-      return obj.id !== gameMode.id;
-    });
+    this.deviceSvc.deleteGameConfig(this.userSvc.getToken(),gameMode.id).subscribe(data=>{
+      console.log(data,"delete")
+      this.gameModes = this.gameModes.filter(function( obj ) {
+        return obj.id !== gameMode.id;
+      });
+    })
   }
   onEditMode(gameMode) {
     console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
