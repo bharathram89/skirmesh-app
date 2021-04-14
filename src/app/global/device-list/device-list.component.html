@@ -32,6 +32,7 @@
                                             <option disabled selected value="none"> -- Select your Device Location -- </option>
                                             <option  
                                                 *ngFor="let location of getLocationList() ;"
+                                                [value]="device.location"
                                                 [disabled]="location.isDisabled">
 
                                                 {{location.name}}

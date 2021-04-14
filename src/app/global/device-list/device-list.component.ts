@@ -52,7 +52,7 @@ export class DeviceListComponent implements OnInit {
         this.userSvc.getUserData().subscribe(userData => {
           // console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
           this.mode = modeConfig.mode;
-          this.selectedLocations = [];//this resets the selcted locations
+          // this.selectedLocations = [];//this resets the selcted locations
           if (modeConfig.mode == 'createMode') {
             this.locationsToSet = modeConfig.location;//set locations
             if (modeConfig.teams) {
@@ -82,6 +82,7 @@ export class DeviceListComponent implements OnInit {
   locationSelected(event, device) {
     this.selectedLocations.push(event.target.value)
     device.location = event.target.value;
+    console.log('location selected ',this.selectedLocations,device.location)
     device.enabled = true;
   }
   getLocationList() {
