@@ -15,7 +15,9 @@ export class DeviceSettings {
       location: string,
       medic: MedicSettings,
       bomb: BombSettings,
-      capture: CaptureSettings
+      capture: CaptureSettings,
+      registerPlayer:RegisterPlayer,
+      queryPlayer:QueryPlayerSettings
     ) {
         this.enabled =enabled;
       this.address = address;
@@ -23,6 +25,8 @@ export class DeviceSettings {
       this.medic = medic;
       this.bomb = bomb;
       this.capture = capture;
+      this.registerPlayer = registerPlayer;
+      this.queryPlayer = queryPlayer;
     }
   }
   export class MedicSettings {

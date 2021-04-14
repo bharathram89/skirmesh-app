@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
-import { BombSettings, CaptureSettings, DeviceSettings, MedicSettings } from '../node.modal';
+import { BombSettings, CaptureSettings, DeviceSettings, MedicSettings, QueryPlayerSettings, RegisterPlayer } from '../node.modal';
 
 export class ColorPalette {
   name: string;
@@ -191,7 +191,9 @@ gameConfigs;
       let med = new MedicSettings(false,null)
       let bmb = new BombSettings(false,null,null,null)
       let cap = new CaptureSettings(false,null,null,null,null)
-      let ds = new DeviceSettings(false,element.address,null,med,bmb,cap)
+      let query = new QueryPlayerSettings(false,null)
+      let reg = new RegisterPlayer(false,null)
+      let ds = new DeviceSettings(false,element.address,null,med,bmb,cap,reg,query)
       arr.push(ds)
     });
 

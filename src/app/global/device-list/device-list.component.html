@@ -26,7 +26,7 @@
                             <div *ngFor="let device of devices; let i = index" class="card user-card">
 
                                 <div class="card-header">
-                                    <div *ngIf="mode == 'createMode' || mode == 'adminNodes'">
+                                    <div *ngIf="mode == 'createMode'">
                                         <h4>Location:
                                             <select class="form-control" (change)="locationSelected($event,device)"
                                                 [(ngModel)]="device.location">
@@ -43,14 +43,19 @@
                                         <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
                                         </h7>
                                         <br>
-                                    </div> 
+                                    </div>
                                     <div *ngIf="mode == 'activeNodes'">
-                                       {{ device.location }}
+                                        {{ device.location }}
+                                    </div>
+                                    <div *ngIf="mode == 'adminNodes'">
+                                        <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
+                                        </h7>
                                     </div>
                                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                                 </div>
 
-                                <div *ngIf="(device.enabled && mode == 'createMode') ||  mode !== 'createMode'" class="card-body">
+                                <div *ngIf="(device.enabled && mode == 'createMode') ||  mode !== 'createMode'"
+                                    class="card-body">
 
                                     <div *ngIf="mode == 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
@@ -60,35 +65,6 @@
                                                 Query</label>
                                         </div>
                                     </div>
-
-
-                                    <div *ngIf="mode !== 'adminNodes'" class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="enableMedic(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'medicSwitch-' + i"
-                                                [checked]="device.medic.enabled">
-                                            <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
-                                                Station</label>
-                                        </div>
-                                        <div *ngIf="device.medic.enabled">
-                                            <div class="card card-body">
-                                                <div class="form-group">
-                                                    <label for="armTime">Team</label>
-                                                    <select class="form-control"
-                                                        (change)="medicNodeTeamSelected($event,device)"
-                                                        [(ngModel)]="device.medic.team">
-                                                        <option value="none" selected disabled hidden>Select Team
-                                                        </option>
-                                                        <option [value]="team.name"
-                                                            *ngFor="let team of teamsAvaliable; let i = index">
-                                                            {{team.name}}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                     <div *ngIf="mode == 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
@@ -100,7 +76,7 @@
                                         <div>
                                             <div class="card card-body">
                                                 <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS -->
-                                                <div>
+                                                <div *ngIf="device.registerPlayer.enabled">
                                                     <div class="card card-body">
                                                         <div class="form-group">
                                                             <label for="armTime">Team</label>
@@ -118,6 +94,34 @@
                                         </div>
                                     </div>
 
+
+                                    <div *ngIf="mode !== 'adminNodes'" class="form-group">
+                                        <div class="custom-control custom-switch">
+                                            <input (click)="enableMedic(device)" type="checkbox"
+                                                class="custom-control-input" [id]="'medicSwitch-' + i"
+                                                [checked]="device.medic.enabled">
+                                            <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
+                                                Station</label>
+                                        </div>
+                                        <div *ngIf="device.medic.enabled">
+                                            <div class="card card-body">
+                                                <div class="form-group">
+                                                    <label for="armTime">Team</label>
+                                                    <label *ngIf="mode == 'activeNodes'"><br> {{device.medic.team}}</label>
+                                                    <select *ngIf="mode !== 'activeNodes'" class="form-control"
+                                                        (change)="medicNodeTeamSelected($event,device)"
+                                                        [(ngModel)]="device.medic.team">
+                                                        <option value="none" selected disabled hidden>Select Team
+                                                        </option>
+                                                        <option [value]="team.name"
+                                                            *ngFor="let team of teamsAvaliable; let i = index">
+                                                            {{team.name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div *ngIf="mode !== 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
@@ -155,8 +159,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
 
                                     <div *ngIf="mode !== 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
@@ -219,7 +221,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <!-- <button *ngIf="mode == 'createMode'" type="button" class="btn btn-primary" (click)="saveNodeConfigs()">Save changes</button> -->
+                <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-danger"
+                    (click)="saveNodeConfigs()">END GAME</button>
             </div>
         </div>
     </div>

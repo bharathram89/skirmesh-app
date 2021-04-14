@@ -84,6 +84,7 @@ export class DeviceListComponent implements OnInit {
     device.location = event.target.value;
     console.log('location selected ',this.selectedLocations,device.location)
     device.enabled = true;
+    this.saveNodeConfigs()
   }
   getLocationList() {
     let arr = [];
@@ -107,17 +108,21 @@ export class DeviceListComponent implements OnInit {
     device.medic.enabled = true;
     device.bomb.enabled = false;
     device.capture.enabled = false;
+    this.saveNodeConfigs()
   }
   medicNodeTeamSelected(teamName, device) {
     device.medic.team = teamName.target.value
+    this.saveNodeConfigs()
   }
 
   enableQuery(device) {
-    device.query.enable = true;
+    device.queryPlayer.enable = true;
+    this.saveNodeConfigs()
   }
 
   enableRegister(device) {
-    device.register.enable = true;
+    device.registerPlayer.enable = true;
+    this.saveNodeConfigs()
   }
 
   convertPointScale(value) {
@@ -164,6 +169,7 @@ export class DeviceListComponent implements OnInit {
 
 
     device.med_time = int_map[value];
+    this.saveNodeConfigs()
 
   }
 
@@ -195,6 +201,7 @@ export class DeviceListComponent implements OnInit {
     device.medic.enabled = false;
     device.bomb.enabled = false;
     device.capture.enabled = true;
+    this.saveNodeConfigs()
   }
   capTime(device, value) {
 
@@ -204,6 +211,7 @@ export class DeviceListComponent implements OnInit {
       120, 150, 180, 210, 240]
 
     device.capture.cap_time = int_map[value];
+    this.saveNodeConfigs()
   }
   capasst(device, value) {
 
@@ -211,6 +219,7 @@ export class DeviceListComponent implements OnInit {
       0x05, 0x04, 0x02, 0x01]
 
     device.capture.cap_asst = int_map[value];
+    this.saveNodeConfigs()
   }
   pointScale(device, value) {
 
@@ -218,6 +227,7 @@ export class DeviceListComponent implements OnInit {
       0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
 
     device.capture.point_scale = int_map[value];
+    this.saveNodeConfigs()
   }
   enableAllowMedic(device) {
     if (device.capture.allow_medic) {
@@ -233,12 +243,14 @@ export class DeviceListComponent implements OnInit {
     device.medic.enabled = false;
     device.bomb.enabled = true;
     device.capture.enabled = false;
+    this.saveNodeConfigs()
   }
   armTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
     device.bomb.arm_time = int_map[value];
+    this.saveNodeConfigs()
   }
   bombTime(device, value) {
 
@@ -248,12 +260,14 @@ export class DeviceListComponent implements OnInit {
       120, 150, 180, 210, 240]
 
     device.bomb.bomb_time = int_map[value];//fusetimer?
+    this.saveNodeConfigs()
   }
   difuseTime(device, value) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
     device.bomb.diff_time = int_map[value];
+    this.saveNodeConfigs()
   }
 
 }
