@@ -1,21 +1,40 @@
-<p>start-game works!</p>
 
-<select  class="form-control" (change)="changeGame($event)">
-    <option disabled selected value> -- Select to Start Game -- </option>
-    <option [value]="gameMode.description" *ngFor="let gameMode of gameModes">{{gameMode.description}}</option>
-  </select>
+<div class="events_area">
+    <div class="container">
+        <div *ngIf="!selectedGameMode" class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="main_title">
+                    <h4>To Being Select Game Mode</h4>
+                    <select class="form-control" (change)="changeGame($event)">
+                        <option disabled selected value> -- Select to Start Game -- </option>
+                        <option [value]="gameMode.description" *ngFor="let gameMode of gameModes">
+                            {{gameMode.description}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row collapsible" [@collapse]="!gameBoardCollapsed" id="gameManagementBoard">
+            <div class="col-lg-12"><h4 class="text-center pt-lg-5 pt-3">{{selectedGameMode}}</h4></div> 
 
-  <div class="collapsible" [@collapse]="!gameBoardCollapsed" id="gameManagementBoard">
-    <div id="activeInGameNodes"> 
-<!-- <app-device-list></app-device-list> -->
-<!-- //(modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)" -->
+            <div class="col-lg-12">
+                <div class="text-center pt-lg-5 pt-3">
+                    <div id="activeInGameNodes">
+                        <app-device-list [config]="activeNodes" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+                        <!-- //(modalClose)="closeModal($event)" [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)" -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="text-center pt-lg-5 pt-3">
+                    <div id="gameAdminNodes"> 
+                        <app-device-list [config]="adminNodes" (nodeConfigs)="nodeConfigs($event)">
+                        </app-device-list>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
-    <div id="gameAdminNodes">
-        <!-- <app-device-list></app-device-list> -->
-
-    </div>
-    <div id="avaliableNodes">
-        <!-- <app-device-list></app-device-list> -->
-
-    </div>
-  </div>
+</div> 

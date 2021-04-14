@@ -8,6 +8,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import { BehaviorSubject } from 'rxjs';
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -27,18 +28,50 @@ export class StartGameComponent implements OnInit {
   gameBoardCollapsed = false;
   gameModes=[];
   userSvc:UserServiceService;
-  selectedGameMode;
+  selectedGameMode; 
+  adminNodes: BehaviorSubject<any>;
+  activeNodes: BehaviorSubject<any>;
   constructor(userService:UserServiceService) {
     this.userSvc = userService;
+    this.activeNodes = new BehaviorSubject({})
+    this.adminNodes = new BehaviorSubject({})
    }
 
-  ngOnInit(): void {
-
-    this.gameModes = this.userSvc.getGameModes(); 
-    
+  ngOnInit(): void { 
+    this.gameModes = this.userSvc.getGameModes();  
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
+
+    let config = this.gameModes.find(ele=> ele.description == this.selectedGameMode).deviceMap
+    config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
+    config = JSON.parse(config.substring(0,config.length-1))// remove last quote and parse
+
+    let nodesWithLocationSet = config.filter(ele=>ele.location);
+
+    let nodesWithoutLocationSet = config.filter(ele=>!ele.location);
+    
+    console.log(this.gameModes," all game modes",  config,nodesWithLocationSet,nodesWithoutLocationSet)
+    this.activeNodes.next({
+      mode:"activeNodes",
+      nodeConfigs:nodesWithLocationSet
+    })
+    this.adminNodes.next({
+      mode:"adminNodes",
+      // location:this.locations['locations'],
+      // teams:this.gameModeForm.get('teams')['controls'],
+      nodeConfigs: nodesWithoutLocationSet
+    })
     this.gameBoardCollapsed= true;
+  }
+  getActiveNodesFromConfig(){
+    
+  }
+  getAdminNodesFromConfig(){
+    
+  }
+
+  nodeConfigs(e){
+
   }
 }

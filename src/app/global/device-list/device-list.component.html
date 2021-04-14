@@ -1,66 +1,71 @@
-<div class="" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
-    role="dialog">
+<div class="" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog">
     <div class="" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Configure nodes for this game mode.</h5>
-                  
+                <h5 *ngIf="mode == 'createMode'" class="modal-title" id="exampleModalLabel">Configure nodes for this
+                    game mode.</h5>
+                <h5 *ngIf="mode == 'activeNodes'" class="modal-title" id="exampleModalLabel">Active Game Nodes.</h5>
+                <h5 *ngIf="mode == 'adminNodes'" class="modal-title" id="exampleModalLabel">Admin Nodes.</h5>
+
             </div>
             <div class="modal-body">
                 <div class="container">
                     <div class="">
-
-                        <div class="row center-cust ">
-                            Locations To Set: [<div *ngFor="let location of  getLocationList(); let i = index"><a
-                                    class="badge badge-pill badge-light">{{ location.name }} </a></div>]
+                        <div *ngIf="mode == 'createMode'">
+                            <div class="row center-cust ">
+                                Locations To Set: [<div *ngFor="let location of  getLocationList(); let i = index"><a
+                                        class="badge badge-pill badge-light">{{ location.name }} </a></div>]
+                            </div>
+                            <div class="row center-cust ">
+                                Teams Avaliable To Set: [<div *ngFor="let team of teamsAvaliable ; let x = index"><a
+                                        class="badge badge-pill badge-light">{{ team.name }} </a></div>]
+                            </div>
                         </div>
-                        <div class="row center-cust ">
-                            Teams Avaliable To Set: [<div *ngFor="let team of teamsAvaliable ; let x = index"><a
-                                    class="badge badge-pill badge-light">{{ team.name }} </a></div>]
-                        </div>
-                        WARNING: SAVE your changes!
                         <div class="center-cust row">
 
-                            <div *ngFor="let device of devices; let i = index"
-                                class="card user-card">
+                            <div *ngFor="let device of devices; let i = index" class="card user-card">
 
                                 <div class="card-header">
+                                    <div *ngIf="mode == 'createMode' || mode == 'adminNodes'">
+                                        <h4>Location:
+                                            <select class="form-control" (change)="locationSelected($event,device)"
+                                                [(ngModel)]="device.location">
+                                                <option disabled selected value="none"> -- Select your Device Location
+                                                    --
+                                                </option>
+                                                <option *ngFor="let location of getLocationList() ;"
+                                                    [value]="device.location" [disabled]="location.isDisabled">
 
-                                    <h4>Location:
-                                        <select class="form-control" (change)="locationSelected($event,device)"
-                                            [(ngModel)]="device.location">
-                                            <option disabled selected value="none"> -- Select your Device Location -- </option>
-                                            <option  
-                                                *ngFor="let location of getLocationList() ;"
-                                                [value]="device.location"
-                                                [disabled]="location.isDisabled">
-
-                                                {{location.name}}
-                                            </option>
-                                        </select>
-                                    </h4>
-                                    <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}} </h7>
-                                    <br>
+                                                    {{location.name}}
+                                                </option>
+                                            </select>
+                                        </h4>
+                                        <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
+                                        </h7>
+                                        <br>
+                                    </div> 
+                                    <div *ngIf="mode == 'activeNodes'">
+                                       {{ device.location }}
+                                    </div>
                                     <!-- <h7>Device ID: {{device.id}}</h7> -->
                                 </div>
 
-                                <div *ngIf="device.enabled" class="card-body">
+                                <div *ngIf="(device.enabled && mode == 'createMode') ||  mode !== 'createMode'" class="card-body">
 
-                                    <div *ngIf="mode !== 'createMode'" class="form-group">
+                                    <div *ngIf="mode == 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableQuery(device)" [disabled]="isQueryEnabled(device)"
-                                                type="checkbox" class="custom-control-input" [id]="'querySwitch-' + i"
-                                                [checked]="isQueryEnabled(device)">
+                                            <input (click)="enableQuery(device)" type="checkbox"
+                                                class="custom-control-input" [id]="'querySwitch-' + i">
                                             <label class="custom-control-label" [for]="'querySwitch-' + i">Player
                                                 Query</label>
                                         </div>
                                     </div>
 
 
-                                    <div class="form-group">
+                                    <div *ngIf="mode !== 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableMedic(device)"
-                                                type="checkbox" class="custom-control-input" [id]="'medicSwitch-' + i"
+                                            <input (click)="enableMedic(device)" type="checkbox"
+                                                class="custom-control-input" [id]="'medicSwitch-' + i"
                                                 [checked]="device.medic.enabled">
                                             <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
                                                 Station</label>
@@ -70,9 +75,10 @@
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
                                                     <select class="form-control"
-                                                    (change)="medicNodeTeamSelected($event,device)"
-                                                    [(ngModel)]="device.medic.team" >
-                                                        <option value="none" selected disabled hidden>Select Team</option>
+                                                        (change)="medicNodeTeamSelected($event,device)"
+                                                        [(ngModel)]="device.medic.team">
+                                                        <option value="none" selected disabled hidden>Select Team
+                                                        </option>
                                                         <option [value]="team.name"
                                                             *ngFor="let team of teamsAvaliable; let i = index">
                                                             {{team.name}}
@@ -84,23 +90,23 @@
                                     </div>
 
 
-                                    <div *ngIf="mode !== 'createMode'" class="form-group">
+                                    <div *ngIf="mode == 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableRegister(device)" [disabled]="isRegisterEnabled(device)"
-                                                type="checkbox" class="custom-control-input"
-                                                [id]="'registerSwitch-' + i" [checked]="isRegisterEnabled(device)">
+                                            <input (click)="enableRegister(device)" type="checkbox"
+                                                class="custom-control-input" [id]="'registerSwitch-' + i">
                                             <label class="custom-control-label" [for]="'registerSwitch-' + i">Register
                                                 Team</label>
                                         </div>
-                                        <div *ngIf="isRegisterEnabled(device)">
+                                        <div>
                                             <div class="card card-body">
                                                 <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS -->
-                                                <div *ngIf="isMedicEnabled(device)">
+                                                <div>
                                                     <div class="card card-body">
                                                         <div class="form-group">
                                                             <label for="armTime">Team</label>
-                                                            <select class="form-control" >
-                                                                <option value="none" selected disabled hidden>Select Location</option>
+                                                            <select class="form-control">
+                                                                <option value="none" selected disabled hidden>Select
+                                                                    Location</option>
                                                                 <option [value]="team.name"
                                                                     *ngFor="let team of teamsAvaliable; let i = index">
                                                                     {{team.name}}</option>
@@ -113,9 +119,9 @@
                                     </div>
 
 
-                                    <div class="form-group">
+                                    <div *ngIf="mode !== 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableBomb(device)"  type="checkbox"
+                                            <input (click)="enableBomb(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'bombSwitch-' + i"
                                                 [checked]="device.bomb.enabled">
                                             <label class="custom-control-label"
@@ -152,10 +158,10 @@
 
 
 
-                                    <div class="form-group">
+                                    <div *ngIf="mode !== 'adminNodes'" class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input (click)="enableCapture(device)"
-                                                type="checkbox" class="custom-control-input" [id]="'captureSwitch-' + i"
+                                            <input (click)="enableCapture(device)" type="checkbox"
+                                                class="custom-control-input" [id]="'captureSwitch-' + i"
                                                 [checked]="device.capture.enabled">
                                             <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
                                                 Point</label>
@@ -166,8 +172,8 @@
                                                 <div class="form-group">
                                                     <label for="captime">Stabilization Time</label>
                                                     <input class="form-control-range" id="captime" type="range" min="0"
-                                                        max="32" [value]="getTimeIndex(device.capture.cap_time)" step="1"
-                                                        (input)="capTime(device,$event.target.value)">
+                                                        max="32" [value]="getTimeIndex(device.capture.cap_time)"
+                                                        step="1" (input)="capTime(device,$event.target.value)">
                                                     {{convertTime(device.capture.cap_time)}}
                                                 </div>
                                                 <hr>
@@ -182,8 +188,9 @@
                                                 <div class="form-group">
                                                     <label for="pointScale">Point Scale</label>
                                                     <input class="form-control-range" id="pointScale" type="range"
-                                                        min="0" max="11" [value]="getScaleIndex(device.capture.point_scale)"
-                                                        step="1" (input)="pointScale(device,$event.target.value)">
+                                                        min="0" max="11"
+                                                        [value]="getScaleIndex(device.capture.point_scale)" step="1"
+                                                        (input)="pointScale(device,$event.target.value)">
                                                     {{convertPointScale(device.capture.point_scale)}}
                                                 </div>
                                                 <hr>
@@ -211,12 +218,13 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer"> 
-                <button type="button" class="btn btn-primary" (click)="saveNodeConfigs()">Save changes</button>
+            <div class="modal-footer">
+                <!-- <button *ngIf="mode == 'createMode'" type="button" class="btn btn-primary" (click)="saveNodeConfigs()">Save changes</button> -->
             </div>
         </div>
     </div>
-</div> <!--
+</div>
+<!--
 //below are constants
 address: "0013A20041A66B3F"
 id: 7
