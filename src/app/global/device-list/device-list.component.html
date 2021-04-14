@@ -73,22 +73,18 @@
                                             <label class="custom-control-label" [for]="'registerSwitch-' + i">Register
                                                 Team</label>
                                         </div>
-                                        <div>
+                                        <div *ngIf="device.registerPlayer.enabled">
                                             <div class="card card-body">
-                                                <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS -->
-                                                <div *ngIf="device.registerPlayer.enabled">
-                                                    <div class="card card-body">
-                                                        <div class="form-group">
-                                                            <label for="armTime">Team</label>
-                                                            <select class="form-control">
-                                                                <option value="none" selected disabled hidden>Select
-                                                                    Location</option>
-                                                                <option [value]="team.name"
-                                                                    *ngFor="let team of teamsAvaliable; let i = index">
-                                                                    {{team.name}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS --> 
+                                                <div class="form-group">
+                                                    <label for="armTime">Team</label>
+                                                    <select class="form-control">
+                                                        <option value="none" selected disabled hidden>Select
+                                                            Location</option>
+                                                        <option [value]="team.name"
+                                                            *ngFor="let team of teamsAvaliable; let i = index">
+                                                            {{team.name}}</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,7 +103,7 @@
                                             <div class="card card-body">
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
-                                                    <label *ngIf="mode == 'activeNodes'"><br> {{device.medic.team}}</label>
+                                                    <label *ngIf="mode == 'activeNodes'"> {{device.medic.team}}</label>
                                                     <select *ngIf="mode !== 'activeNodes'" class="form-control"
                                                         (change)="medicNodeTeamSelected($event,device)"
                                                         [(ngModel)]="device.medic.team">

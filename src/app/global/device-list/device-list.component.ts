@@ -116,12 +116,12 @@ export class DeviceListComponent implements OnInit {
   }
 
   enableQuery(device) {
-    device.queryPlayer.enable = true;
+    device.queryPlayer.enabled = true;
     this.saveNodeConfigs()
   }
 
   enableRegister(device) {
-    device.registerPlayer.enable = true;
+    device.registerPlayer.enabled = true;
     this.saveNodeConfigs()
   }
 
