@@ -106,9 +106,9 @@ export class DeviceListComponent implements OnInit {
   }
 
   locationSelected(event, device) {
-    this.selectedLocations.push(event.target.value)
-    device.location = event.target.value;
-    console.log('location selected ', this.selectedLocations, device.location)
+    console.log('location selected ', this.selectedLocations, event.target.value,device.location)
+    // this.selectedLocations.push(event.target.value)
+    // device.location = event.target.value;
     device.enabled = true;
     this.saveNodeConfigs()
   }
@@ -116,7 +116,10 @@ export class DeviceListComponent implements OnInit {
     let arr = [];
     if (this.locationsToSet) {
       this.locationsToSet.forEach(loc => {
-        if (this.selectedLocations.indexOf(loc.name) == -1) {
+
+        console.log(this.devices.find(ele=>ele.location),"all devices")
+
+        if (this.devices.indexOf(loc.name) == -1) {
           if (arr) {
             arr.push({ 'name': loc.name, 'isDisabled': false });
           }
@@ -142,12 +145,12 @@ export class DeviceListComponent implements OnInit {
   }
 
   enableQuery(device) {
-    device.queryPlayer.enabled = true;
+    device.queryPlayer.enabled = !device.queryPlayer.enabled;
     this.saveNodeConfigs()
   }
 
   enableRegister(device) {
-    device.registerPlayer.enabled = true;
+    device.registerPlayer.enabled = !device.registerPlayer.enabled;
     this.saveNodeConfigs()
   }
 
