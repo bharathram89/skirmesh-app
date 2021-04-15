@@ -17,7 +17,7 @@ export class DeviceListComponent implements OnInit {
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
 
-  devices=[];// BehaviorSubject<any>;
+  devices = [];// BehaviorSubject<any>;
 
   REGISTER = 0x01;
   QUERY = 0x02;
@@ -27,15 +27,17 @@ export class DeviceListComponent implements OnInit {
   BOMB = 0xBB;
 
 
-  @Input() config;
+  @Input() config; 
+  @Output() nodeConfigs = new EventEmitter<string>();
 
-  @Output() nodeConfigs = new EventEmitter<string>(); 
+
   mode: String;
-  locationsToSet = [];
-  setLocation = [];
-  leftLocations = [];
-  teamsAvaliable = [];
+
+  locationsToSet = []; 
   selectedLocations = [];
+
+  teamsAvaliable = [];
+  
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
@@ -47,42 +49,66 @@ export class DeviceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.config.subscribe(
-      modeConfig => {
-        // console.log(modeConfig);
-        this.userSvc.getUserData().subscribe(userData => {
-          // console.log(modeConfig, "config", userData.fieldProfiles[0].devices)
-          this.mode = modeConfig.mode;
-          // this.selectedLocations = [];//this resets the selcted locations
-          if (modeConfig.mode == 'createMode') {
-            this.locationsToSet = modeConfig.location;//set locations
-            if (modeConfig.teams) {
+      modeConfig => { 
+        this.userSvc.getUserData().subscribe(userData => { 
+          this.mode = modeConfig.mode; 
+
+          
+
+          //  TEAMS CONFIGS
+          if(modeConfig.teams){
+            if (this.mode == 'createMode') {
               const teams = [];
-              modeConfig.teams.forEach(element => {
-                // console.log(element, element.value.name)
+              modeConfig.teams.forEach(element => { 
                 teams.push({ 'name': element.value.name })
+              });
+              this.teamsAvaliable = teams//set teams
+            } else {
+              const teams = [];
+              modeConfig.teams.forEach(element => { 
+                teams.push({ 'name': element.name })
               });
               this.teamsAvaliable = teams//set teams
             }
           }
+          
+           
+
+          //  NODE CONFIGS
           if (typeof modeConfig.nodeConfigs == 'string') {//this mean coming from device map
             this.devices = JSON.parse(modeConfig.nodeConfigs);
           } else {
             this.devices = modeConfig.nodeConfigs;
-          }
-          // console.log(modeConfig.nodeConfigs,'passed in config in devicelist')
+          } 
+
+
+          //  LOCATIONS CONFIGS  -needs to be after node configs above.
+
+          if(this.userSvc.findMapID(modeConfig.mapID)){
+            this.locationsToSet = this.userSvc.getLocationsForMap(this.userSvc.findMapID(modeConfig.mapID));
+              
+              let arr=[];
+              this.devices.forEach(device=>{
+                if(device.location){
+                  arr.push(device.location)
+                }
+              })
+              this.selectedLocations = arr
+              console.log(this.selectedLocations,'slelec',this.devices)
+          }  
         })
       }
     )
   }
- 
-  saveNodeConfigs() { 
+
+  saveNodeConfigs() {
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   }
 
   locationSelected(event, device) {
     this.selectedLocations.push(event.target.value)
     device.location = event.target.value;
-    console.log('location selected ',this.selectedLocations,device.location)
+    console.log('location selected ', this.selectedLocations, device.location)
     device.enabled = true;
     this.saveNodeConfigs()
   }

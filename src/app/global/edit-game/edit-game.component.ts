@@ -145,7 +145,7 @@ gameConfigs;
   setNodes(){ 
     this.deviceListConfigs.next({
       mode:"createMode",
-      location:this.locations['locations'],
+      mapID:this.gameModeForm.get('map').value,
       teams:this.gameModeForm.get('teams')['controls'],
       nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
     })
@@ -170,7 +170,7 @@ gameConfigs;
       })
       this.deviceListConfigs.next({
         mode:"createMode",
-        location:this.locations['locations'],
+        mapID:this.gameModeForm.get('map').value ,
         teams:this.gameModeForm.get('teams')['controls'],
         nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
       })

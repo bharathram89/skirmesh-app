@@ -42,8 +42,8 @@ export class StartGameComponent implements OnInit {
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
-
-    let config = this.gameModes.find(ele=> ele.description == this.selectedGameMode).deviceMap
+    let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode)
+    let config = mode.deviceMap
     config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
     config = JSON.parse(config.substring(0,config.length-1))// remove last quote and parse
 
@@ -54,12 +54,14 @@ export class StartGameComponent implements OnInit {
     console.log(this.gameModes," all game modes",  config,nodesWithLocationSet,nodesWithoutLocationSet)
     this.activeNodes.next({
       mode:"activeNodes",
+      teams:mode.teams,
+      location:mode.mapID,
       nodeConfigs:nodesWithLocationSet
     })
     this.adminNodes.next({
       mode:"adminNodes",
-      // location:this.locations['locations'],
-      // teams:this.gameModeForm.get('teams')['controls'],
+      location:mode.mapID,
+      teams:mode.teams,
       nodeConfigs: nodesWithoutLocationSet
     })
     this.gameBoardCollapsed= true;
