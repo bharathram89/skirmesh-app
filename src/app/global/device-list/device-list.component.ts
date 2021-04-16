@@ -132,7 +132,12 @@ export class DeviceListComponent implements OnInit {
     }
     return arr;
   }
-
+  makeAdmin(device){
+    this.nodeConfigs.emit('makeNodeAdmin'+JSON.stringify(device))
+  }
+  makeActive(device){
+    this.nodeConfigs.emit('makeNodeActive'+JSON.stringify(device))
+  }
   enableMedic(device) {
     device.medic.enabled = true;
     device.bomb.enabled = false;

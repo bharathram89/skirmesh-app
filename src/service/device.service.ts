@@ -36,5 +36,9 @@ userSvc:UserServiceService;
   deleteGameConfig(token,gameConfigID){
     return this.http.delete(this.BASE+'resources/gameConfig?token='+token+'&id='+gameConfigID)
   }
+  startGame(token,gameConfigID,gameConfig){
+    //insert into games
+    //put into devices table to setup devices
+  }
   
 }

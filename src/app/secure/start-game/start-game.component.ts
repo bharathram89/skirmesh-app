@@ -31,6 +31,11 @@ export class StartGameComponent implements OnInit {
   selectedGameMode; 
   adminNodes: BehaviorSubject<any>;
   activeNodes: BehaviorSubject<any>;
+  activeNodesList;
+  adminNodesList;
+  teams;
+  mapID;
+
   constructor(userService:UserServiceService) {
     this.userSvc = userService;
     this.activeNodes = new BehaviorSubject({})
@@ -42,38 +47,73 @@ export class StartGameComponent implements OnInit {
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
-    let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode)
+  }
+  startGame(){
+    this.setSelectedGameConfig();
+
+    this.gameBoardCollapsed= true;
+  }
+   
+  setSelectedGameConfig(){
+    let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
+    this.teams = mode.teams;
+    this.mapID = mode.mapID
     let config = mode.deviceMap
     config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
     config = JSON.parse(config.substring(0,config.length-1))// remove last quote and parse
 
-    let nodesWithLocationSet = config.filter(ele=>ele.location);
+    this.activeNodesList = config.filter(ele=>ele.location);
 
-    let nodesWithoutLocationSet = config.filter(ele=>!ele.location);
+    this.adminNodesList = config.filter(ele=>!ele.location);
     
-    console.log(this.gameModes," all game modes",  config,nodesWithLocationSet,nodesWithoutLocationSet)
+    console.log(this.gameModes," all game modes",  config,this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
       mode:"activeNodes",
-      teams:mode.teams,
-      location:mode.mapID,
-      nodeConfigs:nodesWithLocationSet
+      teams:this.teams,
+      location:this.mapID,
+      nodeConfigs:this.activeNodesList
     })
     this.adminNodes.next({
       mode:"adminNodes",
-      location:mode.mapID,
-      teams:mode.teams,
-      nodeConfigs: nodesWithoutLocationSet
+      location:this.mapID,
+      teams:this.teams,
+      nodeConfigs: this.adminNodesList
     })
-    this.gameBoardCollapsed= true;
-  }
-  getActiveNodesFromConfig(){
     
   }
-  getAdminNodesFromConfig(){
-    
-  }
-
   nodeConfigs(e){
 
+    console.log(e.replace('makeNodeAdmin',''),"recived to move in start game",this.activeNodesList)
+    if(e.includes('makeNodeAdmin')){ 
+
+      this.adminNodesList.push(JSON.parse(e.replace('makeNodeAdmin','')));
+      this.adminNodes.next({
+        mode:"adminNodes",
+        location:this.mapID,
+        teams:this.teams,
+        nodeConfigs: this.adminNodesList
+      })
+
+      this.activeNodes.asObservable().forEach(data=>{
+        console.log('actie nodes',data)
+        data.node
+      })
+
+
+
+
+      
+    }else if (e.includes('makeNodeActive')){
+
+      this.activeNodesList.push(JSON.parse(e.replace('makeNodeActive','')));
+      this.activeNodes.next({
+        mode:"activeNodes",
+        location:this.mapID,
+        teams:this.teams,
+        nodeConfigs: this.adminNodesList
+      })
+
+    }
+    
   }
 }
