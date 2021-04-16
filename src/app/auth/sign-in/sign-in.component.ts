@@ -82,18 +82,19 @@ export class SignInComponent implements OnInit {
         // this.tokenStorage.
         // window.sessionStorage.setItem("token",JSON.stringify(data))
 
-        this.authSvc.getUser(respData['token']).subscribe(
-          userData=>{
-            console.log(userData);
-            this.tokenStorage.saveToken(respData['token'])
-            this.router.navigate(['/secure']);
-          },
-          err=>{
-            document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
-            //show error message
-          }
+        this.tokenStorage.saveToken(respData['token'])
+        this.router.navigate(['/secure']);
 
-        )
+        // this.authSvc.getUser(respData['token']).subscribe(
+        //   userData=>{
+        //     console.log(userData);
+        //   },
+        //   err=>{
+        //     document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
+        //     //show error message
+        //   }
+
+        // )
         //store session and route user
       },
       err=>{
