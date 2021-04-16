@@ -85,27 +85,28 @@ export class StartGameComponent implements OnInit {
 
     console.log(e.replace('makeNodeAdmin',''),"recived to move in start game",this.activeNodesList)
     if(e.includes('makeNodeAdmin')){ 
-
-      this.adminNodesList.push(JSON.parse(e.replace('makeNodeAdmin','')));
+      let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
+      this.adminNodesList.push(movedNode);
       this.adminNodes.next({
         mode:"adminNodes",
         location:this.mapID,
         teams:this.teams,
         nodeConfigs: this.adminNodesList
       })
-
-      this.activeNodes.asObservable().forEach(data=>{
-        console.log('actie nodes',data)
-        data.node
+      this.activeNodesList = this.activeNodesList.filter(data=> data.address !=movedNode.address )
+       console.log(this.activeNodesList,"updated active list")
+       this.activeNodes.next({
+        mode:"activeNodes",
+        teams:this.teams,
+        location:this.mapID,
+        nodeConfigs:this.activeNodesList
       })
-
-
 
 
       
     }else if (e.includes('makeNodeActive')){
-
-      this.activeNodesList.push(JSON.parse(e.replace('makeNodeActive','')));
+      let movedNode =JSON.parse(e.replace('makeNodeActive',''));
+      this.activeNodesList.push(movedNode);
       this.activeNodes.next({
         mode:"activeNodes",
         location:this.mapID,
@@ -113,6 +114,14 @@ export class StartGameComponent implements OnInit {
         nodeConfigs: this.adminNodesList
       })
 
+      this.adminNodesList = this.activeNodesList.filter(data=> data.address !=movedNode.address )
+      console.log(this.activeNodesList,"updated active list")
+      this.adminNodes.next({
+        mode:"adminNodes",
+        location:this.mapID,
+        teams:this.teams,
+        nodeConfigs: this.adminNodesList
+      })
     }
     
   }
