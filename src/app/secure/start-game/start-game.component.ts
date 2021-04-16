@@ -85,7 +85,9 @@ export class StartGameComponent implements OnInit {
 
     console.log(e.replace('makeNodeAdmin',''),"recived to move in start game",this.activeNodesList)
     if(e.includes('makeNodeAdmin')){ 
+
       let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
+      
       this.adminNodesList.push(movedNode);
       this.adminNodes.next({
         mode:"adminNodes",
@@ -114,8 +116,8 @@ export class StartGameComponent implements OnInit {
         nodeConfigs: this.activeNodesList
       })
 
-      this.adminNodesList = this.activeNodesList.filter(data=> data.address !=movedNode.address )
-      console.log(this.activeNodesList,"updated active list")
+      this.adminNodesList = this.adminNodesList.filter(data=>!data.address || data.address !=movedNode.address )
+      console.log(this.adminNodesList,"updated admin list",this.activeNodesList)
       this.adminNodes.next({
         mode:"adminNodes",
         location:this.mapID,
