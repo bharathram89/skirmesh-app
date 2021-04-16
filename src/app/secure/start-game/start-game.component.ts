@@ -111,7 +111,7 @@ export class StartGameComponent implements OnInit {
         mode:"activeNodes",
         location:this.mapID,
         teams:this.teams,
-        nodeConfigs: this.adminNodesList
+        nodeConfigs: this.activeNodesList
       })
 
       this.adminNodesList = this.activeNodesList.filter(data=> data.address !=movedNode.address )
