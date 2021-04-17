@@ -73,11 +73,9 @@ gameConfigs;
       name: new FormControl(this.gameModeFrm.name, [
         Validators.required
       ]),
-      teams: this.fb.array([this.newTeam(),this.newTeam()]),
+      teams: this.fb.array([]),
 
-      nodeModes: 
-      
-      new FormControl(this.gameModeFrm.nodeModes, [
+      nodeModes: new FormControl(this.gameModeFrm.nodeModes, [
         Validators.required
       ]),
       map:new FormControl(this.gameModeFrm.map, [
@@ -153,6 +151,16 @@ gameConfigs;
     // document.getElementById("exampleModal").className += "show"
   } 
   ngOnInit() {
+    if(this.gameMode.teams){
+
+      this.gameMode.teams.forEach(element => {
+        this.teams.push(this.newTeam())
+      });
+    }else{
+      this.teams.push(this.newTeam());
+      this.teams.push(this.newTeam())
+      
+    }
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
@@ -171,7 +179,7 @@ gameConfigs;
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
-        teams:this.gameModeForm.get('teams')['controls'],
+        teams: this.gameModeForm.get('teams')['controls'],
         nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
       })
     }

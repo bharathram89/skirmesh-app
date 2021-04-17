@@ -27,15 +27,14 @@
 
                                 <div class="card-header">
                                     <div *ngIf="mode !== 'activeNodes'">
-                                        <h4>Location:
+                                        <h4>Location:{{device?.location?.name}}
                                             <select class="form-control" 
-                                                (change)="locationSelected($event,device)"
-                                                [(ngModel)]="device.location">
-                                                <option selected  > -- Select Device Location --
-                                                </option>
+                                                (change)="locationSelected($event,device)" 
+                                                [(ngModel)]="device.location" 
+                                                >
+                                                <option  value="none" hidden selected> -- Select Device Location -- </option>
                                                 <option *ngFor="let location of getLocationList() ; let i = index"
-                                                     
-                                                    [selected]="device.location"
+                                                [ngValue]="location.name"  
                                                     [disabled]="location.isDisabled">
                                                     {{location.name}}
                                                 </option>

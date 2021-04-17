@@ -9,6 +9,7 @@ import {
   trigger
 } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
+import { DeviceService } from 'src/service/device.service';
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -28,6 +29,7 @@ export class StartGameComponent implements OnInit {
   gameBoardCollapsed = false;
   gameModes=[];
   userSvc:UserServiceService;
+  deviceSvc:DeviceService;
   selectedGameMode; 
   adminNodes: BehaviorSubject<any>;
   activeNodes: BehaviorSubject<any>;
@@ -36,21 +38,24 @@ export class StartGameComponent implements OnInit {
   teams;
   mapID;
 
-  constructor(userService:UserServiceService) {
+  constructor(userService:UserServiceService,deviceService:DeviceService) {
     this.userSvc = userService;
+    this.deviceSvc = deviceService;
     this.activeNodes = new BehaviorSubject({})
     this.adminNodes = new BehaviorSubject({})
    }
 
   ngOnInit(): void { 
-    this.gameModes = this.userSvc.getGameModes();  
+    this.gameModes = this.userSvc.getGameModes(); 
+    
+    //see if any active games open
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
   }
   startGame(){
     this.setSelectedGameConfig();
-
+    // this.deviceSvc.startGame(this.userSvc.getToken(),)
     this.gameBoardCollapsed= true;
   }
    

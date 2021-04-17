@@ -57,19 +57,24 @@ export class DeviceListComponent implements OnInit {
 
           //  TEAMS CONFIGS
           if(modeConfig.teams){
-            if (this.mode == 'createMode') {
+            // if (this.mode == 'createMode') {
+            //   const teams = [];
+            //   modeConfig.teams.forEach(element => { 
+            //     teams.push({ 'name': element.value.name })
+            //   });
+            //   this.teamsAvaliable = teams//set teams
+            // } else {
               const teams = [];
               modeConfig.teams.forEach(element => { 
-                teams.push({ 'name': element.value.name })
+                if(element.value && element.value.name){
+                  teams.push({ 'name': element.value.name })
+                }else{
+                  teams.push({ 'name': element.name })
+
+                }
               });
               this.teamsAvaliable = teams//set teams
-            } else {
-              const teams = [];
-              modeConfig.teams.forEach(element => { 
-                teams.push({ 'name': element.name })
-              });
-              this.teamsAvaliable = teams//set teams
-            }
+            // }
           }
           
            
@@ -94,9 +99,14 @@ export class DeviceListComponent implements OnInit {
                 }
               })
               this.selectedLocations = arr
-              console.log(this.selectedLocations,'slelec',this.devices)
+              console.log(this.selectedLocations,'slelec',this.locationsToSet)
           }  
+
+
+          console.log('oninit selected ', this.selectedLocations, this.devices)
+
         })
+
       }
     )
   }
@@ -106,20 +116,22 @@ export class DeviceListComponent implements OnInit {
   }
 
   locationSelected(event, device) {
-    console.log('location selected ', this.selectedLocations, event.target.value,device.location)
-    // this.selectedLocations.push(event.target.value)
-    // device.location = event.target.value;
+    let val = event.target.value.substr(event.target.value.indexOf(":")+2)
+    this.selectedLocations.push(val)
+
+    device.location = val;
     device.enabled = true;
     this.saveNodeConfigs()
+    console.log('location selected ', this.selectedLocations, this.devices)
+  }
+  getModal(device){
+    return { 'name':device.location, 'isDisabled': true }
   }
   getLocationList() {
     let arr = [];
     if (this.locationsToSet) {
       this.locationsToSet.forEach(loc => {
-
-        console.log(this.devices.find(ele=>ele.location),"all devices")
-
-        if (this.devices.indexOf(loc.name) == -1) {
+        if (this.selectedLocations.indexOf(loc.name) == -1) {
           if (arr) {
             arr.push({ 'name': loc.name, 'isDisabled': false });
           }
