@@ -9,7 +9,7 @@
     padding: 10px;
     margin:5px;
 }
-
+select { transition: none !important; }//https://stackoverflow.com/questions/37181017/angular-select-blinking
 .center-cust{
     justify-content: center;
     text-align: center;

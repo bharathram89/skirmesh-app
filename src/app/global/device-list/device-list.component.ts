@@ -37,7 +37,7 @@ export class DeviceListComponent implements OnInit {
   selectedLocations = [];
 
   teamsAvaliable = [];
-  
+  previousSelected;
   constructor(
     userService: UserServiceService,
     tokenService: TokenStorageService,
@@ -110,13 +110,21 @@ export class DeviceListComponent implements OnInit {
       }
     )
   }
-
+  saveOldVal(device){
+    this.previousSelected = device.location;
+  }
   saveNodeConfigs() {
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   }
 
   locationSelected(event, device) {
+
     let val = event.target.value.substr(event.target.value.indexOf(":")+2)
+
+    //if val exists in selectedLocations then remove from there. 
+    if(device.location){
+      this.selectedLocations = this.selectedLocations.filter(loc=>loc!=this.previousSelected)
+    } 
     this.selectedLocations.push(val)
 
     device.location = val;

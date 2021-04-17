@@ -30,6 +30,7 @@
                                         <h4>Location:{{device?.location?.name}}
                                             <select class="form-control" 
                                                 (change)="locationSelected($event,device)" 
+                                                (click)="saveOldVal(device)"
                                                 [(ngModel)]="device.location" 
                                                 >
                                                 <option  value="none" hidden selected> -- Select Device Location -- </option>
