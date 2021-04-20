@@ -30,8 +30,8 @@ userSvc:UserServiceService;
   modifyGameConfig(data, token){
     return this.http.put(this.BASE+'resources/gameConfig?token='+token,data,this.options)
   }
-  getGameConfigs(token){
-    return this.http.get(this.BASE+'resources/gameConfig?token='+token)
+  getGameConfigs(token,gameConfigID){
+    return this.http.get(this.BASE+'resources/gameConfig?token='+token+'&gameConfigID='+gameConfigID)
   }
   deleteGameConfig(token,gameConfigID){
     return this.http.delete(this.BASE+'resources/gameConfig?token='+token+'&id='+gameConfigID)
@@ -42,5 +42,6 @@ userSvc:UserServiceService;
     //insert into games
     //put into devices table to setup devices
   }
+  // http://api.skirmesh.net/resources/gameConfig
   
 }

@@ -22,10 +22,9 @@ export class GameConfigComponent implements OnInit {
     this.userSvc = userSvc;
   }
 
-  ngOnInit(): void {
-    
-    this.deviceSvc.getGameConfigs(this.userSvc.getToken()).subscribe(savedConfigs=>{
-      // console.log(savedConfigs[0],"savedConfigs");
+  ngOnInit(): void { 
+    this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(savedConfigs=>{
+      console.log(savedConfigs,"savedConfigs");
       JSON.parse(JSON.stringify(savedConfigs)).forEach(savedConfig => { 
         this.gameModes.push({
           id:savedConfig.id,

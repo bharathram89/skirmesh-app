@@ -28,7 +28,7 @@ const DEFAULT_DURATION = 300;
 })
 export class StartGameComponent implements OnInit {
   gameBoardCollapsed = false;
-  gameModes=[];
+  gameModes;
   userSvc:UserServiceService;
   deviceSvc:DeviceService;
   tokenSvc: TokenStorageService;
@@ -49,33 +49,36 @@ export class StartGameComponent implements OnInit {
    }
 
   ngOnInit(): void { 
+    this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(savedConfigs=>{
+      let gameData = JSON.parse(this.tokenSvc.getGameInfo());
+      this.gameModes =  savedConfigs;//this.userSvc.getGameModes(); 
+      if(gameData){
+          console.log(gameData,"data")
+        this.setSelectedGameConfig(gameData); 
+        this.gameBoardCollapsed= true;
+  
+      }
+    })
     
-    let gameData = JSON.parse(this.tokenSvc.getGameInfo());
-    this.gameModes = this.userSvc.getGameModes(); 
-    if(gameData){
-        console.log(gameData,"data")
-      this.setSelectedGameConfig(gameData); 
-      this.gameBoardCollapsed= true;
-
-    }
+    
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
   }
   startGame(){
     let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
-    console.log(mode.id,mode,'start stuff')
-    this.setSelectedGameConfig(mode); 
-    this.gameBoardCollapsed= true;
-    this.tokenSvc.saveGameInfo(JSON.stringify(mode));
-    // this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
-    //   data=>{
-    //     this.gameBoardCollapsed= true;
-    //   },
-    //   err=>{
-    //     //show error message saying game cant be started
-    //   }
-    // )
+    this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
+      data=>{
+        console.log(mode.id,mode,'start stuff')
+        this.setSelectedGameConfig(mode); 
+        this.gameBoardCollapsed= true;
+        this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+        this.gameBoardCollapsed= true;
+      },
+      err=>{
+        //show error message saying game cant be started
+      }
+    )
   }
    
   setSelectedGameConfig(mode){ 
