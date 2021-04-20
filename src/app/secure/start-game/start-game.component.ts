@@ -10,6 +10,7 @@ import {
 } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { DeviceService } from 'src/service/device.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -30,6 +31,7 @@ export class StartGameComponent implements OnInit {
   gameModes=[];
   userSvc:UserServiceService;
   deviceSvc:DeviceService;
+  tokenSvc: TokenStorageService;
   selectedGameMode; 
   adminNodes: BehaviorSubject<any>;
   activeNodes: BehaviorSubject<any>;
@@ -37,18 +39,25 @@ export class StartGameComponent implements OnInit {
   adminNodesList;
   teams;
   mapID;
-
-  constructor(userService:UserServiceService,deviceService:DeviceService) {
+  
+  constructor(userService:UserServiceService,deviceService:DeviceService,tokenService :TokenStorageService) {
     this.userSvc = userService;
     this.deviceSvc = deviceService;
+    this.tokenSvc = tokenService;
     this.activeNodes = new BehaviorSubject({})
     this.adminNodes = new BehaviorSubject({})
    }
 
   ngOnInit(): void { 
-    this.gameModes = this.userSvc.getGameModes(); 
     
-    //see if any active games open
+    let gameData = JSON.parse(this.tokenSvc.getGameInfo());
+    this.gameModes = this.userSvc.getGameModes(); 
+    if(gameData){
+        console.log(gameData,"data")
+      this.setSelectedGameConfig(gameData); 
+      this.gameBoardCollapsed= true;
+
+    }
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
@@ -57,14 +66,16 @@ export class StartGameComponent implements OnInit {
     let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
     console.log(mode.id,mode,'start stuff')
     this.setSelectedGameConfig(mode); 
-    this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
-      data=>{
-        this.gameBoardCollapsed= true;
-      },
-      err=>{
-        //show error message saying game cant be started
-      }
-    )
+    this.gameBoardCollapsed= true;
+    this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+    // this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
+    //   data=>{
+    //     this.gameBoardCollapsed= true;
+    //   },
+    //   err=>{
+    //     //show error message saying game cant be started
+    //   }
+    // )
   }
    
   setSelectedGameConfig(mode){ 
@@ -119,6 +130,7 @@ export class StartGameComponent implements OnInit {
 
       
     }else if (e.includes('makeNodeActive')){
+
       let movedNode =JSON.parse(e.replace('makeNodeActive',''));
       this.activeNodesList.push(movedNode);
       this.activeNodes.next({
@@ -136,7 +148,10 @@ export class StartGameComponent implements OnInit {
         teams:this.teams,
         nodeConfigs: this.adminNodesList
       })
-    }
+     }else if (e.includes('endGame')){
+      this.tokenSvc.endGame();
+      this.gameBoardCollapsed=false;
+     }
     
   }
 }

@@ -10,17 +10,17 @@ import { ManageGameComponent } from './manage-game/manage-game.component';
 import { FindGameComponent } from './find-game/find-game.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MydevicesComponent } from './mydevices/mydevices.component';
-
-
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+ 
 @NgModule({
-  declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent, FindGameComponent, MydevicesComponent],
-  imports: [
-    CommonModule,
-    SecureRoutingModule,
-    GlobalModule,
-    FormsModule,
-    ReactiveFormsModule
-  ]
+    declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent, FindGameComponent, MydevicesComponent],
+    imports: [
+        CommonModule,
+        SecureRoutingModule,
+        GlobalModule,
+        FormsModule,
+        ReactiveFormsModule, 
+    ]
 })
-export class SecureModule { }
+export class SecureModule {
+}

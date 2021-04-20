@@ -1,4 +1,72 @@
-<div #dataContainer></div>
+
+<div class="container-fluid">
+<div  *ngIf="!activeGame" >
+    <div class="alert alert-primary" role="alert">
+        Start A Game then come back and check it out!
+      </div>
+</div>
+    <div *ngIf="activeGame" id="activeGame">
+        <div class="row">
+            <div class="push-md-9 col-md-3">
+                <div class="row">
+                    <div class="col-md-12 col-4">
+                        <div class="card mb-3">
+                            <div class="row card card-outline-success m-x-auto m-b-2">
+                                <div class="cust_text text-xs-center p-y-1" [style.background-color]="teams[0].color" >
+                                    <h1>{{teams[0].name}}</h1>
+                                </div>
+                                <div class="col-md-5 text-xs-center text-success p-y-1">
+                                    <h1>78</h1>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-md-3">
+                <div class="card tall"> 
+                    <div *ngIf="map == 2" #salina_gambit></div>
+                    <div *ngIf="map == 3" #ballahack></div>
+                </div>
+            </div>
+            <div class="push-md-9 col-md-3">
+                <div class="row">
+                    <div class="col-md-12 col-4">
+                        <div class="card mb-3">
+                            <div class="row card card-outline-success m-x-auto m-b-2">
+                                <div class="cust_text text-xs-center p-y-1" [style.background-color]="teams[1].color">
+                                    <h1>{{teams[1].name}}</h1>
+                                </div>
+                                <div class="col-md-5 text-xs-center text-success p-y-1">
+                                    <h1>78</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="teams[2]" class="push-md-9 col-md-3"> 
+                <div class="col-md-12 col-4">
+                    <div *ngFor="let team of teams | slice:2; let i = index;" class="card mb-3">
+                        <div class="row card card-outline-success m-x-auto m-b-2">
+                            <div class="text-xs-center bg-success p-y-1">
+                                <h1>{{team.name}}</h1>
+                            </div>
+                            <div class="col-md-5 text-xs-center text-success p-y-1">
+                                <h1>78</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+ 
+</div>
+
+<!-- 
 <div class="my-3 p-3 bg-white rounded box-shadow">
     <h6 class="border-bottom border-gray pb-2 mb-0">Recent updates</h6>
     <div class="media text-muted pt-3">
@@ -75,4 +143,4 @@
             <h1>1,250</h1>
         </div>
     </div>
-</div>
+</div> -->
