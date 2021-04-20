@@ -36,7 +36,7 @@ userSvc:UserServiceService;
   deleteGameConfig(token,gameConfigID){
     return this.http.delete(this.BASE+'resources/gameConfig?token='+token+'&id='+gameConfigID)
   }
-  startGame(token,gameConfigID,gameConfig){
+  startGame(token,gameConfigID){
     let data = {"gameConfigID":gameConfigID}
     return this.http.post(this.BASE+'gameplay/games?token='+token,data,this.options )
     //insert into games

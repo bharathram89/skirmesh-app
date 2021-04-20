@@ -54,13 +54,20 @@ export class StartGameComponent implements OnInit {
     this.selectedGameMode = e.target.value;
   }
   startGame(){
-    this.setSelectedGameConfig();
-    // this.deviceSvc.startGame(this.userSvc.getToken(),)
-    this.gameBoardCollapsed= true;
+    let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
+    console.log(mode.id,mode,'start stuff')
+    this.setSelectedGameConfig(mode); 
+    this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
+      data=>{
+        this.gameBoardCollapsed= true;
+      },
+      err=>{
+        //show error message saying game cant be started
+      }
+    )
   }
    
-  setSelectedGameConfig(){
-    let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
+  setSelectedGameConfig(mode){ 
     this.teams = mode.teams;
     this.mapID = mode.mapID
     let config = mode.deviceMap

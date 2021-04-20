@@ -104,7 +104,20 @@ export class SignUpComponent implements OnInit {
     playerSignUp.classList.add("active");
   }
   loginWithFacebook(): void {
-    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
+      console.log(fbData,"fb data");
+      let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
+      //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
+      //how to do password?
+      let data = {
+        "callSign": fbData.name,
+        "firstName": fbData.firstName,
+        "lastName": fbData.lastName,
+        "password": this.addUser.value.password,
+        "email": fbData.email,
+        "type": type
+      }
+    });
   }
   onSubmit() {
     let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
