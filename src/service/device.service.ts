@@ -21,10 +21,10 @@ userSvc:UserServiceService;
 
   constructor(private http:HttpClient,
     tokenSvc:TokenStorageService,
-    userSvc: UserServiceService) { 
+    userSvc: UserServiceService) {
       this.userSvc = userSvc;
   }
-  saveGameConfigs(data,token){  
+  saveGameConfigs(data,token){
     return this.http.post(this.BASE+'resources/gameConfig?token='+token,data,this.options)
   }
   modifyGameConfig(data, token){
@@ -38,10 +38,10 @@ userSvc:UserServiceService;
   }
   startGame(token,gameConfigID){
     let data = {"gameConfigID":gameConfigID}
-    return this.http.post(this.BASE+'gameplay/games?token='+token,data,this.options )
+    return this.http.post(this.BASE+'gameplay/startGame?token='+token,data,this.options )
     //insert into games
     //put into devices table to setup devices
   }
   // http://api.skirmesh.net/resources/gameConfig
-  
+
 }
