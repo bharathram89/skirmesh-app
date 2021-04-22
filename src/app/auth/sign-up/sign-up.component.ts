@@ -51,7 +51,7 @@ export class SignUpComponent implements OnInit {
       // this.isLoggedin = (user != null);
       console.log('user fb login', user)
     });
-    this.addUser.controls['fieldName'].disable();//needed in ngonInit to disable fieldName 
+    this.addUser.controls['fieldName'].disable();//needed in ngonInit to disable fieldName
   }
   get checkpass(){
     return this.checkPasswords(this.addUser)
@@ -59,7 +59,7 @@ export class SignUpComponent implements OnInit {
   checkPasswords(group: FormGroup){
     const password = group.get('password').value;
   const confirmPassword = group.get('confirmPassword').value;
-    
+
   return password === confirmPassword ? null : group.controls['confirmPassword'].setErrors({ notSame: true });
 
   }
@@ -134,7 +134,7 @@ export class SignUpComponent implements OnInit {
     },
     err=>{
       document.getElementById('userCreatFaileddMessage').classList.toggle('d-none')
-      // console.log(data,"resp")
+      console.log(data,err,"resp")
     })
   }
 

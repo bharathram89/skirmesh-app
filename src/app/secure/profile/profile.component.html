@@ -24,7 +24,7 @@
                 </figure>
                 <div class="form-inline col-md-10 col-sm-9 col-xs-12">
                   <input formControlName="profileImage" (change)="getFile($event)" type="file" class="file-uploader pull-left" accept="image/*">
-                  <button type="submit" (click)="saveImage()" class="btn btn-sm btn-default-alt pull-left">Update Image</button>
+                  <button type="submit" (click)="saveImage()" class="btn btn-sm btn-primary btn-default-alt pull-left">Update Image</button>
                 </div>
               </div>
 
@@ -84,7 +84,7 @@
             <hr>
             <div class="form-group">
               <div class="col-md-10 col-sm-9 col-xs-12 col-md-push-2 col-sm-push-3 col-xs-push-0">
-                <input (click)="onSubmit()" class="btn btn-primary" type="submit" value="Update Field Profile">
+                <input (click)="onSubmit()" class="btn btn-primary" type="submit" value="Update Profile">
               </div>
             </div>
           </form>
