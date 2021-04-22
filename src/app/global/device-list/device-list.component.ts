@@ -99,11 +99,11 @@ export class DeviceListComponent implements OnInit {
                 }
               })
               this.selectedLocations = arr
-              console.log(this.selectedLocations,'slelec',this.locationsToSet)
+              // console.log(this.selectedLocations,'slelec',this.locationsToSet)
           }  
 
 
-          console.log('oninit selected ', this.selectedLocations, this.devices)
+          // console.log('oninit selected ', this.selectedLocations, this.devices)
 
         })
 
@@ -227,7 +227,7 @@ export class DeviceListComponent implements OnInit {
       120, 150, 180, 210, 240]                 // TODO: convert text based on range
 
 
-    device.med_time = int_map[value];
+    device.medTime = int_map[value];
     this.saveNodeConfigs()
 
   }

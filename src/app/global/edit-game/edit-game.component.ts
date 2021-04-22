@@ -201,7 +201,7 @@ gameConfigs;
       let cap = new CaptureSettings(false,null,null,null,null)
       let query = new QueryPlayerSettings(false,null)
       let reg = new RegisterPlayer(false,null)
-      let ds = new DeviceSettings(false,element.address,null,med,bmb,cap,reg,query)
+      let ds = new DeviceSettings(false,element.address,null,null,med,bmb,cap,reg,query)
       arr.push(ds)
     });
 
