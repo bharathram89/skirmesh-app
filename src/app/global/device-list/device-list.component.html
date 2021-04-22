@@ -121,17 +121,11 @@
                                         <div *ngIf="device.medic.enabled">
                                             <div class="card card-body">
                                                 <div class="form-group">
-                                                    <label for="armTime">Team</label> 
-                                                    <select class="form-control"
-                                                        (change)="medicNodeTeamSelected($event,device)"
-                                                        [(ngModel)]="device.medic.team">
-                                                        <option value="none" selected disabled hidden>Select Team
-                                                        </option>
-                                                        <option [value]="team.name"
-                                                            *ngFor="let team of teamsAvaliable; let i = index">
-                                                            {{team.name}}
-                                                        </option>
-                                                    </select>
+                                                    <label for="medicTime">Time to Medic</label> 
+                                                    <input class="form-control-range" id="medicTime" type="range" min="0"
+                                                    max="11" [value]="getTimeIndex(device.medTime)" step="1"
+                                                    (mouseup)="medicTime(device,$event.target.value)">
+                                                    {{convertTime(device.medTime)}}
                                                 </div>
                                             </div>
                                         </div>
@@ -217,6 +211,17 @@
                                                     <label class="custom-control-label"
                                                         [for]="'allowMedicSwitch-' + i">Allow
                                                         Medic</label>
+                                                </div>
+                                                <div *ngIf="device.capture.allow_medic">
+                                                    <div class="card card-body">
+                                                        <div class="form-group">
+                                                            <label for="capmedicTime">Time to Medic</label> 
+                                                            <input class="form-control-range" id="capmedicTime" type="range" min="0"
+                                                            max="11" [value]="getTimeIndex(device.medTime)" step="1"
+                                                            (mouseup)="medicTime(device,$event.target.value)">
+                                                            {{convertTime(device.medTime)}}
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                             </div>

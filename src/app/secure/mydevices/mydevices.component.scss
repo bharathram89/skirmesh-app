@@ -2,3 +2,20 @@
     color: white;
     text-shadow: 1px 1px rgba(0,0,0,0.5), -1px 1px rgba(0,0,0,0.5), 1px -1px rgba(0,0,0,0.5), -1px -1px rgba(0,0,0,0.5);
 }
+
+#KINGDOM{
+    fill:white;
+}
+
+#NORTH_POND_TRAIL{
+    background-color: red($color: #ffffff);
+    opacity: 0;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+#NORTH_POND_TRAIL:hover {
+    background-color: red($color: #ffffff);
+    fill: var(--WHITE);
+    opacity: 0.25;
+    transform: scale(1.1);
+}

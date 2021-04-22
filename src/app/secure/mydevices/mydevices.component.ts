@@ -37,6 +37,7 @@ export class MydevicesComponent implements OnInit {
   ngAfterViewInit() { 
      if(this.map ==2){
       this.salina_gambit.nativeElement.innerHTML = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <?xml-stylesheet href="./mydevices.component.scss" type="text/scss"?>
       <svg
          xmlns:dc="http://purl.org/dc/elements/1.1/"
          xmlns:cc="http://creativecommons.org/ns#"
@@ -96,7 +97,7 @@ export class MydevicesComponent implements OnInit {
              id="NORTHWEST POND PIPE" />
           <path
              d="m 122.93907,107.52688 -26.451791,7.98005 -19.426347,-5.11266 -4.845506,11.28097 1.891314,4.07842 -1.78624,13.03132 2.375338,11.03516 5.855697,3.71337 5.570053,2.28515 12.568324,4.14183 1.142575,2.71362 6.284163,1.57104 7.71238,-2.42797 3.46269,-4.23419 3.04711,-11.43948 6.77263,-5.32115 -0.85693,-16.9958 -2.71361,-2.28515 z"
-             id="NORTH POND TRAIL PIPE" />
+             id="NORTH_POND_TRAIL PIPE" />
           <path
              d="m 169.95803,116.68547 18.13837,18.42402 1.71387,33.70596 -4.28466,6.14134 -36.81708,-1.85603 -15.74137,-3.14273 -7.14109,-0.28565 -11.99704,-7.8552 3.46269,-4.23419 3.04711,-11.43948 6.77263,-5.32115 -0.85693,-16.9958 5.42723,4.5703 13.42526,-0.99975 z"
              id="RIGHT HOOK TRAIL PIPE" />
@@ -124,6 +125,7 @@ export class MydevicesComponent implements OnInit {
   
      }else if(this.map == 3){
       this.ballahack.nativeElement.innerHTML=`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <?xml-stylesheet href="./mydevices.component.scss" type="text/scss"?>
      <svg
         xmlns:dc="http://purl.org/dc/elements/1.1/"
         xmlns:cc="http://creativecommons.org/ns#"
@@ -186,7 +188,7 @@ export class MydevicesComponent implements OnInit {
             id="MOSES TRAIL" />
          <path
             d="m 61.420351,125.08232 -15.243007,29.14104 25.515651,38.59978 4.925473,-4.37819 3.648498,-1.82425 3.283649,-0.54728 4.925473,0.91213 4.560623,3.10122 6.202447,-10.76307 18.060072,-6.02002 14.95627,-33.875 -18.8296,2.68994 -31.830981,-7.17318 z"
-            id="NORTH POND TRAIL" />
+            id="NORTH_POND_TRAIL" />
          <path
             d="m 117.29923,173.30368 18.24249,12.04004 25.90434,-6.02002 3.6485,-14.22914 -9.4861,-5.47275 0.18242,-13.49945 2.91572,-7.59033 -26.4511,0.89665 z"
             id="RANGE" />
