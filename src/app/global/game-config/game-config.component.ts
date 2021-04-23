@@ -64,7 +64,7 @@ export class GameConfigComponent implements OnInit {
                 null,
 
 
-      stable : inputDeviceSettings.capture.cap_time,//cap_time = stable
+      cap_time : inputDeviceSettings.capture.cap_time,//cap_time = stable?
       cap_asst : inputDeviceSettings.capture.cap_asst,
       point_scale : inputDeviceSettings.capture.point_scale,
       allow_medic : inputDeviceSettings.capture.allow_medic,
