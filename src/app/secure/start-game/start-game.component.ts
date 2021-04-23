@@ -11,6 +11,8 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { DeviceService } from 'src/service/device.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
+import { BombSettings, CaptureSettings, DeviceSettings, MedicSettings, QueryPlayerSettings, RegisterPlayer } from 'src/app/global/node.modal';
+import { AuthService } from 'src/service/auth.service';
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -32,6 +34,7 @@ export class StartGameComponent implements OnInit {
   userSvc:UserServiceService;
   deviceSvc:DeviceService;
   tokenSvc: TokenStorageService;
+  authSvc:AuthService;
   selectedGameMode;
   adminNodes: BehaviorSubject<any>;
   activeNodes: BehaviorSubject<any>;
@@ -40,7 +43,8 @@ export class StartGameComponent implements OnInit {
   teams;
   mapID;
 
-  constructor(userService:UserServiceService,deviceService:DeviceService,tokenService :TokenStorageService) {
+  constructor(userService:UserServiceService,deviceService:DeviceService,tokenService :TokenStorageService,authService:AuthService) {
+    this.authSvc = authService;
     this.userSvc = userService;
     this.deviceSvc = deviceService;
     this.tokenSvc = tokenService;
@@ -69,11 +73,21 @@ export class StartGameComponent implements OnInit {
     let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
     this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
       data=>{
-        console.log(mode.id,mode,'start stuff')
-        this.setSelectedGameConfig(mode);
-        this.gameBoardCollapsed= true;
-        this.tokenSvc.saveGameInfo(JSON.stringify(mode));
-        this.gameBoardCollapsed= true;
+        this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(latestDeviceData=>{
+          this.userSvc.setUserData(latestDeviceData);
+
+          // console.log(latestDeviceData['user'].fieldProfiles[0].devices,'start stuff',data,"temp",mode)
+          mode.deviceMap = latestDeviceData['user'].fieldProfiles[0].devices
+          console.log(latestDeviceData['user']," same some old")
+          this.setSelectedGameConfig(mode);
+          this.gameBoardCollapsed= true;
+          this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+          this.gameBoardCollapsed= true;
+        },
+        err=>{
+          console.log(err);
+          //show error message saying game cant be started
+        })
       },
       err=>{
         console.log(err);
@@ -81,19 +95,25 @@ export class StartGameComponent implements OnInit {
       }
     )
   }
-
+ 
   setSelectedGameConfig(mode){
     this.teams = mode.teams;
     this.mapID = mode.mapID
-    let config = mode.deviceMap
-    config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
-    config = JSON.parse(config.substring(0,config.length-1))// remove last quote and parse
+    let config = mode.deviceMap 
+    console.log(config," od some")
+    // config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
+    // config = JSON.parse(config)// remove last quote and parse
+    console.log(config,"intialonfig")
+    let arr =[];
+    config.forEach(element => {
+      arr.push(this.apiToUiModel(element,this.userSvc.findMapName(this.mapID)))
+    });
 
-    this.activeNodesList = config.filter(ele=>ele.location);
+    this.activeNodesList = arr.filter(ele=>ele.location);
 
-    this.adminNodesList = config.filter(ele=>!ele.location);
+    this.adminNodesList = arr.filter(ele=>!ele.location);
 
-    console.log(this.gameModes," all game modes",  config,this.activeNodesList,this.adminNodesList)
+    console.log(this.gameModes," all game modes",  arr,this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
       mode:"activeNodes",
       teams:this.teams,
@@ -108,6 +128,51 @@ export class StartGameComponent implements OnInit {
     })
 
   }
+
+
+  private REGISTER = 0x01;
+  private QUERY = 0x02;
+  private PAIR_UID = 0x03;
+  private CAPTURE = 0x0A;
+  private MEDIC = 0x0E;
+  private BOMB = 0xBB;
+  apiToUiModel(deviceConfig,mapid){
+    console.log(deviceConfig,"apiToUiModel")
+    let med,cap,bomb,query,reg;
+    if(deviceConfig.config == this.MEDIC){
+      med=new MedicSettings(true,null) 
+    }else{
+      med=new MedicSettings(false,null) 
+    }
+
+    if(deviceConfig.config == this.CAPTURE){
+      cap=new CaptureSettings(true,deviceConfig.cap_time,deviceConfig.cap_asst,deviceConfig.point_scale,deviceConfig.allow_medic)
+    }else{
+      cap=new CaptureSettings(false,deviceConfig.cap_time,deviceConfig.cap_asst,deviceConfig.point_scale,deviceConfig.allow_medic)
+    }
+
+    if(deviceConfig.config == this.BOMB){
+      bomb=new BombSettings(true,deviceConfig.arm_time,deviceConfig.bomb_time,deviceConfig.diff_time)
+    }else{
+      bomb=new BombSettings(false,deviceConfig.arm_time,deviceConfig.bomb_time,deviceConfig.diff_time)
+    }
+
+    if(deviceConfig.config == this.QUERY){
+      query = new QueryPlayerSettings(true,null)
+    }else{
+      query = new QueryPlayerSettings(false,null)
+    }
+
+    if(deviceConfig.config == this.REGISTER){
+      reg = new RegisterPlayer(true,null)
+    }else{
+      reg = new RegisterPlayer(false,null)
+    } 
+    let loc = deviceConfig.location? this.userSvc.findLocationName(mapid,deviceConfig.location):null;
+    let ds = new DeviceSettings(deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
+    return ds;
+  }
+
   nodeConfigs(e){
 
     console.log(e.replace('makeNodeAdmin',''),"recived to move in start game",this.activeNodesList)
