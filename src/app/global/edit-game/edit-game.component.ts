@@ -176,19 +176,68 @@ gameConfigs;
           return locs['locations'];
         }
       })
+
+      let valFromApi = JSON.parse(this.gameModeForm.get('nodeModes').value);
+      let arr=[];
+      valFromApi.forEach(eachNodeConfig => {
+        arr.push(this.apiToUiModel(eachNodeConfig,this.gameModeForm.get('map').value ))
+      }); 
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
         teams: this.gameModeForm.get('teams')['controls'],
-        nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : this.makeDeviceModals(this.devices, this.gameConfigs)
+        nodeConfigs: this.gameModeForm.get('nodeModes').value ? arr : this.makeDeviceModals(this.devices, this.gameConfigs)
       })
     }
   }
 
+  
+  private REGISTER = 0x01;
+  private QUERY = 0x02;
+  private PAIR_UID = 0x03;
+  private CAPTURE = 0x0A;
+  private MEDIC = 0x0E;
+  private BOMB = 0xBB;
+  apiToUiModel(deviceConfig,mapid){
+    console.log(deviceConfig,"apiToUiModel")
+    let med,cap,bomb,query,reg;
+    if(deviceConfig.config == this.MEDIC){
+      med=new MedicSettings(true,null) 
+    }else{
+      med=new MedicSettings(false,null) 
+    }
+
+    if(deviceConfig.config == this.CAPTURE){
+      cap=new CaptureSettings(true,deviceConfig.cap_time,deviceConfig.cap_asst,deviceConfig.point_scale,deviceConfig.allow_medic)
+    }else{
+      cap=new CaptureSettings(false,deviceConfig.cap_time,deviceConfig.cap_asst,deviceConfig.point_scale,deviceConfig.allow_medic)
+    }
+
+    if(deviceConfig.config == this.BOMB){
+      bomb=new BombSettings(true,deviceConfig.arm_time,deviceConfig.bomb_time,deviceConfig.diff_time)
+    }else{
+      bomb=new BombSettings(false,deviceConfig.arm_time,deviceConfig.bomb_time,deviceConfig.diff_time)
+    }
+
+    if(deviceConfig.config == this.QUERY){
+      query = new QueryPlayerSettings(true,null)
+    }else{
+      query = new QueryPlayerSettings(false,null)
+    }
+
+    if(deviceConfig.config == this.REGISTER){
+      reg = new RegisterPlayer(true,null)
+    }else{
+      reg = new RegisterPlayer(false,null)
+    } 
+    let loc = deviceConfig.location? this.userSvc.findLocationName(mapid,deviceConfig.location):null;
+    let ds = new DeviceSettings(deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
+    return ds;
+  }
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
-    // console.log(dataModel)
-    dataModel.map = this.userSvc.findMapID(dataModel.map)
+    console.log(dataModel," final modal?")
+    // dataModel.map = this.userSvc.findMapID(dataModel.map)
     this.saveGameMode.emit(dataModel);
   }
 
@@ -196,12 +245,13 @@ gameConfigs;
   makeDeviceModals(alldevices, gameConfigs): DeviceSettings[] {
     let arr: DeviceSettings[]=[];
     alldevices.forEach(element => {
-      let med = new MedicSettings(false,null)
-      let bmb = new BombSettings(false,null,null,null)
-      let cap = new CaptureSettings(false,null,null,null,null)
+      // console.log(element,"exisitng config? ")
+      let med = new MedicSettings(element.allow_medic,null)
+      let bmb = new BombSettings(false,element.arm_time,element.bomb_time,element.diff_time)
+      let cap = new CaptureSettings(false,element.cap_time,element.cap_asst,element.point_scale,element.allow_medic)
       let query = new QueryPlayerSettings(false,null)
       let reg = new RegisterPlayer(false,null)
-      let ds = new DeviceSettings(false,element.address,null,null,med,bmb,cap,reg,query)
+      let ds = new DeviceSettings(false,element.address,null,element.med_time,med,bmb,cap,reg,query)
       arr.push(ds)
     });
 

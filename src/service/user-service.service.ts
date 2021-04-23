@@ -60,6 +60,12 @@ export class UserServiceService {
     }); 
     return name;
   }
+  findLocationID(mapid,locationName){
+    return this.getLocationsForMap(mapid).find(loc=>loc.name == locationName).id
+  }
+  findLocationName(mapid,locationid){
+    return this.getLocationsForMap(this.findMapID(mapid)).find(loc=>loc.id == locationid).name
+  }
   getFieldProfileID(){
     return this.fieldProfileID;
   }

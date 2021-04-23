@@ -32,7 +32,7 @@ export class DeviceListComponent implements OnInit {
 
 
   mode: String;
-
+mapid:String;
   locationsToSet = []; 
   selectedLocations = [];
 
@@ -52,7 +52,7 @@ export class DeviceListComponent implements OnInit {
       modeConfig => { 
         this.userSvc.getUserData().subscribe(userData => { 
           this.mode = modeConfig.mode; 
-
+          this.mapid=modeConfig.mapID;
           
 
           //  TEAMS CONFIGS
@@ -81,6 +81,7 @@ export class DeviceListComponent implements OnInit {
 
           //  NODE CONFIGS
           if (typeof modeConfig.nodeConfigs == 'string') {//this mean coming from device map
+            console.log(JSON.parse(modeConfig.nodeConfigs),"parsedata")
             this.devices = JSON.parse(modeConfig.nodeConfigs);
           } else {
             this.devices = modeConfig.nodeConfigs;
@@ -132,10 +133,15 @@ export class DeviceListComponent implements OnInit {
     } 
     this.selectedLocations.push(val)
 
+    // let loc = this.userSvc.findLocationID(this.mapid,val)
+    //find id of val
     device.location = val;
     device.enabled = true;
     this.saveNodeConfigs()
     console.log('location selected ', this.selectedLocations, this.devices)
+  }
+  findLocationName(locationid){
+    return this.userSvc.findLocationName(this.mapid,locationid)
   }
   getModal(device){
     return { 'name':device.location, 'isDisabled': true }
@@ -146,11 +152,11 @@ export class DeviceListComponent implements OnInit {
       this.locationsToSet.forEach(loc => {
         if (this.selectedLocations.indexOf(loc.name) == -1) {
           if (arr) {
-            arr.push({ 'name': loc.name, 'isDisabled': false });
+            arr.push({ 'id':loc.id,'name': loc.name, 'isDisabled': false });
           }
         } else {
           if (arr) {
-            arr.push({ 'name': loc.name, 'isDisabled': true });
+            arr.push({ 'id':loc.id,'name': loc.name, 'isDisabled': true });
           }
         }
       });

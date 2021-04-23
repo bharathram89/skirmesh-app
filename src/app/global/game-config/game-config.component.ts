@@ -44,13 +44,17 @@ export class GameConfigComponent implements OnInit {
       });
     })
   }
-  uIToAPIDeviceSettings(inputDeviceSettings: DeviceSettings){
-  
+  uIToAPIDeviceSettings(inputDeviceSettings: DeviceSettings,mapid){
+    let locID;
+    if(inputDeviceSettings.location){
+       locID = this.userSvc.findLocationID(mapid,inputDeviceSettings.location);
+    }
+
     return {
       id:1,
       address:inputDeviceSettings.address,
       enabled:inputDeviceSettings.enabled,
-      location: inputDeviceSettings.location,
+      location: locID,
 
       config: inputDeviceSettings.medic.enabled ? this.MEDIC : 
                 inputDeviceSettings.capture.enabled ? this.CAPTURE :
@@ -71,7 +75,7 @@ export class GameConfigComponent implements OnInit {
       diff_time : inputDeviceSettings.bomb.diff_time,
 
       team: inputDeviceSettings.registerPlayer.enabled ? inputDeviceSettings.registerPlayer.team:null,
-      med_time: inputDeviceSettings.medic.enabled ? this.MEDIC || inputDeviceSettings.capture.enabled ? this.CAPTURE :inputDeviceSettings.medTime:null//if in capture mode and allow_medic enabled get that time or if in medic mode get that time.
+      med_time: inputDeviceSettings.medic.enabled ? inputDeviceSettings.medTime : inputDeviceSettings.capture.enabled ? inputDeviceSettings.medTime:null//if in capture mode and allow_medic enabled get that time or if in medic mode get that time.
     }
 
   }
@@ -121,12 +125,11 @@ export class GameConfigComponent implements OnInit {
       // create a new one
       // let apiGameConfigData = new UITOAPIDeviceSettings() 
       let apiGameConfigData=[];
-      console.log(JSON.parse(dataModel.nodeModes),"configs")
       JSON.parse(dataModel.nodeModes).forEach(element => {
-        apiGameConfigData.push(this.uIToAPIDeviceSettings(element)) 
+        apiGameConfigData.push(this.uIToAPIDeviceSettings(element,this.userSvc.findMapID(dataModel.map))) 
       }); 
       let apiData = {
-        mapID: dataModel.map,
+        mapID: this.userSvc.findMapID(dataModel.map),
         fieldProfileID: this.userSvc.getFieldProfileID(),
         description: dataModel.name,
         deviceMap: JSON.stringify(apiGameConfigData),

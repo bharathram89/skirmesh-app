@@ -114,6 +114,7 @@
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableMedic(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'medicSwitch-' + i"
+                                                [disabled]="device.medic.enabled"
                                                 [checked]="device.medic.enabled">
                                             <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
                                                 Station</label>
@@ -123,7 +124,7 @@
                                                 <div class="form-group">
                                                     <label for="medicTime">Time to Medic</label> 
                                                     <input class="form-control-range" id="medicTime" type="range" min="0"
-                                                    max="11" [value]="getTimeIndex(device.medTime)" step="1"
+                                                    max="11" [value]="getTimeIndex(device.med_time)" step="1"
                                                     (mouseup)="medicTime(device,$event.target.value)">
                                                     {{convertTime(device.medTime)}}
                                                 </div>
@@ -135,6 +136,7 @@
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableBomb(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'bombSwitch-' + i"
+                                                [disabled]="device.bomb.enabled"
                                                 [checked]="device.bomb.enabled">
                                             <label class="custom-control-label"
                                                 [for]="'bombSwitch-' + i">Bomb/IED</label>
@@ -172,6 +174,7 @@
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableCapture(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'captureSwitch-' + i"
+                                                [disabled]="device.capture.enabled"
                                                 [checked]="device.capture.enabled">
                                             <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
                                                 Point</label>
@@ -217,7 +220,7 @@
                                                         <div class="form-group">
                                                             <label for="capmedicTime">Time to Medic</label> 
                                                             <input class="form-control-range" id="capmedicTime" type="range" min="0"
-                                                            max="11" [value]="getTimeIndex(device.medTime)" step="1"
+                                                            max="11" [value]="getTimeIndex(device.med_time)" step="1"
                                                             (mouseup)="medicTime(device,$event.target.value)">
                                                             {{convertTime(device.medTime)}}
                                                         </div>
