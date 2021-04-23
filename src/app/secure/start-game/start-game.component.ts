@@ -32,14 +32,14 @@ export class StartGameComponent implements OnInit {
   userSvc:UserServiceService;
   deviceSvc:DeviceService;
   tokenSvc: TokenStorageService;
-  selectedGameMode; 
+  selectedGameMode;
   adminNodes: BehaviorSubject<any>;
   activeNodes: BehaviorSubject<any>;
   activeNodesList;
   adminNodesList;
   teams;
   mapID;
-  
+
   constructor(userService:UserServiceService,deviceService:DeviceService,tokenService :TokenStorageService) {
     this.userSvc = userService;
     this.deviceSvc = deviceService;
@@ -48,19 +48,19 @@ export class StartGameComponent implements OnInit {
     this.adminNodes = new BehaviorSubject({})
    }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(savedConfigs=>{
       let gameData = JSON.parse(this.tokenSvc.getGameInfo());
-      this.gameModes =  savedConfigs;//this.userSvc.getGameModes(); 
+      this.gameModes =  savedConfigs;//this.userSvc.getGameModes();
       if(gameData){
           console.log(gameData,"data")
-        this.setSelectedGameConfig(gameData); 
+        this.setSelectedGameConfig(gameData);
         this.gameBoardCollapsed= true;
-  
+
       }
     })
-    
-    
+
+
   }
   changeGame(e){
     this.selectedGameMode = e.target.value;
@@ -70,18 +70,19 @@ export class StartGameComponent implements OnInit {
     this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
       data=>{
         console.log(mode.id,mode,'start stuff')
-        this.setSelectedGameConfig(mode); 
+        this.setSelectedGameConfig(mode);
         this.gameBoardCollapsed= true;
         this.tokenSvc.saveGameInfo(JSON.stringify(mode));
         this.gameBoardCollapsed= true;
       },
       err=>{
+        console.log(err);
         //show error message saying game cant be started
       }
     )
   }
-   
-  setSelectedGameConfig(mode){ 
+
+  setSelectedGameConfig(mode){
     this.teams = mode.teams;
     this.mapID = mode.mapID
     let config = mode.deviceMap
@@ -91,7 +92,7 @@ export class StartGameComponent implements OnInit {
     this.activeNodesList = config.filter(ele=>ele.location);
 
     this.adminNodesList = config.filter(ele=>!ele.location);
-    
+
     console.log(this.gameModes," all game modes",  config,this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
       mode:"activeNodes",
@@ -105,15 +106,15 @@ export class StartGameComponent implements OnInit {
       teams:this.teams,
       nodeConfigs: this.adminNodesList
     })
-    
+
   }
   nodeConfigs(e){
 
     console.log(e.replace('makeNodeAdmin',''),"recived to move in start game",this.activeNodesList)
-    if(e.includes('makeNodeAdmin')){ 
+    if(e.includes('makeNodeAdmin')){
 
       let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
-      
+
       this.adminNodesList.push(movedNode);
       this.adminNodes.next({
         mode:"adminNodes",
@@ -131,7 +132,7 @@ export class StartGameComponent implements OnInit {
       })
 
 
-      
+
     }else if (e.includes('makeNodeActive')){
 
       let movedNode =JSON.parse(e.replace('makeNodeActive',''));
@@ -155,6 +156,6 @@ export class StartGameComponent implements OnInit {
       this.tokenSvc.endGame();
       this.gameBoardCollapsed=false;
      }
-    
+
   }
 }

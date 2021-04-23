@@ -20,7 +20,7 @@ export class AuthService {
 
 
   createUser(data){
-    return this.http.post(this.BASE + 'resources/users',data,this.options)
+    return this.http.post(this.BASE + 'resources/createUser',data,this.options)
   }
 
 

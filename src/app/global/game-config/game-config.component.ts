@@ -11,7 +11,7 @@ import { TabsComponent } from '../tabs/tabs.component';
 })
 export class GameConfigComponent implements OnInit {
 
-  
+
   private REGISTER = 0x01;
   private QUERY = 0x02;
   private PAIR_UID = 0x03;
@@ -51,24 +51,23 @@ export class GameConfigComponent implements OnInit {
     }
 
     return {
-      id:1,
+      //id:1,
       address:inputDeviceSettings.address,
       enabled:inputDeviceSettings.enabled,
       location: locID,
 
-      config: inputDeviceSettings.medic.enabled ? this.MEDIC : 
+      config: inputDeviceSettings.medic.enabled ? this.MEDIC :
                 inputDeviceSettings.capture.enabled ? this.CAPTURE :
                 inputDeviceSettings.bomb.enabled ? this.BOMB :
                 inputDeviceSettings.registerPlayer.enabled ? this.REGISTER :
                 inputDeviceSettings.queryPlayer.enabled ? this.QUERY :
-                null,
+                this.CAPTURE, // CAN NEVER BE NULL --> default should be CAPTURE if req'd
 
-
+      stable:inputDeviceSettings.capture.cap_time,
       cap_time : inputDeviceSettings.capture.cap_time,//cap_time = stable?
       cap_asst : inputDeviceSettings.capture.cap_asst,
       point_scale : inputDeviceSettings.capture.point_scale,
       allow_medic : inputDeviceSettings.capture.allow_medic,
-      
 
       bomb_time : inputDeviceSettings.bomb.bomb_time,
       arm_time : inputDeviceSettings.bomb.arm_time,
@@ -123,7 +122,7 @@ export class GameConfigComponent implements OnInit {
       });
     } else {
       // create a new one
-      // let apiGameConfigData = new UITOAPIDeviceSettings() 
+      // let apiGameConfigData = new UITOAPIDeviceSettings()
       let apiGameConfigData=[];
       JSON.parse(dataModel.nodeModes).forEach(element => {
         apiGameConfigData.push(this.uIToAPIDeviceSettings(element,this.userSvc.findMapID(dataModel.map))) 
