@@ -148,6 +148,7 @@ export class DeviceListComponent implements OnInit {
   }
   getLocationList() {
     let arr = [];
+    arr.push({'id':null, 'name':"NONE",'isDisabled':false })
     if (this.locationsToSet) {
       this.locationsToSet.forEach(loc => {
         if (this.selectedLocations.indexOf(loc.name) == -1) {
