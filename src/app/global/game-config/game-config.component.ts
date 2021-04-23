@@ -134,8 +134,8 @@ export class GameConfigComponent implements OnInit {
         deviceMap: JSON.stringify(apiGameConfigData),
         teams: dataModel.teams
       }
-      console.log('create gameconfig',apiData,apiGameConfigData)
-
+      console.log('create gameconfig',dataModel)
+      dataModel.map = this.userSvc.findMapID(dataModel.map)
       dataModel.id = Math.round(Math.random() * 100);
       this.gameModes.push(dataModel);
       this.deviceSvc.saveGameConfigs(apiData, this.userSvc.getToken()).subscribe(data => {
