@@ -28,14 +28,14 @@
                                 <div class="card-header">
                                     <div *ngIf="mode !== 'activeNodes'">
                                         <h4>Location:{{device?.location?.name}}
-                                            <select class="form-control" 
-                                                (change)="locationSelected($event,device)" 
+                                            <select class="form-control"
+                                                (change)="locationSelected($event,device)"
                                                 (click)="saveOldVal(device)"
-                                                [(ngModel)]="device.location" 
+                                                [(ngModel)]="device.location"
                                                 >
                                                 <option  value="none" hidden selected> -- Select Device Location -- </option>
                                                 <option *ngFor="let location of getLocationList() ; let i = index"
-                                                [ngValue]="location.name"  
+                                                [ngValue]="location.name"
                                                     [disabled]="location.isDisabled">
                                                     {{location.name}}
                                                 </option>
@@ -57,7 +57,7 @@
 
                                 <div *ngIf="(device.enabled && mode == 'createMode') ||  mode !== 'createMode'"
                                     class="card-body">
- 
+
 
                                     <div *ngIf="mode == 'adminNodes'" id="playerQuery" class="form-group">
                                         <div class="custom-control custom-switch">
@@ -94,7 +94,7 @@
                                         </div>
                                         <div *ngIf="device.registerPlayer.enabled">
                                             <div class="card card-body">
-                                                <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS --> 
+                                                <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS -->
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
                                                     <select class="form-control">
@@ -122,10 +122,11 @@
                                         <div *ngIf="device.medic.enabled">
                                             <div class="card card-body">
                                                 <div class="form-group">
-                                                    <label for="medicTime">Time to Medic</label> 
+                                                    <label for="medicTime">Time to Medic</label>
                                                     <input class="form-control-range" id="medicTime" type="range" min="0"
                                                     max="11" [value]="getTimeIndex(device.med_time)" step="1"
-                                                    (mouseup)="medicTime(device,$event.target.value)">
+                                                    (change)="medicTime(device,$event.target.value, true)"
+                                                    (input)="medicTime(device, $event.target.value, false)">
                                                     {{convertTime(device.medTime)}}
                                                 </div>
                                             </div>
@@ -147,7 +148,8 @@
                                                     <label for="armTime">Arm Time</label>
                                                     <input class="form-control-range" id="armTime" type="range" min="0"
                                                         max="11" [value]="getTimeIndex(device.bomb.arm_time)" step="1"
-                                                        (mouseup)="armTime(device,$event.target.value)">
+                                                        (change)="armTime(device,$event.target.value, true)"
+                                                        (input)="armTime(device,$event.target.value, false)">
                                                     {{convertTime(device.bomb.arm_time)}}
                                                 </div>
                                                 <hr>
@@ -155,7 +157,9 @@
                                                     <label for="blastTime">Fuse Timer</label>
                                                     <input class="form-control-range" id="blastTime" type="range"
                                                         min="0" max="32" [value]="getTimeIndex(device.bomb.bomb_time)"
-                                                        step="1" (mouseup)="bombTime(device,$event.target.value)">
+                                                        step="1"
+                                                        (change)="bombTime(device,$event.target.value, true)"
+                                                        (input)="bombTime(device,$event.target.value, false)">
                                                     {{convertTime(device.bomb.bomb_time)}}
                                                 </div>
                                                 <hr>
@@ -163,7 +167,9 @@
                                                     <label for="difuseTime">Diffuse Time</label>
                                                     <input class="form-control-range" id="difuseTime" type="range"
                                                         min="0" max="11" [value]="getTimeIndex(device.bomb.diff_time)"
-                                                        step="1" (mouseup)="difuseTime(device,$event.target.value)">
+                                                        step="1"
+                                                        (change)="difuseTime(device,$event.target.value, true)"
+                                                        (input)="difuseTime(device,$event.target.value, false)">
                                                     {{convertTime(device.bomb.diff_time)}}
                                                 </div>
                                             </div>
@@ -186,7 +192,9 @@
                                                     <label for="captime">Stabilization Time</label>
                                                     <input class="form-control-range" id="captime" type="range" min="0"
                                                         max="32" [value]="getTimeIndex(device.capture.cap_time)"
-                                                        step="1" (mouseup)="capTime(device,$event.target.value)">
+                                                        step="1"
+                                                        (change)="capTime(device,$event.target.value, true)"
+                                                        (input)="capTime(device,$event.target.value, false)">
                                                     {{convertTime(device.capture.cap_time)}}
                                                 </div>
                                                 <hr>
@@ -194,7 +202,8 @@
                                                     <label for="capasst">Capture Assist</label>
                                                     <input class="form-control-range" id="capasst" type="range" min="0"
                                                         max="8" [value]="getPercIndex(device.capture.cap_asst)" step="1"
-                                                        (mouseup)="capasst(device,$event.target.value)">
+                                                        (change)="capasst(device,$event.target.value, true)"
+                                                        (input)="capasst(device,$event.target.value, false)">
                                                     {{convertPerc(device.capture.cap_asst)}} %
                                                 </div>
                                                 <hr>
@@ -203,7 +212,8 @@
                                                     <input class="form-control-range" id="pointScale" type="range"
                                                         min="0" max="11"
                                                         [value]="getScaleIndex(device.capture.point_scale)" step="1"
-                                                        (mouseup)="pointScale(device,$event.target.value)">
+                                                        (change)="pointScale(device,$event.target.value, true)"
+                                                        (input)="pointScale(device,$event.target.value, false)">
                                                     {{convertPointScale(device.capture.point_scale)}}
                                                 </div>
                                                 <hr>
@@ -218,10 +228,11 @@
                                                 <div *ngIf="device.capture.allow_medic">
                                                     <div class="card card-body">
                                                         <div class="form-group">
-                                                            <label for="capmedicTime">Time to Medic</label> 
+                                                            <label for="capmedicTime">Time to Medic</label>
                                                             <input class="form-control-range" id="capmedicTime" type="range" min="0"
                                                             max="11" [value]="getTimeIndex(device.med_time)" step="1"
-                                                            (mouseup)="medicTime(device,$event.target.value)">
+                                                            (change)="medicTime(device,$event.target.value, true)"
+                                                            (input)="medicTime(device,$event.target.value, false)">
                                                             {{convertTime(device.medTime)}}
                                                         </div>
                                                     </div>

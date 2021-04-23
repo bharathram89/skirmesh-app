@@ -27,13 +27,13 @@ export class DeviceListComponent implements OnInit {
   BOMB = 0xBB;
 
 
-  @Input() config; 
+  @Input() config;
   @Output() nodeConfigs = new EventEmitter<string>();
 
 
   mode: String;
-mapid:String;
-  locationsToSet = []; 
+  mapid:String;
+  locationsToSet = [];
   selectedLocations = [];
 
   teamsAvaliable = [];
@@ -49,23 +49,23 @@ mapid:String;
 
   ngOnInit(): void {
     this.config.subscribe(
-      modeConfig => { 
-        this.userSvc.getUserData().subscribe(userData => { 
-          this.mode = modeConfig.mode; 
+      modeConfig => {
+        this.userSvc.getUserData().subscribe(userData => {
+          this.mode = modeConfig.mode;
           this.mapid=modeConfig.mapID;
-          
+
 
           //  TEAMS CONFIGS
           if(modeConfig.teams){
             // if (this.mode == 'createMode') {
             //   const teams = [];
-            //   modeConfig.teams.forEach(element => { 
+            //   modeConfig.teams.forEach(element => {
             //     teams.push({ 'name': element.value.name })
             //   });
             //   this.teamsAvaliable = teams//set teams
             // } else {
               const teams = [];
-              modeConfig.teams.forEach(element => { 
+              modeConfig.teams.forEach(element => {
                 if(element.value && element.value.name){
                   teams.push({ 'name': element.value.name })
                 }else{
@@ -76,8 +76,8 @@ mapid:String;
               this.teamsAvaliable = teams//set teams
             // }
           }
-          
-           
+
+
 
           //  NODE CONFIGS
           if (typeof modeConfig.nodeConfigs == 'string') {//this mean coming from device map
@@ -85,14 +85,14 @@ mapid:String;
             this.devices = JSON.parse(modeConfig.nodeConfigs);
           } else {
             this.devices = modeConfig.nodeConfigs;
-          } 
+          }
 
 
           //  LOCATIONS CONFIGS  -needs to be after node configs above.
 
           if(this.userSvc.findMapID(modeConfig.mapID)){
             this.locationsToSet = this.userSvc.getLocationsForMap(this.userSvc.findMapID(modeConfig.mapID));
-              
+
               let arr=[];
               this.devices.forEach(device=>{
                 if(device.location){
@@ -101,7 +101,7 @@ mapid:String;
               })
               this.selectedLocations = arr
               // console.log(this.selectedLocations,'slelec',this.locationsToSet)
-          }  
+          }
 
 
           // console.log('oninit selected ', this.selectedLocations, this.devices)
@@ -127,10 +127,10 @@ mapid:String;
 
     let val = event.target.value.substr(event.target.value.indexOf(":")+2)
 
-    //if val exists in selectedLocations then remove from there. 
+    //if val exists in selectedLocations then remove from there.
     if(device.location){
       this.selectedLocations = this.selectedLocations.filter(loc=>loc!=this.previousSelected)
-    } 
+    }
     this.selectedLocations.push(val)
 
     // let loc = this.userSvc.findLocationID(this.mapid,val)
@@ -225,7 +225,7 @@ mapid:String;
     return int_map.indexOf(value)
   }
 
-  medicTime(device, value) {
+  medicTime(device, value, updateConfigs) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,          // Use discrete values to convert
       15, 18, 21, 24, 27, 30,                   // to simple times used for gameplay
@@ -234,7 +234,10 @@ mapid:String;
 
 
     device.medTime = int_map[value];
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
 
   }
 
@@ -268,7 +271,7 @@ mapid:String;
     device.capture.enabled = true;
     this.saveNodeConfigs()
   }
-  capTime(device, value) {
+  capTime(device, value, updateConfigs) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
       15, 18, 21, 24, 27, 30,
@@ -276,23 +279,32 @@ mapid:String;
       120, 150, 180, 210, 240]
 
     device.capture.cap_time = int_map[value];
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
   }
-  capasst(device, value) {
+  capasst(device, value, updateConfigs) {
 
     var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
       0x05, 0x04, 0x02, 0x01]
 
     device.capture.cap_asst = int_map[value];
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
   }
-  pointScale(device, value) {
+  pointScale(device, value, updateConfigs) {
 
     var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
       0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
 
     device.capture.point_scale = int_map[value];
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
   }
   enableAllowMedic(device) {
     if (device.capture.allow_medic) {
@@ -300,6 +312,7 @@ mapid:String;
     } else {
       device.capture.allow_medic = true;
     }
+    this.saveNodeConfigs();
   }
 
 
@@ -310,14 +323,17 @@ mapid:String;
     device.capture.enabled = false;
     this.saveNodeConfigs()
   }
-  armTime(device, value) {
+  armTime(device, value, updateConfigs) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
     device.bomb.arm_time = int_map[value];
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
   }
-  bombTime(device, value) {
+  bombTime(device, value, updateConfigs) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
       15, 18, 21, 24, 27, 30,
@@ -325,14 +341,20 @@ mapid:String;
       120, 150, 180, 210, 240]
 
     device.bomb.bomb_time = int_map[value];//fusetimer?
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
   }
-  difuseTime(device, value) {
+  difuseTime(device, value, updateConfigs) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
     device.bomb.diff_time = int_map[value];
-    this.saveNodeConfigs()
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
   }
 
 }
