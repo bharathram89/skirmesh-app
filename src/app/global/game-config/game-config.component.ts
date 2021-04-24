@@ -55,7 +55,7 @@ export class GameConfigComponent implements OnInit {
 
     let locID;
 
-    if(inputDeviceSettings.location == 'NONE'){
+    if(inputDeviceSettings.location == 'NONE' || !inputDeviceSettings.location){
         locID = null;
     } else if(inputDeviceSettings.location){
         locID = this.userSvc.findLocationID(mapid,inputDeviceSettings.location);

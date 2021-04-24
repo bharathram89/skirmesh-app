@@ -108,9 +108,9 @@ export class StartGameComponent implements OnInit {
       arr.push(this.apiToUiModel(element,this.userSvc.findMapName(this.mapID)))
     });
 
-    this.activeNodesList = arr.filter(ele=>ele.location);
+    this.activeNodesList = arr.filter(ele=>ele.enabled);
 
-    this.adminNodesList = arr.filter(ele=>!ele.location);
+    this.adminNodesList = arr.filter(ele=>!ele.enabled);
 
     console.log(this.gameModes," all game modes",  arr,this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
