@@ -105,7 +105,6 @@ export class StartGameComponent implements OnInit {
     // config = JSON.parse(config)// remove last quote and parse
     let arr =[];
     config.forEach(element => {
-        console.log("HERE", element, this.mapID);
       arr.push(this.apiToUiModel(element,this.userSvc.findMapName(this.mapID)))
     });
 
