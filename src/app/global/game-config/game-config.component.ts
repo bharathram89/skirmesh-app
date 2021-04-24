@@ -116,9 +116,9 @@ export class GameConfigComponent implements OnInit {
     onGameModeFormSubmit(dataModel) {
 
         if (dataModel.id > 0) {
-
+          console.log(dataModel,"modal to edit")
             let apiData = {
-
+                id             : dataModel.id,
                 mapID          : this.userSvc.findMapID(dataModel.map),
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
