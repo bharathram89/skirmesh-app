@@ -101,7 +101,7 @@ gameConfigs;
     this.configSet = true;
     // console.log(e," node Cofings receieved")
     this.gameModeForm.value.nodeModes = e;
-    this.deviceConfigs = JSON.parse(e); 
+    this.deviceConfigs = JSON.parse(e);
   }
   saveConfigs(){
     // console.log(this.gameModeForm.value)
@@ -140,7 +140,7 @@ gameConfigs;
     // console.log(color,e.target.value,i,'selected color')
      this.color.next(color)
   }
-  setNodes(){ 
+  setNodes(){
     this.deviceListConfigs.next({
       mode:"createMode",
       mapID:this.gameModeForm.get('map').value,
@@ -149,7 +149,7 @@ gameConfigs;
     })
     // document.getElementById("exampleModal").style.display = "block"
     // document.getElementById("exampleModal").className += "show"
-  } 
+  }
   ngOnInit() {
     if(this.gameMode.teams){
 
@@ -159,7 +159,7 @@ gameConfigs;
     }else{
       this.teams.push(this.newTeam());
       this.teams.push(this.newTeam())
-      
+
     }
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
@@ -168,7 +168,7 @@ gameConfigs;
       nodeModes: this.gameMode.nodeModes || '',
       map: this.userSvc.findMapName(this.gameMode.map) || ''
     });
-    
+
     if(this.gameMode.map){
       this.isMapSelected=true;
       this.locations = this.maps.find(locs=>{
@@ -181,7 +181,7 @@ gameConfigs;
       let arr=[];
       valFromApi.forEach(eachNodeConfig => {
         arr.push(this.apiToUiModel(eachNodeConfig,this.gameModeForm.get('map').value ))
-      }); 
+      });
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
@@ -191,20 +191,23 @@ gameConfigs;
     }
   }
 
-  
   private REGISTER = 0x01;
-  private QUERY = 0x02;
+  private QUERY    = 0x02;
   private PAIR_UID = 0x03;
-  private CAPTURE = 0x0A;
-  private MEDIC = 0x0E;
-  private BOMB = 0xBB;
+  private CAPTURE  = 0x0A;
+  private MEDIC    = 0x0E;
+  private BOMB     = 0xBB;
+
   apiToUiModel(deviceConfig,mapid){
+
     console.log(deviceConfig,"apiToUiModel")
+
     let med,cap,bomb,query,reg;
+
     if(deviceConfig.config == this.MEDIC){
-      med=new MedicSettings(true,null) 
+      med=new MedicSettings(true)
     }else{
-      med=new MedicSettings(false,null) 
+      med=new MedicSettings(false)
     }
 
     if(deviceConfig.config == this.CAPTURE){
@@ -220,20 +223,22 @@ gameConfigs;
     }
 
     if(deviceConfig.config == this.QUERY){
-      query = new QueryPlayerSettings(true,null)
+      query = new QueryPlayerSettings(true)
     }else{
-      query = new QueryPlayerSettings(false,null)
+      query = new QueryPlayerSettings(false)
     }
 
     if(deviceConfig.config == this.REGISTER){
       reg = new RegisterPlayer(true,null)
     }else{
       reg = new RegisterPlayer(false,null)
-    } 
-    let loc = deviceConfig.location? this.userSvc.findLocationName(mapid,deviceConfig.location):null;
-    let ds = new DeviceSettings(deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
+    }
+    let loc = deviceConfig.location ? this.userSvc.findLocationName(mapid,deviceConfig.location) : null;
+    let ds = new DeviceSettings(deviceConfig.id,deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
     return ds;
   }
+
+  
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
     console.log(dataModel," final modal?")
@@ -246,12 +251,12 @@ gameConfigs;
     let arr: DeviceSettings[]=[];
     alldevices.forEach(element => {
       // console.log(element,"exisitng config? ")
-      let med = new MedicSettings(element.allow_medic,null)
+      let med = new MedicSettings(element.allow_medic)
       let bmb = new BombSettings(false,element.arm_time,element.bomb_time,element.diff_time)
       let cap = new CaptureSettings(false,element.cap_time,element.cap_asst,element.point_scale,element.allow_medic)
-      let query = new QueryPlayerSettings(false,null)
+      let query = new QueryPlayerSettings(false)
       let reg = new RegisterPlayer(false,null)
-      let ds = new DeviceSettings(false,element.address,null,element.med_time,med,bmb,cap,reg,query)
+      let ds = new DeviceSettings(element.id,false,element.address,null,element.med_time,med,bmb,cap,reg,query)
       arr.push(ds)
     });
 

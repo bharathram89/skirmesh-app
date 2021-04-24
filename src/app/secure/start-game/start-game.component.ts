@@ -95,17 +95,17 @@ export class StartGameComponent implements OnInit {
       }
     )
   }
- 
+
   setSelectedGameConfig(mode){
     this.teams = mode.teams;
     this.mapID = mode.mapID
-    let config = mode.deviceMap 
-    console.log(config," od some")
+    let config = mode.deviceMap
+    console.log(config,"deviceMap")
     // config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
     // config = JSON.parse(config)// remove last quote and parse
-    console.log(config,"intialonfig")
     let arr =[];
     config.forEach(element => {
+        console.log("HERE", element, this.mapID);
       arr.push(this.apiToUiModel(element,this.userSvc.findMapName(this.mapID)))
     });
 
@@ -137,12 +137,12 @@ export class StartGameComponent implements OnInit {
   private MEDIC = 0x0E;
   private BOMB = 0xBB;
   apiToUiModel(deviceConfig,mapid){
-    console.log(deviceConfig,"apiToUiModel")
+    // console.log(deviceConfig,"apiToUiModel")
     let med,cap,bomb,query,reg;
     if(deviceConfig.config == this.MEDIC){
-      med=new MedicSettings(true,null) 
+      med=new MedicSettings(true)
     }else{
-      med=new MedicSettings(false,null) 
+      med=new MedicSettings(false)
     }
 
     if(deviceConfig.config == this.CAPTURE){
@@ -158,18 +158,18 @@ export class StartGameComponent implements OnInit {
     }
 
     if(deviceConfig.config == this.QUERY){
-      query = new QueryPlayerSettings(true,null)
+      query = new QueryPlayerSettings(true)
     }else{
-      query = new QueryPlayerSettings(false,null)
+      query = new QueryPlayerSettings(false)
     }
 
     if(deviceConfig.config == this.REGISTER){
       reg = new RegisterPlayer(true,null)
     }else{
       reg = new RegisterPlayer(false,null)
-    } 
+    }
     let loc = deviceConfig.location? this.userSvc.findLocationName(mapid,deviceConfig.location):null;
-    let ds = new DeviceSettings(deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
+    let ds = new DeviceSettings(deviceConfig.id,deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
     return ds;
   }
 

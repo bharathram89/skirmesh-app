@@ -47,8 +47,8 @@ export class UserServiceService {
     this.fieldPf.maps.forEach(map => {
       if(map.name == mapName){
         id= map.id;
-      } 
-    }); 
+      }
+    });
     return id;
   }
   findMapName(mapID){
@@ -56,8 +56,8 @@ export class UserServiceService {
     this.fieldPf.maps.forEach(map => {
       if(map.id == mapID){
         name= map.name;
-      } 
-    }); 
+      }
+    });
     return name;
   }
   findLocationID(mapid,locationName){
