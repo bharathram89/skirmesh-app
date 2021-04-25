@@ -1,71 +1,10 @@
+const REGISTER = 0x01;
+const QUERY    = 0x02;
+const PAIR_UID = 0x03;
+const CAPTURE  = 0x0A;
+const MEDIC    = 0x0E;
+const BOMB     = 0xBB;
 
-
-
-// export class APITOUIDeviceSettings {
-//   deviceSettings:DeviceSettings;
-
-//   private REGISTER = 0x01;
-//   private QUERY = 0x02;
-//   private PAIR_UID = 0x03;
-//   private CAPTURE = 0x0A;
-//   private MEDIC = 0x0E;
-//   private BOMB = 0xBB;
-
-//   constructor(
-//     enabled: boolean,
-//     address: string,
-//     id: number,
-//     location: string,
-//     config: number,
-//     arm_time: number,
-//     bomb_time: number,
-//     diff_time: number,
-//     cap_time: number,
-//     cap_asst: number,
-//     point_scale: number,
-//     allow_medic: boolean,
-//   ) {
-//     let med:MedicSettings;
-//     let bomb:BombSettings;
-//     let cap:CaptureSettings;
-//     let reg:RegisterPlayer;
-//     let query:QueryPlayerSettings;
-//     if(config == this.MEDIC){
-//       med = new MedicSettings(true,'')//no team for now for medic
-//     }else{
-//       med = new MedicSettings(false,null)
-//     }
-
-//     if(config == this.BOMB){
-//       bomb = new BombSettings(true,arm_time,bomb_time,diff_time)
-//     }else{
-//       bomb = new BombSettings(false,null,null,null)
-//     }
-
-//     if(config == this.CAPTURE){
-//       cap = new CaptureSettings(true,cap_time,cap_asst,point_scale,allow_medic)
-//     }else{
-//       cap = new CaptureSettings(false,null,null,null,null)
-
-//     }
-
-//     if(config == this.REGISTER){
-//       reg = new RegisterPlayer(true,'')
-//     }else{
-//       reg = new RegisterPlayer(false,null)
-//     }
-
-//     if(config == this.QUERY){
-//       query = new QueryPlayerSettings(true,'')
-//     }else{
-//       query = new QueryPlayerSettings(false,null)
-//     }
-
-
-//     this.deviceSettings= new DeviceSettings(enabled,address,location,'',med,bomb,cap,reg,query);
-
-//   }
-// }
 
 export class DeviceSettings {
 
@@ -102,6 +41,36 @@ export class DeviceSettings {
         this.capture        = capture;
         this.registerPlayer = registerPlayer;
         this.queryPlayer    = queryPlayer;
+    }
+
+    toJSON() {
+
+        return {
+            id:          this.id,
+            enabled:     this.enabled,
+            address:     this.address,
+            location:    this.location,
+            teamID:      this.registerPlayer.teamID,
+
+            med_time:    this.medTime,
+            // teamID:      this.registerPlayer.teamID,  TODO: Really need to get this in!
+            config:      this.medic.enabled              ? MEDIC    :
+                             this.capture.enabled        ? CAPTURE  :
+                             this.bomb.enabled           ? BOMB     :
+                             this.registerPlayer.enabled ? REGISTER :
+                             this.queryPlayer.enabled    ? QUERY    :
+                             CAPTURE,
+
+            cap_time:    this.capture.cap_time,
+            cap_asst:    this.capture.cap_asst,
+            point_scale: this.capture.point_scale,
+            allow_medic: this.capture.allow_medic,
+
+            bomb_time:   this.bomb.bomb_time,
+            arm_time:    this.bomb.arm_time,
+            diff_time:   this.bomb.diff_time
+        }
+
     }
 }
 
@@ -166,14 +135,14 @@ export class CaptureSettings {
 export class RegisterPlayer {
 
     enabled: boolean;
-    team:    string;
+    teamID:  number;
 
     constructor(
         enabled: boolean,
-        team:    string
+        teamID:  number,
     ) {
         this.enabled = enabled;
-        this.team    = team;
+        this.teamID  = teamID;
     }
 }
 
@@ -187,4 +156,71 @@ export class QueryPlayerSettings {
     ) {
         this.enabled = enabled;
     }
+}
+
+
+
+export function makeDeviceModals(devices, gameConfigs): DeviceSettings[] {
+
+    let arr: DeviceSettings[]=[];
+
+    devices.forEach(device => {
+    // console.log(device,"exisitng config? ")
+        let med   = new MedicSettings(device.allow_medic)
+        let bmb   = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
+        let cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
+        let query = new QueryPlayerSettings(false)
+        let reg   = new RegisterPlayer(false,null)
+        let ds    = new DeviceSettings(device.id,false,device.address,null,device.med_time,med,bmb,cap,reg,query)
+        arr.push(ds)
+    });
+
+    return arr;
+}
+
+
+export function apiToUiModel(device){
+
+    console.log("::apiToUiModel::",device)
+
+    let med,cap,bomb,query,reg;
+
+    med   = new MedicSettings(false)
+    cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
+    bomb  = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
+    query = new QueryPlayerSettings(false)
+    reg   = new RegisterPlayer(false,null) //TODO: This needs to grab the teamID!!
+
+    switch(device.config){
+
+        case CAPTURE:
+            cap.enabled   = true;
+            break;
+        case MEDIC:
+            med.enabled   = true;
+            break;
+        case BOMB:
+            bomb.enabled  = true;
+            break;
+        case QUERY:
+            query.enabled = true;
+            break;
+        case REGISTER:
+            reg.enabled   = true;
+            break;
+        default:
+            cap.enabled   = true;
+    }
+
+    let id, loc, en, addr, medT;
+
+    id = device.id;
+    en = device.enabled;
+    addr = device.address;
+    loc = device.location;
+    medT = device.med_time;
+
+    let ds = new DeviceSettings(id,en,addr,loc,device.med_time,med,bomb,cap,reg,query)
+
+    return ds;
 }

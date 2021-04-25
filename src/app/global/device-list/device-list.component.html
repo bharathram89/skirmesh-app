@@ -33,9 +33,9 @@
                                                 (click)="saveOldVal(device)"
                                                 [(ngModel)]="device.location"
                                                 >
-                                                <option  value="none" hidden selected> -- Select Device Location -- </option>
+                                                <option  value="none" selected> -- Select Device Location -- </option>
                                                 <option *ngFor="let location of getLocationList() ; let i = index"
-                                                [ngValue]="location.name"
+                                                    [ngValue]=location.id
                                                     [disabled]="location.isDisabled">
                                                     {{location.name}}
                                                 </option>

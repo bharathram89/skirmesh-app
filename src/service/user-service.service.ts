@@ -92,7 +92,6 @@ export class UserServiceService {
     return this.fieldPf.gameConfigs;
   }
   getLocationsForMap(mapID){
-
     return this.fieldPf.maps.find(ele=> ele.id==mapID).locations
   }
 }

@@ -39,6 +39,7 @@ export class GameConfigComponent implements OnInit {
             // console.log(savedConfigs, "savedConfigs");
             JSON.parse(JSON.stringify(savedConfigs)).forEach(savedConfig => {
 
+                console.log("saved configs", savedConfig)
                 this.gameModes.push({
                     id:        savedConfig.id,
                     name:      savedConfig.description,
@@ -49,45 +50,6 @@ export class GameConfigComponent implements OnInit {
 
             });
         })
-    }
-
-    uIToAPIDeviceSettings(inputDeviceSettings: DeviceSettings, mapid){
-
-    let locID;
-
-    if(inputDeviceSettings.location == 'NONE' || !inputDeviceSettings.location){
-        locID = null;
-    } else if(inputDeviceSettings.location){
-        locID = this.userSvc.findLocationID(mapid,inputDeviceSettings.location);
-    }
-
-    return {
-
-      id          : inputDeviceSettings.id,
-      address     : inputDeviceSettings.address,
-      enabled     : inputDeviceSettings.enabled,
-      location    : locID,
-
-      config      : inputDeviceSettings.medic.enabled              ? this.MEDIC    :
-                        inputDeviceSettings.capture.enabled        ? this.CAPTURE  :
-                        inputDeviceSettings.bomb.enabled           ? this.BOMB     :
-                        inputDeviceSettings.registerPlayer.enabled ? this.REGISTER :
-                        inputDeviceSettings.queryPlayer.enabled    ? this.QUERY    :
-                        this.CAPTURE, // CAN NEVER BE NULL --> default should be CAPTURE if req'd
-
-      cap_time    : inputDeviceSettings.capture.cap_time,
-      cap_asst    : inputDeviceSettings.capture.cap_asst,
-      point_scale : inputDeviceSettings.capture.point_scale,
-      allow_medic : inputDeviceSettings.capture.allow_medic,
-
-      bomb_time   : inputDeviceSettings.bomb.bomb_time,
-      arm_time    : inputDeviceSettings.bomb.arm_time,
-      diff_time   : inputDeviceSettings.bomb.diff_time,
-
-      team        : inputDeviceSettings.registerPlayer.enabled ? inputDeviceSettings.registerPlayer.team : null,
-      med_time    : inputDeviceSettings.medTime
-    }
-
     }
 
     onDeleteMode(gameMode) {
@@ -142,7 +104,7 @@ export class GameConfigComponent implements OnInit {
             let apiGameConfigData=[];
 
             JSON.parse(dataModel.nodeModes).forEach(element => {
-                apiGameConfigData.push(this.uIToAPIDeviceSettings(element,this.userSvc.findMapID(dataModel.map)))
+                apiGameConfigData.push(element)
             });
 
             let apiData = {
