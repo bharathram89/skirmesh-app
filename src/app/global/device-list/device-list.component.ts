@@ -172,24 +172,29 @@ export class DeviceListComponent implements OnInit {
   }
 
   enableMedic(device) {
-    device.medic.enabled = true;
-    device.bomb.enabled = false;
-    device.capture.enabled = false;
-    this.saveNodeConfigs()
-  }
-
-  medicNodeTeamSelected(teamName, device) {
-    device.medic.team = teamName.target.value
+    device.medic.enabled          = true;
+    device.bomb.enabled           = false;
+    device.capture.enabled        = false;
+    device.queryPlayer.enabled    = false;
+    device.registerPlayer.enabled = false;
     this.saveNodeConfigs()
   }
 
   enableQuery(device) {
-    device.queryPlayer.enabled = !device.queryPlayer.enabled;
+    device.queryPlayer.enabled    = true;
+    device.medic.enabled          = false;
+    device.bomb.enabled           = false;
+    device.capture.enabled        = false;
+    device.registerPlayer.enabled = false;
     this.saveNodeConfigs()
   }
 
   enableRegister(device) {
-    device.registerPlayer.enabled = !device.registerPlayer.enabled;
+    device.registerPlayer.enabled = true;
+    device.medic.enabled          = false;
+    device.bomb.enabled           = false;
+    device.capture.enabled        = false;
+    device.queryPlayer.enabled    = false;
     this.saveNodeConfigs()
   }
 
@@ -269,9 +274,11 @@ export class DeviceListComponent implements OnInit {
 
   //save data for capture all works
   enableCapture(device) {
-    device.medic.enabled   = false;
-    device.bomb.enabled    = false;
-    device.capture.enabled = true;
+    device.medic.enabled          = false;
+    device.bomb.enabled           = false;
+    device.capture.enabled        = true;
+    device.registerPlayer.enabled = false;
+    device.queryPlayer.enabled    = false;
     this.saveNodeConfigs()
   }
 
@@ -325,9 +332,11 @@ export class DeviceListComponent implements OnInit {
 
   //save data for bomb all works
   enableBomb(device) {
-    device.medic.enabled = false;
-    device.bomb.enabled = true;
-    device.capture.enabled = false;
+      device.medic.enabled          = false;
+      device.bomb.enabled           = true;
+      device.capture.enabled        = false;
+      device.registerPlayer.enabled = false;
+      device.queryPlayer.enabled    = false;
     this.saveNodeConfigs()
   }
 
