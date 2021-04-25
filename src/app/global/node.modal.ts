@@ -160,7 +160,7 @@ export class QueryPlayerSettings {
 
 
 
-export function makeDeviceModals(devices, gameConfigs): DeviceSettings[] {
+export function makeDeviceModals(devices): DeviceSettings[] {
 
     let arr: DeviceSettings[]=[];
 

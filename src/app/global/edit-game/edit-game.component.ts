@@ -87,7 +87,7 @@ gameConfigs;
       this.maps = data.maps;
       this.devices = data.devices;
       this.gameConfigs = data.gameConfigs;
-      this.deviceConfigs = makeDeviceModals(this.devices, this.gameConfigs)
+      this.deviceConfigs = makeDeviceModals(this.devices)
     })
     // this.deviceListConfigs.next({
     //   mode:"createMode"
@@ -145,7 +145,7 @@ gameConfigs;
       mode:"createMode",
       mapID:this.gameModeForm.get('map').value,
       teams:this.gameModeForm.get('teams')['controls'],
-      nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : makeDeviceModals(this.devices, this.gameConfigs)
+      nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : makeDeviceModals(this.devices)
     })
     // document.getElementById("exampleModal").style.display = "block"
     // document.getElementById("exampleModal").className += "show"
@@ -186,7 +186,7 @@ gameConfigs;
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
         teams: this.gameModeForm.get('teams')['controls'],
-        nodeConfigs: this.gameModeForm.get('nodeModes').value ? arr : makeDeviceModals(this.devices, this.gameConfigs)
+        nodeConfigs: this.gameModeForm.get('nodeModes').value ? arr : makeDeviceModals(this.devices)
       })
     }
   }
