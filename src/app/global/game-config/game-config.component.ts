@@ -11,6 +11,7 @@ import { TabsComponent } from '../tabs/tabs.component';
 })
 export class GameConfigComponent implements OnInit {
 
+    gameConfigs;
     private REGISTER = 0x01;
     private QUERY    = 0x02;
     private PAIR_UID = 0x03;
@@ -34,10 +35,11 @@ export class GameConfigComponent implements OnInit {
 
         let fpID  = this.userSvc.getFieldProfileID();
         let token = this.userSvc.getToken();
-
+        
         this.deviceSvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
             // console.log(savedConfigs, "savedConfigs");
-            JSON.parse(JSON.stringify(savedConfigs)).forEach(savedConfig => {
+            this.gameConfigs =JSON.parse(JSON.stringify(savedConfigs));
+            this.gameConfigs.forEach(savedConfig => {
 
                 this.gameModes.push({
                     id:        savedConfig.id,
@@ -116,7 +118,16 @@ export class GameConfigComponent implements OnInit {
     onGameModeFormSubmit(dataModel) {
 
         if (dataModel.id > 0) {
-          console.log(dataModel,"modal to edit")
+            let teams =[];
+            let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id)
+            dataModel.teams.forEach(element => {
+               element['id']=gameConfig.teams.find(ele=>ele.name == element.name).id
+            //     console.log(element," ele ",this.gameConfigs,dataModel.id);
+
+            //     teams.push(this.userSvc.findTeam(dataModel.id,element.name))
+
+            });
+
             let apiData = {
                 id             : dataModel.id,
                 mapID          : this.userSvc.findMapID(dataModel.map),
@@ -125,6 +136,7 @@ export class GameConfigComponent implements OnInit {
                 deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
+            console.log(dataModel,"modal to edit",apiData)
             // console.log('edit gameconfig',apiData)
             this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(data => {})
             this.gameModes = this.gameModes.map(gameMode => {

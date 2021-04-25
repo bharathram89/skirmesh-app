@@ -100,9 +100,7 @@ export class StartGameComponent implements OnInit {
     this.teams = mode.teams;
     this.mapID = mode.mapID
     let config = mode.deviceMap
-    console.log(config,"deviceMap")
-    // config=  config.replace(/\\/g,'').substring(1, config.length);//remove \ and remove first quote
-    // config = JSON.parse(config)// remove last quote and parse
+    // console.log(config,"deviceMap")
     let arr =[];
     config.forEach(element => {
       arr.push(this.apiToUiModel(element,this.userSvc.findMapName(this.mapID)))
@@ -112,7 +110,7 @@ export class StartGameComponent implements OnInit {
 
     this.adminNodesList = arr.filter(ele=>!ele.enabled);
 
-    console.log(this.gameModes," all game modes",  arr,this.activeNodesList,this.adminNodesList)
+    // console.log(this.gameModes," all game modes",  arr,this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
       mode:"activeNodes",
       teams:this.teams,
@@ -174,8 +172,8 @@ export class StartGameComponent implements OnInit {
 
   nodeConfigs(e){
 
-    console.log(e.replace('makeNodeAdmin',''),"recived to move in start game",this.activeNodesList)
-    if(e.includes('makeNodeAdmin')){
+    console.log(e,"recived to move in start game")
+    if(e.includes('makeNodeAdmin')){  
 
       let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
 
@@ -209,7 +207,7 @@ export class StartGameComponent implements OnInit {
       })
 
       this.adminNodesList = this.adminNodesList.filter(data=>!data.address || data.address !=movedNode.address )
-      console.log(this.adminNodesList,"updated admin list",this.activeNodesList)
+      // console.log(this.adminNodesList,"updated admin list",this.activeNodesList)
       this.adminNodes.next({
         mode:"adminNodes",
         location:this.mapID,
@@ -219,6 +217,8 @@ export class StartGameComponent implements OnInit {
      }else if (e.includes('endGame')){
       this.tokenSvc.endGame();
       this.gameBoardCollapsed=false;
+     }else{
+       //update to 
      }
 
   }

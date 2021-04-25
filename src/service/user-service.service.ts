@@ -95,4 +95,7 @@ export class UserServiceService {
 
     return this.fieldPf.maps.find(ele=> ele.id==mapID).locations
   }
+  findTeam(gameConfigID,teamName){
+    console.log(this.fieldProfile,teamName,gameConfigID,"vals")
+  }
 }
