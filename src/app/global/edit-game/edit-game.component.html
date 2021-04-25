@@ -8,7 +8,7 @@
     <label for="map">Map</label>
     <select formControlName="map" class="form-control" (change)="changeMap($event)">
       <option disabled selected value> -- Select your Map -- </option>
-      <option [value]="map.name" *ngFor="let map of maps">{{map.name}}</option>
+      <option [value]=map.id (name)=map.name [selected]="map.id" *ngFor="let map of maps">{{map.name}}</option>
     </select>
   </div>
 
@@ -42,13 +42,13 @@
     </div>
 
   </table>
-  <div *ngIf="isMapSelected"> 
+  <div *ngIf="isMapSelected">
     <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
   </div>
   <br />
   <button type="submit" [disabled]="" class="btn btn-primary">Save</button>
- 
-         
+
+
 </form>
 
 

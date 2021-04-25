@@ -164,6 +164,10 @@ export function makeDeviceModals(devices): DeviceSettings[] {
 
     let arr: DeviceSettings[]=[];
 
+    while (!Array.isArray(devices)) {
+        devices = JSON.parse(devices)
+    }
+
     devices.forEach(device => {
     // console.log(device,"exisitng config? ")
         let med   = new MedicSettings(device.allow_medic)

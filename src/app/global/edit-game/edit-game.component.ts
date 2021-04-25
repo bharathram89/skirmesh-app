@@ -97,15 +97,18 @@ gameConfigs;
   get teams() : FormArray {
     return this.gameModeForm.get("teams") as FormArray
   }
+
   nodeConfigs(e){
     this.configSet = true;
     // console.log(e," node Cofings receieved")
     this.gameModeForm.value.nodeModes = e;
     this.deviceConfigs = JSON.parse(e);
   }
+
   saveConfigs(){
     // console.log(this.gameModeForm.value)
   }
+
   newTeam(): FormGroup {
     return this.fb.group({
      name:'Team Name',
@@ -124,22 +127,25 @@ gameConfigs;
   onChangeOfTeamList(){
     this.setNodes();
   }
-//setNodes
+  //setNodes
   changeMap(e){
     this.gameModeForm.controls['map'].setValue(e.target.value)
-    this.locations = this.maps.find(locs=>{
-      if(locs['name']==e.target.value){
-        return locs['locations'];
+    this.locations = this.maps.find(maps=>{
+      if(maps['id']==e.target.value){
+        return maps['locations'];
       }
     })
+    console.log("::LOCS::", this.locations)
     this.setNodes()
     this.isMapSelected=true;
   }
+
   changeColor(e,i){
     let color = this.colors.filter(color=>{return color.name==e.target.value})[0]
     // console.log(color,e.target.value,i,'selected color')
      this.color.next(color)
   }
+
   setNodes(){
     this.deviceListConfigs.next({
       mode:"createMode",
@@ -150,6 +156,7 @@ gameConfigs;
     // document.getElementById("exampleModal").style.display = "block"
     // document.getElementById("exampleModal").className += "show"
   }
+
   ngOnInit() {
     if(this.gameMode.teams){
 
@@ -161,12 +168,15 @@ gameConfigs;
       this.teams.push(this.newTeam())
 
     }
+
+    console.log("::createMODE", this.gameMode.map)
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
       teams: this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
-      nodeModes: this.gameMode.nodeModes || '',
-      map: this.userSvc.findMapName(this.gameMode.map) || ''
+      nodeModes: this.gameMode.nodeModes || [],
+      mapID: this.gameMode.map || null,
+      map: this.userSvc.findMapName(this.gameMode.map) || null,
     });
 
     if(this.gameMode.map){
@@ -177,11 +187,7 @@ gameConfigs;
         }
       })
 
-      // let valFromApi = JSON.parse(this.gameModeForm.get('nodeModes').value);
-      // let arr=[];
-      // valFromApi.forEach(eachNodeConfig => {
-      //   arr.push(apiToUiModel(eachNodeConfig))
-      // });
+      console.log("::createMODE", this.gameModeForm)
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,

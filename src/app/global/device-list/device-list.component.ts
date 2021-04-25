@@ -5,6 +5,8 @@ import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { combineLatest, of } from 'rxjs';
 
+import { makeDeviceModals } from 'src/app/global/node.modal';
+
 @Component({
   selector: 'app-device-list',
   templateUrl: './device-list.component.html',
@@ -43,8 +45,8 @@ export class DeviceListComponent implements OnInit {
     this.config.subscribe(
       modeConfig => {
         this.userSvc.getUserData().subscribe(userData => {
-          this.mode = modeConfig.mode;
-          this.mapid=modeConfig.mapID;
+          this.mode  = modeConfig.mode;
+          this.mapid = modeConfig.mapID;
 
           //  TEAMS CONFIGS
           if(modeConfig.teams){
@@ -69,9 +71,9 @@ export class DeviceListComponent implements OnInit {
           }
 
           //  NODE CONFIGS
-          if (typeof modeConfig.nodeConfigs == 'string') {//this mean coming from device map
-            console.log(JSON.parse(modeConfig.nodeConfigs),"parsedata")
-            this.devices = JSON.parse(modeConfig.nodeConfigs);
+          console.log("::modeConfig::", modeConfig);
+          if (!Array.isArray(modeConfig.nodeConfigs)) {//this mean coming from device map
+            this.devices = makeDeviceModals(modeConfig.nodeConfigs);
           } else {
             this.devices = modeConfig.nodeConfigs;
           }
