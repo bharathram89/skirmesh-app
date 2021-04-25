@@ -21,10 +21,10 @@ export class DeviceSettings {
 
     constructor(
         id:             number,
-        enabled:        boolean         = true,
+        enabled:        boolean,
         address:        string,
         location:       string,
-        medTime:        number          = 6,
+        medTime:        number,
         medic:          MedicSettings,
         bomb:           BombSettings,
         capture:        CaptureSettings,
@@ -52,8 +52,6 @@ export class DeviceSettings {
             location:    this.location,
             teamID:      this.registerPlayer.teamID,
 
-            med_time:    this.medTime,
-            // teamID:      this.registerPlayer.teamID,  TODO: Really need to get this in!
             config:      this.medic.enabled              ? MEDIC    :
                              this.capture.enabled        ? CAPTURE  :
                              this.bomb.enabled           ? BOMB     :
@@ -64,7 +62,9 @@ export class DeviceSettings {
             cap_time:    this.capture.cap_time,
             cap_asst:    this.capture.cap_asst,
             point_scale: this.capture.point_scale,
+
             allow_medic: this.capture.allow_medic,
+            med_time:    this.medTime,
 
             bomb_time:   this.bomb.bomb_time,
             arm_time:    this.bomb.arm_time,

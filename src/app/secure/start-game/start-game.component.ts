@@ -11,7 +11,7 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { DeviceService } from 'src/service/device.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
-import { BombSettings, CaptureSettings, DeviceSettings, MedicSettings, QueryPlayerSettings, RegisterPlayer } from 'src/app/global/node.modal';
+import { makeDeviceModals } from 'src/app/global/node.modal';
 import { AuthService } from 'src/service/auth.service';
 
 const DEFAULT_DURATION = 300;
@@ -63,12 +63,12 @@ export class StartGameComponent implements OnInit {
 
       }
     })
-
-
   }
+
   changeGame(e){
     this.selectedGameMode = e.target.value;
   }
+
   startGame(){
     let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
     this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
@@ -99,16 +99,12 @@ export class StartGameComponent implements OnInit {
   setSelectedGameConfig(mode){
     this.teams = mode.teams;
     this.mapID = mode.mapID
-    let config = mode.deviceMap
-    // console.log(config,"deviceMap")
-    let arr =[];
-    config.forEach(element => {
-      arr.push(this.apiToUiModel(element,this.userSvc.findMapName(this.mapID)))
-    });
 
-    this.activeNodesList = arr.filter(ele=>ele.enabled);
+    let config = makeDeviceModals(mode.deviceMap)
+    console.log(config,"deviceMap")
 
-    this.adminNodesList = arr.filter(ele=>!ele.enabled);
+    this.activeNodesList = config.filter(ele=>ele.enabled);
+    this.adminNodesList  = config.filter(ele=>!ele.enabled);
 
     // console.log(this.gameModes," all game modes",  arr,this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
@@ -126,54 +122,10 @@ export class StartGameComponent implements OnInit {
 
   }
 
-
-  private REGISTER = 0x01;
-  private QUERY = 0x02;
-  private PAIR_UID = 0x03;
-  private CAPTURE = 0x0A;
-  private MEDIC = 0x0E;
-  private BOMB = 0xBB;
-  apiToUiModel(deviceConfig,mapid){
-    // console.log(deviceConfig,"apiToUiModel")
-    let med,cap,bomb,query,reg;
-    if(deviceConfig.config == this.MEDIC){
-      med=new MedicSettings(true)
-    }else{
-      med=new MedicSettings(false)
-    }
-
-    if(deviceConfig.config == this.CAPTURE){
-      cap=new CaptureSettings(true,deviceConfig.cap_time,deviceConfig.cap_asst,deviceConfig.point_scale,deviceConfig.allow_medic)
-    }else{
-      cap=new CaptureSettings(false,deviceConfig.cap_time,deviceConfig.cap_asst,deviceConfig.point_scale,deviceConfig.allow_medic)
-    }
-
-    if(deviceConfig.config == this.BOMB){
-      bomb=new BombSettings(true,deviceConfig.arm_time,deviceConfig.bomb_time,deviceConfig.diff_time)
-    }else{
-      bomb=new BombSettings(false,deviceConfig.arm_time,deviceConfig.bomb_time,deviceConfig.diff_time)
-    }
-
-    if(deviceConfig.config == this.QUERY){
-      query = new QueryPlayerSettings(true)
-    }else{
-      query = new QueryPlayerSettings(false)
-    }
-
-    if(deviceConfig.config == this.REGISTER){
-      reg = new RegisterPlayer(true,null)
-    }else{
-      reg = new RegisterPlayer(false,null)
-    }
-    let loc = deviceConfig.location? this.userSvc.findLocationName(mapid,deviceConfig.location):null;
-    let ds = new DeviceSettings(deviceConfig.id,deviceConfig.enabled,deviceConfig.address,loc,deviceConfig.med_time,med,bomb,cap,reg,query)
-    return ds;
-  }
-
   nodeConfigs(e){
-
+      // ONLY SEND UPDATED NODE - SINGLE NODE AT A TIME!!
     console.log(e,"recived to move in start game")
-    if(e.includes('makeNodeAdmin')){  
+    if(e.includes('makeNodeAdmin')){
 
       let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
 
@@ -192,7 +144,6 @@ export class StartGameComponent implements OnInit {
         location:this.mapID,
         nodeConfigs:this.activeNodesList
       })
-
 
 
     }else if (e.includes('makeNodeActive')){
@@ -218,7 +169,7 @@ export class StartGameComponent implements OnInit {
       this.tokenSvc.endGame();
       this.gameBoardCollapsed=false;
      }else{
-       //update to 
+       //update to
      }
 
   }
