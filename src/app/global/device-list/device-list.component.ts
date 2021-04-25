@@ -35,6 +35,7 @@ export class DeviceListComponent implements OnInit {
   mapid:String;
   locationsToSet = [];
   selectedLocations = [];
+  updatedLocationList = [];
 
   teamsAvaliable = [];
   previousSelected;
@@ -99,6 +100,8 @@ export class DeviceListComponent implements OnInit {
                 }
               })
               this.selectedLocations = arr;
+
+             this.updatedLocationList = this.getLocationList();
           }
           // console.log('oninit selected ', this.selectedLocations, this.devices)
         })
@@ -128,17 +131,12 @@ export class DeviceListComponent implements OnInit {
     //find id of val
     device.location = val || null;
     device.enabled = true;
+
+    this.updatedLocationList = this.getLocationList()
     this.saveNodeConfigs()
     console.log('location selected ', this.selectedLocations, this.devices)
   }
 
-  findLocationName(locationid){
-    return this.userSvc.findLocationName(this.mapid,locationid)
-  }
-
-  getModal(device){
-    return {'id':device.location, 'name':this.findLocationName(device.location), 'isDisabled': true }
-  }
 
   getLocationList() {
     let arr = [];
