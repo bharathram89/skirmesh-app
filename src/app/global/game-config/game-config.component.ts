@@ -45,7 +45,7 @@ export class GameConfigComponent implements OnInit {
                     id:        savedConfig.id,
                     name:      savedConfig.description,
                     teams:     savedConfig.teams,
-                    nodeModes: makeDeviceModals(JSON.parse(JSON.parse(savedConfig.deviceMap))),
+                    nodeModes: makeDeviceModals(savedConfig.deviceMap),
                     map:       savedConfig.mapID
                 });
             });
@@ -79,13 +79,12 @@ export class GameConfigComponent implements OnInit {
 
         if (dataModel.id > 0) {
             let teams =[];
-            let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id)
-            dataModel.teams.forEach(element => {
-                console.log("::TEAM ELEMENT::", element, dataModel,gameConfig.teams)
-               element['id']=gameConfig.teams.find(ele=>ele.name == element.name).id
-            //     console.log(element," ele ",this.gameConfigs,dataModel.id);
+            let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id);
 
-            //     teams.push(this.userSvc.findTeam(dataModel.id,element.name))
+            dataModel.teams.forEach(element => {
+
+                let temp_ele = gameConfig.teams.find(ele=>ele.color == element.color);
+                if (temp_ele) {element.id = temp_ele.id}
 
             });
 
@@ -94,7 +93,7 @@ export class GameConfigComponent implements OnInit {
                 mapID          : this.userSvc.findMapID(dataModel.map),
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : JSON.stringify(dataModel.nodeModes),
+                deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
 
@@ -117,7 +116,7 @@ export class GameConfigComponent implements OnInit {
                 mapID          : this.userSvc.findMapID(dataModel.map),
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : JSON.stringify(dataModel.nodeModes),
+                deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
 
