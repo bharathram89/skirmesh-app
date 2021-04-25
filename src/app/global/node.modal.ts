@@ -189,7 +189,7 @@ export function apiToUiModel(device){
     cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
     bomb  = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
     query = new QueryPlayerSettings(false)
-    reg   = new RegisterPlayer(false,null) //TODO: This needs to grab the teamID!!
+    reg   = new RegisterPlayer(false,device.teamID) //TODO: This needs to grab the teamID!!
 
     switch(device.config){
 

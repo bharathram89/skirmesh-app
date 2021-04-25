@@ -104,7 +104,7 @@
                                                     <select class="form-control">
                                                         <option value="none" selected disabled hidden>Select
                                                             Team</option>
-                                                        <option [value]="team.id"
+                                                        <option [value]="team.id" [disabled]="!team.id"
                                                             *ngFor="let team of teamsAvaliable; let i = index">
                                                             {{team.name}}</option>
                                                     </select>

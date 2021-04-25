@@ -19,17 +19,8 @@ export class DeviceListComponent implements OnInit {
 
   devices = [];// BehaviorSubject<any>;
 
-  REGISTER = 0x01;
-  QUERY    = 0x02;
-  PAIR_UID = 0x03;
-  CAPTURE  = 0x0A;
-  MEDIC    = 0x0E;
-  BOMB     = 0xBB;
-
-
   @Input() config;
   @Output() nodeConfigs = new EventEmitter<string>();
-
 
   mode: String;
   mapid:String;
