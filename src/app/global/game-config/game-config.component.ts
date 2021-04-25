@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DeviceService } from 'src/service/device.service';
 import { UserServiceService } from 'src/service/user-service.service';
-import { DeviceSettings } from '../node.modal';
+import { makeDeviceModals } from '../node.modal';
 import { TabsComponent } from '../tabs/tabs.component';
 
 @Component({
@@ -12,12 +12,6 @@ import { TabsComponent } from '../tabs/tabs.component';
 export class GameConfigComponent implements OnInit {
 
     gameConfigs;
-    private REGISTER = 0x01;
-    private QUERY    = 0x02;
-    private PAIR_UID = 0x03;
-    private CAPTURE  = 0x0A;
-    private MEDIC    = 0x0E;
-    private BOMB     = 0xBB;
 
     @ViewChild('gameModeEdit') editModeTemplate;
     @ViewChild(TabsComponent) tabsComponent;
@@ -35,21 +29,25 @@ export class GameConfigComponent implements OnInit {
 
         let fpID  = this.userSvc.getFieldProfileID();
         let token = this.userSvc.getToken();
-        
+
         this.deviceSvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
             // console.log(savedConfigs, "savedConfigs");
-            this.gameConfigs =JSON.parse(JSON.stringify(savedConfigs));
+            this.gameConfigs = savedConfigs;
             this.gameConfigs.forEach(savedConfig => {
+                // We need to do this to attach the "#" to the front
+                // of each color, because it's not held in the DB
+                savedConfig.teams.forEach(team => {
+                    team.color = "#" + team.color;
+                })
 
-                console.log("saved configs", savedConfig)
                 this.gameModes.push({
+
                     id:        savedConfig.id,
                     name:      savedConfig.description,
                     teams:     savedConfig.teams,
-                    nodeModes: savedConfig.deviceMap,
+                    nodeModes: makeDeviceModals(JSON.parse(JSON.parse(savedConfig.deviceMap))),
                     map:       savedConfig.mapID
                 });
-
             });
         })
     }
@@ -83,6 +81,7 @@ export class GameConfigComponent implements OnInit {
             let teams =[];
             let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id)
             dataModel.teams.forEach(element => {
+                console.log("::TEAM ELEMENT::", element, dataModel,gameConfig.teams)
                element['id']=gameConfig.teams.find(ele=>ele.name == element.name).id
             //     console.log(element," ele ",this.gameConfigs,dataModel.id);
 
@@ -95,9 +94,10 @@ export class GameConfigComponent implements OnInit {
                 mapID          : this.userSvc.findMapID(dataModel.map),
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : dataModel.nodeModes,
+                deviceMap      : JSON.stringify(dataModel.nodeModes),
                 teams          : dataModel.teams
             }
+
             console.log(dataModel,"modal to edit",apiData)
             // console.log('edit gameconfig',apiData)
             this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(data => {})
@@ -110,20 +110,14 @@ export class GameConfigComponent implements OnInit {
                 }
           });
         }
-        else {
-            // create a new one
-            // let apiGameConfigData = new UITOAPIDeviceSettings()
-            let apiGameConfigData=[];
 
-            JSON.parse(dataModel.nodeModes).forEach(element => {
-                apiGameConfigData.push(element)
-            });
+        else {
 
             let apiData = {
                 mapID          : this.userSvc.findMapID(dataModel.map),
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : JSON.stringify(apiGameConfigData),
+                deviceMap      : JSON.stringify(dataModel.nodeModes),
                 teams          : dataModel.teams
             }
 

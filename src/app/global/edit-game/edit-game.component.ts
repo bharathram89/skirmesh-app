@@ -145,7 +145,7 @@ gameConfigs;
       mode:"createMode",
       mapID:this.gameModeForm.get('map').value,
       teams:this.gameModeForm.get('teams')['controls'],
-      nodeConfigs: this.gameModeForm.get('nodeModes').value ? JSON.parse(this.gameModeForm.get('nodeModes').value) : makeDeviceModals(this.devices)
+      nodeConfigs: this.gameModeForm.get('nodeModes').value || makeDeviceModals(this.devices)
     })
     // document.getElementById("exampleModal").style.display = "block"
     // document.getElementById("exampleModal").className += "show"
@@ -177,17 +177,17 @@ gameConfigs;
         }
       })
 
-      let valFromApi = JSON.parse(this.gameModeForm.get('nodeModes').value);
-      let arr=[];
-      valFromApi.forEach(eachNodeConfig => {
-        arr.push(apiToUiModel(eachNodeConfig))
-      });
+      // let valFromApi = JSON.parse(this.gameModeForm.get('nodeModes').value);
+      // let arr=[];
+      // valFromApi.forEach(eachNodeConfig => {
+      //   arr.push(apiToUiModel(eachNodeConfig))
+      // });
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
         teams: this.gameModeForm.get('teams')['controls'],
-        nodeConfigs: this.gameModeForm.get('nodeModes').value ? arr : makeDeviceModals(this.devices)
-      })
+        nodeConfigs: this.gameModeForm.get('nodeModes').value || makeDeviceModals(this.devices)
+      });
     }
   }
 
