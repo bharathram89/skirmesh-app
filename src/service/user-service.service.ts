@@ -30,9 +30,9 @@ export class UserServiceService {
     if(userData.user.type=='field'){
       this.isField = true;
       this.isPlayer = false;
-      this.fieldProfileID = userData.user.fieldProfiles[0].id;
-      this.fieldPf = userData.user.fieldProfiles[0];
-      this.fieldProfile.next(userData.user.fieldProfiles[0]);// set field profile to first by default for now
+      this.fieldProfileID = userData.user.fieldProfile.id;
+      this.fieldPf = userData.user.fieldProfile;
+      this.fieldProfile.next(userData.user.fieldProfile);// set field profile to first by default for now
     }else if (userData.user.type =='player'){
       this.isPlayer = true;
       this.isField = false;

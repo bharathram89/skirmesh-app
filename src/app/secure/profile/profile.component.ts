@@ -98,10 +98,10 @@ export class ProfileComponent implements OnInit {
       userData => {
 
         if (this.isField) {
-          this.currentVals.profile = userData.fieldProfiles[0].profile ? userData.fieldProfiles[0].profile : 'Describe your Field!';
+          this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
-          this.currentVals.fieldProfileID = userData.fieldProfiles[0].id;
-          this.currentVals.imageID = userData.fieldProfiles[0].imageID ? userData.fieldProfiles[0].imageID : 0;
+          this.currentVals.fieldProfileID = userData.fieldProfile.id;
+          this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
         }
         else if (this.isPlayer) {
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
@@ -163,7 +163,7 @@ export class ProfileComponent implements OnInit {
     if (this.isField) {
       this.profileForm.value.fieldName ? data.user['callSign'] = this.profileForm.value.fieldName:null;
       this.profileForm.value.profile ? data.field['profile'] = this.profileForm.value.profile : null;
-      // Need to include the fieldProfiles[...].id  --- we're just taking the first for now
+      // Need to include fieldProfile.id
       data.field['id'] = this.currentVals.fieldProfileID;
       // console.log(data.field);
 
