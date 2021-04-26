@@ -71,8 +71,9 @@ export class DeviceListComponent implements OnInit {
           }
 
           //  NODE CONFIGS
-          console.log("::modeConfig::", modeConfig,userData);
-          if (modeConfig.nodeConfigs.length == 0 ) {//this mean coming from device map
+          console.log("::modeConfig::", modeConfig, "::userData::", userData);
+          if (!modeConfig.nodeConfigs) {
+              //this mean coming from device map for EDIT or START games
             this.devices = makeDeviceModals(userData.fieldProfile.devices);
           } else {
             this.devices = modeConfig.nodeConfigs;
