@@ -73,7 +73,7 @@ export class DeviceListComponent implements OnInit {
           //  NODE CONFIGS
           console.log("::modeConfig::", modeConfig,userData);
           if (modeConfig.nodeConfigs.length == 0 ) {//this mean coming from device map
-            this.devices = makeDeviceModals(userData.fieldProfiles[0].devices);
+            this.devices = makeDeviceModals(userData.fieldProfiles[0].devices,false);
           } else {
             this.devices = modeConfig.nodeConfigs;
           }

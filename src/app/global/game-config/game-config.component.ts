@@ -45,7 +45,7 @@ export class GameConfigComponent implements OnInit {
                     id:        savedConfig.id,
                     name:      savedConfig.description,
                     teams:     savedConfig.teams,
-                    nodeModes: makeDeviceModals(savedConfig.deviceMap),
+                    nodeModes: makeDeviceModals(savedConfig.deviceMap,false),
                     map:       savedConfig.mapID
                 });
             });

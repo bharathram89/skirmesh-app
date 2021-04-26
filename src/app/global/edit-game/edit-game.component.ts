@@ -87,7 +87,7 @@ gameConfigs;
       this.maps = data.maps;
       this.devices = data.devices;
       this.gameConfigs = data.gameConfigs;
-      this.deviceConfigs = makeDeviceModals(this.devices)
+      this.deviceConfigs = makeDeviceModals(this.devices,true)
     })
     // this.deviceListConfigs.next({
     //   mode:"createMode"
@@ -153,7 +153,7 @@ gameConfigs;
       mode:"createMode",
       mapID:this.gameModeForm.get('map').value,
       teams:this.gameModeForm.get('teams')['controls'],
-      nodeConfigs: this.gameModeForm.get('nodeModes').value || makeDeviceModals(this.devices)
+      nodeConfigs: this.gameModeForm.get('nodeModes').value 
     })
     // document.getElementById("exampleModal").style.display = "block"
     // document.getElementById("exampleModal").className += "show"
@@ -176,7 +176,7 @@ gameConfigs;
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
       teams: this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
-      nodeModes: this.gameMode.nodeModes || makeDeviceModals(this.devices),
+      nodeModes: makeDeviceModals(this.devices,true),
       mapID: this.gameMode.map? this.gameMode.map : null,
       map: this.gameMode.map || null,
     });
@@ -194,7 +194,7 @@ gameConfigs;
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
         teams: this.gameModeForm.get('teams')['controls'],
-        nodeConfigs: this.gameModeForm.get('nodeModes').value || makeDeviceModals(this.devices)
+        nodeConfigs: this.gameModeForm.get('nodeModes').value || makeDeviceModals(this.devices,false)
       });
     }
   }

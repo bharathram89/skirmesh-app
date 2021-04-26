@@ -160,7 +160,7 @@ export class QueryPlayerSettings {
 
 
 
-export function makeDeviceModals(devices): DeviceSettings[] {
+export function makeDeviceModals(devices,createNewModals): DeviceSettings[] {
 
     let arr: DeviceSettings[]=[];
 
@@ -169,13 +169,25 @@ export function makeDeviceModals(devices): DeviceSettings[] {
     }
 
     devices.forEach(device => {
-    // console.log(device,"exisitng config? ")
-        let med   = new MedicSettings(device.allow_medic)
-        let bmb   = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
-        let cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
-        let query = new QueryPlayerSettings(false)
-        let reg   = new RegisterPlayer(false,null)
-        let ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,device.med_time,med,bmb,cap,reg,query)
+        let ds;
+        console.log(device,"exisitng config? ")
+        if(createNewModals){
+
+            let med   = new MedicSettings(false)
+            let bmb   = new BombSettings(false,null,null,null)
+            let cap   = new CaptureSettings(false,null,null,null,null)
+            let query = new QueryPlayerSettings(false)
+            let reg   = new RegisterPlayer(false,null)
+            ds    = new DeviceSettings(null,false,device.address,null,null,med,bmb,cap,reg,query)
+        }else{
+
+            let med   = new MedicSettings(device.allow_medic)
+            let bmb   = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
+            let cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
+            let query = new QueryPlayerSettings(false)
+            let reg   = new RegisterPlayer(false,null)
+            ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,device.med_time,med,bmb,cap,reg,query)
+        }
         arr.push(ds)
     });
 
