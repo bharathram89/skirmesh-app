@@ -33,13 +33,13 @@ export class GameConfigComponent implements OnInit {
         this.deviceSvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
             // console.log(savedConfigs, "savedConfigs");
             this.gameConfigs = savedConfigs;
+            console.log(savedConfigs,"saved Configs in game-config")
             this.gameConfigs.forEach(savedConfig => {
                 // We need to do this to attach the "#" to the front
                 // of each color, because it's not held in the DB
                 savedConfig.teams.forEach(team => {
                     team.color = "#" + team.color;
                 })
-
                 this.gameModes.push({
 
                     id:        savedConfig.id,
@@ -62,7 +62,7 @@ export class GameConfigComponent implements OnInit {
     }
 
     onEditMode(gameMode) {
-    // console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
+    console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
         this.tabsComponent.openTab(
               `Editing ${gameMode.name}`,
               this.editModeTemplate,
@@ -113,7 +113,7 @@ export class GameConfigComponent implements OnInit {
         else {
 
             let apiData = {
-                mapID          : this.userSvc.findMapID(dataModel.map),
+                mapID          : dataModel.map,
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
                 deviceMap      : dataModel.nodeModes,
@@ -123,7 +123,7 @@ export class GameConfigComponent implements OnInit {
             console.log('create gameconfig',dataModel)
 
             dataModel.map = this.userSvc.findMapID(dataModel.map)
-            dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR?
+            dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR? 
 
             this.gameModes.push(dataModel);
             this.deviceSvc.saveGameConfigs(apiData, this.userSvc.getToken()).subscribe(data => {

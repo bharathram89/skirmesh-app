@@ -71,18 +71,18 @@ export class DeviceListComponent implements OnInit {
           }
 
           //  NODE CONFIGS
-          console.log("::modeConfig::", modeConfig);
-          if (!Array.isArray(modeConfig.nodeConfigs)) {//this mean coming from device map
-            this.devices = makeDeviceModals(modeConfig.nodeConfigs);
+          console.log("::modeConfig::", modeConfig,userData);
+          if (modeConfig.nodeConfigs.length == 0 ) {//this mean coming from device map
+            this.devices = makeDeviceModals(userData.fieldProfiles[0].devices);
           } else {
             this.devices = modeConfig.nodeConfigs;
           }
 
           //  LOCATIONS CONFIGS  -needs to be after node configs above.
 
-          if(this.userSvc.findMapID(modeConfig.mapID)){
+          if(modeConfig.mapID){
 
-            this.locationsToSet = this.userSvc.getLocationsForMap(this.userSvc.findMapID(modeConfig.mapID));
+            this.locationsToSet = this.userSvc.getLocationsForMap(modeConfig.mapID);
 
               let arr=[];
 
@@ -114,7 +114,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   locationSelected(event, device) {
-
+    console.log(device.location,"location selected print",event.target.value)
     let val = parseInt(event.target.value.substr(event.target.value.indexOf(":"+2)));
 
     this.selectedLocations = this.selectedLocations.filter(loc=>loc!=this.previousSelected)
@@ -122,7 +122,7 @@ export class DeviceListComponent implements OnInit {
     if (val) {this.selectedLocations.push(val)}
     // let loc = this.userSvc.findLocationID(this.mapid,val)
     //find id of val
-    device.location = val || null;
+    // device.location = val || null;
     device.enabled = true;
 
     this.updatedLocationList = this.getLocationList()

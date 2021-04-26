@@ -83,7 +83,7 @@ gameConfigs;
       ])
     });
     this.userSvc.getFieldProfile().subscribe(data=>{
-      // console.log(data);
+      // console.log(data,"field profile in edit-game component");
       this.maps = data.maps;
       this.devices = data.devices;
       this.gameConfigs = data.gameConfigs;
@@ -134,7 +134,7 @@ gameConfigs;
       if(maps['id']==e.target.value){
         return maps['locations'];
       }
-    })
+    })['locations']
     console.log("::LOCS::", this.locations)
     this.setNodes()
     this.isMapSelected=true;
@@ -147,6 +147,8 @@ gameConfigs;
   }
 
   setNodes(){
+
+    console.log(this.gameModeForm.get('map').value,"map val in exit of edit game")
     this.deviceListConfigs.next({
       mode:"createMode",
       mapID:this.gameModeForm.get('map').value,
@@ -169,14 +171,14 @@ gameConfigs;
 
     }
 
-    console.log("::createMODE", this.gameMode.map)
+    console.log("::createMODE", this.gameMode,this.gameModeForm.get('map'))
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
       teams: this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},{name:'Team Bravo',color:'#ff0000'}],
-      nodeModes: this.gameMode.nodeModes || [],
-      mapID: this.gameMode.map || null,
-      map: this.userSvc.findMapName(this.gameMode.map) || null,
+      nodeModes: this.gameMode.nodeModes || makeDeviceModals(this.devices),
+      mapID: this.gameMode.map? this.gameMode.map : null,
+      map: this.gameMode.map || null,
     });
 
     if(this.gameMode.map){
@@ -187,7 +189,7 @@ gameConfigs;
         }
       })
 
-      console.log("::createMODE", this.gameModeForm)
+      console.log("::createMODE", this.gameMode)
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
@@ -200,6 +202,7 @@ gameConfigs;
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
     console.log(dataModel," final modal?")
+    dataModel.mapID = parseInt(dataModel.mapID)
     // dataModel.map = this.userSvc.findMapID(dataModel.map)
     this.saveGameMode.emit(dataModel);
   }

@@ -175,7 +175,7 @@ export function makeDeviceModals(devices): DeviceSettings[] {
         let cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
         let query = new QueryPlayerSettings(false)
         let reg   = new RegisterPlayer(false,null)
-        let ds    = new DeviceSettings(device.id,false,device.address,null,device.med_time,med,bmb,cap,reg,query)
+        let ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,device.med_time,med,bmb,cap,reg,query)
         arr.push(ds)
     });
 
