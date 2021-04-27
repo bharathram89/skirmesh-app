@@ -8,7 +8,7 @@
     <label for="map">Map</label>
     <select formControlName="map" class="form-control" (change)="changeMap($event)">
       <option disabled selected value> -- Select your Map -- </option>
-      <option [value]=map.id (name)=map.name [selected]="gameMode.mapID" *ngFor="let map of maps">{{map.name}}</option>
+      <option [value]=map.id (name)=map.id *ngFor="let map of maps">{{map.name}}</option>
     </select>
   </div>
 

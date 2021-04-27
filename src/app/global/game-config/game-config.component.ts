@@ -122,7 +122,7 @@ export class GameConfigComponent implements OnInit {
 
             console.log('create gameconfig',dataModel)
 
-            dataModel.map = this.userSvc.findMapID(dataModel.map)
+            // dataModel.map = this.userSvc.findMapID(dataModel.map)
             dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR? 
 
             this.gameModes.push(dataModel);

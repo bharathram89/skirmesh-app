@@ -202,7 +202,7 @@ gameConfigs;
   onNewGameModeFormSubmit() {
     let dataModel = this.gameModeForm.value;
     console.log(dataModel," final modal?")
-    dataModel.mapID = parseInt(dataModel.mapID)
+    // dataModel.map = parseInt(dataModel.map)
     // dataModel.map = this.userSvc.findMapID(dataModel.map)
     this.saveGameMode.emit(dataModel);
   }
