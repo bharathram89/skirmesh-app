@@ -78,9 +78,8 @@ export class StartGameComponent implements OnInit {
 
           // console.log(latestDeviceData['user'].fieldProfile.devices,'start stuff',data,"temp",mode)
           mode.deviceMap = latestDeviceData['user'].fieldProfile.devices
-          console.log(latestDeviceData['user']," same some old")
+          console.log(mode," data being set for game start")
           this.setSelectedGameConfig(mode);
-          this.gameBoardCollapsed= true;
           this.tokenSvc.saveGameInfo(JSON.stringify(mode));
           this.gameBoardCollapsed= true;
         },
@@ -101,12 +100,12 @@ export class StartGameComponent implements OnInit {
     this.mapID = mode.mapID
 
     let config = makeDeviceModals(mode.deviceMap,false)
-    console.log(config,"deviceMap")
+    console.log(config,"deviceMap");
 
     this.activeNodesList = config.filter(ele=>ele.enabled);
     this.adminNodesList  = config.filter(ele=>!ele.enabled);
 
-    // console.log(this.gameModes," all game modes",  arr,this.activeNodesList,this.adminNodesList)
+    console.log(this.gameModes," all game modes",  this.activeNodesList,this.adminNodesList)
     this.activeNodes.next({
       mode:"activeNodes",
       teams:this.teams,
