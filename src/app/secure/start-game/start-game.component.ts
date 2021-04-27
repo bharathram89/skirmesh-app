@@ -76,8 +76,8 @@ export class StartGameComponent implements OnInit {
         this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(latestDeviceData=>{
           this.userSvc.setUserData(latestDeviceData);
 
-          // console.log(latestDeviceData['user'].fieldProfiles[0].devices,'start stuff',data,"temp",mode)
-          mode.deviceMap = latestDeviceData['user'].fieldProfiles[0].devices
+          // console.log(latestDeviceData['user'].fieldProfile.devices,'start stuff',data,"temp",mode)
+          mode.deviceMap = latestDeviceData['user'].fieldProfile.devices
           console.log(latestDeviceData['user']," same some old")
           this.setSelectedGameConfig(mode);
           this.gameBoardCollapsed= true;

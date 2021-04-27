@@ -181,11 +181,11 @@ export function makeDeviceModals(devices,createNewModals): DeviceSettings[] {
             ds    = new DeviceSettings(null,false,device.address,null,null,med,bmb,cap,reg,query)
         }else{
 
-            let med   = new MedicSettings(device.allow_medic)
-            let bmb   = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
-            let cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
-            let query = new QueryPlayerSettings(false)
-            let reg   = new RegisterPlayer(false,null)
+            let med   = new MedicSettings(device.config == MEDIC)
+            let bmb   = new BombSettings(device.config == BOMB,device.arm_time,device.bomb_time,device.diff_time)
+            let cap   = new CaptureSettings(device.config == CAPTURE,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
+            let query = new QueryPlayerSettings(device.config == QUERY)
+            let reg   = new RegisterPlayer(device.config == REGISTER,null)
             ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,device.med_time,med,bmb,cap,reg,query)
         }
         arr.push(ds)

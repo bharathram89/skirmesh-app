@@ -194,7 +194,7 @@ gameConfigs;
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,
         teams: this.gameModeForm.get('teams')['controls'],
-        nodeConfigs: this.gameModeForm.get('nodeModes').value || makeDeviceModals(this.devices,false)
+        nodeConfigs: this.gameMode.nodeModes
       });
     }
   }
