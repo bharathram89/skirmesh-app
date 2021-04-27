@@ -73,7 +73,7 @@ export class DeviceListComponent implements OnInit {
           //  NODE CONFIGS
           console.log("::modeConfig::", modeConfig,userData);
           if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 ) {//this mean coming from device map
-            this.devices = makeDeviceModals(userData.fieldProfile.devices,false);
+            this.devices = makeDeviceModals(userData.fieldProfile.devices);
           } else {
             this.devices = modeConfig.nodeConfigs;
           }
@@ -232,7 +232,7 @@ export class DeviceListComponent implements OnInit {
       36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
       120, 150, 180, 210, 240]
 
-    device.medTime = int_map[value];
+    device.medic.medTime = int_map[value];
 
     if (updateConfigs) {
         this.saveNodeConfigs();

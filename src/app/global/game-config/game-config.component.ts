@@ -45,7 +45,7 @@ export class GameConfigComponent implements OnInit {
                     id:        savedConfig.id,
                     name:      savedConfig.description,
                     teams:     savedConfig.teams,
-                    nodeModes: makeDeviceModals(savedConfig.deviceMap,false),
+                    nodeModes: makeDeviceModals(savedConfig.deviceMap),
                     map:       savedConfig.mapID
                 });
             });
@@ -123,7 +123,7 @@ export class GameConfigComponent implements OnInit {
             console.log('create gameconfig',dataModel)
 
             // dataModel.map = this.userSvc.findMapID(dataModel.map)
-            dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR? 
+            dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR?
 
             this.gameModes.push(dataModel);
             this.deviceSvc.saveGameConfigs(apiData, this.userSvc.getToken()).subscribe(data => {

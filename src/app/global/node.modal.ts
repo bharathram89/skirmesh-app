@@ -12,7 +12,6 @@ export class DeviceSettings {
     enabled:        boolean;
     address:        string;
     location:       string;
-    medTime:        number;
     medic:          MedicSettings;
     bomb:           BombSettings;
     capture:        CaptureSettings;
@@ -24,19 +23,17 @@ export class DeviceSettings {
         enabled:        boolean,
         address:        string,
         location:       string,
-        medTime:        number,
-        medic:          MedicSettings,
-        bomb:           BombSettings,
-        capture:        CaptureSettings,
-        registerPlayer: RegisterPlayer,
-        queryPlayer:    QueryPlayerSettings
+        medic:          MedicSettings       = new MedicSettings(),
+        bomb:           BombSettings        = new BombSettings(),
+        capture:        CaptureSettings     = new CaptureSettings(),
+        registerPlayer: RegisterPlayer      = new RegisterPlayer(),
+        queryPlayer:    QueryPlayerSettings = new QueryPlayerSettings()
     ) {
         this.id             = id;
         this.enabled        = enabled;
         this.address        = address;
         this.location       = location;
         this.medic          = medic;
-        this.medTime        = medTime;
         this.bomb           = bomb;
         this.capture        = capture;
         this.registerPlayer = registerPlayer;
@@ -64,7 +61,7 @@ export class DeviceSettings {
             point_scale: this.capture.point_scale,
 
             allow_medic: this.capture.allow_medic,
-            med_time:    this.medTime,
+            med_time:    this.medic.medTime,
 
             bomb_time:   this.bomb.bomb_time,
             arm_time:    this.bomb.arm_time,
@@ -78,11 +75,14 @@ export class DeviceSettings {
 export class MedicSettings {
 
     enabled: boolean;
+    medTime: number;
 
     constructor(
-        enabled: boolean
+        enabled: boolean = false,
+        medTime: number  = 6
     ) {
         this.enabled = enabled;
+        this.medTime = medTime;
     }
 }
 
@@ -95,7 +95,7 @@ export class BombSettings {
     diff_time: number;
 
     constructor(
-        enabled:   boolean,
+        enabled:   boolean  = false,
         arm_time:  number   = 1,
         bomb_time: number   = 12,
         diff_time: number   = 3
@@ -117,7 +117,7 @@ export class CaptureSettings {
     allow_medic: boolean;
 
     constructor(
-        enabled:     boolean,
+        enabled:     boolean  = false,
         cap_time:    number   = 12,
         cap_asst:    number   = 5,
         point_scale: number   = 60,
@@ -138,8 +138,8 @@ export class RegisterPlayer {
     teamID:  number;
 
     constructor(
-        enabled: boolean,
-        teamID:  number,
+        enabled: boolean = false,
+        teamID:  number  = null,
     ) {
         this.enabled = enabled;
         this.teamID  = teamID;
@@ -152,7 +152,7 @@ export class QueryPlayerSettings {
     enabled: boolean;
 
     constructor(
-        enabled: boolean
+        enabled: boolean = false
     ) {
         this.enabled = enabled;
     }
@@ -160,7 +160,7 @@ export class QueryPlayerSettings {
 
 
 
-export function makeDeviceModals(devices,createNewModals): DeviceSettings[] {
+export function makeDeviceModals(devices, createNewModals=false): DeviceSettings[] {
 
     let arr: DeviceSettings[]=[];
 
@@ -169,24 +169,21 @@ export function makeDeviceModals(devices,createNewModals): DeviceSettings[] {
     }
 
     devices.forEach(device => {
+
         let ds;
-        console.log(device,"exisitng config? ")
+
         if(createNewModals){
 
-            let med   = new MedicSettings(false)
-            let bmb   = new BombSettings(false,null,null,null)
-            let cap   = new CaptureSettings(false,null,null,null,null)
-            let query = new QueryPlayerSettings(false)
-            let reg   = new RegisterPlayer(false,null)
-            ds    = new DeviceSettings(null,false,device.address,null,null,med,bmb,cap,reg,query)
+            ds = new DeviceSettings(null,false,device.address,null);
+
         }else{
 
-            let med   = new MedicSettings(device.config == MEDIC)
+            let med   = new MedicSettings(device.config == MEDIC,device.med_time)
             let bmb   = new BombSettings(device.config == BOMB,device.arm_time,device.bomb_time,device.diff_time)
             let cap   = new CaptureSettings(device.config == CAPTURE,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
             let query = new QueryPlayerSettings(device.config == QUERY)
             let reg   = new RegisterPlayer(device.config == REGISTER,null)
-            ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,device.med_time,med,bmb,cap,reg,query)
+            ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,med,bmb,cap,reg,query)
         }
         arr.push(ds)
     });
@@ -201,7 +198,7 @@ export function apiToUiModel(device){
 
     let med,cap,bomb,query,reg;
 
-    med   = new MedicSettings(false)
+    med   = new MedicSettings(false,device.med_time)
     cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
     bomb  = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
     query = new QueryPlayerSettings(false)
@@ -234,9 +231,8 @@ export function apiToUiModel(device){
     en = device.enabled;
     addr = device.address;
     loc = device.location;
-    medT = device.med_time;
 
-    let ds = new DeviceSettings(id,en,addr,loc,device.med_time,med,bomb,cap,reg,query)
+    let ds = new DeviceSettings(id,en,addr,loc,med,bomb,cap,reg,query)
 
     return ds;
 }
