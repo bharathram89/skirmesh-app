@@ -130,7 +130,7 @@
                                                     <input class="form-control-range" type="range" min="0"
                                                     max="11" [value]="getTimeIndex(device.medic.medTime)" step="1"
                                                     (change)="medicTime(device,$event.target.value, true)"
-                                                    (input)="medicTime(device, $event.target.value, false)">
+                                                    (input)="medicTime(device, $event.target.value)">
                                                     {{convertTime(device.medic.medTime)}}
                                                 </div>
                                             </div>
@@ -153,7 +153,7 @@
                                                     <input class="form-control-range" type="range" min="0"
                                                         max="11" [value]="getTimeIndex(device.bomb.arm_time)" step="1"
                                                         (change)="armTime(device,$event.target.value, true)"
-                                                        (input)="armTime(device,$event.target.value, false)">
+                                                        (input)="armTime(device,$event.target.value)">
                                                     {{convertTime(device.bomb.arm_time)}}
                                                 </div>
                                                 <hr>
@@ -163,7 +163,7 @@
                                                         min="0" max="32" [value]="getTimeIndex(device.bomb.bomb_time)"
                                                         step="1"
                                                         (change)="bombTime(device,$event.target.value, true)"
-                                                        (input)="bombTime(device,$event.target.value, false)">
+                                                        (input)="bombTime(device,$event.target.value)">
                                                     {{convertTime(device.bomb.bomb_time)}}
                                                 </div>
                                                 <hr>
@@ -173,7 +173,7 @@
                                                         min="0" max="11" [value]="getTimeIndex(device.bomb.diff_time)"
                                                         step="1"
                                                         (change)="difuseTime(device,$event.target.value, true)"
-                                                        (input)="difuseTime(device,$event.target.value, false)">
+                                                        (input)="difuseTime(device,$event.target.value)">
                                                     {{convertTime(device.bomb.diff_time)}}
                                                 </div>
                                             </div>
@@ -198,7 +198,7 @@
                                                         max="32" [value]="getTimeIndex(device.capture.cap_time)"
                                                         step="1"
                                                         (change)="capTime(device,$event.target.value, true)"
-                                                        (input)="capTime(device,$event.target.value, false)">
+                                                        (input)="capTime(device,$event.target.value)">
                                                     {{convertTime(device.capture.cap_time)}}
                                                 </div>
                                                 <hr>
@@ -207,7 +207,7 @@
                                                     <input class="form-control-range" type="range" min="0"
                                                         max="8" [value]="getPercIndex(device.capture.cap_asst)" step="1"
                                                         (change)="capasst(device,$event.target.value, true)"
-                                                        (input)="capasst(device,$event.target.value, false)">
+                                                        (input)="capasst(device,$event.target.value)">
                                                     {{convertPerc(device.capture.cap_asst)}} %
                                                 </div>
                                                 <hr>
@@ -217,7 +217,7 @@
                                                         min="0" max="11"
                                                         [value]="getScaleIndex(device.capture.point_scale)" step="1"
                                                         (change)="pointScale(device,$event.target.value, true)"
-                                                        (input)="pointScale(device,$event.target.value, false)">
+                                                        (input)="pointScale(device,$event.target.value)">
                                                     {{convertPointScale(device.capture.point_scale)}}
                                                 </div>
                                                 <hr>
@@ -236,7 +236,7 @@
                                                             <input class="form-control-range" type="range" min="0"
                                                             max="11" [value]="getTimeIndex(device.medic.medTime)" step="1"
                                                             (change)="medicTime(device,$event.target.value, true)"
-                                                            (input)="medicTime(device,$event.target.value, false)">
+                                                            (input)="medicTime(device,$event.target.value)">
                                                             {{convertTime(device.medic.medTime)}}
                                                         </div>
                                                     </div>

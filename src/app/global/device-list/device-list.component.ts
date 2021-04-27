@@ -222,7 +222,7 @@ export class DeviceListComponent implements OnInit {
     return int_map.indexOf(value)
   }
 
-  medicTime(device, value, updateConfigs) {
+  medicTime(device, value, updateConfigs=false) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,          // Use discrete values to convert
       15, 18, 21, 24, 27, 30,                                      // to simple times used for gameplay
@@ -270,7 +270,7 @@ export class DeviceListComponent implements OnInit {
     this.saveNodeConfigs()
   }
 
-  capTime(device, value, updateConfigs) {
+  capTime(device, value, updateConfigs=false) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
       15, 18, 21, 24, 27, 30,
@@ -284,7 +284,7 @@ export class DeviceListComponent implements OnInit {
     }
   }
 
-  capasst(device, value, updateConfigs) {
+  capasst(device, value, updateConfigs=false) {
 
     var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
       0x05, 0x04, 0x02, 0x01]
@@ -296,7 +296,7 @@ export class DeviceListComponent implements OnInit {
     }
   }
 
-  pointScale(device, value, updateConfigs) {
+  pointScale(device, value, updateConfigs=false) {
 
     var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
       0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
@@ -328,7 +328,7 @@ export class DeviceListComponent implements OnInit {
     this.saveNodeConfigs()
   }
 
-  armTime(device, value, updateConfigs) {
+  armTime(device, value, updateConfigs=false) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
@@ -339,7 +339,7 @@ export class DeviceListComponent implements OnInit {
     }
   }
 
-  bombTime(device, value, updateConfigs) {
+  bombTime(device, value, updateConfigs=false) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
       15, 18, 21, 24, 27, 30,
@@ -353,7 +353,7 @@ export class DeviceListComponent implements OnInit {
     }
   }
 
-  difuseTime(device, value, updateConfigs) {
+  difuseTime(device, value, updateConfigs=false) {
 
     var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
