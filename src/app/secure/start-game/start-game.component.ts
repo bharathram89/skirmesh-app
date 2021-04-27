@@ -99,7 +99,7 @@ export class StartGameComponent implements OnInit {
     this.teams = mode.teams;
     this.mapID = mode.mapID
 
-    let config = makeDeviceModals(mode.deviceMap,false)
+    let config = makeDeviceModals(mode.deviceMap)
     console.log(config,"deviceMap");
 
     this.activeNodesList = config.filter(ele=>ele.enabled);
