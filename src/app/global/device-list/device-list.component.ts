@@ -114,12 +114,11 @@ export class DeviceListComponent implements OnInit {
   }
 
   locationSelected(event, device) {
-    console.log(device.location,"location selected print",event.target.value)
-    let val = parseInt(event.target.value.substr(event.target.value.indexOf(":"+2)));
-
+    // console.log(device.location,"location selected print", "::LOC VAL::", event.target)
     this.selectedLocations = this.selectedLocations.filter(loc=>loc!=this.previousSelected)
 
-    if (val) {this.selectedLocations.push(val)}
+    if (device.location) {this.selectedLocations.push(device.location)}
+    // Angular black magic updates all this for us....
     // let loc = this.userSvc.findLocationID(this.mapid,val)
     //find id of val
     // device.location = val || null;
@@ -127,7 +126,6 @@ export class DeviceListComponent implements OnInit {
 
     this.updatedLocationList = this.getLocationList()
     this.saveNodeConfigs()
-    console.log('location selected ', this.selectedLocations, this.devices)
   }
 
 
@@ -138,19 +136,18 @@ export class DeviceListComponent implements OnInit {
 
       this.locationsToSet.forEach(loc => {
 
-        if (this.selectedLocations.indexOf(loc.id) == -1) {
+        if (this.selectedLocations.includes(loc.id)) {
 
-            arr.push({ 'id':loc.id,'name': loc.name, 'isDisabled': false });
+            arr.push({ 'id':loc.id,'name': loc.name, 'isDisabled': true });
 
         } else {
 
-            arr.push({ 'id':loc.id,'name': loc.name, 'isDisabled': true });
+            arr.push({ 'id':loc.id,'name': loc.name, 'isDisabled': false });
 
           }
 
       });
     }
-
     return arr;
   }
 
