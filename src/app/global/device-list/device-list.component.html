@@ -4,7 +4,14 @@
             <div class="modal-header">
                 <h5 *ngIf="mode == 'createMode'" class="modal-title" id="exampleModalLabel">Configure nodes for this
                     game mode.</h5>
-                <h5 *ngIf="mode == 'activeNodes'" class="modal-title" id="exampleModalLabel">Control Nodes</h5>
+                <h5 *ngIf="mode == 'activeNodes'" class="modal-title" id="exampleModalLabel">Terminal Configurations</h5>
+
+                <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-warning"
+                    (click)="saveNodeConfigs()">PAUSE GAME</button>
+
+                <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-danger"
+                    (click)="endGame()">END GAME</button>
+
                 <!-- <h5 *ngIf="mode == 'adminNodes'" class="modal-title" id="exampleModalLabel">Admin Nodes.</h5> -->
 
             </div>
@@ -98,7 +105,7 @@
                                         </div>
                                         <div *ngIf="device.registerPlayer.enabled">
                                             <div class="card card-body">
-                                                <!-- NEED TO PUT DROPDOWN (or similar) FOR TEAM SELECTION HERE FROM ALLOWED TEAMS -->
+
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
                                                     <select class="form-control">
@@ -250,19 +257,12 @@
 
                             </div>
 
-
                         </div>
-
 
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-danger"
-                    (click)="endGame()">END GAME</button>
-                    <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-warning"
-                    (click)="saveNodeConfigs()">PAUSE GAME</button>
-            </div>
+            <div class="modal-footer"> </div>
         </div>
     </div>
 </div>
