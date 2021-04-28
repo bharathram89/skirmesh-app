@@ -170,11 +170,14 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 
     devices.forEach(device => {
 
-        let ds;
+        let ds, id, addr, loc;
+        id   = device.id;
+        addr = device.address;
+        loc  = device.location;
 
         if(createNewModals){
 
-            ds = new DeviceSettings(null,false,device.address,null);
+            ds = new DeviceSettings(id,false,addr,null);
 
         }else{
 
@@ -183,7 +186,7 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
             let cap   = new CaptureSettings(device.config == CAPTURE,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
             let query = new QueryPlayerSettings(device.config == QUERY)
             let reg   = new RegisterPlayer(device.config == REGISTER,null)
-            ds        = new DeviceSettings(device.id,device.enabled,device.address,device.location,med,bmb,cap,reg,query)
+            ds        = new DeviceSettings(id,device.enabled,addr,loc,med,bmb,cap,reg,query)
         }
         arr.push(ds)
     });

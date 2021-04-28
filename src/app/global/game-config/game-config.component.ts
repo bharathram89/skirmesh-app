@@ -93,7 +93,7 @@ export class GameConfigComponent implements OnInit {
                 mapID          : this.userSvc.findMapID(dataModel.map),
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : JSON.stringify(dataModel.nodeModes),
+                deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
 
@@ -116,7 +116,7 @@ export class GameConfigComponent implements OnInit {
                 mapID          : dataModel.map,
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : JSON.stringify(dataModel.nodeModes),
+                deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
 
