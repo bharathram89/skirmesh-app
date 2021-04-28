@@ -31,9 +31,8 @@ export class GameConfigComponent implements OnInit {
         let token = this.userSvc.getToken();
 
         this.deviceSvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
-            // console.log(savedConfigs, "savedConfigs");
+
             this.gameConfigs = savedConfigs;
-            console.log(savedConfigs,"saved Configs in game-config")
             this.gameConfigs.forEach(savedConfig => {
                 // We need to do this to attach the "#" to the front
                 // of each color, because it's not held in the DB
@@ -49,7 +48,8 @@ export class GameConfigComponent implements OnInit {
                     map:       savedConfig.mapID
                 });
             });
-        })
+
+        });
     }
 
     onDeleteMode(gameMode) {
