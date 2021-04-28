@@ -42,26 +42,26 @@ export class DeviceListComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.config.subscribe(
-      modeConfig => {
+
+    this.config.subscribe( modeConfig => {
+
         this.userSvc.getUserData().subscribe(userData => {
+
           this.mode  = modeConfig.mode;
           this.mapid = modeConfig.mapID;
 
           //  TEAMS CONFIGS
           if(modeConfig.teams){
-            // if (this.mode == 'createMode') {
-            //   const teams = [];
-            //   modeConfig.teams.forEach(element => {
-            //     teams.push({ 'name': element.value.name })
-            //   });
-            //   this.teamsAvaliable = teams//set teams
-            // } else {
+
               const teams = [];
               modeConfig.teams.forEach(element => {
+
                 if(element.value && element.value.name){
+
                   teams.push({ 'name': element.value.name })
+
                 }else{
+
                   teams.push({ 'name': element.name })
 
                 }
