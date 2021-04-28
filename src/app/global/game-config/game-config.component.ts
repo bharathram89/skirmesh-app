@@ -83,7 +83,7 @@ export class GameConfigComponent implements OnInit {
 
             dataModel.teams.forEach(element => {
 
-                let temp_ele = gameConfig.teams.find(ele=>ele.color == element.color);
+                let temp_ele = gameConfig.teams.find(ele=>ele.id == element.id);
                 if (temp_ele) {element.id = temp_ele.id}
 
             });

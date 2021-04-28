@@ -112,7 +112,8 @@ gameConfigs;
   newTeam(): FormGroup {
     return this.fb.group({
      name:'Team Name',
-     color:''
+     color: null,
+     id: null
     })
   }
 
