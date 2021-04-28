@@ -98,11 +98,12 @@ gameConfigs;
     return this.gameModeForm.get("teams") as FormArray
   }
 
+  // TODO: Does this ever do anything?..
   nodeConfigs(e){
     this.configSet = true;
-    // console.log(e," node Cofings receieved")
+    console.log(e,"::: node Cofings receieved :::")
     this.gameModeForm.value.nodeModes = e;
-    this.deviceConfigs = JSON.parse(e);
+    this.deviceConfigs = JSON.parse(e); // I don't think this is correct
   }
 
   saveConfigs(){
@@ -121,10 +122,12 @@ gameConfigs;
     this.teams.push(this.newTeam());
     this.setNodes();
   }
+
   removeTeam(i:number) {
     this.teams.removeAt(i);
     this.setNodes();
   }
+
   onChangeOfTeamList(){
     this.setNodes();
   }
@@ -136,7 +139,7 @@ gameConfigs;
         return maps['locations'];
       }
     })['locations']
-    console.log("::LOCS::", this.locations)
+
     this.setNodes()
     this.isMapSelected=true;
   }
@@ -154,7 +157,7 @@ gameConfigs;
       mode:"createMode",
       mapID:this.gameModeForm.get('map').value,
       teams:this.gameModeForm.get('teams')['controls'],
-      nodeConfigs: this.gameModeForm.get('nodeModes').value 
+      nodeConfigs: this.gameModeForm.get('nodeModes').value
     })
     // document.getElementById("exampleModal").style.display = "block"
     // document.getElementById("exampleModal").className += "show"
@@ -172,7 +175,6 @@ gameConfigs;
 
     }
 
-    console.log("::createMODE", this.gameMode,this.gameModeForm.get('map'))
     this.gameModeForm.patchValue({
       id: this.gameMode.id || -1,
       name: this.gameMode.name || '',
