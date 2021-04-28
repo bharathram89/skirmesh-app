@@ -28,148 +28,162 @@ const DEFAULT_DURATION = 300;
     ])
   ]
 })
+
 export class StartGameComponent implements OnInit {
-  gameBoardCollapsed = false;
-  gameModes;
-  userSvc:UserServiceService;
-  deviceSvc:DeviceService;
-  tokenSvc: TokenStorageService;
-  authSvc:AuthService;
-  selectedGameMode;
-  adminNodes: BehaviorSubject<any>;
-  activeNodes: BehaviorSubject<any>;
-  activeNodesList;
-  adminNodesList;
-  teams;
-  mapID;
 
-  constructor(userService:UserServiceService,deviceService:DeviceService,tokenService :TokenStorageService,authService:AuthService) {
-    this.authSvc = authService;
-    this.userSvc = userService;
-    this.deviceSvc = deviceService;
-    this.tokenSvc = tokenService;
-    this.activeNodes = new BehaviorSubject({})
-    this.adminNodes = new BehaviorSubject({})
-   }
+    gameBoardCollapsed = false;
+    gameModes;
+    userSvc             : UserServiceService;
+    deviceSvc           : DeviceService;
+    tokenSvc            : TokenStorageService;
+    authSvc             : AuthService;
+    selectedGameMode;
+    adminNodes          : BehaviorSubject<any>;
+    activeNodes         : BehaviorSubject<any>;
+    activeNodesList;
+    adminNodesList;
+    teams;
+    mapID;
 
-  ngOnInit(): void {
-    this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(savedConfigs=>{
-      let gameData = JSON.parse(this.tokenSvc.getGameInfo());
-      this.gameModes =  savedConfigs;//this.userSvc.getGameModes();
-      if(gameData){
-          console.log(gameData,"data")
-        this.setSelectedGameConfig(gameData);
-        this.gameBoardCollapsed= true;
+    constructor(
+        userService     : UserServiceService,
+        deviceService   : DeviceService,
+        tokenService    : TokenStorageService,
+        authService     : AuthService
+    ){
+        this.authSvc     = authService;
+        this.userSvc     = userService;
+        this.deviceSvc   = deviceService;
+        this.tokenSvc    = tokenService;
+        this.activeNodes = new BehaviorSubject({})
+        this.adminNodes  = new BehaviorSubject({})
+    }
 
-      }
-    })
-  }
+    ngOnInit(): void {
 
-  changeGame(e){
-    this.selectedGameMode = e.target.value;
-  }
+        this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
+            savedConfigs => {
 
-  startGame(){
-    let mode = this.gameModes.find(ele=> ele.description == this.selectedGameMode);
-    this.deviceSvc.startGame(this.userSvc.getToken(),mode.id).subscribe(
-      data=>{
-        this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(latestDeviceData=>{
-          this.userSvc.setUserData(latestDeviceData);
+        let gameData   = JSON.parse(this.tokenSvc.getGameInfo());
+        this.gameModes = savedConfigs;//this.userSvc.getGameModes();
 
-          // console.log(latestDeviceData['user'].fieldProfile.devices,'start stuff',data,"temp",mode)
-          mode.deviceMap = latestDeviceData['user'].fieldProfile.devices
-          console.log(mode," data being set for game start")
-          this.setSelectedGameConfig(mode);
-          this.tokenSvc.saveGameInfo(JSON.stringify(mode));
-          this.gameBoardCollapsed= true;
-        },
-        err=>{
-          console.log(err);
-          //show error message saying game cant be started
+        if(gameData){
+            this.setSelectedGameConfig(gameData);
+            this.gameBoardCollapsed= true;
+        }
         })
-      },
-      err=>{
-        console.log(err);
-        //show error message saying game cant be started
-      }
-    )
-  }
+    }
 
-  setSelectedGameConfig(mode){
-    this.teams = mode.teams;
-    this.mapID = mode.mapID
+    changeGame(e){
+        let gameID = e.target.value;
+        this.selectedGameMode = this.gameModes.find(ele => ele.id = gameID);
+    }
 
-    let config = makeDeviceModals(mode.deviceMap)
-    console.log(config,"deviceMap");
+    startGame(){
 
-    this.activeNodesList = config.filter(ele=>ele.enabled);
-    this.adminNodesList  = config.filter(ele=>!ele.enabled);
+        let mode = this.selectedGameMode;
+        this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
+            data => {
 
-    console.log(this.gameModes," all game modes",  this.activeNodesList,this.adminNodesList)
-    this.activeNodes.next({
-      mode:"activeNodes",
-      teams:this.teams,
-      location:this.mapID,
-      nodeConfigs:this.activeNodesList
-    })
-    this.adminNodes.next({
-      mode:"adminNodes",
-      location:this.mapID,
-      teams:this.teams,
-      nodeConfigs: this.adminNodesList
-    })
+                this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(
+                latestDeviceData => {
 
-  }
+                    // Do this to ensure the latest data is used/pushed
+                    this.userSvc.setUserData(latestDeviceData);
+
+                    this.setSelectedGameConfig(mode);
+                    this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+                    this.gameBoardCollapsed = true;
+                },
+                err=>{
+                    console.log(err);
+                })
+          },
+          err=>{
+                console.log(err);
+          }
+        )
+    }
+
+    getSelectedGameModeName() {
+        return this.selectedGameMode ? this.selectedGameMode.description : null
+    }
+
+    setSelectedGameConfig(mode){
+
+        this.teams = mode.teams;
+        this.mapID = mode.mapID;
+
+        let config = makeDeviceModals(mode.deviceMap)
+
+        this.activeNodesList = config.filter(ele=>ele.enabled);
+        this.adminNodesList  = config.filter(ele=>!ele.enabled);
+
+        console.log(this.gameModes,"all game modes", this.activeNodesList, this.adminNodesList)
+        this.activeNodes.next({
+            mode        : "activeNodes",
+            teams       : this.teams,
+            location    : this.mapID,
+            nodeConfigs : this.activeNodesList
+        })
+        this.adminNodes.next({
+            mode        : "adminNodes",
+            location    : this.mapID,
+            teams       : this.teams,
+            nodeConfigs : this.adminNodesList
+        })
+    }
 
   nodeConfigs(e){
-      // ONLY SEND UPDATED NODE - SINGLE NODE AT A TIME!!
+      // ONLY SEND UPDATED NODE - SINGLE NODE AT A TIME
     console.log(e,"recived to move in start game")
     if(e.includes('makeNodeAdmin')){
 
-      let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
+        let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
+        this.adminNodesList.push(movedNode);
 
-      this.adminNodesList.push(movedNode);
-      this.adminNodes.next({
-        mode:"adminNodes",
-        location:this.mapID,
-        teams:this.teams,
-        nodeConfigs: this.adminNodesList
-      })
-      this.activeNodesList = this.activeNodesList.filter(data=> data.address !=movedNode.address )
-       console.log(this.activeNodesList,"updated active list")
-       this.activeNodes.next({
-        mode:"activeNodes",
-        teams:this.teams,
-        location:this.mapID,
-        nodeConfigs:this.activeNodesList
-      })
+        this.adminNodes.next({
+            mode        : "adminNodes",
+            location    : this.mapID,
+            teams       : this.teams,
+            nodeConfigs : this.adminNodesList
+        })
 
+        this.activeNodesList = this.activeNodesList.filter(data=> data.address != movedNode.address)
+        console.log(this.activeNodesList,"updated active list")
+
+        this.activeNodes.next({
+            mode        : "activeNodes",
+            teams       : this.teams,
+            location    : this.mapID,
+            nodeConfigs : this.activeNodesList
+        })
 
     }else if (e.includes('makeNodeActive')){
 
-      let movedNode =JSON.parse(e.replace('makeNodeActive',''));
-      this.activeNodesList.push(movedNode);
-      this.activeNodes.next({
-        mode:"activeNodes",
-        location:this.mapID,
-        teams:this.teams,
-        nodeConfigs: this.activeNodesList
-      })
+        let movedNode =JSON.parse(e.replace('makeNodeActive',''));
+        this.activeNodesList.push(movedNode);
+        this.activeNodes.next({
+            mode        : "activeNodes",
+            location    : this.mapID,
+            teams       : this.teams,
+            nodeConfigs : this.activeNodesList
+        })
 
-      this.adminNodesList = this.adminNodesList.filter(data=>!data.address || data.address !=movedNode.address )
-      // console.log(this.adminNodesList,"updated admin list",this.activeNodesList)
-      this.adminNodes.next({
-        mode:"adminNodes",
-        location:this.mapID,
-        teams:this.teams,
-        nodeConfigs: this.adminNodesList
-      })
-     }else if (e.includes('endGame')){
-      this.tokenSvc.endGame();
-      this.gameBoardCollapsed=false;
-     }else{
-       //update to
-     }
+        this.adminNodesList = this.adminNodesList.filter(data=>!data.address || data.address !=movedNode.address )
+        // console.log(this.adminNodesList,"updated admin list",this.activeNodesList)
+        this.adminNodes.next({
+            mode        : "adminNodes",
+            location    : this.mapID,
+            teams       : this.teams,
+            nodeConfigs : this.adminNodesList
+        })
 
-  }
+        }else if (e.includes('endGame')){
+            this.tokenSvc.endGame();
+            this.gameBoardCollapsed=false;
+        }else{
+        //update to
+        }
+    }
 }

@@ -14,7 +14,6 @@ import { makeDeviceModals } from 'src/app/global/node.modal';
 })
 
 export class DeviceListComponent implements OnInit {
-  p: number = 1;
 
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
@@ -73,7 +72,7 @@ export class DeviceListComponent implements OnInit {
           //  NODE CONFIGS
           console.log("::modeConfig::", modeConfig,userData);
           if (!modeConfig.nodeConfigs){
-            //This can NEVER evaluate as true... 
+            //This can NEVER evaluate as true...
           // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 ) {//this mean coming from device map
             this.devices = makeDeviceModals(userData.fieldProfile.devices);
           } else {

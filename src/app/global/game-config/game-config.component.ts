@@ -98,7 +98,7 @@ export class GameConfigComponent implements OnInit {
             }
 
             console.log(dataModel,"modal to edit",apiData)
-            
+
             this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(data => {})
             this.gameModes = this.gameModes.map(gameMode => {
 
@@ -116,7 +116,7 @@ export class GameConfigComponent implements OnInit {
                 mapID          : dataModel.map,
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
-                deviceMap      : dataModel.nodeModes,
+                deviceMap      : JSON.stringify(dataModel.nodeModes),
                 teams          : dataModel.teams
             }
 

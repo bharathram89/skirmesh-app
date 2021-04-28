@@ -101,7 +101,7 @@ gameConfigs;
   // TODO: Does this ever do anything?..
   nodeConfigs(e){
     this.configSet = true;
-    console.log(e,"::: node Cofings receieved :::")
+    console.log(e,"::: node Configs received :::")
     this.gameModeForm.value.nodeModes = e;
     this.deviceConfigs = JSON.parse(e); // I don't think this is correct
   }
@@ -192,7 +192,6 @@ gameConfigs;
         }
       })
 
-      console.log("::createMODE", this.gameMode)
       this.deviceListConfigs.next({
         mode:"createMode",
         mapID:this.gameModeForm.get('map').value ,

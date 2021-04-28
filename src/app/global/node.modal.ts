@@ -183,7 +183,7 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
             let cap   = new CaptureSettings(device.config == CAPTURE,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
             let query = new QueryPlayerSettings(device.config == QUERY)
             let reg   = new RegisterPlayer(device.config == REGISTER,null)
-            ds    = new DeviceSettings(device.id,device.enabled,device.address,device.location,med,bmb,cap,reg,query)
+            ds        = new DeviceSettings(device.id,device.enabled,device.address,device.location,med,bmb,cap,reg,query)
         }
         arr.push(ds)
     });
@@ -194,15 +194,13 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 
 export function apiToUiModel(device){
 
-    console.log("::apiToUiModel::",device)
-
     let med,cap,bomb,query,reg;
 
     med   = new MedicSettings(false,device.med_time)
     cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
     bomb  = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
     query = new QueryPlayerSettings(false)
-    reg   = new RegisterPlayer(false,device.teamID) //TODO: This needs to grab the teamID!!
+    reg   = new RegisterPlayer(false,device.teamID)
 
     switch(device.config){
 
@@ -227,10 +225,10 @@ export function apiToUiModel(device){
 
     let id, loc, en, addr, medT;
 
-    id = device.id;
-    en = device.enabled;
+    id   = device.id;
+    en   = device.enabled;
     addr = device.address;
-    loc = device.location;
+    loc  = device.location;
 
     let ds = new DeviceSettings(id,en,addr,loc,med,bomb,cap,reg,query)
 
