@@ -164,8 +164,10 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 
     let arr: DeviceSettings[]=[];
 
-    while (!Array.isArray(devices)) {
-        devices = JSON.parse(devices)
+    let count = 0;
+    while (!Array.isArray(devices) && count < 3) {
+        devices = JSON.parse(devices);
+        count += 1;
     }
 
     devices.forEach(device => {
