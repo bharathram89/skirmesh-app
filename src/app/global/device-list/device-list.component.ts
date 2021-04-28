@@ -57,11 +57,11 @@ export class DeviceListComponent implements OnInit {
 
                 if(element.value && element.value.name){
 
-                  teams.push({ 'name': element.value.name })
+                  teams.push({ 'id': element.value.id, 'name': element.value.name, 'color': element.value.color })
 
                 }else{
 
-                  teams.push({ 'name': element.name })
+                  teams.push({ 'id': element.id, 'name': element.name, 'color': element.color })
 
                 }
               });
