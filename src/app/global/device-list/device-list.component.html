@@ -98,7 +98,7 @@
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableRegister(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'registerSwitch-' + i"
-                                                [disabled]="device.registerPlayer.enabled"
+                                                [disabled]="device.registerPlayer.enabled || !teamsAvaliable[0].id"
                                                 [checked]="device.registerPlayer.enabled">
                                             <label class="custom-control-label" [for]="'registerSwitch-' + i">Register
                                                 Team</label>
