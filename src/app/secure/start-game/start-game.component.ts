@@ -38,11 +38,13 @@ export class StartGameComponent implements OnInit {
     tokenSvc            : TokenStorageService;
     authSvc             : AuthService;
     selectedGameMode;
+    activeDevices       : BehaviorSubject<any>;
     adminNodes          : BehaviorSubject<any>;
     activeNodes         : BehaviorSubject<any>;
-    activeNodesList;
-    adminNodesList;
-    teams;
+    // deviceListConfigs;
+    // activeNodesList;
+    // adminNodesList;
+    teams = [];
     mapID;
 
     constructor(
@@ -51,12 +53,12 @@ export class StartGameComponent implements OnInit {
         tokenService    : TokenStorageService,
         authService     : AuthService
     ){
-        this.authSvc     = authService;
-        this.userSvc     = userService;
-        this.deviceSvc   = deviceService;
-        this.tokenSvc    = tokenService;
-        this.activeNodes = new BehaviorSubject({})
-        this.adminNodes  = new BehaviorSubject({})
+        this.authSvc       = authService;
+        this.userSvc       = userService;
+        this.deviceSvc     = deviceService;
+        this.tokenSvc      = tokenService;
+        this.activeDevices = new BehaviorSubject({})
+        // this.adminNodes    = new BehaviorSubject({})
     }
 
     ngOnInit(): void {
@@ -114,72 +116,20 @@ export class StartGameComponent implements OnInit {
         this.teams = mode.teams;
         this.mapID = mode.mapID;
 
-        let config = makeDeviceModals(mode.deviceMap)
-
-        this.activeNodesList = config.filter(ele=>ele.enabled);
-        this.adminNodesList  = config.filter(ele=>!ele.enabled);
-
-        console.log(this.gameModes,"all game modes", this.activeNodesList, this.adminNodesList)
-        this.activeNodes.next({
-            mode        : "activeNodes",
+        this.activeDevices.next({
+            mode        : "active",
+            mapID       : this.mapID,
             teams       : this.teams,
-            location    : this.mapID,
-            nodeConfigs : this.activeNodesList
-        })
-        this.adminNodes.next({
-            mode        : "adminNodes",
-            location    : this.mapID,
-            teams       : this.teams,
-            nodeConfigs : this.adminNodesList
-        })
+            nodeConfigs : makeDeviceModals(mode.deviceMap)
+        });
     }
 
-  nodeConfigs(e){
+
+    nodeConfigs(e){
       // ONLY SEND UPDATED NODE - SINGLE NODE AT A TIME
-    console.log(e,"recived to move in start game")
-    if(e.includes('makeNodeAdmin')){
+        console.log(":::START GAME NODE CONFIGS:::", e)
 
-        let movedNode =JSON.parse(e.replace('makeNodeAdmin',''));
-        this.adminNodesList.push(movedNode);
-
-        this.adminNodes.next({
-            mode        : "adminNodes",
-            location    : this.mapID,
-            teams       : this.teams,
-            nodeConfigs : this.adminNodesList
-        })
-
-        this.activeNodesList = this.activeNodesList.filter(data=> data.address != movedNode.address)
-        console.log(this.activeNodesList,"updated active list")
-
-        this.activeNodes.next({
-            mode        : "activeNodes",
-            teams       : this.teams,
-            location    : this.mapID,
-            nodeConfigs : this.activeNodesList
-        })
-
-    }else if (e.includes('makeNodeActive')){
-
-        let movedNode =JSON.parse(e.replace('makeNodeActive',''));
-        this.activeNodesList.push(movedNode);
-        this.activeNodes.next({
-            mode        : "activeNodes",
-            location    : this.mapID,
-            teams       : this.teams,
-            nodeConfigs : this.activeNodesList
-        })
-
-        this.adminNodesList = this.adminNodesList.filter(data=>!data.address || data.address !=movedNode.address )
-        // console.log(this.adminNodesList,"updated admin list",this.activeNodesList)
-        this.adminNodes.next({
-            mode        : "adminNodes",
-            location    : this.mapID,
-            teams       : this.teams,
-            nodeConfigs : this.adminNodesList
-        })
-
-        }else if (e.includes('endGame')){
+        if (e.includes('endGame')){
             this.tokenSvc.endGame();
             this.gameBoardCollapsed=false;
         }else{

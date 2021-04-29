@@ -154,7 +154,7 @@ gameConfigs;
 
     console.log(this.gameModeForm.get('map').value,"map val in exit of edit game")
     this.deviceListConfigs.next({
-      mode:"createMode",
+      mode:"create",
       mapID:this.gameModeForm.get('map').value,
       teams:this.gameModeForm.get('teams')['controls'],
       nodeConfigs: this.gameModeForm.get('nodeModes').value
@@ -193,7 +193,7 @@ gameConfigs;
       })
 
       this.deviceListConfigs.next({
-        mode:"createMode",
+        mode:"create",
         mapID:this.gameModeForm.get('map').value ,
         teams: this.gameModeForm.get('teams')['controls'],
         nodeConfigs: this.gameMode.nodeModes

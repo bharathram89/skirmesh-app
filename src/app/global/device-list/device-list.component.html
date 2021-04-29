@@ -2,14 +2,15 @@
     <div class="" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 *ngIf="mode == 'createMode'" class="modal-title" id="exampleModalLabel">Configure nodes for this
+                <h5 *ngIf="mode == 'create'" class="modal-title" id="exampleModalLabel">Configure nodes for this
                     game mode.</h5>
-                <h5 *ngIf="mode == 'activeNodes'" class="modal-title" id="exampleModalLabel">Terminal Configurations</h5>
+                <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5>
+                <h6> WARNING: Changes will impact live gameplay </h6>
 
-                <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-warning"
+                <button *ngIf="mode == 'active'" type="button" class="btn btn-warning"
                     (click)="saveNodeConfigs()">PAUSE GAME</button>
 
-                <button *ngIf="mode == 'activeNodes'" type="button" class="btn btn-danger"
+                <button *ngIf="mode == 'active'" type="button" class="btn btn-danger"
                     (click)="endGame()">END GAME</button>
 
                 <!-- <h5 *ngIf="mode == 'adminNodes'" class="modal-title" id="exampleModalLabel">Admin Nodes.</h5> -->
@@ -18,7 +19,7 @@
             <div class="modal-body">
                 <div class="container">
                     <div class="">
-                        <div *ngIf="mode == 'createMode'">
+                        <!-- <div *ngIf="mode == 'createMode'">
                             <div class="row center-cust ">
                                 Locations To Set: [<div *ngFor="let location of  getLocationList(); let i = index"><a
                                         class="badge badge-pill badge-light">{{ location.name }} </a></div>]
@@ -27,13 +28,21 @@
                                 Teams Avaliable To Set: [<div *ngFor="let team of teamsAvaliable ; let x = index"><a
                                         class="badge badge-pill badge-light">{{ team.name }} </a></div>]
                             </div>
-                        </div>
+                        </div> -->
                         <div class="center-cust row">
 
                             <div *ngFor="let device of devices; let i = index" class="card user-card">
 
                                 <div class="card-header">
-                                    <div *ngIf="mode !== 'activeNodes'">
+
+                                    <!-- <div *ngIf="mode == 'active'">
+                                        <input type="checkbox" class="custom-control-input"
+                                            [id]="'locationSwitch-' + i">
+                                        <label class="custom-control-label" [for]="'locationSwitch-' + i">
+                                            {{ getLocationName(device?.location)?.name }}</label>
+                                    </div> -->
+
+                                    <div>
                                         <h4>Location:{{device?.location?.name}}
                                             <select class="form-control"
                                                 (change)="locationSelected($event,device)"
@@ -43,7 +52,7 @@
                                                 <option value="none" selected> -- Select Location -- </option>
                                                 <option *ngFor="let location of updatedLocationList ; let i = index"
                                                     [ngValue]=location.id
-                                                    [disabled]="location.isDisabled">
+                                                    [disabled]="!location.enabled">
                                                     {{location.name}}
                                                 </option>
                                             </select>
@@ -52,18 +61,10 @@
                                         </h7>
                                         <br>
                                     </div>
-                                    <div *ngIf="mode == 'activeNodes'">
-                                        {{ device.location }}
-                                    </div>
-                                    <!-- <div *ngIf="mode == 'adminNodes'">
-                                        <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
-                                        </h7>
-                                    </div> -->
-                                    <!-- <h7>Device ID: {{device.id}}</h7> -->
+
                                 </div>
 
-                                <div *ngIf="(device.enabled && mode == 'createMode') ||  mode !== 'createMode'"
-                                    class="card-body">
+                                <div class="card-body">
 
 
                                     <div class="form-group">
@@ -72,36 +73,18 @@
                                                 class="custom-control-input" [id]="'querySwitch-' + i"
                                                 [disabled]="device.queryPlayer.enabled"
                                                 [checked]="device.queryPlayer.enabled">
-                                            <label class="custom-control-label" [for]="'querySwitch-' + i">Player
-                                                Query</label>
+                                            <label class="custom-control-label" [for]="'querySwitch-' + i">Player Query</label>
                                         </div>
                                     </div>
 
-
-
-                                    <!-- <div class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="makeActive(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'makeActive-' + i">
-                                            <label class="custom-control-label" [for]="'makeActive-' + i"> Make Node Active In Game</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="makeAdmin(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'makeAdmin-' + i">
-                                            <label class="custom-control-label" [for]="'makeAdmin-' + i">Make Node Admin</label>
-                                        </div>
-                                    </div> -->
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableRegister(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'registerSwitch-' + i"
-                                                [disabled]="device.registerPlayer.enabled || !teamsAvaliable[0].id"
+                                                [disabled]="device.registerPlayer.enabled || !teamsAvaliable"
                                                 [checked]="device.registerPlayer.enabled">
-                                            <label class="custom-control-label" [for]="'registerSwitch-' + i">Register
-                                                Team</label>
+                                            <label class="custom-control-label" [for]="'registerSwitch-' + i">Register Team</label>
                                         </div>
                                         <div *ngIf="device.registerPlayer.enabled">
                                             <div class="card card-body">
@@ -113,8 +96,8 @@
                                                         <option disabled hidden>Select Team</option>
                                                         <option [value]=team.id
                                                                 [disabled]=!team.id
-                                                                *ngFor="let team of teamsAvaliable; let i = index"
-                                                                [selected]="i == 0">
+                                                                *ngFor="let team of teamsAvaliable; let t = index"
+                                                                [selected]="t == 0">
                                                                 {{team?.name}}
                                                         </option>
                                                     </select>
@@ -146,6 +129,7 @@
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
@@ -190,6 +174,7 @@
                                         </div>
                                     </div>
 
+
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableCapture(device)" type="checkbox"
@@ -199,6 +184,7 @@
                                             <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
                                                 Point</label>
                                         </div>
+
                                         <div *ngIf="device.capture.enabled">
                                             <div class="card card-body">
 
@@ -212,6 +198,7 @@
                                                     {{convertTime(device.capture.cap_time)}}
                                                 </div>
                                                 <hr>
+
                                                 <div class="form-group">
                                                     <label for="capasst">Capture Assist</label>
                                                     <input class="form-control-range" type="range" min="0"
@@ -221,6 +208,7 @@
                                                     {{convertPerc(device.capture.cap_asst)}} %
                                                 </div>
                                                 <hr>
+
                                                 <div class="form-group">
                                                     <label for="pointScale">Point Scale</label>
                                                     <input class="form-control-range" type="range"
@@ -231,6 +219,7 @@
                                                     {{convertPointScale(device.capture.point_scale)}}
                                                 </div>
                                                 <hr>
+
                                                 <div class="custom-control custom-switch">
                                                     <input (click)="enableAllowMedic(device)" type="checkbox"
                                                         class="custom-control-input" [id]="'allowMedicSwitch-' + i"
@@ -239,6 +228,7 @@
                                                         [for]="'allowMedicSwitch-' + i">Allow
                                                         Medic</label>
                                                 </div>
+
                                                 <div *ngIf="device.capture.allow_medic">
                                                     <div class="card card-body">
                                                         <div class="form-group">
@@ -269,31 +259,3 @@
         </div>
     </div>
 </div>
-<!--
-//below are constants
-address: "0013A20041A66B3F"
-id: 7
-//below change per game
-location: null
-gameActions: []
-gameID: null
-//below can change anytime during game
-point_scale: 60 -range
-allow_medic: true - switch
-med_time: 3 -range
-where is allow_bomb to show the node is a bomb?
-arm_time: 1 - range
-bomb_status: 189 ??? what is this for?
-bomb_time: 18 - range
-diff_time: 12 - range
-where is allow_capture to show the node is a capture point?
-cap_asst: 20 -range
-cap_time: 1 - range
-config: 10 ?
-stable: 1 -range? is this how long it take to be stable?
-fieldProfileID: 1
-lastChange: "Sun, 04 Apr 2021 17:40:43 GMT"
-creationDate: "Sat, 27 Mar 2021 00:35:08 GMT"
-deactivated: null
-team: "3333cc"
-teamID: null -->
