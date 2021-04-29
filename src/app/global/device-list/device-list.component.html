@@ -112,6 +112,7 @@
                                                             [(ngModel)]="device.registerPlayer.teamID">
                                                         <option disabled hidden>Select Team</option>
                                                         <option [value]=team.id
+                                                                [disabled]=!team.id
                                                                 *ngFor="let team of teamsAvaliable; let i = index"
                                                                 [selected]="i == 0">
                                                                 {{team?.name}}
