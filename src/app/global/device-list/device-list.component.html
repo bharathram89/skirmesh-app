@@ -111,7 +111,7 @@
                                                             (change)="teamSelected($event, device)"
                                                             [(ngModel)]="device.registerPlayer.teamID">
                                                         <option disabled hidden>Select Team</option>
-                                                        <option [value]=team.id||team.color
+                                                        <option [value]=team.id
                                                                 *ngFor="let team of teamsAvaliable; let i = index"
                                                                 [selected]="i == 0">
                                                                 {{team?.name}}
