@@ -105,15 +105,17 @@
                                         </div>
                                         <div *ngIf="device.registerPlayer.enabled">
                                             <div class="card card-body">
-
                                                 <div class="form-group">
                                                     <label for="armTime">Team</label>
-                                                    <select class="form-control">
-                                                        <option value="none" selected disabled hidden>Select
-                                                            Team</option>
-                                                        <option [value]="team.id" [disabled]="!team.id"
-                                                            *ngFor="let team of teamsAvaliable; let i = index">
-                                                            {{team.name}}</option>
+                                                    <select class="form-control"
+                                                            (change)="teamSelected($event, device)"
+                                                            [(ngModel)]="device.registerPlayer.teamID">
+                                                        <option disabled hidden>Select Team</option>
+                                                        <option [value]=team.id||team.color
+                                                                *ngFor="let team of teamsAvaliable; let i = index"
+                                                                [selected]="i == 0">
+                                                                {{team?.name}}
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -135,7 +137,7 @@
                                                 <div class="form-group">
                                                     <label for="medicTime">Time to Medic</label>
                                                     <input class="form-control-range" type="range" min="0"
-                                                    max="11" [value]="getTimeIndex(device.medic.medTime)" step="1"
+                                                    max="17" [value]="getTimeIndex(device.medic.medTime)" step="1"
                                                     (change)="medicTime(device,$event.target.value, true)"
                                                     (input)="medicTime(device, $event.target.value)">
                                                     {{convertTime(device.medic.medTime)}}
@@ -241,7 +243,7 @@
                                                         <div class="form-group">
                                                             <label for="capmedicTime">Time to Medic</label>
                                                             <input class="form-control-range" type="range" min="0"
-                                                            max="11" [value]="getTimeIndex(device.medic.medTime)" step="1"
+                                                            max="17" [value]="getTimeIndex(device.medic.medTime)" step="1"
                                                             (change)="medicTime(device,$event.target.value, true)"
                                                             (input)="medicTime(device,$event.target.value)">
                                                             {{convertTime(device.medic.medTime)}}

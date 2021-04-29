@@ -7,6 +7,15 @@ import { combineLatest, of } from 'rxjs';
 
 import { makeDeviceModals } from 'src/app/global/node.modal';
 
+const TIME_INTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, // Every 10 secs >>  2min
+                   15, 18, 21, 24, 27, 30,                // Every 30 secs >>  5min
+                   36, 42, 48, 54, 60, 66, 72, 78, 84, 90,// Every 60 secs >> 15min
+                   120, 150, 180, 210, 240];              // Every  5 mins >> 40min
+
+const PERC_INTS = [0x64, 0x32, 0x19, 0x14, 0x0a, 0x05, 0x04, 0x02, 0x01];
+const POINT_SCL = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c, 0x4b,
+                   0x50, 0x64, 0x78, 0x96, 0xf0].reverse();
+
 @Component({
   selector: 'app-device-list',
   templateUrl: './device-list.component.html',
@@ -76,7 +85,7 @@ export class DeviceListComponent implements OnInit {
           // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 ) {//this mean coming from device map
             this.devices = makeDeviceModals(userData.fieldProfile.devices);
           } else {
-            this.devices = modeConfig.nodeConfigs;
+            this.devices = makeDeviceModals(modeConfig.nodeConfigs);
           }
 
           //  LOCATIONS CONFIGS  -needs to be after node configs above.
@@ -93,11 +102,10 @@ export class DeviceListComponent implements OnInit {
                   arr.push(device.location);
                 }
               })
-              this.selectedLocations = arr;
-
-             this.updatedLocationList = this.getLocationList();
+              this.selectedLocations   = arr;
+              this.updatedLocationList = this.getLocationList();
           }
-          // console.log('oninit selected ', this.selectedLocations, this.devices)
+
         })
 
       }
@@ -107,9 +115,11 @@ export class DeviceListComponent implements OnInit {
   endGame(){
     this.nodeConfigs.emit('endGame')
   }
+
   saveOldVal(device){
     this.previousSelected = device.location;
   }
+
   saveNodeConfigs() {
     this.nodeConfigs.emit(JSON.stringify(this.devices))
   }
@@ -125,8 +135,13 @@ export class DeviceListComponent implements OnInit {
     // device.location = val || null;
     device.enabled = true;
 
-    this.updatedLocationList = this.getLocationList()
-    this.saveNodeConfigs()
+    this.updatedLocationList = this.getLocationList();
+    this.saveNodeConfigs();
+  }
+
+
+  teamSelected(event, device) {
+      this.saveNodeConfigs();
   }
 
 
@@ -160,31 +175,59 @@ export class DeviceListComponent implements OnInit {
     this.nodeConfigs.emit('makeNodeActive'+JSON.stringify(device))
   }
 
+  updateModeSwitches(device){
+
+      device.medic.enabled          = false;
+      device.bomb.enabled           = false;
+      device.capture.enabled        = false;
+      device.queryPlayer.enabled    = false;
+      device.registerPlayer.enabled = false;
+
+      // reset the team to ensure it's null if not
+      // in registerPlayer mode --- the only way to set
+      // the teamID is if you are *in* registerPlayer
+      device.registerPlayer.teamID  = null;
+
+  }
+
   enableMedic(device) {
-    device.medic.enabled          = true;
-    device.bomb.enabled           = false;
-    device.capture.enabled        = false;
-    device.queryPlayer.enabled    = false;
-    device.registerPlayer.enabled = false;
-    this.saveNodeConfigs()
+
+    this.updateModeSwitches(device);
+    device.medic.enabled = true;
+    this.saveNodeConfigs();
+
   }
 
   enableQuery(device) {
-    device.queryPlayer.enabled    = true;
-    device.medic.enabled          = false;
-    device.bomb.enabled           = false;
-    device.capture.enabled        = false;
-    device.registerPlayer.enabled = false;
-    this.saveNodeConfigs()
+
+    this.updateModeSwitches(device);
+    device.queryPlayer.enabled = true;
+    this.saveNodeConfigs();
+
   }
 
   enableRegister(device) {
+
+    this.updateModeSwitches(device);
     device.registerPlayer.enabled = true;
-    device.medic.enabled          = false;
-    device.bomb.enabled           = false;
-    device.capture.enabled        = false;
-    device.queryPlayer.enabled    = false;
-    this.saveNodeConfigs()
+    this.saveNodeConfigs();
+
+  }
+
+  enableCapture(device) {
+
+    this.updateModeSwitches(device);
+    device.capture.enabled = true;
+    this.saveNodeConfigs();
+
+  }
+
+  enableBomb(device) {
+
+    this.updateModeSwitches(device);
+    device.bomb.enabled = true;
+    this.saveNodeConfigs();
+
   }
 
   convertPointScale(value) {
@@ -198,39 +241,20 @@ export class DeviceListComponent implements OnInit {
   }
 
   getTimeIndex(value) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-      15, 18, 21, 24, 27, 30,
-      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
-      120, 150, 180, 210, 240];
-
-    return int_map.indexOf(value)
+    return TIME_INTS.indexOf(value)
   }
 
   getPercIndex(value) {
-
-    var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
-      0x05, 0x04, 0x02, 0x01];
-
-    return int_map.indexOf(value)
+    return PERC_INTS.indexOf(value)
   }
 
   getScaleIndex(value) {
-
-    var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
-      0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse();
-
-    return int_map.indexOf(value)
+    return POINT_SCL.indexOf(value)
   }
 
   medicTime(device, value, updateConfigs=false) {
 
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,          // Use discrete values to convert
-      15, 18, 21, 24, 27, 30,                                      // to simple times used for gameplay
-      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
-      120, 150, 180, 210, 240]
-
-    device.medic.medTime = int_map[value];
+    device.medic.medTime = TIME_INTS[value];
 
     if (updateConfigs) {
         this.saveNodeConfigs();
@@ -238,9 +262,73 @@ export class DeviceListComponent implements OnInit {
 
   }
 
+  capTime(device, value, updateConfigs=false) {
+
+    device.capture.cap_time = TIME_INTS[value];
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
+  }
+
+  capasst(device, value, updateConfigs=false) {
+
+    device.capture.cap_asst = PERC_INTS[value];
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
+  }
+
+  pointScale(device, value, updateConfigs=false) {
+
+    device.capture.point_scale = POINT_SCL[value];
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
+  }
+
+  enableAllowMedic(device) {
+
+    if (device.capture.allow_medic) {
+        device.capture.allow_medic = false;
+    } else {
+        device.capture.allow_medic = true;
+    }
+    this.saveNodeConfigs();
+  }
+
+  armTime(device, value, updateConfigs=false) {
+
+    device.bomb.arm_time = TIME_INTS[value];
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
+  }
+
+  bombTime(device, value, updateConfigs=false) {
+    //bomb_time == fuse time
+    device.bomb.bomb_time = TIME_INTS[value];
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
+  }
+
+  difuseTime(device, value, updateConfigs=false) {
+
+    device.bomb.diff_time = TIME_INTS[value];
+
+    if (updateConfigs) {
+        this.saveNodeConfigs();
+    }
+  }
+
   convertTime(value) {
 
-    var new_val
+    var new_val;
 
     if (value < 12) {
       new_val = value * 10 + " sec"
@@ -254,115 +342,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   convertPerc(value) {
-
-    var new_val
-
     return 100 / value
-
-  }
-
-  //save data for capture all works
-  enableCapture(device) {
-    device.medic.enabled          = false;
-    device.bomb.enabled           = false;
-    device.capture.enabled        = true;
-    device.registerPlayer.enabled = false;
-    device.queryPlayer.enabled    = false;
-    this.saveNodeConfigs()
-  }
-
-  capTime(device, value, updateConfigs=false) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-      15, 18, 21, 24, 27, 30,
-      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
-      120, 150, 180, 210, 240]
-
-    device.capture.cap_time = int_map[value];
-
-    if (updateConfigs) {
-        this.saveNodeConfigs();
-    }
-  }
-
-  capasst(device, value, updateConfigs=false) {
-
-    var int_map = [0x64, 0x32, 0x19, 0x14, 0x0a,
-      0x05, 0x04, 0x02, 0x01]
-
-    device.capture.cap_asst = int_map[value];
-
-    if (updateConfigs) {
-        this.saveNodeConfigs();
-    }
-  }
-
-  pointScale(device, value, updateConfigs=false) {
-
-    var int_map = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c,
-      0x4b, 0x50, 0x64, 0x78, 0x96, 0xf0].reverse()
-
-    device.capture.point_scale = int_map[value];
-
-    if (updateConfigs) {
-        this.saveNodeConfigs();
-    }
-  }
-
-  enableAllowMedic(device) {
-    if (device.capture.allow_medic) {
-      device.capture.allow_medic = false;
-    } else {
-      device.capture.allow_medic = true;
-    }
-    this.saveNodeConfigs();
-  }
-
-
-  //save data for bomb all works
-  enableBomb(device) {
-      device.medic.enabled          = false;
-      device.bomb.enabled           = true;
-      device.capture.enabled        = false;
-      device.registerPlayer.enabled = false;
-      device.queryPlayer.enabled    = false;
-    this.saveNodeConfigs()
-  }
-
-  armTime(device, value, updateConfigs=false) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-    device.bomb.arm_time = int_map[value];
-
-    if (updateConfigs) {
-        this.saveNodeConfigs();
-    }
-  }
-
-  bombTime(device, value, updateConfigs=false) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-      15, 18, 21, 24, 27, 30,
-      36, 42, 48, 54, 60, 66, 72, 78, 84, 90,
-      120, 150, 180, 210, 240]
-
-    device.bomb.bomb_time = int_map[value];//fusetimer?
-
-    if (updateConfigs) {
-        this.saveNodeConfigs();
-    }
-  }
-
-  difuseTime(device, value, updateConfigs=false) {
-
-    var int_map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-    device.bomb.diff_time = int_map[value];
-
-    if (updateConfigs) {
-        this.saveNodeConfigs();
-    }
   }
 
 }
