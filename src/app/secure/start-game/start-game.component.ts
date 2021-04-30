@@ -84,6 +84,9 @@ export class StartGameComponent implements OnInit {
     startGame(){
 
         let mode = this.selectedGameMode;
+
+        if (!mode) {return console.log("NO GAME SELECTED")};
+        
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
 

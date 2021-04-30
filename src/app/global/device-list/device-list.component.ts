@@ -118,7 +118,7 @@ export class DeviceListComponent implements OnInit {
   }
 
     endGame(){
-        this.nodeConfigs.emit('endGame')
+        this.nodeConfigs.emit('endGame');
     }
 
     saveOldVal(device){
