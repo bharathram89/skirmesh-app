@@ -18,7 +18,6 @@ export class DeviceService {
     BASE = 'http://api.skirmesh.net/'
     GCTK = 'resources/gameConfig?token='
 
-
     userSvc:UserServiceService;
 
     constructor(

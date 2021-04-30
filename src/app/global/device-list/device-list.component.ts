@@ -5,6 +5,7 @@ import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { combineLatest, of } from 'rxjs';
 
+import { NodeConfigService } from 'src/service/node-status.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 
 const TIME_INTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, // Every 10 secs >>  2min
@@ -24,29 +25,33 @@ const POINT_SCL = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c, 0x4b,
 
 export class DeviceListComponent implements OnInit {
 
-  userSvc: UserServiceService;
-  tokenSvc: TokenStorageService;
+    userSvc  : UserServiceService;
+    tokenSvc : TokenStorageService;
+    nodeSvc  : NodeConfigService;
 
-  devices = [];// BehaviorSubject<any>;
+    @Input() config;
+    @Output() nodeConfigs = new EventEmitter<string>();
 
-  @Input() config;
-  @Output() nodeConfigs = new EventEmitter<string>();
+    mode  : String;
+    mapid : String;
 
-  mode: String;
-  mapid:String;
-  locationsToSet = [];
-  selectedLocations = [];
-  updatedLocationList = [];
+    devices             = [];
+    locationsToSet      = [];
+    selectedLocations   = [];
+    updatedLocationList = [];
+    teamsAvaliable      = [];
+    previousSelected;
 
-  teamsAvaliable = [];
-  previousSelected;
-  constructor(
-    userService: UserServiceService,
-    tokenService: TokenStorageService,
-    private router: Router) {
-    this.userSvc = userService;
-    this.tokenSvc = tokenService;
-  }
+    constructor(
+        userService    : UserServiceService,
+        tokenService   : TokenStorageService,
+        nodeService    : NodeConfigService,
+        private router : Router
+    ) {
+        this.userSvc  = userService;
+        this.tokenSvc = tokenService;
+        this.nodeSvc  = nodeService;
+    }
 
 
   ngOnInit(): void {
@@ -120,8 +125,22 @@ export class DeviceListComponent implements OnInit {
         this.previousSelected = device.location;
     }
 
-    saveNodeConfigs() {
-        this.nodeConfigs.emit(JSON.stringify(this.devices))
+    saveNodeConfigs(device = this.devices) {
+
+        if (this.mode == 'active') {
+            //update the database here
+            console.log("::XMIT DEVICE TO DB::", device)
+            this.nodeConfigs.emit(JSON.stringify(device))
+            this.nodeSvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
+                data => {
+                    console.log("::API RESPONSE TO DEVICE UPDATE::", data)
+                }
+            );
+        }
+        else {
+            this.nodeConfigs.emit(JSON.stringify(device));
+        }
+
     }
 
     locationSelected(event, device) {
@@ -136,11 +155,11 @@ export class DeviceListComponent implements OnInit {
         device.enabled = true;
 
         this.updatedLocationList = this.getLocationList();
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
     }
 
     teamSelected(event, device) {
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
     }
 
     getLocationList() {
@@ -187,7 +206,7 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.medic.enabled = true;
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
 
     }
 
@@ -195,7 +214,7 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.queryPlayer.enabled = true;
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
 
     }
 
@@ -203,7 +222,7 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.registerPlayer.enabled = true;
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
 
     }
 
@@ -211,7 +230,7 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.capture.enabled = true;
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
 
     }
 
@@ -219,7 +238,7 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.bomb.enabled = true;
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
 
     }
 
@@ -248,7 +267,7 @@ export class DeviceListComponent implements OnInit {
         device.medic.medTime = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
 
     }
@@ -258,7 +277,7 @@ export class DeviceListComponent implements OnInit {
         device.capture.cap_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
     }
 
@@ -267,7 +286,7 @@ export class DeviceListComponent implements OnInit {
         device.capture.cap_asst = PERC_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
     }
 
@@ -276,7 +295,7 @@ export class DeviceListComponent implements OnInit {
         device.capture.point_scale = POINT_SCL[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
     }
 
@@ -287,7 +306,7 @@ export class DeviceListComponent implements OnInit {
         } else {
             device.capture.allow_medic = true;
         }
-        this.saveNodeConfigs();
+        this.saveNodeConfigs(device);
     }
 
     armTime(device, value, updateConfigs=false) {
@@ -295,7 +314,7 @@ export class DeviceListComponent implements OnInit {
         device.bomb.arm_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
     }
 
@@ -304,7 +323,7 @@ export class DeviceListComponent implements OnInit {
         device.bomb.bomb_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
     }
 
@@ -313,7 +332,7 @@ export class DeviceListComponent implements OnInit {
         device.bomb.diff_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs();
+            this.saveNodeConfigs(device);
         }
     }
 
