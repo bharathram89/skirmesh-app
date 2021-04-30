@@ -165,7 +165,10 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
     let arr: DeviceSettings[]=[];
 
     let count = 0;
+    // Loop through parsing, because it may get stringified multiple times
+    // going into and out of the database
     while (!Array.isArray(devices) && count < 3) {
+        console.log("::MAKE MODALS::", devices)
         devices = JSON.parse(devices);
         count += 1;
     }
@@ -195,6 +198,28 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 
     return arr;
 }
+
+
+export function makeDeviceModal(device): DeviceSettings[] {
+
+    let ds, id, addr, loc;
+
+    id   = device.id;
+    addr = device.address;
+    loc  = device.location;
+
+    let med   = new MedicSettings(device.config == MEDIC,device.med_time)
+    let bmb   = new BombSettings(device.config == BOMB,device.arm_time,device.bomb_time,device.diff_time)
+    let cap   = new CaptureSettings(device.config == CAPTURE,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
+    let query = new QueryPlayerSettings(device.config == QUERY)
+    let reg   = new RegisterPlayer(device.config == REGISTER,null)
+
+    ds        = new DeviceSettings(id,device.enabled,addr,loc,med,bmb,cap,reg,query)
+
+    console.log(":: MAKE DEVICE ::", ds);
+    return ds;
+}
+
 
 
 export function apiToUiModel(device){

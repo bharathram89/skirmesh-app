@@ -34,6 +34,7 @@ export class GameConfigComponent implements OnInit {
 
             this.gameConfigs = savedConfigs;
             this.gameConfigs.forEach(savedConfig => {
+                console.log("::SAVED CONFIGS::", savedConfig)
                 // We need to do this to attach the "#" to the front
                 // of each color, because it's not held in the DB
                 savedConfig.teams.forEach(team => {
@@ -62,7 +63,7 @@ export class GameConfigComponent implements OnInit {
     }
 
     onEditMode(gameMode) {
-    console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
+        console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
         this.tabsComponent.openTab(
               `Editing ${gameMode.name}`,
               this.editModeTemplate,
@@ -77,9 +78,12 @@ export class GameConfigComponent implements OnInit {
 
     onGameModeFormSubmit(dataModel) {
 
-        if (dataModel.id > 0) {
+        console.log("::DATA MODEL::", dataModel)
+        
+        if (dataModel.id) {
             let teams =[];
             let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id);
+
 
             dataModel.teams.forEach(element => {
 
@@ -97,7 +101,7 @@ export class GameConfigComponent implements OnInit {
                 teams          : dataModel.teams
             }
 
-            console.log(dataModel,"modal to edit",apiData)
+            // console.log(dataModel, "modal to edit", apiData)
 
             this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(data => {})
             this.gameModes = this.gameModes.map(gameMode => {

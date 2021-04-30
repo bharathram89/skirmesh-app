@@ -8,18 +8,20 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 export class GamelistComponent implements OnInit {
 
-  @Input() gamemodes;
-  @Output() addMode = new EventEmitter<any>();
-  @Output() editMode = new EventEmitter<any>();
-  @Output() deleteMode = new EventEmitter<any>();
-  userSvc:UserServiceService
-  constructor(userService:UserServiceService) {
-    this.userSvc = userService;
-   }
+    @Input() gamemodes;
+    @Output() addMode    = new EventEmitter<any>();
+    @Output() editMode   = new EventEmitter<any>();
+    @Output() deleteMode = new EventEmitter<any>();
 
-  ngOnInit(): void {
-  }
-  findMapName(e){
-    return this.userSvc.findMapName(e);
-  }
+    userSvc : UserServiceService
+
+    constructor(userService:UserServiceService) {
+        this.userSvc = userService;
+    }
+
+    ngOnInit(): void {}
+    
+    findMapName(e){
+        return this.userSvc.findMapName(e);
+    }
 }
