@@ -66,14 +66,25 @@ export class StartGameComponent implements OnInit {
         this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
             savedConfigs => {
 
-        let gameData   = JSON.parse(this.tokenSvc.getGameInfo());
-        this.gameModes = savedConfigs;//this.userSvc.getGameModes();
+                let gameData   = JSON.parse(this.tokenSvc.getGameInfo());
+                this.gameModes = savedConfigs;//this.userSvc.getGameModes();
 
-        if(gameData){
-            this.setSelectedGameConfig(gameData);
-            this.gameBoardCollapsed= true;
-        }
-        })
+                if(gameData){
+                    this.setSelectedGameConfig(gameData);
+                    this.gameBoardCollapsed = true;
+                }
+                else{
+                    let fieldProfile = this.userSvc.getFieldProfile();
+
+                    this.activeDevices.next({
+                        mode        : "active",
+                        mapID       : null,
+                        teams       : null,
+                        nodeConfigs : makeDeviceModals(fieldProfile.devices)
+                    });
+                }
+            }
+        )
     }
 
     changeGame(e){
@@ -86,7 +97,7 @@ export class StartGameComponent implements OnInit {
         let mode = this.selectedGameMode;
 
         if (!mode) {return console.log("NO GAME SELECTED")};
-        
+
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
 

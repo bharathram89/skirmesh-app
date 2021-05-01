@@ -4,7 +4,7 @@
         <div *ngIf="!gameBoardCollapsed" class="row justify-content-center">
             <div class="col-lg-5">
                 <div class="main_title">
-                    <h4>To Being Select Game Mode</h4>
+                    <h4>Select Game Configuration</h4>
                     <select class="form-control" (change)="changeGame($event)">
                         <option disabled selected value> -- Select to Start Game -- </option>
                         <option [value]=gameMode.id *ngFor="let gameMode of gameModes">

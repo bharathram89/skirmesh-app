@@ -60,17 +60,13 @@ export class EditGameComponent implements OnInit {
                 map       : new FormControl(this.gameModeFrm.map, [Validators.required])
             });
 
-            this.userSvc.getFieldProfile().subscribe(
-                data=>{
-                    this.maps          = data.maps;
-                    this.devices       = data.devices;
-                    this.gameConfigs   = data.gameConfigs;
-                    this.deviceConfigs = makeDeviceModals(data.devices);
-                }
-            )
-            // this.deviceListConfigs.next({
-            //   mode:"createMode"
-            // })
+            let fieldProfile = this.userSvc.getFieldProfile()
+
+            this.maps          = fieldProfile.maps;
+            this.devices       = fieldProfile.devices;
+            this.gameConfigs   = fieldProfile.gameConfigs;
+            this.deviceConfigs = makeDeviceModals(fieldProfile.devices);
+
     }
 
     ngOnInit() {

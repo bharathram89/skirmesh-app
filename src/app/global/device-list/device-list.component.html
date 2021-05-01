@@ -2,6 +2,22 @@
     <div class="" role="document">
         <div class="modal-content">
 
+            <div class="modal-header">
+                <h5 *ngIf="mode == 'create'" class="modal-title" id="exampleModalLabel">Configure nodes for this
+                    game mode.</h5>
+                <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5>
+                <h6 *ngIf="mode == 'active'"> WARNING: Changes will impact live gameplay </h6>
+
+                <button *ngIf="mode == 'active'" type="button" class="btn btn-warning"
+                    (click)="saveNodeConfigs()">PAUSE GAME</button>
+
+                <button *ngIf="mode == 'active'" type="button" class="btn btn-danger"
+                    (click)="endGame()">END GAME</button>
+
+                <!-- <h5 *ngIf="mode == 'adminNodes'" class="modal-title" id="exampleModalLabel">Admin Nodes.</h5> -->
+
+            </div>
+
             <div class="modal-body">
                 <div class="container">
                     <div class="">

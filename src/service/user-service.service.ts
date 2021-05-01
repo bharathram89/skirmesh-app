@@ -15,7 +15,7 @@ export class UserServiceService {
   isPlayer:boolean=false;
   token;
   fieldProfileID;
-  fieldProfile: BehaviorSubject<any>;
+  fieldProfile;
   fieldPf;
   constructor(
     tokenService: TokenStorageService
@@ -32,7 +32,7 @@ export class UserServiceService {
       this.isPlayer = false;
       this.fieldProfileID = userData.user.fieldProfile.id;
       this.fieldPf = userData.user.fieldProfile;
-      this.fieldProfile.next(userData.user.fieldProfile);// set field profile to first by default for now
+      this.fieldProfile = userData.user.fieldProfile;
     }else if (userData.user.type =='player'){
       this.isPlayer = true;
       this.isField = false;
