@@ -87,10 +87,10 @@ export class DeviceListComponent implements OnInit {
           if (!modeConfig.nodeConfigs){
             //This can NEVER evaluate as true...
           // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 )
-            this.devices = makeDeviceModals(userData.fieldProfile.devices);
+                this.devices = makeDeviceModals(userData.fieldProfile.devices);
           } else {
              // modeConfig.nodeConfigs have already been made Device Modals
-            this.devices = modeConfig.nodeConfigs;
+                this.devices = modeConfig.nodeConfigs;
           }
 
           //  LOCATIONS CONFIGS  -needs to be after node configs above.
@@ -129,11 +129,11 @@ export class DeviceListComponent implements OnInit {
 
         if (this.mode == 'active') {
             //update the database here
-            console.log("::XMIT DEVICE TO DB::", device)
+            // console.log("::XMIT DEVICE TO DB::", device)
             this.nodeConfigs.emit(JSON.stringify(device))
             this.nodeSvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
                 data => {
-                    console.log("::API RESPONSE TO DEVICE UPDATE::", data)
+                    // console.log("::API RESPONSE TO DEVICE UPDATE::", data)
                 }
             );
         }

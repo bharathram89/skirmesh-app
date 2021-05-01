@@ -70,18 +70,9 @@ export class StartGameComponent implements OnInit {
                 this.gameModes = savedConfigs;//this.userSvc.getGameModes();
 
                 if(gameData){
+
                     this.setSelectedGameConfig(gameData);
                     this.gameBoardCollapsed = true;
-                }
-                else{
-                    let fieldProfile = this.userSvc.getFieldProfile();
-
-                    this.activeDevices.next({
-                        mode        : "active",
-                        mapID       : null,
-                        teams       : null,
-                        nodeConfigs : makeDeviceModals(fieldProfile.devices)
-                    });
                 }
             }
         )
@@ -89,7 +80,9 @@ export class StartGameComponent implements OnInit {
 
     changeGame(e){
         let gameID = e.target.value;
-        this.selectedGameMode = this.gameModes.find(ele => ele.id = gameID);
+        this.selectedGameMode = this.gameModes.find(ele => ele.id == gameID);
+        console.log(":: SELECTED GAME ::", this.selectedGameMode)
+        this.setSelectedGameConfig(this.selectedGameMode);
     }
 
     startGame(){
@@ -102,19 +95,18 @@ export class StartGameComponent implements OnInit {
             data => {
 
                 this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(
-                latestDeviceData => {
+                    latestDeviceData => {
 
-                    // Do this to ensure the latest data is used/pushed
-                    this.userSvc.setUserData(latestDeviceData);
+                        this.userSvc.setUserData(latestDeviceData);
 
-                    this.setSelectedGameConfig(mode);
-                    this.tokenSvc.saveGameInfo(JSON.stringify(mode));
-                    this.gameBoardCollapsed = true;
-                },
-                err=>{
-                    console.log(err);
-                })
-          },
+                        this.setSelectedGameConfig(mode);
+                        this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+                        this.gameBoardCollapsed = true;
+                    },
+                    err=>{
+                        console.log(err);
+                    })
+              },
           err=>{
                 console.log(err);
           }
