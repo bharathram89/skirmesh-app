@@ -201,14 +201,15 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 
     devices.forEach(device => {
 
-        let ds, id, addr;
+        let ds, id, addr, loc;
 
         id   = device.id;
         addr = device.address;
+        loc  = device.location;
 
         if(createNewModals){
 
-            ds = new DeviceSettings(id,false,addr,null);
+            ds = new DeviceSettings(id,false,addr,loc);
 
         }else{
             ds = makeDeviceModal(device)
