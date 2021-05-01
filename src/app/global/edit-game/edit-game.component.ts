@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
-import { apiToUiModel, makeDeviceModal, makeDeviceModals} from '../node.modal';
+import { makeDeviceModal, makeDeviceModals} from '../node.modal';
 
 // export class ColorPalette {
 //     name       : string;
