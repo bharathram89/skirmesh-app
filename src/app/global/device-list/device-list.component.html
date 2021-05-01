@@ -73,7 +73,7 @@
                                                         <option [value]=team.id
                                                                 [disabled]=!team.id
                                                                 *ngFor="let team of teamsAvaliable; let t = index"
-                                                                [selected]="t == 0">
+                                                                [selected]="team.id == device.registerPlayer.teamID">
                                                                 {{team?.name}}
                                                         </option>
                                                     </select>

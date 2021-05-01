@@ -177,7 +177,7 @@ export function makeDeviceModal(device): DeviceSettings[] {
     let bmb   = new BombSettings(device.config == BOMB,device.arm_time,device.bomb_time,device.diff_time)
     let cap   = new CaptureSettings(device.config == CAPTURE,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
     let query = new QueryPlayerSettings(device.config == QUERY)
-    let reg   = new RegisterPlayer(device.config == REGISTER,null)
+    let reg   = new RegisterPlayer(device.config == REGISTER, device.teamID)
 
     ds        = new DeviceSettings(id,device.enabled,addr,loc,gID,med,bmb,cap,reg,query)
 
@@ -221,46 +221,47 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 }
 
 
+// This doesn't get used anymore
 
-export function apiToUiModel(device){
-
-    let med,cap,bomb,query,reg;
-
-    med   = new MedicSettings(false,device.med_time)
-    cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
-    bomb  = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
-    query = new QueryPlayerSettings(false)
-    reg   = new RegisterPlayer(false,device.teamID)
-
-    switch(device.config){
-
-        case CAPTURE:
-            cap.enabled   = true;
-            break;
-        case MEDIC:
-            med.enabled   = true;
-            break;
-        case BOMB:
-            bomb.enabled  = true;
-            break;
-        case QUERY:
-            query.enabled = true;
-            break;
-        case REGISTER:
-            reg.enabled   = true;
-            break;
-        default:
-            cap.enabled   = true;
-    }
-
-    let id, loc, en, addr, medT;
-
-    id   = device.id;
-    en   = device.enabled;
-    addr = device.address;
-    loc  = device.location;
-
-    let ds = new DeviceSettings(id,en,addr,loc,med,bomb,cap,reg,query)
-
-    return ds;
-}
+// export function apiToUiModel(device){
+//
+//     let med,cap,bomb,query,reg;
+//
+//     med   = new MedicSettings(false,device.med_time)
+//     cap   = new CaptureSettings(false,device.cap_time,device.cap_asst,device.point_scale,device.allow_medic)
+//     bomb  = new BombSettings(false,device.arm_time,device.bomb_time,device.diff_time)
+//     query = new QueryPlayerSettings(false)
+//     reg   = new RegisterPlayer(false,device.teamID)
+//
+//     switch(device.config){
+//
+//         case CAPTURE:
+//             cap.enabled   = true;
+//             break;
+//         case MEDIC:
+//             med.enabled   = true;
+//             break;
+//         case BOMB:
+//             bomb.enabled  = true;
+//             break;
+//         case QUERY:
+//             query.enabled = true;
+//             break;
+//         case REGISTER:
+//             reg.enabled   = true;
+//             break;
+//         default:
+//             cap.enabled   = true;
+//     }
+//
+//     let id, loc, en, addr, medT;
+//
+//     id   = device.id;
+//     en   = device.enabled;
+//     addr = device.address;
+//     loc  = device.location;
+//
+//     let ds = new DeviceSettings(id,en,addr,loc,med,bomb,cap,reg,query)
+//
+//     return ds;
+// }

@@ -123,16 +123,15 @@ export class DeviceListComponent implements OnInit {
         if (this.mode == 'active') {
             //update the database here
             console.log(":: XMIT DEVICE TO DB ::", device)
-            this.nodeConfigs.emit(JSON.stringify(device))
             this.nodeSvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
                 data => {
                     console.log("::API RESPONSE TO DEVICE UPDATE::", data)
                 }
             );
         }
-        else {
-            this.nodeConfigs.emit(JSON.stringify(device));
-        }
+        else {}
+
+        this.nodeConfigs.emit(JSON.stringify(device))
 
     }
 
@@ -152,6 +151,7 @@ export class DeviceListComponent implements OnInit {
     }
 
     teamSelected(event, device) {
+        console.log(":: TEAM SELECTED ::", event, device.registerPlayer)
         this.saveNodeConfigs(device);
     }
 
