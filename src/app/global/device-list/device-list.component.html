@@ -3,46 +3,20 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 *ngIf="mode == 'create'" class="modal-title" id="exampleModalLabel">Configure nodes for this
-                    game mode.</h5>
-                <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
-                <h6 *ngIf="mode == 'active'"> WARNING: Changes will impact live gameplay </h6>
-
-                <button *ngIf="mode == 'active'" type="button" class="btn btn-warning"
-                    (click)="saveNodeConfigs()">PAUSE GAME</button>
-
-                <button *ngIf="mode == 'active'" type="button" class="btn btn-danger"
-                    (click)="endGame()">END GAME</button>
-
-                <!-- <h5 *ngIf="mode == 'adminNodes'" class="modal-title" id="exampleModalLabel">Admin Nodes.</h5> -->
-
+                <h5 *ngIf="mode == 'create'" class="modal-title" id="exampleModalLabel">
+                    Configure nodes for this game mode.
+                </h5>
             </div>
 
             <div class="modal-body">
                 <div class="container">
                     <div class="">
-                        <!-- <div *ngIf="mode == 'createMode'">
-                            <div class="row center-cust ">
-                                Locations To Set: [<div *ngFor="let location of  getLocationList(); let i = index"><a
-                                        class="badge badge-pill badge-light">{{ location.name }} </a></div>]
-                            </div>
-                            <div class="row center-cust ">
-                                Teams Avaliable To Set: [<div *ngFor="let team of teamsAvaliable ; let x = index"><a
-                                        class="badge badge-pill badge-light">{{ team.name }} </a></div>]
-                            </div>
-                        </div> -->
+
                         <div class="center-cust row">
 
                             <div *ngFor="let device of devices; let i = index" class="card user-card">
 
                                 <div class="card-header">
-
-                                    <!-- <div *ngIf="mode == 'active'">
-                                        <input type="checkbox" class="custom-control-input"
-                                            [id]="'locationSwitch-' + i">
-                                        <label class="custom-control-label" [for]="'locationSwitch-' + i">
-                                            {{ getLocationName(device?.location)?.name }}</label>
-                                    </div> -->
 
                                     <div>
                                         <h4>Location:{{device?.location?.name}}

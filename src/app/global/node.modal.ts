@@ -12,6 +12,7 @@ export class DeviceSettings {
     enabled:        boolean;
     address:        string;
     location:       string;
+    gameID:         number;
     medic:          MedicSettings;
     bomb:           BombSettings;
     capture:        CaptureSettings;
@@ -23,6 +24,7 @@ export class DeviceSettings {
         enabled:        boolean,
         address:        string,
         location:       string,
+        gameID:         number              = null,
         medic:          MedicSettings       = new MedicSettings(),
         bomb:           BombSettings        = new BombSettings(),
         capture:        CaptureSettings     = new CaptureSettings(),
@@ -33,6 +35,7 @@ export class DeviceSettings {
         this.enabled        = enabled;
         this.address        = address;
         this.location       = location;
+        this.gameID         = gameID;
         this.medic          = medic;
         this.bomb           = bomb;
         this.capture        = capture;
@@ -47,6 +50,7 @@ export class DeviceSettings {
             enabled:     this.enabled,
             address:     this.address,
             location:    this.location,
+            gameID:      this.gameID,
             teamID:      this.registerPlayer.teamID,
 
             config:      this.medic.enabled              ? MEDIC    :
@@ -162,11 +166,12 @@ export class QueryPlayerSettings {
 
 export function makeDeviceModal(device): DeviceSettings[] {
 
-    let ds, id, addr, loc;
+    let ds, id, addr, loc, gID;
 
     id   = device.id;
     addr = device.address;
     loc  = device.location;
+    gID  = device.gameID;
 
     let med   = new MedicSettings(device.config == MEDIC,device.med_time)
     let bmb   = new BombSettings(device.config == BOMB,device.arm_time,device.bomb_time,device.diff_time)
@@ -174,7 +179,7 @@ export function makeDeviceModal(device): DeviceSettings[] {
     let query = new QueryPlayerSettings(device.config == QUERY)
     let reg   = new RegisterPlayer(device.config == REGISTER,null)
 
-    ds        = new DeviceSettings(id,device.enabled,addr,loc,med,bmb,cap,reg,query)
+    ds        = new DeviceSettings(id,device.enabled,addr,loc,gID,med,bmb,cap,reg,query)
 
     console.log(":: MAKE DEVICE ::", ds);
     return ds;

@@ -48,8 +48,11 @@ export class DeviceService {
 
         let data = {"gameConfigID":gameConfigID}
         return this.http.post(this.BASE+'gameplay/startGame?token='+token,data,this.options )
-        //insert into games
-        //put into devices table to setup devices
+    }
+
+    endGame(token, gameID){
+        let data = {"id":gameID}
+        return this.http.put(this.BASE+'gameplay/endGame?token='+token,data,this.options )
     }
   // http://api.skirmesh.net/resources/gameConfig
 

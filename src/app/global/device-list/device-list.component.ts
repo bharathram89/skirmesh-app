@@ -110,15 +110,8 @@ export class DeviceListComponent implements OnInit {
               this.selectedLocations   = arr;
               this.updatedLocationList = this.getLocationList();
           }
-
         })
-
-      }
-    )
-  }
-
-    endGame(){
-        this.nodeConfigs.emit('endGame');
+      })
     }
 
     saveOldVal(device){
@@ -129,11 +122,11 @@ export class DeviceListComponent implements OnInit {
 
         if (this.mode == 'active') {
             //update the database here
-            // console.log("::XMIT DEVICE TO DB::", device)
+            console.log(":: XMIT DEVICE TO DB ::", device)
             this.nodeConfigs.emit(JSON.stringify(device))
             this.nodeSvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
                 data => {
-                    // console.log("::API RESPONSE TO DEVICE UPDATE::", data)
+                    console.log("::API RESPONSE TO DEVICE UPDATE::", data)
                 }
             );
         }

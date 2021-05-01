@@ -31,7 +31,7 @@ const DEFAULT_DURATION = 300;
 
 export class StartGameComponent implements OnInit {
 
-    gameBoardCollapsed = false;
+    gameBoardActive     = false;
     gameModes;
     userSvc             : UserServiceService;
     deviceSvc           : DeviceService;
@@ -67,20 +67,23 @@ export class StartGameComponent implements OnInit {
             savedConfigs => {
 
                 let gameData   = JSON.parse(this.tokenSvc.getGameInfo());
-                this.gameModes = savedConfigs;//this.userSvc.getGameModes();
+                this.gameModes = savedConfigs;
 
                 if(gameData){
 
                     this.setSelectedGameConfig(gameData);
-                    this.gameBoardCollapsed = true;
+                    this.gameBoardActive = true;
+                }
+                else{
+                    this.gameBoardActive = false;
                 }
             }
         )
     }
 
-    changeGame(e){
-        let gameID = e.target.value;
-        this.selectedGameMode = this.gameModes.find(ele => ele.id == gameID);
+    changeGame(games){
+        let gameConfigID = games.target.value;
+        this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
         console.log(":: SELECTED GAME ::", this.selectedGameMode)
         this.setSelectedGameConfig(this.selectedGameMode);
     }
@@ -93,24 +96,27 @@ export class StartGameComponent implements OnInit {
 
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
-
-                this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(
-                    latestDeviceData => {
-
-                        this.userSvc.setUserData(latestDeviceData);
-
-                        this.setSelectedGameConfig(mode);
-                        this.tokenSvc.saveGameInfo(JSON.stringify(mode));
-                        this.gameBoardCollapsed = true;
-                    },
-                    err=>{
-                        console.log(err);
-                    })
-              },
-          err=>{
-                console.log(err);
-          }
+                // Why isn't this data stored as the "gameInfo"?
+                console.log(":: GAME DATA ::", data)
+            }, err=>{console.log(err)}
         )
+
+        // why were these functions nested?  gameData is never used
+        // in the nested function
+        this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(
+            latestDeviceData => {
+                // not sure this actually provides a benefit - we don't
+                // reset the config data before sending it up
+                this.userSvc.setUserData(latestDeviceData);
+            },
+            err=>{console.log(err)}
+        )
+
+        this.setSelectedGameConfig(mode);
+        // This should store the actual game data
+        this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+        // This is not used anymore
+        this.gameBoardActive = true;
     }
 
     getSelectedGameModeName() {
@@ -131,15 +137,14 @@ export class StartGameComponent implements OnInit {
     }
 
 
-    nodeConfigs(e){
-      // ONLY SEND UPDATED NODE - SINGLE NODE AT A TIME
-        console.log(":::START GAME NODE CONFIGS:::", e)
+    nodeConfigs(event){
+        console.log(":::START GAME nodeCONFIGS:::", event);
+    }
 
-        if (e.includes('endGame')){
-            this.tokenSvc.endGame();
-            this.gameBoardCollapsed=false;
-        }else{
-        //update to
-        }
+    endGame(){
+        
+        this.tokenSvc.endGame();
+        this.gameBoardActive = false;
+
     }
 }
