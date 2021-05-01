@@ -58,7 +58,7 @@ export class DeviceSettings {
                              this.bomb.enabled           ? BOMB     :
                              this.registerPlayer.enabled ? REGISTER :
                              this.queryPlayer.enabled    ? QUERY    :
-                             CAPTURE,
+                             QUERY,
 
             cap_time:    this.capture.cap_time,
             cap_asst:    this.capture.cap_asst,
@@ -145,7 +145,8 @@ export class RegisterPlayer {
         enabled: boolean = false,
         teamID:  number  = null,
     ) {
-        this.enabled = enabled;
+        // Don't allow enabling this unless a teamID is available
+        this.enabled = teamID ? enabled : false;
         this.teamID  = teamID;
     }
 }

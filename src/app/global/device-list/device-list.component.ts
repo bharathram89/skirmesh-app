@@ -151,7 +151,6 @@ export class DeviceListComponent implements OnInit {
     }
 
     teamSelected(event, device) {
-        console.log(":: TEAM SELECTED ::", event, device.registerPlayer)
         this.saveNodeConfigs(device);
     }
 

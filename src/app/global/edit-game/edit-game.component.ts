@@ -134,7 +134,6 @@ export class EditGameComponent implements OnInit {
         }
 
         this.gameModeForm.value.nodeModes = this.deviceConfigs;
-        // console.log(":: UPDATED NODE MODES ::", this.gameModeForm.value.nodeModes)
     }
 
     saveConfigs(){
