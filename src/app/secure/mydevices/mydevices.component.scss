@@ -5,17 +5,13 @@
 
 #KINGDOM{
     fill:white;
+    stroke: maroon;
+      stroke-width: 2px;
 }
 
-#NORTH_POND_TRAIL{
-    background-color: red($color: #ffffff);
-    opacity: 0;
-    transform-origin: center;
-    transform-box: fill-box;
-}
-#NORTH_POND_TRAIL:hover {
-    background-color: red($color: #ffffff);
-    fill: var(--WHITE);
-    opacity: 0.25;
+#KINGDOM:hover {
+    fill: red($color: #000000);
+     
+    opacity: 0.75;
     transform: scale(1.1);
 }

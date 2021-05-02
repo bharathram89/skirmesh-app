@@ -65,35 +65,21 @@ export class EditGameComponent implements OnInit {
             this.maps          = fieldProfile.maps;
             this.devices       = fieldProfile.devices;
             this.gameConfigs   = fieldProfile.gameConfigs;
-            this.deviceConfigs = makeDeviceModals(fieldProfile.devices);
+            this.deviceConfigs = makeDeviceModals(fieldProfile.devices,true);
 
     }
 
-    ngOnInit() {
-
-        if(this.gameMode.teams){
-
-            this.gameMode.teams.forEach(element => {
-                this.teams.push(this.newTeam())
-            });
-        }else{
-
-            this.teams.push(this.newTeam());
-            this.teams.push(this.newTeam());
-        }
-
-        this.gameModeForm.patchValue({
-            id        : this.gameMode.id   || null,
-            name      : this.gameMode.name || '',
-            teams     : this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},
-                                                                    {name:'Team Bravo',color:'#0000ff'}],
-            nodeModes : makeDeviceModals(this.devices, true),
-            mapID     : this.gameMode.map ? this.gameMode.map : null,
-            map       : this.gameMode.map || null,
-        });
+    ngOnInit() { 
 
         if(this.gameMode.map){
-
+            this.gameMode.teams.forEach(element => {
+                this.teams.push(this.fb.group(element))
+            });
+            this.gameModeForm.patchValue({
+                id        : this.gameMode.id ,
+                map       : this.gameMode.map || null,
+                name      : this.gameMode.name || '',
+            });
             this.isMapSelected = true;
             this.locations = this.maps.find(locs=>{
 
@@ -104,9 +90,21 @@ export class EditGameComponent implements OnInit {
 
             this.deviceListConfigs.next({
                 mode        : "create",
-                mapID       : this.gameModeForm.get('map').value ,
-                teams       : this.gameModeForm.get('teams')['controls'],
+                mapID       : this.gameMode.map ,
+                teams       : this.gameMode.teams,
                 nodeConfigs : this.gameMode.nodeModes
+            });
+        }else{
+            this.teams.push(this.newTeam());
+            this.teams.push(this.newTeam());
+            this.gameModeForm.patchValue({
+                id        : this.gameMode.id   || null,
+                name      : this.gameMode.name || '',
+                teams     : this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},
+                                                                        {name:'Team Bravo',color:'#0000ff'}],
+                nodeModes : this.deviceConfigs,
+                mapID     : this.gameMode.map ? this.gameMode.map : null,
+                map       : this.gameMode.map || null,
             });
         }
     }

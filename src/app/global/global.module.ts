@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { MapComponent } from './map/map.component';
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, GameConfigComponent, TabsComponent, TabComponent,
     TabsComponent,
@@ -24,7 +25,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     DynamicTabsDirective,
     GamelistComponent,
     EditGameComponent,
-    DeviceListComponent,],
+    DeviceListComponent,
+    MapComponent,],
   imports: [
     RouterModule,
     CommonModule,
@@ -34,7 +36,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     ColorPickerModule
 
   ],
-  exports: [FooterComponent, HeaderComponent,GameConfigComponent,DeviceListComponent]
+  exports: [FooterComponent, HeaderComponent,GameConfigComponent,DeviceListComponent,MapComponent]
 })
 export class GlobalModule { }
 //AuthService

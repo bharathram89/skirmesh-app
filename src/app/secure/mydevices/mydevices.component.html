@@ -1,10 +1,9 @@
-
 <div class="container-fluid">
-<div  *ngIf="!activeGame" >
-    <div class="alert alert-primary" role="alert">
-        Start A Game then come back and check it out!
-      </div>
-</div>
+    <div *ngIf="!activeGame">
+        <div class="alert alert-primary" role="alert">
+            Start A Game then come back and check it out!
+        </div>
+    </div>
     <div *ngIf="activeGame" id="activeGame">
         <div class="row">
             <div class="push-md-9 col-md-3">
@@ -12,15 +11,15 @@
                     <div class="col-md-12 col-4">
                         <div class="card mb-3">
                             <div class="row card card-outline-success m-x-auto m-b-2">
-                                <div class="cust_text text-xs-center p-y-1" [style.background-color]="teams[0].color" >
+                                <div class="cust_text text-xs-center p-y-1" [style.background-color]="teams[0].color">
                                     <h1>{{teams[0].name}}</h1>
                                 </div>
                                 <div class="col-md-5 text-xs-center text-success p-y-1">
                                     <p *ngFor="let player of teams[0].teamPlayers">
-                                        <a *ngIf="player.is_alive" style="color: green;" >{{player.rfidID}}</a>
-                                        <a *ngIf="!player.is_alive" style="color: red;"  >{{player.rfidID}}</a> 
+                                        <a *ngIf="player.is_alive" style="color: green;">{{player.rfidID}}</a>
+                                        <a *ngIf="!player.is_alive" style="color: red;">{{player.rfidID}}</a>
                                     </p>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -28,8 +27,7 @@
             </div>
             <div class="pull-md-3">
                 <div class="card tall"> 
-                    <div *ngIf="map == 2" #salina_gambit></div>
-                    <div *ngIf="map == 3" #ballahack></div>
+                    <app-map></app-map>
                 </div>
             </div>
             <div class="push-md-9 col-md-3">
@@ -42,8 +40,8 @@
                                 </div>
                                 <div class="col-md-5 text-xs-center text-success p-y-1">
                                     <p *ngFor="let player of teams[1].teamPlayers">
-                                        <a *ngIf="player.is_alive" style="color: green;" >{{player.rfidID}}</a>
-                                        <a *ngIf="!player.is_alive" style="color: red;"  >{{player.rfidID}}</a> 
+                                        <a *ngIf="player.is_alive" style="color: green;">{{player.rfidID}}</a>
+                                        <a *ngIf="!player.is_alive" style="color: red;">{{player.rfidID}}</a>
                                     </p>
                                 </div>
                             </div>
@@ -53,7 +51,7 @@
             </div>
         </div>
         <div class="row">
-            <div *ngIf="teams[2]" class="push-md-9 col-md-3"> 
+            <div *ngIf="teams[2]" class="push-md-9 col-md-3">
                 <div class="col-md-12 col-4">
                     <div *ngFor="let team of teams | slice:2; let i = index;" class="card mb-3">
                         <div class="row card card-outline-success m-x-auto m-b-2">
@@ -62,17 +60,17 @@
                             </div>
                             <div class="col-md-5 text-xs-center text-success p-y-1">
                                 <p *ngFor="let player of team.teamPlayers">
-                                    <a *ngIf="player.is_alive" style="color: green;" >{{player.rfidID}}</a>
-                                    <a *ngIf="!player.is_alive" style="color: red;"  >{{player.rfidID}}</a> 
+                                    <a *ngIf="player.is_alive" style="color: green;">{{player.rfidID}}</a>
+                                    <a *ngIf="!player.is_alive" style="color: red;">{{player.rfidID}}</a>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
- 
+
 </div>
 
 <!-- 

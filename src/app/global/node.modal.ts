@@ -210,7 +210,7 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
 
         if(createNewModals){
 
-            ds = new DeviceSettings(id,false,addr,loc);
+            ds = new DeviceSettings(id,false,addr,null);
 
         }else{
             ds = makeDeviceModal(device)
