@@ -14,8 +14,7 @@ export class GameService {
   options = { headers: this.headers };
 
   BASE = 'http://api.skirmesh.net/'
-  GCTK = 'resources/gameConfig?token='
-  GTK = 'resources/games?token='
+  GTK = 'games/activeGames?token='
 
   userSvc: UserServiceService;
 
