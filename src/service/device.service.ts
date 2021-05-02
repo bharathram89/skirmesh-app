@@ -41,16 +41,15 @@ export class DeviceService {
         return this.http.get(this.BASE+this.GCTK+token+'&fieldProfileID='+fieldProfileID)
     }
 
-    getGameConfigsByID(token){
-        return this.http.get(this.BASE+this.GCTK+token)
+    getGameConfigsByID(token, gameConfigID){
+        return this.http.get(this.BASE+this.GCTK+token+'&id='+gameConfigID)
     }
-    
+
     deleteGameConfig(token, gameConfigID){
         return this.http.delete(this.BASE+this.GCTK+token+'&id='+gameConfigID)
     }
 
     startGame(token, gameConfigID){
-
         let data = {"gameConfigID":gameConfigID}
         return this.http.post(this.BASE+'games/startGame?token='+token,data,this.options )
     }

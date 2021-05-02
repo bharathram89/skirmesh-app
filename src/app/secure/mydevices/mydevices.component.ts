@@ -6,7 +6,7 @@ import { DeviceService } from 'src/service/device.service';
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
- 
+
 
 @Component({
    selector: 'app-mydevices',
@@ -14,10 +14,11 @@ import { UserServiceService } from 'src/service/user-service.service';
    styleUrls: ['./mydevices.component.scss']
 })
 export class MydevicesComponent implements OnInit {
-   activeGames=[];
-   activeGame = false; 
+   activeGames;
+   activeGame = false;
    map;
    teams;
+   description;
    currentTab = 'map'
    tokenSvc: TokenStorageService;
    gameSvc:GameService;
@@ -27,39 +28,42 @@ export class MydevicesComponent implements OnInit {
       this.gameSvc = gameService;
       this.deviceSvc = deviceService;
    }
+
    ngOnInit() {
       this.gameSvc.getGames(this.tokenSvc.getToken()).subscribe(
-         allGames=>{
-            console.log(allGames,"all Games")
-            this.activeGames = this.getGamesWithActiveDevices(allGames); 
+         activeGames=>{
+
+            this.activeGames = activeGames;
             console.log(this.activeGames,"active Games")
          },
          err=>{
             //show message on page no games are active.
          }
-      ) 
+      )
    }
-   getGamesWithActiveDevices(listOfGames){
-      return listOfGames.filter(ele=>ele.devices.length>0)
-   }
+
+   // getGamesWithActiveDevices(listOfGames){
+   //    return listOfGames.filter(ele=>ele.devices.length>0)
+   // }
+
    changeGameTab(tabToChangeTo){
       this.currentTab = tabToChangeTo;
    }
+
    selectActiveGame(selectedGameConfigID){
       console.log(selectedGameConfigID.target.value,"selected game")
-      this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken()).subscribe(
+      this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(), selectedGameConfigID.target.value).subscribe(
          gameConfig=>{
             console.log(gameConfig, "selected COnfigs details")
             this.activeGame = true;
-            this.teams = gameConfig["teams"]
+            this.teams = gameConfig["teams"];
             this.map = gameConfig['mapID'];
+            this.description = gameConfig['description'];
          }
       )
    }
    //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
    ngAfterViewInit() {
- 
 
-
-   } 
+   }
 }

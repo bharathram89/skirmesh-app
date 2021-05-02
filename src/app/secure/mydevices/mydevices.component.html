@@ -2,14 +2,14 @@
     <div>
         <select (change)="selectActiveGame($event)" class="form-control" >
             <option value="none" selected disabled> -- Select An Active Game -- </option>
-            <option *ngFor="let activeGame of activeGames ; let i = index"  
+            <option *ngFor="let activeGame of activeGames ; let i = index"
                 [value]="activeGame.gameConfigID">
-                {{activeGame.id}}
+                Game# {{activeGame.id}} --- {{description}} --- {{activeGame.startTime.slice(0,16)}}
             </option>
         </select>
     </div>
     <div *ngIf="activeGame" id="activeGame">
- 
+
         <div class="d-flex align-items-start">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
               <button (click)="changeGameTab('map')" class="nav-link" id="v-pills-home-tab"  type="button" role="tab"  >Map</button>
@@ -20,7 +20,7 @@
             <div class="tab-content" id="v-pills-tabContent">
               <div *ngIf="currentTab == 'map'" class="" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                 <div class="pull-md-3">
-                    <div class="card tall"> 
+                    <div class="card tall">
                         hi
                         <app-map [mapID]="map"></app-map>
                     </div>
@@ -51,19 +51,19 @@
               <div *ngIf="currentTab == 'live'"  class="" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">fourth</div>
             </div>
           </div>
-       
-       
+
+
         <div class="row">
 
-           
-           
+
+
         </div>
-        
+
     </div>
 
 </div>
 
-<!-- 
+<!--
 <div class="my-3 p-3 bg-white rounded box-shadow">
     <h6 class="border-bottom border-gray pb-2 mb-0">Recent updates</h6>
     <div class="media text-muted pt-3">
