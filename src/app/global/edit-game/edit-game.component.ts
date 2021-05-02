@@ -65,7 +65,7 @@ export class EditGameComponent implements OnInit {
             this.maps          = fieldProfile.maps;
             this.devices       = fieldProfile.devices;
             this.gameConfigs   = fieldProfile.gameConfigs;
-            this.deviceConfigs = makeDeviceModals(fieldProfile.devices,true);
+            // this.deviceConfigs = makeDeviceModals(fieldProfile.devices,true);
 
     }
 
@@ -87,7 +87,7 @@ export class EditGameComponent implements OnInit {
                     return locs['locations'];
                     }
             })
-
+            this.deviceConfigs =this.gameMode.nodeModes;
             this.deviceListConfigs.next({
                 mode        : "create",
                 mapID       : this.gameMode.map ,
@@ -95,6 +95,7 @@ export class EditGameComponent implements OnInit {
                 nodeConfigs : this.gameMode.nodeModes
             });
         }else{
+            this.deviceConfigs = makeDeviceModals(this.devices,true)
             this.teams.push(this.newTeam());
             this.teams.push(this.newTeam());
             this.gameModeForm.patchValue({

@@ -146,7 +146,7 @@ export class RegisterPlayer {
         teamID:  number  = null,
     ) {
         // Don't allow enabling this unless a teamID is available
-        this.enabled = teamID ? enabled : false;
+        this.enabled = enabled ;
         this.teamID  = teamID;
     }
 }
