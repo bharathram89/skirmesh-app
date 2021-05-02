@@ -90,7 +90,7 @@ export class EditGameComponent implements OnInit {
                     }
             })
 
-            this.deviceConfigs =this.gameMode.nodeModes;
+            this.deviceConfigs = this.gameMode.nodeModes;
             this.deviceListConfigs.next({
                 mode        : "create",
                 mapID       : this.gameMode.map ,

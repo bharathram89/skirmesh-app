@@ -60,7 +60,6 @@ export class StartGameComponent implements OnInit {
         this.deviceSvc     = deviceService;
         this.tokenSvc      = tokenService;
         this.activeDevices = new BehaviorSubject({})
-        // this.adminNodes    = new BehaviorSubject({})
     }
 
     ngOnInit(): void {
@@ -86,7 +85,7 @@ export class StartGameComponent implements OnInit {
     changeGame(games){
         let gameConfigID = games.target.value;
         this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
-        console.log(":: SELECTED GAME ::", this.selectedGameMode)
+        console.log(":: SELECTED GAME --> ::", this.selectedGameMode)
         this.setSelectedGameConfig(this.selectedGameMode);
     }
 
@@ -117,15 +116,19 @@ export class StartGameComponent implements OnInit {
         this.setSelectedGameConfig(mode);
         // This should store the actual game data
         this.tokenSvc.saveGameInfo(JSON.stringify(mode));
-        // This is not used anymore
+
         this.gameBoardActive = true;
     }
+
 
     getSelectedGameModeName() {
         return this.selectedGameMode ? this.selectedGameMode.description : null
     }
 
+
     setSelectedGameConfig(mode){
+
+        console.log(":: SETTING START GAME DATA ::", mode.deviceMap)
 
         this.teams = mode.teams;
         this.mapID = mode.mapID;
