@@ -44,8 +44,10 @@ export class StartGameComponent implements OnInit {
     // deviceListConfigs;
     // activeNodesList;
     // adminNodesList;
-    teams = [];
+    teams               = [];
     mapID;
+    gameID              = null;
+    gameData            = null;
 
     constructor(
         userService     : UserServiceService,
@@ -96,7 +98,7 @@ export class StartGameComponent implements OnInit {
 
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
-                // Why isn't this data stored as the "gameInfo"?
+                this.gameData = data
                 console.log(":: GAME DATA ::", data)
             }, err=>{console.log(err)}
         )
@@ -142,9 +144,15 @@ export class StartGameComponent implements OnInit {
     }
 
     endGame(){
-        
+
         this.tokenSvc.endGame();
         this.gameBoardActive = false;
+
+        this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
+            data => {
+                console.log("::END GAME DATA ::", data)
+            }, err=>{console.log(err)}
+        )
 
     }
 }
