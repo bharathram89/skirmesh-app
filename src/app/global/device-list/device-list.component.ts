@@ -83,7 +83,7 @@ export class DeviceListComponent implements OnInit {
             // }
           }
 
-          //  NODE CONFIGS -- if we don't have them, make them [] 
+          //  NODE CONFIGS -- if we don't have them, make them []
           if (this.mode != 'create'){
             //This can NEVER evaluate as true...
           // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 )
@@ -141,16 +141,15 @@ export class DeviceListComponent implements OnInit {
 
         if (device.location) {this.selectedLocations.push(device.location)}
         // Angular black magic updates all this for us....
-        // let loc = this.userSvc.findLocationID(this.mapid,val)
-        //find id of val
-        // device.location = val || null;
-        device.enabled = true;
+        device.location = device.location || null;
+        device.enabled  = true;
 
         this.updatedLocationList = this.getLocationList();
         this.saveNodeConfigs(device);
     }
 
     teamSelected(event, device) {
+        device.registerPlayer.teamID = parseInt(device.registerPlayer.teamID)
         this.saveNodeConfigs(device);
     }
 
@@ -214,7 +213,8 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.registerPlayer.enabled = true;
-        this.saveNodeConfigs(device);
+        // Do not save the config until a teamID is selected
+        // this.saveNodeConfigs(device);
 
     }
 

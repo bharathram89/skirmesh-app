@@ -65,21 +65,23 @@ export class EditGameComponent implements OnInit {
             this.maps          = fieldProfile.maps;
             this.devices       = fieldProfile.devices;
             this.gameConfigs   = fieldProfile.gameConfigs;
-            // this.deviceConfigs = makeDeviceModals(fieldProfile.devices,true);
 
     }
 
-    ngOnInit() { 
+    ngOnInit() {
 
         if(this.gameMode.map){
+
             this.gameMode.teams.forEach(element => {
                 this.teams.push(this.fb.group(element))
             });
+
             this.gameModeForm.patchValue({
                 id        : this.gameMode.id ,
                 map       : this.gameMode.map || null,
                 name      : this.gameMode.name || '',
             });
+
             this.isMapSelected = true;
             this.locations = this.maps.find(locs=>{
 
@@ -87,6 +89,7 @@ export class EditGameComponent implements OnInit {
                     return locs['locations'];
                     }
             })
+
             this.deviceConfigs =this.gameMode.nodeModes;
             this.deviceListConfigs.next({
                 mode        : "create",
@@ -94,7 +97,9 @@ export class EditGameComponent implements OnInit {
                 teams       : this.gameMode.teams,
                 nodeConfigs : this.gameMode.nodeModes
             });
+
         }else{
+
             this.deviceConfigs = makeDeviceModals(this.devices,true)
             this.teams.push(this.newTeam());
             this.teams.push(this.newTeam());

@@ -25,7 +25,7 @@
                                                 (click)="saveOldVal(device)"
                                                 [(ngModel)]="device.location"
                                                 >
-                                                <option value="none" selected> -- Select Location -- </option>
+                                                <option value="" selected> -- Select Location -- </option>
                                                 <option *ngFor="let location of updatedLocationList ; let i = index"
                                                     [ngValue]=location.id
                                                     [disabled]="!location.enabled">
@@ -52,8 +52,8 @@
                                             <label class="custom-control-label" [for]="'querySwitch-' + i">Player Query</label>
                                         </div>
                                     </div>
- 
-                                    <div *ngIf="teamsAvaliable[0].id" class="form-group">
+
+                                    <div *ngIf="mode !== 'create'" class="form-group">
                                         <div class="custom-control custom-switch">
                                             <input (click)="enableRegister(device)" type="checkbox"
                                                 class="custom-control-input" [id]="'registerSwitch-' + i"
@@ -71,8 +71,7 @@
                                                         <option disabled hidden>Select Team</option>
                                                         <option [value]=team.id
                                                                 [disabled]=!team.id
-                                                                *ngFor="let team of teamsAvaliable; let t = index"
-                                                                [selected]="team.id == device.registerPlayer.teamID">
+                                                                *ngFor="let team of teamsAvaliable; let t = index">
                                                                 {{team?.name}}
                                                         </option>
                                                     </select>
