@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 // import * as bootstrap from 'bootstrap';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -9,6 +9,7 @@ import { UserServiceService } from 'src/service/user-service.service';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+  @Input() mapID
   map;
   tokenSvc: TokenStorageService
   userSvc:UserServiceService;
@@ -18,6 +19,7 @@ export class MapComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    console.log(this.mapID)
     let activeGame = JSON.parse(this.tokenSvc.getGameInfo());
     if (activeGame) { 
        this.map = this.userSvc.findMapName(activeGame.mapID);   

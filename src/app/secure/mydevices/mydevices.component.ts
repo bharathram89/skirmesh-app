@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { DeviceService } from 'src/service/device.service';
+import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
  
@@ -12,26 +14,48 @@ import { UserServiceService } from 'src/service/user-service.service';
    styleUrls: ['./mydevices.component.scss']
 })
 export class MydevicesComponent implements OnInit {
-  
-   activeGame = false;
+   activeGames=[];
+   activeGame = false; 
    map;
    teams;
-   tokenSvc: TokenStorageService
-   constructor(tokenService: TokenStorageService) {
+   currentTab = 'map'
+   tokenSvc: TokenStorageService;
+   gameSvc:GameService;
+   deviceSvc:DeviceService;
+   constructor(tokenService: TokenStorageService, gameService:GameService,deviceService :DeviceService) {
       this.tokenSvc = tokenService;
+      this.gameSvc = gameService;
+      this.deviceSvc = deviceService;
    }
    ngOnInit() {
-      let activeGame = JSON.parse(this.tokenSvc.getGameInfo());
-      if (activeGame) {
-         this.activeGame = true;
-         this.map = activeGame.mapID;
-         this.teams = activeGame.teams;
-         console.log(activeGame, "activeGame")
-      } else {
-
-      }
+      this.gameSvc.getGames(this.tokenSvc.getToken()).subscribe(
+         allGames=>{
+            console.log(allGames,"all Games")
+            this.activeGames = this.getGamesWithActiveDevices(allGames); 
+            console.log(this.activeGames,"active Games")
+         },
+         err=>{
+            //show message on page no games are active.
+         }
+      ) 
    }
-
+   getGamesWithActiveDevices(listOfGames){
+      return listOfGames.filter(ele=>ele.devices.length>0)
+   }
+   changeGameTab(tabToChangeTo){
+      this.currentTab = tabToChangeTo;
+   }
+   selectActiveGame(selectedGameConfigID){
+      console.log(selectedGameConfigID.target.value,"selected game")
+      this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken()).subscribe(
+         gameConfig=>{
+            console.log(gameConfig, "selected COnfigs details")
+            this.activeGame = true;
+            this.teams = gameConfig["teams"]
+            this.map = gameConfig['mapID'];
+         }
+      )
+   }
    //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
    ngAfterViewInit() {
  

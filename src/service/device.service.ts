@@ -33,6 +33,7 @@ export class DeviceService {
     }
 
     modifyGameConfig(data, token){
+        console.log(" MODIFY GAME CONFIG DATA:" , data)
         return this.http.put(this.BASE+this.GCTK+token,data,this.options)
     }
 
@@ -40,6 +41,9 @@ export class DeviceService {
         return this.http.get(this.BASE+this.GCTK+token+'&fieldProfileID='+fieldProfileID)
     }
 
+    getGameConfigsByID(token){
+        return this.http.get(this.BASE+this.GCTK+token)
+    }
     deleteGameConfig(token, gameConfigID){
         return this.http.delete(this.BASE+this.GCTK+token+'&id='+gameConfigID)
     }

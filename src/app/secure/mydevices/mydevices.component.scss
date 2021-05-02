@@ -3,15 +3,3 @@
     text-shadow: 1px 1px rgba(0,0,0,0.5), -1px 1px rgba(0,0,0,0.5), 1px -1px rgba(0,0,0,0.5), -1px -1px rgba(0,0,0,0.5);
 }
 
-#KINGDOM{
-    fill:white;
-    stroke: maroon;
-      stroke-width: 2px;
-}
-
-#KINGDOM:hover {
-    fill: red($color: #000000);
-     
-    opacity: 0.75;
-    transform: scale(1.1);
-}
