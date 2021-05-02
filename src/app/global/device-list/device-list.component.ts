@@ -149,7 +149,7 @@ export class DeviceListComponent implements OnInit {
     }
 
     teamSelected(event, device) {
-        device.registerPlayer.teamID = parseInt(device.registerPlayer.teamID)
+        device.registerPlayer.teamID = parseInt(device.registerPlayer.teamID);
         this.saveNodeConfigs(device);
     }
 
