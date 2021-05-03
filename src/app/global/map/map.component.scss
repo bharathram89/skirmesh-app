@@ -15,7 +15,14 @@
 }
  
 
-
+.map {
+    height: 200%;
+    width: 200%;
+    @media only screen and (max-width: 600px) {
+        height: 100%;
+        width: 100%;
+    }
+}
 .blinking{
     animation:blinkingText 1.2s infinite;
 }
