@@ -1,7 +1,7 @@
 
 <div class="events_area">
     <div class="container">
-        <div *ngIf="!gameBoardActive" class="row justify-content-center">
+        <div *ngIf="!gameInProgress" class="row justify-content-center">
             <div class="col-lg-5">
                 <div class="main_title">
                     <h4>Select Game Configuration</h4>
@@ -17,27 +17,34 @@
         </div>
 
         <div class="row collapsible" [@collapse]="!gameBoardActive" id="gameManagementBoard">
-            <div class="col-lg-12"><h4 class="text-center pt-3">{{getSelectedGameModeName()}}</h4></div>
-        </div>
+            <div class="col-lg-12"><h3 class="text-center pt-3">{{getSelectedGameModeName()}}</h3></div>
 
-        <div class="col-lg-12">
-            <div class="text-center pt-3">
+            <div class="col-lg-12">
+                <div class="text-center pt-3">
 
-                <div class="modal-header" *ngIf="gameBoardActive">
-                    <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
-                    <h5> WARNING: Changes will impact live gameplay </h5>
+                    <div class="modal-header" *ngIf="!gameInProgress">
+                        <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
+                        <h5> NOTICE: Device changes will revert to the saved configuration on START GAME. </h5>
 
-                    <button type="button" class="btn btn-warning"
-                        (click)="saveNodeConfigs()">PAUSE GAME</button>
+                    </div>
 
-                    <button type="button" class="btn btn-danger"
-                        (click)="endGame()">END GAME</button>
-                </div>
+                    <div class="modal-header" *ngIf="gameInProgress">
+                        <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
+                        <h4> WARNING: Changes impact live gameplay. </h4>
 
-                <div>
-                    <app-device-list [config]="activeDevices" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+                        <button type="button" class="btn btn-warning"
+                            (click)="saveNodeConfigs()">PAUSE GAME</button>
+
+                        <button type="button" class="btn btn-danger"
+                            (click)="endGame()">END GAME</button>
+                    </div>
+
+                    <div>
+                        <app-device-list [config]="activeDevices" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+                    </div>
                 </div>
             </div>
+
         </div>
 
     </div>

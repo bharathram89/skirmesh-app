@@ -32,6 +32,7 @@ const DEFAULT_DURATION = 300;
 export class StartGameComponent implements OnInit {
 
     gameBoardActive     = false;
+    gameInProgress      = false;
     gameModes;
     userSvc             : UserServiceService;
     deviceSvc           : DeviceService;
@@ -117,7 +118,8 @@ export class StartGameComponent implements OnInit {
         // This should store the actual game data
         this.tokenSvc.saveGameInfo(JSON.stringify(mode));
 
-        this.gameBoardActive = true;
+        this.gameInProgress = true;
+
     }
 
 
@@ -139,6 +141,8 @@ export class StartGameComponent implements OnInit {
             teams       : this.teams,
             nodeConfigs : makeDeviceModals(mode.deviceMap)
         });
+
+        this.gameBoardActive = true;
     }
 
 
@@ -149,13 +153,15 @@ export class StartGameComponent implements OnInit {
     endGame(){
 
         this.tokenSvc.endGame();
-        this.gameBoardActive = false;
-
+        
         this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
             data => {
                 console.log("::END GAME DATA ::", data)
             }, err=>{console.log(err)}
         )
+
+        this.gameInProgress = false;
+        this.gameBoardActive = false;
 
     }
 }
