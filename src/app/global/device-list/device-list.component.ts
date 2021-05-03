@@ -118,7 +118,7 @@ export class DeviceListComponent implements OnInit {
         this.previousSelected = device.location;
     }
 
-    saveNodeConfigs(device = this.devices) {
+    saveNodeConfigs(device) {
 
         if (this.mode == 'active') {
             //update the database here
@@ -150,7 +150,13 @@ export class DeviceListComponent implements OnInit {
 
     teamSelected(event, device) {
         device.registerPlayer.teamID = parseInt(device.registerPlayer.teamID);
-        this.saveNodeConfigs(device);
+        if (this.mode == 'active') {
+            let partial = device.toJSON()
+            this.saveNodeConfigs({'id':partial.id, 'config':partial.config, 'teamID':partial.teamID});
+        }
+        else{
+            this.saveNodeConfigs(device);
+        }
     }
 
     getLocationList() {
@@ -197,15 +203,28 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.medic.enabled = true;
-        this.saveNodeConfigs(device);
 
+        if (this.mode == 'active') {
+            let partial = device.toJSON()
+            this.saveNodeConfigs({'id':partial.id, 'config':partial.config});
+        }
+        else{
+            this.saveNodeConfigs(device);
+        }
     }
 
     enableQuery(device) {
 
         this.updateModeSwitches(device);
         device.queryPlayer.enabled = true;
-        this.saveNodeConfigs(device);
+
+        if (this.mode == 'active') {
+            let partial = device.toJSON()
+            this.saveNodeConfigs({'id':partial.id, 'config':partial.config});
+        }
+        else{
+            this.saveNodeConfigs(device);
+        }
 
     }
 
@@ -222,7 +241,14 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.capture.enabled = true;
-        this.saveNodeConfigs(device);
+
+        if (this.mode == 'active') {
+            let partial = device.toJSON()
+            this.saveNodeConfigs({'id':partial.id, 'config':partial.config});
+        }
+        else{
+            this.saveNodeConfigs(device);
+        }
 
     }
 
@@ -230,7 +256,14 @@ export class DeviceListComponent implements OnInit {
 
         this.updateModeSwitches(device);
         device.bomb.enabled = true;
-        this.saveNodeConfigs(device);
+
+        if (this.mode == 'active') {
+            let partial = device.toJSON()
+            this.saveNodeConfigs({'id':partial.id, 'config':partial.config});
+        }
+        else{
+            this.saveNodeConfigs(device);
+        }
 
     }
 
@@ -259,7 +292,13 @@ export class DeviceListComponent implements OnInit {
         device.medic.medTime = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'med_time':partial.med_time});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
 
     }
@@ -269,7 +308,13 @@ export class DeviceListComponent implements OnInit {
         device.capture.cap_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'cap_time':partial.cap_time});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
     }
 
@@ -278,7 +323,13 @@ export class DeviceListComponent implements OnInit {
         device.capture.cap_asst = PERC_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'cap_asst':partial.cap_asst});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
     }
 
@@ -287,7 +338,13 @@ export class DeviceListComponent implements OnInit {
         device.capture.point_scale = POINT_SCL[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'point_scale':partial.point_scale});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
     }
 
@@ -298,7 +355,14 @@ export class DeviceListComponent implements OnInit {
         } else {
             device.capture.allow_medic = true;
         }
-        this.saveNodeConfigs(device);
+
+        if (this.mode == 'active') {
+            let partial = device.toJSON()
+            this.saveNodeConfigs({'id':partial.id, 'allow_medic':partial.allow_medic});
+        }
+        else{
+            this.saveNodeConfigs(device);
+        }
     }
 
     armTime(device, value, updateConfigs=false) {
@@ -306,7 +370,13 @@ export class DeviceListComponent implements OnInit {
         device.bomb.arm_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'arm_time':partial.arm_time});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
     }
 
@@ -315,7 +385,13 @@ export class DeviceListComponent implements OnInit {
         device.bomb.bomb_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'bomb_time':partial.bomb_time});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
     }
 
@@ -324,7 +400,13 @@ export class DeviceListComponent implements OnInit {
         device.bomb.diff_time = TIME_INTS[value];
 
         if (updateConfigs) {
-            this.saveNodeConfigs(device);
+            if (this.mode == 'active') {
+                let partial = device.toJSON()
+                this.saveNodeConfigs({'id':partial.id, 'diff_time':partial.diff_time});
+            }
+            else{
+                this.saveNodeConfigs(device);
+            }
         }
     }
 

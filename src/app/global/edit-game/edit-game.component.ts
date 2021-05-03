@@ -126,6 +126,8 @@ export class EditGameComponent implements OnInit {
         return this.gameModeForm.get("teams") as FormArray
     }
 
+    // This listens to the output of nodeConfigs in device-list.component.ts
+    // due to the emitter --- for edit, the emitted device is spliced into configs
     nodeConfigs(device){
 
         this.configSet = true; // Not sure what this does...
