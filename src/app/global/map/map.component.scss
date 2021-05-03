@@ -1,19 +1,18 @@
-.location{ 
-    stroke: black;
-    opacity: 0.50;
-    stroke-width: 2px;
-    display: inline-block !important;
-    pointer-events: all;
+path.location{
+    fill             : rgba(255,255,255,0);
+    stroke           : rgba(0,0,0,10);
+    stroke-width     : 0.25px;
 }
 
-.location:hover {
-    fill: red($color: #000000); 
-    opacity: 0.75;
-    transform: scale(1.1);
-    transform-origin: center;
-    transform-box: fill-box;
+path.location:hover {
+    fill             : rgba(255,255,255,50);
+    stroke           : none;
+    opacity          : 0.25;
+    transform        : scale(1.1);
+    transform-origin : center;
+    transform-box    : fill-box;
 }
- 
+
 
 .map {
     height: 200%;
@@ -47,7 +46,7 @@
     padding-bottom: calc(4%);
     border: 1vw;
     border-radius: 50%;
-    position: absolute; 
+    position: absolute;
     animation: pulsate infinite 1.5s;
   }
   @keyframes pulsate {
