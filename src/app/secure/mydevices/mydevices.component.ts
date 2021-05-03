@@ -14,6 +14,10 @@ import { UserServiceService } from 'src/service/user-service.service';
    styleUrls: ['./mydevices.component.scss']
 })
 export class MydevicesComponent implements OnInit {
+   gameConfig;
+
+
+   devices;
    activeGames;
    activeGame = false;
    map;
@@ -50,17 +54,28 @@ export class MydevicesComponent implements OnInit {
       this.currentTab = tabToChangeTo;
    }
 
-   selectActiveGame(selectedGameConfigID){
-      console.log(selectedGameConfigID.target.value,"selected game")
-      this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(), selectedGameConfigID.target.value).subscribe(
+   selectActiveGame(gameID){
+      console.log(gameID.target.value,"selected game")
+      let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
+      this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),gameConfigID ).subscribe(
          gameConfig=>{
             console.log(gameConfig, "selected COnfigs details")
             this.activeGame = true;
+            this.gameConfig = gameConfig;
             this.teams = gameConfig["teams"];
             this.map = gameConfig['mapID'];
             this.description = gameConfig['description'];
+            this.devices = this.findDevicesForGameID(gameConfigID);
+            console.log(this.devices,"finsl divs")
+
          }
       )
+   }
+   findGameConfigIDForGame(gameID){
+      return this.activeGames.find(ele => ele.id == gameID)
+   }
+   findDevicesForGameID(gameID){
+      return this.activeGames.filter(ele=> ele.gameConfigID == gameID && ele.devices.length > 0)[0].devices;
    }
    //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
    ngAfterViewInit() {

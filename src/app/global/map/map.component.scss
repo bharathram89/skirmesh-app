@@ -1,8 +1,9 @@
-.location{
-    fill:white;
+.location{ 
     stroke: black;
     opacity: 0.50;
     stroke-width: 2px;
+    display: inline-block !important;
+    pointer-events: all;
 }
 
 .location:hover {
@@ -12,6 +13,20 @@
     transform-origin: center;
     transform-box: fill-box;
 }
+ 
+
+
+.blinking{
+    animation:blinkingText 1.2s infinite;
+}
+@keyframes blinkingText{
+    0%{     fill: #ffffff;    }
+    49%{    fill: #ffffff; }
+    60%{    fill: transparent; }
+    99%{    fill:transparent;  }
+    100%{   fill: #ffffff;    }
+}
+
 /*
 .beacon-container {
     position: relative;

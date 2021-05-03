@@ -3,7 +3,7 @@
         <select (change)="selectActiveGame($event)" class="form-control" >
             <option value="none" selected disabled> -- Select An Active Game -- </option>
             <option *ngFor="let activeGame of activeGames ; let i = index"
-                [value]="activeGame.gameConfigID">
+                [value]="activeGame.id">
                 Game# {{activeGame.id}} --- {{description}} --- {{activeGame.startTime.slice(0,16)}}
             </option>
         </select>
@@ -20,9 +20,8 @@
             <div class="tab-content" id="v-pills-tabContent">
               <div *ngIf="currentTab == 'map'" class="" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                 <div class="pull-md-3">
-                    <div class="card tall">
-                        hi
-                        <app-map [mapID]="map"></app-map>
+                    <div class="card tall"> 
+                        <app-map [mapID]="map" [mapData]="devices"></app-map>
                     </div>
                 </div>
               </div>
