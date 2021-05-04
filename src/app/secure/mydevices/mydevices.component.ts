@@ -55,6 +55,9 @@ export class MydevicesComponent implements OnInit {
    }
 
    selectActiveGame(gameID){
+      //need to reset teams info.
+      this.teams = [];
+
       console.log(gameID.target.value,"selected game")
       let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
       this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),gameConfigID ).subscribe(
