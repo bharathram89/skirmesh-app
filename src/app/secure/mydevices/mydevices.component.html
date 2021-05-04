@@ -29,19 +29,18 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="currentTab == 'team'" class="" id="v-pills-profile" role="tabpanel"
+                <div *ngIf="currentTab == 'team'" class="col" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
 
 
 
-                    <div *ngFor="let team of teams" class="push-md-9 col">
-                        <div class="row">
-                            <div class="col-md-12 col-4">
-                                <div class="card mb-3">
-                                    <div class="row card card-outline-success m-x-auto m-b-2">
+                    <div *ngFor="let team of teams" class=" team-section"> 
+                          
+                                    <div class="card card-outline-success m-x-auto m-b-2">
                                         <div class="cust_text text-xs-center p-y-1"
                                             [style.background-color]="team.color">
-                                            <h3>{{team.name}}</h3>
+                                            <h3>{{team.name}} | Total Score: {{team.score}}</h3>
+ 
                                         </div>
 
 
@@ -51,7 +50,7 @@
                                                     <th scope="col">RFID</th>
                                                     <th scope="col">Last Action</th>
                                                     <th scope="col">Last Location</th>
-                                                    <th scope="col">Totoal Points</th>
+                                                    <th scope="col">Total Points</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -78,9 +77,7 @@
                                             </tbody>
                                         </table> 
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                 
                     </div>
 
 

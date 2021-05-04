@@ -27,10 +27,12 @@ export class MydevicesComponent implements OnInit {
    tokenSvc: TokenStorageService;
    gameSvc:GameService;
    deviceSvc:DeviceService;
-   constructor(tokenService: TokenStorageService, gameService:GameService,deviceService :DeviceService) {
+   userSvc:UserServiceService;
+   constructor(tokenService: TokenStorageService, gameService:GameService,deviceService :DeviceService,userService:UserServiceService) {
       this.tokenSvc = tokenService;
       this.gameSvc = gameService;
       this.deviceSvc = deviceService;
+      this.userSvc = userService;
    }
 
    ngOnInit() {
@@ -66,7 +68,7 @@ export class MydevicesComponent implements OnInit {
             this.activeGame = true;
             this.gameConfig = gameConfig;
             gameConfig["teams"].forEach(team => {
-               let teamObj = {id:team.id,name:team.name,color:'#'+team.color,players:[]}
+               let teamObj = {id:team.id,name:team.name,color:'#'+team.color,score:this.findTeamScore(team),players:[]}
                team.teamPlayers.forEach(player => {
                   teamObj.players.push({rfID:player.rfidID
                                        ,is_alive:player.is_alive
@@ -86,6 +88,13 @@ export class MydevicesComponent implements OnInit {
 
          }
       )
+   }
+   findTeamScore(team){
+      let gameActions = team.gameActions;
+      let total =0;
+      gameActions.filter(action => action.points? total = total + action.points:total = total);
+      console.log(total,"findTeamScore")
+      return  total
    }
    findGameConfigIDForGame(gameID){
       return this.activeGames.find(ele => ele.id == gameID)
