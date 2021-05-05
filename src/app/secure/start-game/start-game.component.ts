@@ -181,7 +181,7 @@ export class StartGameComponent implements OnInit {
         this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
             data => {
                 this.gameInProgress = false;
-                this.gameBoardActive = false;
+                this.gameBoardActive = false; 
                 console.log("::END GAME DATA ::", data)
             }, err=>{console.log(err)}
         )

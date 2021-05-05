@@ -84,14 +84,14 @@ export class DeviceListComponent implements OnInit {
           }
 
           //  NODE CONFIGS -- if we don't have them, make them []
-          if (this.mode != 'create'){
-            //This can NEVER evaluate as true...
-          // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 )
-                this.devices = makeDeviceModals(userData.fieldProfile.devices);
-          } else {
+        //   if (this.mode != 'create'){
+        //     //This can NEVER evaluate as true...
+        //   // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 )
+        //         this.devices = makeDeviceModals(userData.fieldProfile.devices);
+        //   } else {
              // modeConfig.nodeConfigs have already been made Device Modals
                 this.devices = modeConfig.nodeConfigs;
-          }
+        //   }
 
           //  LOCATIONS CONFIGS  -needs to be after node configs above.
 
