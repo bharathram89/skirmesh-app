@@ -69,7 +69,7 @@ export class StartGameComponent implements OnInit {
 
     ngOnInit(): void {
         this.gameSvc.getGames(this.tokenSvc.getToken()).subscribe(
-            activeGames=>{ 
+            activeGames=>{
 
                 if(activeGames[0] ){
                     this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),activeGames[0].gameConfigID ).subscribe(
@@ -91,22 +91,22 @@ export class StartGameComponent implements OnInit {
                         //       });
                         //       this.teams.push(teamObj)
                         //    });
-                           
+
                         //    this.map = gameConfig['mapID'];
                         //    this.description = gameConfig['description'];
                         //    this.devices = this.findDevicesForGameID(gameConfigID);
                         //    console.log(this.devices,this.teams,"finsl divs")
-               
-               
+
+
                         }
                      )
-                    
+
                     //take fist one for now
                     // activeGames[0]
                 }else{
                     this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
-                        savedConfigs => { 
-                            this.gameModes = savedConfigs; 
+                        savedConfigs => {
+                            this.gameModes = savedConfigs;
                         }
                     )
                 }
@@ -116,7 +116,7 @@ export class StartGameComponent implements OnInit {
                //show message on page no games are active.
             }
          )
-       
+
     }
 
     changeGame(games){
@@ -138,9 +138,9 @@ export class StartGameComponent implements OnInit {
                 this.userSvc.setUserData(data);
                 console.log(":: GAME DATA ::", data)
             }, err=>{console.log(err)}
-        ) 
+        )
 
-        this.setSelectedGameConfig(mode); 
+        this.setSelectedGameConfig(mode);
 
         this.gameInProgress = true;
 
@@ -156,8 +156,9 @@ export class StartGameComponent implements OnInit {
 
         console.log(":: SETTING START GAME DATA ::", mode.deviceMap)
 
-        this.teams = mode.teams;
-        this.mapID = mode.mapID;
+        this.selectedGameMode = mode;
+        this.teams            = mode.teams;
+        this.mapID            = mode.mapID;
 
         this.activeDevices.next({
             mode        : "active",
@@ -177,11 +178,11 @@ export class StartGameComponent implements OnInit {
     endGame(){
 
         this.tokenSvc.endGame();
-        
+
         this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
             data => {
                 this.gameInProgress = false;
-                this.gameBoardActive = false; 
+                this.gameBoardActive = false;
                 console.log("::END GAME DATA ::", data)
             }, err=>{console.log(err)}
         )
