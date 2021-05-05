@@ -30,4 +30,8 @@ export class GameService {
     return this.http.get(this.BASE + this.GTK + token )
   }
 
+  getGameStats(gameID){
+    return this.http.get(this.BASE + 'statistics/game?id=' + gameID ) 
+  }
+
 }
