@@ -175,18 +175,26 @@ export class StartGameComponent implements OnInit {
         console.log(":::START GAME nodeCONFIGS:::", event);
     }
 
+
+    pauseGame() {
+
+        let paused = !this.gameData.is_paused;
+
+        this.gameSvc.pauseGame(this.userSvc.getToken(), {"id":this.gameData.id, "is_paused":paused}).subscribe(
+            data => this.gameData = data
+        )
+    }
+
+
     endGame(){
 
         this.tokenSvc.endGame();
 
         this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
             data => {
-                this.gameInProgress = false;
-                this.gameBoardActive = false;
-                console.log("::END GAME DATA ::", data)
-            }, err=>{console.log(err)}
-        )
-
-
+                    this.gameInProgress = false;
+                    this.gameBoardActive = false;
+                    console.log("::END GAME DATA ::", data);
+                })
     }
 }
