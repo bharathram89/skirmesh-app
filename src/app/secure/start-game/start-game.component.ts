@@ -72,13 +72,18 @@ export class StartGameComponent implements OnInit {
             activeGames=>{
 
                 if(activeGames[0] ){
+
+                    this.gameData = activeGames[0];
+                    this.gameBoardActive = true;
+                    this.gameInProgress = true;
+
                     this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),activeGames[0].gameConfigID ).subscribe(
+
                         gameConfig=>{
-                            this.gameData = activeGames[0]
-                           // console.log(gameConfig, "selected COnfigs details")
-                           this.setSelectedGameConfig(gameConfig);
-                            this.gameBoardActive = true;
-                            this.gameInProgress = true;
+
+                            // console.log(gameConfig, "selected COnfigs details")
+                            this.setSelectedGameConfig(gameConfig);
+
                         //    gameConfig["teams"].forEach(team => {
                         //       let teamObj = {id:team.id,name:team.name,color:'#'+team.color,score:this.findTeamScore(team),players:[]}
                         //       team.teamPlayers.forEach(player => {
@@ -120,9 +125,10 @@ export class StartGameComponent implements OnInit {
     }
 
     changeGame(games){
+
         let gameConfigID = games.target.value;
         this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
-        console.log(":: SELECTED GAME --> ::", this.selectedGameMode)
+
         this.setSelectedGameConfig(this.selectedGameMode);
     }
 
@@ -134,9 +140,10 @@ export class StartGameComponent implements OnInit {
 
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
+
                 this.gameData = data
                 this.userSvc.setUserData(data);
-                console.log(":: GAME DATA ::", data)
+
             }, err=>{console.log(err)}
         )
 
@@ -194,7 +201,6 @@ export class StartGameComponent implements OnInit {
             data => {
                     this.gameInProgress = false;
                     this.gameBoardActive = false;
-                    console.log("::END GAME DATA ::", data);
                 })
     }
 }
