@@ -13,6 +13,7 @@ import { DeviceService } from 'src/service/device.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 import { AuthService } from 'src/service/auth.service';
+import { GameService } from 'src/service/game.service';
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -38,6 +39,7 @@ export class StartGameComponent implements OnInit {
     deviceSvc           : DeviceService;
     tokenSvc            : TokenStorageService;
     authSvc             : AuthService;
+    gameSvc             : GameService;
     selectedGameMode;
     activeDevices       : BehaviorSubject<any>;
     adminNodes          : BehaviorSubject<any>;
@@ -54,33 +56,67 @@ export class StartGameComponent implements OnInit {
         userService     : UserServiceService,
         deviceService   : DeviceService,
         tokenService    : TokenStorageService,
-        authService     : AuthService
+        authService     : AuthService,
+        gameService     : GameService
     ){
         this.authSvc       = authService;
         this.userSvc       = userService;
         this.deviceSvc     = deviceService;
         this.tokenSvc      = tokenService;
+        this.gameSvc       = gameService;
         this.activeDevices = new BehaviorSubject({})
     }
 
     ngOnInit(): void {
+        this.gameSvc.getGames(this.tokenSvc.getToken()).subscribe(
+            activeGames=>{ 
 
-        this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
-            savedConfigs => {
-
-                let gameData   = JSON.parse(this.tokenSvc.getGameInfo());
-                this.gameModes = savedConfigs;
-
-                if(gameData){
-
-                    this.setSelectedGameConfig(gameData);
-                    this.gameBoardActive = true;
+                if(activeGames[0] ){
+                    this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),activeGames[0].gameConfigID ).subscribe(
+                        gameConfig=>{
+                            this.gameData = activeGames[0]
+                           // console.log(gameConfig, "selected COnfigs details")
+                           this.setSelectedGameConfig(gameConfig);
+                            this.gameBoardActive = true;
+                            this.gameInProgress = true;
+                        //    gameConfig["teams"].forEach(team => {
+                        //       let teamObj = {id:team.id,name:team.name,color:'#'+team.color,score:this.findTeamScore(team),players:[]}
+                        //       team.teamPlayers.forEach(player => {
+                        //          teamObj.players.push({rfID:player.rfidID
+                        //                               ,is_alive:player.is_alive
+                        //                               ,lastAction:this.findLastAction(team.id,player.rfidID,team)
+                        //                               ,lastLocation:this.findLastLocation(team.id,player.rfidID,team)
+                        //                               ,totalPoints:this.findTotalPoints(team.id,player.rfidID,team)
+                        //                            })
+                        //       });
+                        //       this.teams.push(teamObj)
+                        //    });
+                           
+                        //    this.map = gameConfig['mapID'];
+                        //    this.description = gameConfig['description'];
+                        //    this.devices = this.findDevicesForGameID(gameConfigID);
+                        //    console.log(this.devices,this.teams,"finsl divs")
+               
+               
+                        }
+                     )
+                    
+                    //take fist one for now
+                    // activeGames[0]
+                }else{
+                    this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
+                        savedConfigs => { 
+                            this.gameModes = savedConfigs; 
+                        }
+                    )
                 }
-                else{
-                    this.gameBoardActive = false;
-                }
+               console.log( activeGames," LIST OF ACTIVE GAMES IN START GAME")
+            },
+            err=>{
+               //show message on page no games are active.
             }
-        )
+         )
+       
     }
 
     changeGame(games){
@@ -99,24 +135,12 @@ export class StartGameComponent implements OnInit {
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
                 this.gameData = data
+                this.userSvc.setUserData(data);
                 console.log(":: GAME DATA ::", data)
             }, err=>{console.log(err)}
-        )
+        ) 
 
-        // why were these functions nested?  gameData is never used
-        // in the nested function
-        this.authSvc.getUser(this.tokenSvc.getToken()).subscribe(
-            latestDeviceData => {
-                // not sure this actually provides a benefit - we don't
-                // reset the config data before sending it up
-                this.userSvc.setUserData(latestDeviceData);
-            },
-            err=>{console.log(err)}
-        )
-
-        this.setSelectedGameConfig(mode);
-        // This should store the actual game data
-        this.tokenSvc.saveGameInfo(JSON.stringify(mode));
+        this.setSelectedGameConfig(mode); 
 
         this.gameInProgress = true;
 
@@ -156,12 +180,12 @@ export class StartGameComponent implements OnInit {
         
         this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
             data => {
+                this.gameInProgress = false;
+                this.gameBoardActive = false;
                 console.log("::END GAME DATA ::", data)
             }, err=>{console.log(err)}
         )
 
-        this.gameInProgress = false;
-        this.gameBoardActive = false;
 
     }
 }

@@ -58,6 +58,10 @@
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/mydevices']">Live Games</a>
+                </li>
             </ul>
 
             <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
@@ -71,15 +75,12 @@
 
             <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isField">
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Start Games</a>
+                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Start/Manage Game</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Manage Games</a>
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Manage Games Modes</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/mydevices']">My Devices</a>
-                </li>
             </ul>
 
             <!-- SIGN-IN / SIGN-OUT -->

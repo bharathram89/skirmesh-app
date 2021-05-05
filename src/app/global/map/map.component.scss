@@ -24,8 +24,10 @@ path.location:hover {
 }
 .blinking{
     animation:blinkingText 1.2s infinite;
+    opacity: 75%;
 }
 @keyframes blinkingText{
+    
     0%{     fill: #ffffff;    }
     49%{    fill: #ffffff; }
     60%{    fill: transparent; }

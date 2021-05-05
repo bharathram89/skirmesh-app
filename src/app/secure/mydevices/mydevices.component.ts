@@ -40,7 +40,7 @@ export class MydevicesComponent implements OnInit {
          activeGames=>{
 
             this.activeGames = activeGames;
-            console.log(this.activeGames,"active Games")
+            console.log(this.activeGames," LIST OF ACTIVE GAMES IN MY DEVICES")
          },
          err=>{
             //show message on page no games are active.
@@ -60,11 +60,11 @@ export class MydevicesComponent implements OnInit {
       //need to reset teams info.
       this.teams = [];
 
-      console.log(gameID.target.value,"selected game")
+      // console.log(gameID.target.value,"selected game")
       let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
       this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),gameConfigID ).subscribe(
          gameConfig=>{
-            console.log(gameConfig, "selected COnfigs details")
+            // console.log(gameConfig, "selected COnfigs details")
             this.activeGame = true;
             this.gameConfig = gameConfig;
             gameConfig["teams"].forEach(team => {
@@ -93,7 +93,7 @@ export class MydevicesComponent implements OnInit {
       let gameActions = team.gameActions;
       let total =0;
       gameActions.filter(action => action.points? total = total + action.points:total = total);
-      console.log(total,"findTeamScore")
+      // console.log(total,"findTeamScore")
       return  total
    }
    findGameConfigIDForGame(gameID){
@@ -102,33 +102,33 @@ export class MydevicesComponent implements OnInit {
    findDevicesForGameID(gameID){
       return this.activeGames.filter(ele=> ele.gameConfigID == gameID && ele.devices.length > 0)[0].devices;
    }
-   findLastActionTime(teamID,rfID){
-      let teamInfo = this.teams.find(ele=>ele.id = teamID);
-      let gameActions = teamInfo.gameActions;
-      let userActions = gameActions.filter(action => action.rfidID= rfID);
-      console.log(userActions,"findLastActionTime")
-      return userActions[0].creationDate
-   }
+   // findLastActionTime(teamID,rfID){
+   //    let teamInfo = this.teams.find(ele=>ele.id == teamID);
+   //    let gameActions = teamInfo.gameActions;
+   //    let userActions = gameActions.filter(action => action.rfidID== rfID);
+   //    // console.log(userActions,"findLastActionTime")
+   //    return userActions[0].creationDate
+   // }
    findLastAction(teamID,rfID,team){ 
       let gameActions = team.gameActions;
-      let userActions = gameActions.filter(action => action.rfidID= rfID);
-      console.log(userActions,"findLastAction")
+      let userActions = gameActions.filter(action => action.rfidID== rfID);
+      // console.log(userActions,"findLastAction")
       return  userActions[0].actionID 
    }
 
    findTotalPoints(teamID,rfID,team){ 
       let gameActions = team.gameActions;
-      let userActions = gameActions.filter(action => action.rfidID= rfID);
+      let userActions = gameActions.filter(action => action.rfidID== rfID && action.points);
       let totalPoints = 0;
       userActions.filter(action => action.points ? totalPoints = totalPoints + action.points:totalPoints = totalPoints )
-      console.log(totalPoints,"findTotalPoints")
+      // console.log(totalPoints,"findTotalPoints")
       return  totalPoints
    }
 
    findLastLocation(teamID,rfID,team){ 
       let gameActions = team.gameActions;
-      let userActions = gameActions.filter(action => action.rfidID= rfID);
-      console.log(userActions,"findLastLocation")
+      let userActions = gameActions.filter(action => action.rfidID== rfID);
+      // console.log(userActions,"findLastLocation")
       return  userActions[0].deviceID 
    }
    //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
