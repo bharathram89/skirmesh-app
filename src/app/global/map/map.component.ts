@@ -42,12 +42,12 @@ export class MapComponent implements OnInit {
   
   shouldLocationBlink(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
-    if(deviceConfigForLocation && deviceConfigForLocation.stable) return false //if stable dont blink
-    return true //if not stable blink
+    if(deviceConfigForLocation && deviceConfigForLocation.stable) return true //if stable dont blink
+    return false //if not stable blink
   }
   locationColor(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
     if(deviceConfigForLocation && deviceConfigForLocation.team) return '#'+deviceConfigForLocation.team //if team set use that color
-    return 'transparent'//default to white without any team set
+    return 'transparent'//default to transparent without any team set
   }
 }
