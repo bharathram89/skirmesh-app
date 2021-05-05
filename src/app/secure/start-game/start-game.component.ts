@@ -69,10 +69,16 @@ export class StartGameComponent implements OnInit {
 
     ngOnInit(): void {
         this.gameSvc.getGames(this.tokenSvc.getToken()).subscribe(
-            activeGames=>{ 
+            activeGames=>{
 
                 if(activeGames[0] ){
+
+                    this.gameData = activeGames[0];
+                    this.gameBoardActive = true;
+                    this.gameInProgress = true;
+
                     this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),activeGames[0].gameConfigID ).subscribe(
+
                         gameConfig=>{
                             this.gameData = activeGames[0]
                            // console.log(gameConfig, "selected COnfigs details")
@@ -85,8 +91,8 @@ export class StartGameComponent implements OnInit {
                      )
                 }else{
                     this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
-                        savedConfigs => { 
-                            this.gameModes = savedConfigs; 
+                        savedConfigs => {
+                            this.gameModes = savedConfigs;
                         }
                     )
                 }
@@ -96,13 +102,14 @@ export class StartGameComponent implements OnInit {
                //show message on page no games are active.
             }
          )
-       
+
     }
 
     changeGame(games){
+
         let gameConfigID = games.target.value;
         this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
-        console.log(":: SELECTED GAME --> ::", this.selectedGameMode)
+
         this.setSelectedGameConfig(this.selectedGameMode);
     }
 
@@ -114,12 +121,13 @@ export class StartGameComponent implements OnInit {
 
         this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
+
                 this.gameData = data
                 console.log(":: START GAME - GAME DATA ::", data)
             }, err=>{console.log(err)}
-        ) 
+        )
 
-        this.setSelectedGameConfig(mode); 
+        this.setSelectedGameConfig(mode);
 
         this.gameInProgress = true;
 
@@ -135,8 +143,9 @@ export class StartGameComponent implements OnInit {
 
         console.log(":: SETTING SELECTED GAME CONFIG ::", mode.deviceMap)
 
-        this.teams = mode.teams;
-        this.mapID = mode.mapID;
+        this.selectedGameMode = mode;
+        this.teams            = mode.teams;
+        this.mapID            = mode.mapID;
 
         this.activeDevices.next({
             mode        : "active",
@@ -153,18 +162,25 @@ export class StartGameComponent implements OnInit {
         console.log(":::START GAME nodeCONFIGS:::", event);
     }
 
+
+    pauseGame() {
+
+        let paused = !this.gameData.is_paused;
+
+        this.gameSvc.pauseGame(this.userSvc.getToken(), {"id":this.gameData.id, "is_paused":paused}).subscribe(
+            data => this.gameData = data
+        )
+    }
+
+
     endGame(){
 
         this.tokenSvc.endGame();
-        
+
         this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
             data => {
-                this.gameInProgress = false;
-                this.gameBoardActive = false; 
-                console.log("::END GAME DATA ::", data)
-            }, err=>{console.log(err)}
-        )
-
-
+                    this.gameInProgress = false;
+                    this.gameBoardActive = false;
+                })
     }
 }
