@@ -9,42 +9,102 @@ import { UserServiceService } from 'src/service/user-service.service';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
-  @Input() mapID
-  @Input() mapData
-  map;
-  tokenSvc: TokenStorageService
-  userSvc:UserServiceService;
-   constructor(tokenService: TokenStorageService, userService: UserServiceService) {
-     this.userSvc = userService;
-      this.tokenSvc = tokenService;
-   }
-
-  ngOnInit(): void {
-    console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
-    let activeGame = JSON.parse(this.tokenSvc.getGameInfo());
-    if (activeGame) { 
-       this.map = this.userSvc.findMapName(activeGame.mapID);   
-    } else {
-
+    @Input() mapID
+    @Input() mapData
+    map;
+    tokenSvc : TokenStorageService
+    userSvc  : UserServiceService;
+    constructor(tokenService: TokenStorageService, userService: UserServiceService) {
+        this.userSvc  = userService;
+        this.tokenSvc = tokenService;
     }
-    
+
+    ngOnInit(): void {
+
+        console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
+        let activeGame = JSON.parse(this.tokenSvc.getGameInfo());
+        if (activeGame) {
+            console.log(":: MAP DATA ::", activeGame);
+            this.map = this.userSvc.findMapName(activeGame.mapID);
+
+            for (let device of activeGame.mapData) {
+                console.log("device", device);
+            }
+
+        } else {
+
+        }
+
+        document.addEventListener('readystatechange', event => {
+            // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
+            console.log(" EVENT ", event.target);
+            // if (event.target == "complete") {
+            //
+            this.updateMapState();
+            // }
+        });
+
   }
+
+  updateMapState() {
+
+      console.log("RUNNING UPDATE MAP");
+
+      for (let device of this.mapData) {
+
+          let locID    = device.location;
+          let stable   = device.stable;
+          let color    = '#' + device.team;
+
+          let element = document.getElementById(locID);
+
+          if (element) {
+
+              console.log("FOUND LOC", element, device)
+
+              if (!stable && device.team) {
+
+                  element.classList.add("beacon");
+                  element.setAttribute("fill", color);
+
+              }
+              else if (stable && device.team){
+
+                  element.classList.remove("beacon");
+                  element.classList.add("owned");
+                  element.setAttribute("fill", color);
+              }
+              else {
+
+                  element.classList.remove("beacon");
+                  element.setAttribute("fill", "transparent")
+
+
+              }
+          }
+
+      }
+
+  }
+
   locationClick(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
     console.log(deviceConfigForLocation,'locationState',locationID)
-    return false; 
+    return false;
   }
+
   locationState(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
-    if(deviceConfigForLocation && deviceConfigForLocation.enabled)return true;
-    return false; 
+    if(deviceConfigForLocation && deviceConfigForLocation.enabled) return true;
+    return false;
   }
-  
+
   shouldLocationBlink(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
-    if(deviceConfigForLocation && deviceConfigForLocation.stable) return true //if stable dont blink
+    if(deviceConfigForLocation && !deviceConfigForLocation.stable) return true //if stable dont blink
     return false //if not stable blink
   }
+
   locationColor(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
     if(deviceConfigForLocation && deviceConfigForLocation.team) return '#'+deviceConfigForLocation.team //if team set use that color

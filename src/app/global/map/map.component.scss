@@ -1,7 +1,7 @@
 path.location{
-    fill             : rgba(255,255,255,0);
-    stroke           : rgba(0,0,0,10);
-    stroke-width     : 0.25px;
+    opacity: 0;
+    // stroke           : rgba(0,0,0,10);
+    // stroke-width     : 0.25px;
 }
 
 path.location:hover {
@@ -13,6 +13,9 @@ path.location:hover {
     transform-box    : fill-box;
 }
 
+path.location.owned {
+    opacity: 0.5;
+}
 
 .map {
     height: 200%;
@@ -22,10 +25,11 @@ path.location:hover {
         width: 100%;
     }
 }
-.blinking{
-    animation:blinkingText 1.2s infinite;
-    opacity: 75%;
-}
+
+// .blinking{
+//     animation:blinkingText 1.2s infinite;
+//     opacity: 75%;
+// }
 // @keyframes pulsate {
 //     from {transform: scale(0.8);
 //         opacity: 1;
@@ -50,21 +54,20 @@ path.location:hover {
 //         opacity: 0.25;
 //     }
 // }
-@keyframes blinkingText{
-    
-    // 0%{     fill: #ffffff;    }
-    // 49%{    fill: #ffffff; }
-    60%{    fill: transparent; }
-    99%{    fill:transparent;  }
-    // 100%{   fill: #ffffff;    }
-}
+// @keyframes blinkingText{
+//
+//     // 0%{     fill: #ffffff;    }
+//     // 49%{    fill: #ffffff; }
+//     60%{    fill: transparent; }
+//     99%{    fill:transparent;  }
+//     // 100%{   fill: #ffffff;    }
+// }
 
-/*
 .beacon-container {
     position: relative;
     padding: 0;
-  }
-  .beacon {
+}
+.beacon {
     content: '';
     display: block;
     width: 4%;
@@ -74,62 +77,63 @@ path.location:hover {
     border-radius: 50%;
     position: absolute;
     animation: pulsate infinite 1.5s;
-  }
-  @keyframes pulsate {
+    transform-origin : center;
+    transform-box    : fill-box;
+}
+@keyframes pulsate {
     from {transform: scale(0.8);
         opacity: 1;
     }
     to {transform: scale(1.2);
           opacity: 0;
     }
-  }
-  path {
-      opacity: 0;
-      transform-origin: center;
-      transform-box: fill-box;
-  }
-  path:hover {
-      fill: var(--WHITE);
-      opacity: 0.25;
-      transform: scale(1.1);
-  }
-  path.owned {
-      opacity: 0.5;
-  }
-  div.roster {
-      max-height: 22.8em;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-  }
-  #tooltip {
-      color: var(--BLACK);
-      background: #FFFFFF80;
-      border-radius: 0.2em;
-      padding: 0.1em;
-      z-index: 10;
-  }
-  path.demo {
-      animation: draw 2s infinite linear;
-      stroke-width: 2px;
-      stroke-dasharray: 10;
-      stroke: #FF0000;
-      fill: #CC5500;
-  }
-  @keyframes draw {
-      0% {
-          stroke-dashoffset: 0;
-          opacity: 0.25;
-      }
-      50% {
-          stroke-dashoffset: 10;
-          fill: #FF0000;
-          opacity: 0.75;
-          transform: scale(0.9);
-      }
-      100% {
-          stroke-dashoffset: 20;
-          opacity: 0.25;
-      }
-  }
-  */
+}
+// path {
+//   opacity: 0;
+//   transform-origin: center;
+//   transform-box: fill-box;
+// }
+// path:hover {
+//   fill: var(--WHITE);
+//   opacity: 0.25;
+//   transform: scale(1.1);
+// }
+// path.owned {
+//   opacity: 0.5;
+// }
+// div.roster {
+//   max-height: 22.8em;
+//   overflow-y: auto;
+//   display: flex;
+//   flex-direction: column;
+// }
+// #tooltip {
+//   color: var(--BLACK);
+//   background: #FFFFFF80;
+//   border-radius: 0.2em;
+//   padding: 0.1em;
+//   z-index: 10;
+// }
+// path.demo {
+//   animation: draw 2s infinite linear;
+//   stroke-width: 2px;
+//   stroke-dasharray: 10;
+//   stroke: #FF0000;
+//   fill: #CC5500;
+// }
+// @keyframes draw {
+//   0% {
+//       stroke-dashoffset: 0;
+//       opacity: 0.25;
+//   }
+//   50% {
+//       stroke-dashoffset: 10;
+//       fill: #FF0000;
+//       opacity: 0.75;
+//       transform: scale(0.9);
+//   }
+//   100% {
+//       stroke-dashoffset: 20;
+//       opacity: 0.25;
+//   }
+// }

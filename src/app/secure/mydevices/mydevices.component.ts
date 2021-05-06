@@ -15,7 +15,7 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 export class MydevicesComponent implements OnInit {
 
-   
+
    devices;
    activeGames;
    activeGame = false;
@@ -28,10 +28,10 @@ export class MydevicesComponent implements OnInit {
    deviceSvc: DeviceService;
    userSvc: UserServiceService;
    constructor(tokenService: TokenStorageService, gameService: GameService, deviceService: DeviceService, userService: UserServiceService) {
-      this.tokenSvc = tokenService;
-      this.gameSvc = gameService;
+      this.tokenSvc  = tokenService;
+      this.gameSvc   = gameService;
       this.deviceSvc = deviceService;
-      this.userSvc = userService;
+      this.userSvc   = userService;
    }
 
    ngOnInit() {
@@ -39,7 +39,7 @@ export class MydevicesComponent implements OnInit {
          activeGames => {
 
             this.activeGames = activeGames;
-            console.log(this.activeGames, " LIST OF ACTIVE GAMES IN MY DEVICES")
+            console.log(this.activeGames, "ACTIVE GAMES IN MY DEVICES")
          },
          err => {
             //show message on page no games are active.
@@ -61,7 +61,7 @@ export class MydevicesComponent implements OnInit {
       let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
        combineLatest([this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),gameConfigID ),this.gameSvc.getGameStats(gameID.target.value)])
        .subscribe(([gameConfig,stats])=>{
-              this.activeGame = true; 
+              this.activeGame = true;
               console.log(this.devices,this.teams,"finsl divs",stats,gameConfig)
          gameConfig["teams"].forEach(team => {
             let teamObj = {id:team.id,name:team.name,color:'#'+team.color,score:this.findTeamScore(stats['team_stats'],team['id']),players:[]}
@@ -81,13 +81,13 @@ export class MydevicesComponent implements OnInit {
          this.devices = this.findDevicesForGameID(gameConfigID);
 
        })
-       
-      
+
+
 
    }
-   findTeamScore(stats,teamID) { 
+   findTeamScore(stats,teamID) {
       let gameActions = stats[0]
-      let total = 0; 
+      let total = 0;
       gameActions ? gameActions.filter(action => action.points ? total = total + action.points : total = total):null;
       console.log(gameActions,"findTeamScore")
       return total

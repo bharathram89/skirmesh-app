@@ -1,69 +1,60 @@
-<div *ngIf="mapID == 2" id="salina_gambit">
+<div *ngIf="mapID == 2" id="salina_gambit" [load]="updateMapState()">
    <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="map"
       viewBox="0 0 210 292" version="1.1" id="svg8">
       <defs id="defs2" />v
       <g id="layer1">
-         <image xlink:href="../../../assets/images/salina_gambit.png" y="-0.29215574" x="1.9073366" id="image126"
+         <image xlink:href="../../../assets/images/salina_gambit.png" y="-0.29215574" x="1.9073366"
             preserveAspectRatio="none" height="293.66766" width="206.60199" />
-         <path id="FRAGO (B)" [class.blinking]="shouldLocationBlink(17)" [attr.fill]="locationColor(17)" class="location" (click)="locationClick(17)" [ngClass]="{'blinking': shouldLocationBlink(17)}" 
+         <path id=17 class="location"
             d="M 1.26835,1.656226 V 291.44552 H 209.44804 V 1.656226 Z M 7.31718,5.8923672 H 203.39922 V 287.20937 H 7.31718 Z" />
-         <path id="FRAGO (A)" class="location" [attr.fill]="locationColor(16)" (click)="locationClick(16)" [ngClass]="{'blinking': shouldLocationBlink(16)}" 
+         <path id=16 class="location"
             d="M 7.31718,5.8923672 V 287.11189 H 203.39923 V 5.8923672 Z m 5.697323,4.1108688 H 197.70192 V 283.00102 H 13.014503 Z" />
          <path class="location"
             d="M 118.27957,16.129032 108.60215,26.523297 100,37.992832 l -8.871445,9.675543 12.398615,4.27721 21.56244,0.02574 14.33691,4.659498 10.96318,-2.099019 -1.64418,-27.650085 -6.45161,-12.544802 -19.35484,-1.433692 z"
-            id="KINGDOM" [attr.fill]="locationColor(1)" (click)="locationClick(1)" [ngClass]="{'blinking': shouldLocationBlink(1)}" />
-         <path class="location" [attr.fill]="locationColor(3)" (click)="locationClick(3)" [ngClass]="{'blinking': shouldLocationBlink(3)}" 
+            id=1 />
+         <path class="location"
             d="m 91.128555,47.668375 -2.239666,11.47141 10.035842,24.014337 24.014339,1.433692 8.96057,-10.752689 20.43011,-7.168458 -1.94005,-12.134863 -10.96318,2.099019 -14.33691,-4.659498 -21.56244,-0.02574 z"
-            id="NORTH FOB BUNKER" />
-         <path class="location" [attr.fill]="locationColor(2)" (click)="locationClick(2)" [ngClass]="{'blinking': shouldLocationBlink(2)}" 
+            id=3 />
+         <path class="location"
             d="m 91.128555,47.668375 -24.461888,16.847754 -6.451613,21.146953 -3.58423,15.770608 20.430108,8.96058 19.426347,5.11266 11.768171,-3.0845 14.68362,-4.89555 V 95.340502 84.587814 L 98.924731,83.154122 88.888889,59.139785 Z"
-            id="MOSES TRAIL" />
-         <path class="location" [attr.fill]="locationColor(4)" (click)="locationClick(4)" [ngClass]="{'blinking': shouldLocationBlink(4)}" 
+            id=2 />
+         <path class="location"
             d="m 152.32975,66.666667 -20.43011,7.168458 -8.96057,10.752689 v 22.939066 l 0.60185,14.01453 8.14084,6.85545 13.42526,-0.99975 19.46752,-8.2131 5.38349,-2.49854 z"
-            id="NORTH SAM SITE" />
+            id=4 />
          <path class="location"
-         [attr.fill]="locationColor(5)" (click)="locationClick(5)" [ngClass]="{'blinking': shouldLocationBlink(5)}" 
             d="m 56.630824,101.43369 -19.068672,20.39337 -9.711887,18.13837 -3.713369,12.85397 12.853968,0.14282 13.853722,3.71337 10.568818,-0.57129 7.283916,-5.42723 5.998518,-0.85693 c 0,0 -2.375338,-11.03516 -2.375338,-11.03516 0,0 1.78624,-13.03132 1.78624,-13.03132 l -1.891314,-4.07842 4.845506,-11.28097 z"
-            id="NORTHWEST POND PIPE" />
+            id=5 />
          <path class="location"
-         [attr.fill]="locationColor(6)" (click)="locationClick(6)" [ngClass]="{'blinking': shouldLocationBlink(6)}" 
             d="m 122.93907,107.52688 -26.451791,7.98005 -19.426347,-5.11266 -4.845506,11.28097 1.891314,4.07842 -1.78624,13.03132 2.375338,11.03516 5.855697,3.71337 5.570053,2.28515 12.568324,4.14183 1.142575,2.71362 6.284163,1.57104 7.71238,-2.42797 3.46269,-4.23419 3.04711,-11.43948 6.77263,-5.32115 -0.85693,-16.9958 -2.71361,-2.28515 z"
-            id="NORTH POND TRAIL PIPE" />
-         <path class="location" 
-         [attr.fill]="locationColor(7)" (click)="locationClick(7)" [ngClass]="{'blinking': shouldLocationBlink(7)}" 
+            id=6 />
+         <path class="location"
             d="m 169.95803,116.68547 18.13837,18.42402 1.71387,33.70596 -4.28466,6.14134 -36.81708,-1.85603 -15.74137,-3.14273 -7.14109,-0.28565 -11.99704,-7.8552 3.46269,-4.23419 3.04711,-11.43948 6.77263,-5.32115 -0.85693,-16.9958 5.42723,4.5703 13.42526,-0.99975 z"
-            id="RIGHT HOOK TRAIL PIPE" />
-         <path class="location" 
-         [attr.fill]="locationColor(8)" (click)="locationClick(8)" [ngClass]="{'blinking': shouldLocationBlink(8)}" 
+            id=7 />
+         <path class="location"
             d="m 24.136896,152.8194 -5.712875,13.7109 -1.57104,11.71139 0.428465,17.56709 17.138625,10.14036 15.853227,1.71386 c 0,0 12.282681,11.28293 12.853969,11.42575 0.571287,0.14282 12.853968,4.14183 12.853968,4.14183 l 15.424762,-0.85693 3.713369,-6.14134 -7.668363,-12.79095 0.525365,-7.46052 -4.854039,-11.16934 -0.03829,-6.79844 -3.638099,-1.52293 -3.976528,-0.93067 -5.499453,-1.09989 -6.599343,-2.87664 -2.961244,-1.86135 -0.930676,-3.46889 -0.169214,-7.53002 2.10392,-2.61837 -10.568818,0.57129 -13.853722,-3.71337 z"
-            id="CANNIBAL VILLAGE PIPE" />
-         <path class="location" 
-         [attr.fill]="locationColor(9)" (click)="locationClick(9)" [ngClass]="{'blinking': shouldLocationBlink(9)}" 
+            id=8 />
+         <path class="location"
             d="m 99.832487,162.67411 -0.03828,3.11067 -1.469724,4.70311 -2.057612,1.76367 -5.144031,2.49853 -5.801364,1.83098 -2.237436,1.43199 0.03829,6.79844 4.854039,11.16934 -0.525365,7.46052 7.668363,12.79095 -3.713369,6.14134 7.771102,4.52522 8.23003,0.41671 9.48017,-14.06398 0.10417,-16.98095 -0.75048,-3.17663 -0.18712,-3.90745 3.54204,-6.9799 1.16322,-9.50521 2.483,-4.76713 -9.4131,-6.11715 -7.71238,2.42797 z"
-            id="BARRIER WOODS PIPE" />
+            id=9 />
          <path class="location"
-         [attr.fill]="locationColor(10)" (click)="locationClick(10)" [ngClass]="{'blinking': shouldLocationBlink(10)}" 
             d="m 123.24213,167.93433 -2.483,4.76713 -1.16322,9.50521 -3.54204,6.9799 0.18712,3.90745 0.75048,3.17663 v 9.7927 l 7.29244,-2.70863 2.91697,-0.10417 7.18825,0.20835 5.6256,0.31254 4.79217,3.75039 0.41671,-15.52247 3.48492,-18.8986 -15.74137,-3.14273 -7.14109,-0.28565 z"
-            id="COURTYARD BUILDING" />
-         <path class="location" 
-         [attr.fill]="locationColor(11)" (click)="locationClick(11)" [ngClass]="{'blinking': shouldLocationBlink(11)}" 
+            id=10 />
+         <path class="location"
             d="m 185.52561,174.95679 -36.81708,-1.85603 -3.48492,18.8986 -0.41671,15.52247 6.77154,2.39608 7.00695,0.68325 2.26486,-0.16236 z"
-            id="EAST TOWN SWAMP PIPE" />
+            id=11 />
          <path class="location"
-         [attr.fill]="locationColor(12)" (click)="locationClick(12)" [ngClass]="{'blinking': shouldLocationBlink(12)}" 
             d="m 99.1771,226.89887 5.52141,12.60549 13.33474,3.22951 12.70967,0.52088 7.24817,-0.52442 22.85916,-32.29153 -9.27181,-0.52089 -6.77154,-2.39608 -4.79217,-3.75039 -5.60511,-0.31625 -7.20874,-0.20464 -2.91697,0.10417 -7.29244,2.70863 -0.10417,7.18825 -9.48017,14.06398 z"
-            id="SOUTH BUNKER" />
+            id=12 />
          <path class="location"
-         [attr.fill]="locationColor(13)" (click)="locationClick(13)" [ngClass]="{'blinking': shouldLocationBlink(13)}" 
             d="m 104.69851,239.50436 1.35431,17.39766 -0.20835,8.64675 -1.77102,9.16763 2.18773,6.0423 5.62559,1.8752 7.29243,-0.20836 8.02168,-11.147 9.27181,-26.25277 1.5184,-2.29544 -7.24817,0.52442 -12.70967,-0.52088 z"
-            id="BIG DIP DOME" />
+            id=13 />
       </g>
    </svg>
 </div>
 
-<div *ngIf="mapID==4" id="ballhack">
+<div *ngIf="mapID==4" id="ballhack" [load]="updateMapState()">
    <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
