@@ -31,46 +31,40 @@ export class MapComponent implements OnInit {
 
         }
 
-
   }
 
   updateMapState() {
 
-      console.log("RUNNING UPDATE MAP");
+      for (let device of this.mapData){this.updateLocationState(device);}
+  }
 
-      for (let device of this.mapData) {
+  updateLocationState(device) {
 
-          let locID    = device.location;
-          let stable   = device.stable;
-          let color    = '#' + device.team;
+      let locID    = device.location;
+      let stable   = device.stable;
+      let color    = '#' + device.team;
 
-          let element = document.getElementById(locID);
+      let element = document.getElementById(locID);
 
-          if (element) {
+      if (element) {
 
-              console.log("FOUND LOC", element, device)
+          if (!stable && device.team) {
 
-              if (!stable && device.team) {
+              element.classList.add("beacon");
+              element.setAttribute("fill", color);
 
-                  element.classList.add("beacon");
-                  element.setAttribute("fill", color);
-
-              }
-              else if (stable && device.team){
-
-                  element.classList.remove("beacon");
-                  element.classList.add("owned");
-                  element.setAttribute("fill", color);
-              }
-              else {
-
-                  element.classList.remove("beacon");
-                  element.setAttribute("fill", "transparent")
-
-
-              }
           }
+          else if (stable && device.team){
 
+              element.classList.remove("beacon");
+              element.classList.add("owned");
+              element.setAttribute("fill", color);
+          }
+          else {
+
+              element.classList.remove("beacon");
+              element.setAttribute("fill", "transparent")
+          }
       }
 
   }
