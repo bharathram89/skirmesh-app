@@ -1,3 +1,23 @@
 div.main_title {
     text-align: center;
 }
+
+.btn {
+    padding: 1rem 1.5rem;
+    font-weight: bolder;
+    margin: 5px 5px;
+}
+
+.btn:active {
+    transform: scale(0.9);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+h1.text-center.pt-3 {
+    background-color: #F0F0F0;
+    margin: 0;
+    padding: 1rem 0;
+}

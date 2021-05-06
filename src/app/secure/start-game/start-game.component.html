@@ -22,21 +22,21 @@
             <div class="col-lg-12">
                 <div class="text-center pt-3">
 
-                    <div class="modal-header" *ngIf="!gameInProgress">
+                    <div *ngIf="!gameInProgress">
                         <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
                         <h5> NOTICE: Device changes will revert to the saved configuration on START GAME. </h5>
 
                     </div>
 
-                    <div class="modal-header" *ngIf="gameInProgress">
+                    <div *ngIf="gameInProgress">
                         <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
                         <h4> WARNING: Changes impact live gameplay. </h4>
 
                         <button *ngIf="!gameData.is_paused" type="button" class="btn btn-warning"
-                            (click)="pauseGame()">PAUSE GAME</button>
+                            (click)="pauseGame()">PAUSE</button>
 
                         <button *ngIf="gameData.is_paused" type="button" class="btn btn-info"
-                            (click)="pauseGame()">RESUME GAME</button>
+                            (click)="pauseGame()">RESUME</button>
 
                         <button type="button" class="btn btn-danger"
                             (click)="endGame()">END GAME</button>
