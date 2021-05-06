@@ -24,25 +24,13 @@ export class MapComponent implements OnInit {
         console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
         let activeGame = JSON.parse(this.tokenSvc.getGameInfo());
         if (activeGame) {
-            console.log(":: MAP DATA ::", activeGame);
-            this.map = this.userSvc.findMapName(activeGame.mapID);
 
-            for (let device of activeGame.mapData) {
-                console.log("device", device);
-            }
+            this.map = this.userSvc.findMapName(activeGame.mapID);
 
         } else {
 
         }
 
-        document.addEventListener('readystatechange', event => {
-            // When window loaded ( external resources are loaded too- `css`,`src`, etc...)
-            console.log(" EVENT ", event.target);
-            // if (event.target == "complete") {
-            //
-            this.updateMapState();
-            // }
-        });
 
   }
 
