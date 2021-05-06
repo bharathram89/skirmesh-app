@@ -24,9 +24,8 @@
                 <div *ngIf="currentTab == 'map'" class="" id="v-pills-home" role="tabpanel"
                     aria-labelledby="v-pills-home-tab">
                     <div class="pull-md-3">
-                        <div class="card tall">
                             <app-map [mapID]="map" [mapData]="devices"></app-map>
-                        </div>
+    
                     </div>
                 </div>
                 <div *ngIf="currentTab == 'team'" class="card-group" id="v-pills-profile" role="tabpanel"
@@ -34,13 +33,13 @@
 
 
 
-                    <div *ngFor="let team of teams" class="card team-section"> 
-                          
+                    <div *ngFor="let team of teams" class="card team-section">
+
                                     <div class=" card-outline-success m-x-auto m-b-2">
                                         <div class="cust_text text-xs-center p-y-1"
                                             [style.background-color]="team.color">
                                             <h3>{{team.name}} | Total Score: {{team.score}}</h3>
- 
+
                                         </div>
 
 
@@ -75,9 +74,9 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table> 
+                                        </table>
                                     </div>
-                                 
+
                     </div>
 
 

@@ -50,6 +50,7 @@ export class MapComponent implements OnInit {
 
           if (!stable && device.team) {
 
+              element.classList.remove("owned");
               element.classList.add("beacon");
               element.setAttribute("fill", color);
 
@@ -61,9 +62,10 @@ export class MapComponent implements OnInit {
               element.setAttribute("fill", color);
           }
           else {
-
+              
+              element.classList.remove("owned");
               element.classList.remove("beacon");
-              element.setAttribute("fill", "transparent")
+              element.setAttribute("fill", null);
           }
       }
 
