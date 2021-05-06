@@ -26,13 +26,37 @@ path.location:hover {
     animation:blinkingText 1.2s infinite;
     opacity: 75%;
 }
+// @keyframes pulsate {
+//     from {transform: scale(0.8);
+//         opacity: 1;
+//     }
+//     to {transform: scale(1.2);
+//           opacity: 0;
+//     }
+//   }
+//   @keyframes draw {
+//     0% {
+//         stroke-dashoffset: 0;
+//         opacity: 0.25;
+//     }
+//     50% {
+//         stroke-dashoffset: 10;
+//         fill: #FF0000;
+//         opacity: 0.75;
+//         transform: scale(0.9);
+//     }
+//     100% {
+//         stroke-dashoffset: 20;
+//         opacity: 0.25;
+//     }
+// }
 @keyframes blinkingText{
     
-    0%{     fill: #ffffff;    }
-    49%{    fill: #ffffff; }
+    // 0%{     fill: #ffffff;    }
+    // 49%{    fill: #ffffff; }
     60%{    fill: transparent; }
     99%{    fill:transparent;  }
-    100%{   fill: #ffffff;    }
+    // 100%{   fill: #ffffff;    }
 }
 
 /*

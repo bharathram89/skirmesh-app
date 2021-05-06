@@ -80,34 +80,15 @@ export class StartGameComponent implements OnInit {
                     this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),activeGames[0].gameConfigID ).subscribe(
 
                         gameConfig=>{
-
-                            // console.log(gameConfig, "selected COnfigs details")
-                            this.setSelectedGameConfig(gameConfig);
-
-                        //    gameConfig["teams"].forEach(team => {
-                        //       let teamObj = {id:team.id,name:team.name,color:'#'+team.color,score:this.findTeamScore(team),players:[]}
-                        //       team.teamPlayers.forEach(player => {
-                        //          teamObj.players.push({rfID:player.rfidID
-                        //                               ,is_alive:player.is_alive
-                        //                               ,lastAction:this.findLastAction(team.id,player.rfidID,team)
-                        //                               ,lastLocation:this.findLastLocation(team.id,player.rfidID,team)
-                        //                               ,totalPoints:this.findTotalPoints(team.id,player.rfidID,team)
-                        //                            })
-                        //       });
-                        //       this.teams.push(teamObj)
-                        //    });
-
-                        //    this.map = gameConfig['mapID'];
-                        //    this.description = gameConfig['description'];
-                        //    this.devices = this.findDevicesForGameID(gameConfigID);
-                        //    console.log(this.devices,this.teams,"finsl divs")
-
-
+                            this.gameData = activeGames[0]
+                           // console.log(gameConfig, "selected COnfigs details")
+                           this.setSelectedGameConfig(gameConfig);
+                            this.gameBoardActive = true;
+                            this.gameInProgress = true;
+               
+               
                         }
                      )
-
-                    //take fist one for now
-                    // activeGames[0]
                 }else{
                     this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
                         savedConfigs => {
@@ -142,8 +123,7 @@ export class StartGameComponent implements OnInit {
             data => {
 
                 this.gameData = data
-                this.userSvc.setUserData(data);
-
+                console.log(":: START GAME - GAME DATA ::", data)
             }, err=>{console.log(err)}
         )
 
@@ -161,7 +141,7 @@ export class StartGameComponent implements OnInit {
 
     setSelectedGameConfig(mode){
 
-        console.log(":: SETTING START GAME DATA ::", mode.deviceMap)
+        console.log(":: SETTING SELECTED GAME CONFIG ::", mode.deviceMap)
 
         this.selectedGameMode = mode;
         this.teams            = mode.teams;

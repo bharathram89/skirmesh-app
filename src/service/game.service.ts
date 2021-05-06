@@ -35,4 +35,8 @@ export class GameService {
         return this.http.put(this.BASE + this.RGMS + token, data, this.options)
     }
 
+  getGameStats(gameID){
+    return this.http.get(this.BASE + 'statistics/game?id=' + gameID ) 
+  }
+
 }
