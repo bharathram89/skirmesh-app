@@ -95,6 +95,7 @@ export class MapComponent implements OnInit {
 
   locationColor(locationID){
     let deviceConfigForLocation = this.mapData.find(ele => ele.location == locationID);
+    console.log(deviceConfigForLocation,"locationColor")
     if(deviceConfigForLocation && deviceConfigForLocation.team) return '#'+deviceConfigForLocation.team //if team set use that color
     return 'transparent'//default to transparent without any team set
   }
