@@ -2,15 +2,13 @@
     <div class="" role="document">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 *ngIf="mode == 'create'" class="modal-title" id="exampleModalLabel">
+            <div *ngIf="mode == 'create'" class="modal-header">
+                <h5  class="modal-title" id="exampleModalLabel">
                     Configure nodes for this game mode.
                 </h5>
             </div>
 
             <div class="modal-body">
-                <div class="container">
-                    <div class="">
 
                         <div class="center-cust row">
 
@@ -19,7 +17,7 @@
                                 <div class="card-header">
 
                                     <div>
-                                        <h4>Location:{{device?.location?.name}}
+                                        <h6>{{device?.location?.name}}
                                             <select class="form-control"
                                                 (change)="locationSelected($event,device)"
                                                 (click)="saveOldVal(device)"
@@ -32,9 +30,9 @@
                                                     {{location.name}}
                                                 </option>
                                             </select>
-                                        </h4>
-                                        <h7>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
-                                        </h7>
+                                        </h6>
+                                        <h9>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
+                                        </h9>
                                         <br>
                                     </div>
 
@@ -226,10 +224,8 @@
 
                         </div>
 
-                    </div>
-                </div>
             </div>
-            <div class="modal-footer"> </div>
+
         </div>
     </div>
 </div>

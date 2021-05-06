@@ -1,19 +1,30 @@
 .form-group{
-    margin-bottom: 5px;
+    margin-bottom: 2px;
 }
 .card-body{
-    padding: 5px;
+    padding: 10px;
     text-align: left;
 }
 .card{
-    padding: 10px;
-    margin:5px;
+    padding: 5px;
+    margin: 0 10px 10px 10px;
 }
 select { transition: none !important; }//https://stackoverflow.com/questions/37181017/angular-select-blinking
 .center-cust{
     justify-content: center;
     text-align: center;
   }
+
+.custom-control {
+    padding-left: 2rem;
+}
+div.row {
+    margin: 0;
+}
+
+div.modal-body {
+    padding: 1rem 0 1rem 0;
+}
 
 .card>hr {
   margin: 0.25rem 0 0 0;
