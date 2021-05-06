@@ -65,7 +65,7 @@ export class GameConfigComponent implements OnInit {
     onEditMode(gameMode) {
         console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
         this.tabsComponent.openTab(
-              `Editing ${gameMode.name}`,
+              gameMode.name,
               this.editModeTemplate,
               gameMode,
               true
@@ -79,7 +79,7 @@ export class GameConfigComponent implements OnInit {
     onGameModeFormSubmit(dataModel) {
 
         console.log("::DATA MODEL::", dataModel)
-        
+
         if (dataModel.id) {
             let teams =[];
             let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id);
