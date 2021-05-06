@@ -52,11 +52,11 @@ path.location:hover {
 // }
 @keyframes blinkingText{
     
-    // 0%{     fill: #ffffff;    }
-    // 49%{    fill: #ffffff; }
+    0%{     fill: #ffffff;    }
+    49%{    fill: #ffffff; }
     60%{    fill: transparent; }
     99%{    fill:transparent;  }
-    // 100%{   fill: #ffffff;    }
+    100%{   fill: #ffffff;    }
 }
 
 /*
