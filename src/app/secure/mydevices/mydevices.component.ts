@@ -86,10 +86,11 @@ export class MydevicesComponent implements OnInit {
 
    }
    findTeamScore(stats,teamID) {
-      let gameActions = stats[0]
+      let gameActions = stats[0].data
       let total = 0;
+      console.log(stats,"findTeamScore")
       gameActions ? gameActions.filter(action => action.points ? total = total + action.points : total = total):null;
-      console.log(gameActions,"findTeamScore")
+      
       return total
    }
    findGameConfigIDForGame(gameID) {
@@ -97,23 +98,16 @@ export class MydevicesComponent implements OnInit {
    }
    findDevicesForGameID(gameID) {
       return this.activeGames.filter(ele => ele.gameConfigID == gameID && ele.devices.length > 0)[0].devices;
-   }
-   // findLastActionTime(teamID,rfID){
-   //    let teamInfo = this.teams.find(ele=>ele.id == teamID);
-   //    let gameActions = teamInfo.gameActions;
-   //    let userActions = gameActions.filter(action => action.rfidID== rfID);
-   //    // console.log(userActions,"findLastActionTime")
-   //    return userActions[0].creationDate
-   // }
+   } 
    findLastAction( rfID, team) {
-      let gameActions = team[0];
+      let gameActions = team[0].data;
       let userActions = gameActions? gameActions.filter(action => action.rfidID == rfID):null;
       // console.log(userActions,"findLastAction")
       return userActions && userActions[0] && userActions[0].actionID ? userActions[0].actionID : 'Interact with a Node'
    }
 
    findTotalPoints( rfID, team) {
-      let gameActions = team[0];
+      let gameActions = team[0].data;
       let userActions = gameActions ? gameActions.filter(action => action.rfidID == rfID && action.points):null;
       let totalPoints = 0;
       userActions? userActions.filter(action => action.points ? totalPoints = totalPoints + action.points : totalPoints = totalPoints):null;
@@ -122,7 +116,7 @@ export class MydevicesComponent implements OnInit {
    }
 
    findLastLocation(  rfID, team) {
-      let gameActions = team[0];
+      let gameActions = team[0].data;
       let userActions = gameActions ? gameActions.filter(action => action.rfidID == rfID):null;
       // console.log(userActions,"findLastLocation")
       return userActions && userActions[0] && userActions[0].deviceID ? userActions[0].deviceID : 'Interact with a Node'

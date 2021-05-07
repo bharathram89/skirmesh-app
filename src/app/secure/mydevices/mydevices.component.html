@@ -7,10 +7,10 @@
             </option>
         </select>
     </div>
-    <div *ngIf="activeGame" id="activeGame">
+    <div *ngIf="activeGame" class="view-account" id="activeGame">
 
-        <div class="d-flex align-items-start">
-            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <div class="module-inner">
+            <!-- <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <button (click)="changeGameTab('map')" class="nav-link" id="v-pills-home-tab" type="button"
                     role="tab">Map</button>
                 <button (click)="changeGameTab('team')" class="nav-link" id="v-pills-profile-tab" type="button"
@@ -19,77 +19,86 @@
                     role="tab">Game Score</button>
                 <button (click)="changeGameTab('live')" class="nav-link" id="v-pills-settings-tab" type="button"
                     role="tab">Live Game Events</button>
+            </div> -->
+            <div class="side-bar">
+                <nav class="side-menu">
+                    <ul class="nav">
+                      <li id="map"  (click)="changeGameTab('map')" class="active">Map</li>
+                      <li id="teamScore" (click)="changeGameTab('team')"  >Team Score</li>
+                      <li id="EventsTracker" (click)="changeGameTab('live')" >Events Tracker</li>
+                    </ul>
+                </nav>
             </div>
-            <div class="tab-content" id="v-pills-tabContent">
-                <div *ngIf="currentTab == 'map'" class="" id="v-pills-home" role="tabpanel"
-                    aria-labelledby="v-pills-home-tab">
-                    <div class="pull-md-3">
-                            <app-map [mapID]="map" [mapData]="devices"></app-map>
-    
+            
+            <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
+                aria-labelledby="v-pills-home-tab">
+                <div class="pull-md-3">
+                    <div class="card tall">
+                        <app-map [mapID]="map" [mapData]="devices"></app-map>
                     </div>
                 </div>
-                <div *ngIf="currentTab == 'team'" class="card-group" id="v-pills-profile" role="tabpanel"
-                    aria-labelledby="v-pills-profile-tab">
+            </div>
+            <div *ngIf="currentTab == 'team'" class="content-panel" id="v-pills-profile" role="tabpanel"
+                aria-labelledby="v-pills-profile-tab">
 
 
 
-                    <div *ngFor="let team of teams" class="card team-section">
+                <div *ngFor="let team of teams" class="card team-section"> 
+                        
+                                <div class=" card-outline-success m-x-auto m-b-2">
+                                    <div class="cust_text text-xs-center p-y-1"
+                                        [style.background-color]="team.color">
+                                        <h3>{{team.name}} | Total Score: {{team.score}}</h3>
 
-                                    <div class=" card-outline-success m-x-auto m-b-2">
-                                        <div class="cust_text text-xs-center p-y-1"
-                                            [style.background-color]="team.color">
-                                            <h3>{{team.name}} | Total Score: {{team.score}}</h3>
-
-                                        </div>
-
-
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">RFID</th>
-                                                    <th scope="col">Last Action</th>
-                                                    <th scope="col">Last Location</th>
-                                                    <th scope="col">Total Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let player of team.players">
-                                                    <th scope="row">
-                                                        <div class="text">
-                                                            <a *ngIf="player.is_alive"
-                                                                style="color: green;">{{player.rfID}}</a>
-                                                            <a *ngIf="!player.is_alive"
-                                                                style="color: red;">{{player.rfID}}</a>
-                                                        </div>
-                                                    </th>
-                                                    <td>
-                                                        <ngb-highlight >{{player.lastAction}}
-                                                        </ngb-highlight>
-                                                    </td>
-                                                    <td>
-                                                        <ngb-highlight  >{{player.lastLocation}}</ngb-highlight>
-                                                    </td>
-                                                    <td>
-                                                        <ngb-highlight  >{{player.totalPoints}}</ngb-highlight>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
                                     </div>
 
-                    </div>
 
-
-
-
-
-
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">RFID</th>
+                                                <th scope="col">Last Action</th>
+                                                <th scope="col">Last Location</th>
+                                                <th scope="col">Total Points</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let player of team.players">
+                                                <th scope="row">
+                                                    <div class="text">
+                                                        <a *ngIf="player.is_alive"
+                                                            style="color: green;">{{player.rfID}}</a>
+                                                        <a *ngIf="!player.is_alive"
+                                                            style="color: red;">{{player.rfID}}</a>
+                                                    </div>
+                                                </th>
+                                                <td>
+                                                    <ngb-highlight >{{player.lastAction}}
+                                                    </ngb-highlight>
+                                                </td>
+                                                <td>
+                                                    <ngb-highlight  >{{player.lastLocation}}</ngb-highlight>
+                                                </td>
+                                                <td>
+                                                    <ngb-highlight  >{{player.totalPoints}}</ngb-highlight>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table> 
+                                </div>
+                                
                 </div>
-                <div *ngIf="currentTab == 'game'" class="" id="v-pills-messages" role="tabpanel"
-                    aria-labelledby="v-pills-messages-tab">Thiurd</div>
-                <div *ngIf="currentTab == 'live'" class="" id="v-pills-settings" role="tabpanel"
-                    aria-labelledby="v-pills-settings-tab">fourth</div>
+
+
+
+
+
+
             </div>
+            <div *ngIf="currentTab == 'game'" class="" id="v-pills-messages" role="tabpanel"
+                aria-labelledby="v-pills-messages-tab">Thiurd</div>
+            <div *ngIf="currentTab == 'live'" class="" id="v-pills-settings" role="tabpanel"
+                aria-labelledby="v-pills-settings-tab">fourth</div> 
         </div>
 
 
