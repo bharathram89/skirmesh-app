@@ -85,8 +85,8 @@ export class StartGameComponent implements OnInit {
                            this.setSelectedGameConfig(gameConfig);
                             this.gameBoardActive = true;
                             this.gameInProgress = true;
-               
-               
+
+
                         }
                      )
                 }else{
@@ -175,12 +175,16 @@ export class StartGameComponent implements OnInit {
 
     endGame(){
 
-        this.tokenSvc.endGame();
+        let safe = confirm("Do you really want to end the game?");
 
-        this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
-            data => {
-                    this.gameInProgress = false;
-                    this.gameBoardActive = false;
-                })
+        if (safe) {
+            this.tokenSvc.endGame();
+
+            this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
+                data => {
+                        this.gameInProgress = false;
+                        this.gameBoardActive = false;
+                    })
+        }
     }
 }
