@@ -106,7 +106,7 @@
                                     <ngb-highlight>{{action.points}}</ngb-highlight>
                                 </td>
                                 <td >
-                                    <ngb-highlight>{{action.timestamp}}</ngb-highlight>
+                                    <ngb-highlight>{{action.timestamp.toLocaleString('en-US', {hourCycle:"h24"})}}</ngb-highlight>
                                 </td>
                             </tr>
                         </tbody>

@@ -121,7 +121,7 @@ export class MydevicesComponent implements OnInit {
                             action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                             points    : this.actionList.find(ele => ele.id == act.actionID).points,
                             location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
-                            timestamp : date.toLocaleString()
+                            timestamp : date
                         }
                         this.allActions.push(historyObj);
                     }
@@ -149,7 +149,7 @@ export class MydevicesComponent implements OnInit {
                             action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                             points    : act.points,
                             location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
-                            timestamp : date.toLocaleString()
+                            timestamp : date
                         }
 
                         this.allActions.push(historyObj);
@@ -157,8 +157,8 @@ export class MydevicesComponent implements OnInit {
 
                 });
 
-
-                this.allActions = this.allActions.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
+                // Sort actions by descending timestamp
+                this.allActions = this.allActions.sort((a, b) => b.timestamp - a.timestamp);
 
             })
     }
