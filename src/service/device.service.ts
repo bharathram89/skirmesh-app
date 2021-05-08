@@ -48,16 +48,6 @@ export class DeviceService {
     deleteGameConfig(token, gameConfigID){
         return this.http.delete(this.BASE+this.GCTK+token+'&id='+gameConfigID)
     }
-
-    startGame(token, gameConfigID){
-        let data = {"gameConfigID":gameConfigID}
-        return this.http.post(this.BASE+'games/startGame?token='+token,data,this.options )
-    }
-
-    endGame(token, gameID){
-        let data = {"id":gameID}
-        return this.http.put(this.BASE+'games/endGame?token='+token,data,this.options )
-    }
   // http://api.skirmesh.net/resources/gameConfig
 
 }

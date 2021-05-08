@@ -119,7 +119,7 @@ export class StartGameComponent implements OnInit {
 
         if (!mode) {return console.log("NO GAME SELECTED")};
 
-        this.deviceSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
+        this.gameSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
             data => {
 
                 this.gameData = data
@@ -180,7 +180,7 @@ export class StartGameComponent implements OnInit {
         if (safe) {
             this.tokenSvc.endGame();
 
-            this.deviceSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
+            this.gameSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
                 data => {
                         this.gameInProgress = false;
                         this.gameBoardActive = false;

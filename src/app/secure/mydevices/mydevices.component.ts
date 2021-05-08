@@ -19,6 +19,7 @@ export class MydevicesComponent implements OnInit {
    activeGames;
    activeGame = false;
    map;
+   LOCATIONS;
 
    teams   = [];
    players = [];

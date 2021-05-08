@@ -7,7 +7,7 @@ import { UserServiceService } from './user-service.service';
       providedIn: 'root'
 })
 export class GameService {
-    
+
     headers = new HttpHeaders({
         'Content-Type': 'application/json'
     });
@@ -35,8 +35,18 @@ export class GameService {
         return this.http.put(this.BASE + this.RGMS + token, data, this.options)
     }
 
-  getGameStats(gameID){
-    return this.http.get(this.BASE + 'statistics/game?id=' + gameID ) 
-  }
+    startGame(token, gameConfigID){
+        let data = {"gameConfigID":gameConfigID}
+        return this.http.post(this.BASE+'games/startGame?token='+token,data,this.options )
+    }
+
+    endGame(token, gameID){
+        let data = {"id":gameID}
+        return this.http.put(this.BASE+'games/endGame?token='+token,data,this.options )
+    }
+
+    getGameStats(gameID){
+        return this.http.get(this.BASE + 'statistics/game?id=' + gameID )
+    }
 
 }
