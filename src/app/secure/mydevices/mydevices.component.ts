@@ -123,7 +123,6 @@ export class MydevicesComponent implements OnInit {
                             location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
                             timestamp : date.toLocaleString()
                         }
-                        console.log(act.creationDate);
                         this.allActions.push(historyObj);
                     }
                 });
@@ -161,16 +160,10 @@ export class MydevicesComponent implements OnInit {
 
                 this.allActions = this.allActions.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
 
-                console.log(":: POST GAME SELECT DATA ::", ":: TEAMS ::", this.teams, ":: PLAYERS ::", this.players, this.allActions)
-
             })
     }
 
-    getTotalPlayerScore(userActions){
-        let total;
-        console.log(userActions,"user Actions",this.actionList)
 
-    }
     findGameConfigIDForGame(gameID) {
         return this.activeGames.find(ele => ele.id == gameID)
     }
