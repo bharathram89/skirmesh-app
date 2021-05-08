@@ -107,19 +107,21 @@ export class MydevicesComponent implements OnInit {
                         name: player.name,
                         is_alive: player.is_alive,
                         lastAction: this.actionList.find(ele => ele.id == player.data[player.data.length - 1].actionID).action,
-                        lastLocation: this.findLastLocation(player.data[player.data.length - 1].deviceID),
+                        lastLocation: this.findLocationFromDeviceID(player.data[player.data.length - 1].deviceID),
                         totalPoints: player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
                     }
                     this.players.push(playerObj)
 
                     for (let act of player.data) {
 
+                        let date = new Date(act.creationDate);
                         let historyObj = {
-                            team: stats["team_stats"].find(ele => ele.id == player.teamID).name,
-                            name: player.name,
-                            action: this.actionList.find(ele =>ele.id == act.actionID).action,
-                            points: this.actionList.find(ele => ele.id == act.actionID).points,
-                            timestamp: act.creationDate
+                            team      : stats["team_stats"].find(ele => ele.id == player.teamID).name,
+                            name      : player.name,
+                            action    : this.actionList.find(ele =>ele.id == act.actionID).action,
+                            points    : this.actionList.find(ele => ele.id == act.actionID).points,
+                            location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
+                            timestamp : date.toLocaleString()
                         }
                         console.log(act.creationDate);
                         this.allActions.push(historyObj);
@@ -141,12 +143,14 @@ export class MydevicesComponent implements OnInit {
 
                     for (let act of team.data) {
 
+                        let date = new Date(act.creationDate);
                         let historyObj = {
-                            team: team.name,
-                            name: null,
-                            action: this.actionList.find(ele =>ele.id == act.actionID).action,
-                            points: act.points,
-                            timestamp: act.creationDate
+                            team      : team.name,
+                            name      : null,
+                            action    : this.actionList.find(ele =>ele.id == act.actionID).action,
+                            points    : act.points,
+                            location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
+                            timestamp : date.toLocaleString()
                         }
 
                         this.allActions.push(historyObj);
@@ -177,15 +181,7 @@ export class MydevicesComponent implements OnInit {
     }
 
 
-    findLastAction(rfID, team) {
-        let gameActions = team[0].data;
-        let userActions = gameActions ? gameActions.filter(action => action.rfidID == rfID) : null;
-        // console.log(userActions,"findLastAction")
-        return userActions && userActions[0] && userActions[0].actionID ? userActions[0].actionID : 'Interact with a Node'
-    }
-
-
-    findLastLocation(deviceID) {
+    findLocationFromDeviceID(deviceID) {
 
         let device = this.devices.find(ele => ele.id == deviceID)
 
