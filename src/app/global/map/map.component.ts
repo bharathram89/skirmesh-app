@@ -22,46 +22,43 @@ export class MapComponent implements OnInit {
     ngOnInit(): void {
 
         console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
-          
+
 
   }
 
-  updateMapState() {
+    updateMapState() {
+        for (let device of this.mapData){this.updateLocationState(device);}
+    }
 
-      for (let device of this.mapData){this.updateLocationState(device);}
-  }
+    updateLocationState(device) {
 
-  updateLocationState(device) {
+        let locID    = device.location;
+        let stable   = device.stable;
+        let color    = '#' + device.team;
 
-      let locID    = device.location;
-      let stable   = device.stable;
-      let color    = '#' + device.team;
+        let element = document.getElementById(locID);
 
-      let element = document.getElementById(locID);
+        if (element) {
 
-      if (element) {
-
-          if (!stable && device.team) {
+            if (!stable && device.team) {
 
               element.classList.remove("owned");
               element.classList.add("beacon");
               element.setAttribute("fill", color);
 
-          }
-          else if (stable && device.team){
+            }
+            else if (stable && device.team){
 
               element.classList.remove("beacon");
               element.classList.add("owned");
               element.setAttribute("fill", color);
-          }
-          else {
-              
+            }
+            else {
+
               element.classList.remove("owned");
               element.classList.remove("beacon");
               element.setAttribute("fill", null);
-          }
-      }
-
-  }
- 
+            }
+        }
+    }
 }
