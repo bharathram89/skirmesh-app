@@ -13,9 +13,9 @@
                 <div class="side-bar">
                     <nav class="side-menu">
                         <ul class="nav">
-                            <li id="map" (click)="changeGameTab('map')" class="active">Map</li>
-                            <li id="teamScore" (click)="changeGameTab('team')">Team Score</li>
-                            <li id="EventsTracker" (click)="changeGameTab('live')">Events Tracker</li>
+                            <li id="map" (click)="changeGameTab('map')" class="active"><a>Map</a></li>
+                            <li id="teamScore" (click)="changeGameTab('teamScore')"><a>Team Score</a></li>
+                            <li id="EventsTracker" (click)="changeGameTab('EventsTracker')"><a>Events Tracker</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -28,11 +28,11 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="currentTab == 'team'" class="card-group content-panel" id="v-pills-profile" role="tabpanel"
+                <div *ngIf="currentTab == 'teamScore'" class="card-group content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
 
 
-                    <div *ngFor="let team of teams" class="card team-section">
+                    <div *ngFor="let team of teams" class="team-section">
 
                         <div class=" card-outline-success m-x-auto m-b-2">
                             <div class="cust_text text-xs-center p-y-1" [style.background-color]="team.color">
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="currentTab == 'live'" class="content-panel" id="v-pills-settings" role="tabpanel"
+                <div *ngIf="currentTab == 'EventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
                     aria-labelledby="v-pills-settings-tab">fourth</div>
             </div>
 
