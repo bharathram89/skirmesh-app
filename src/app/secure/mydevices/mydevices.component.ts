@@ -21,8 +21,9 @@ export class MydevicesComponent implements OnInit {
    map;
    LOCATIONS;
 
-   teams   = [];
-   players = [];
+   teams      = [];
+   players    = [];
+   allActions = [];
 
    description;
    currentTab = 'map'
@@ -77,15 +78,28 @@ export class MydevicesComponent implements OnInit {
 
                 stats["player_stats"].forEach(player => {
 
-                    let playerObj = ({
+                    let playerObj = {
                                        teamID       : player.teamID,
                                        name         : player.name,
-                                       is_alive     : player.is_alive, // This is not available
-                                       lastAction   : player.data[player.data.length-1].actionID, // Need to query actions
+                                       is_alive     : player.is_alive,
+                                       lastAction   : player.data[player.data.length-1].actionID, // TODO Need to query actions
                                        lastLocation : this.findLastLocation( player.data[player.data.length-1].deviceID),
                                        totalPoints  : player.data.reduce((prev, next) => prev + next.points, 0)
-                                     })
+                                     }
                     this.players.push(playerObj)
+
+                    for (let act of player.data) {
+
+                        let historyObj = {
+                                            team      : stats["team_stats"].find(ele => ele.id == player.teamID).name,
+                                            name      : player.name,
+                                            action    : act.actionID, // TODO use this to search for action name
+                                            points    : act.actionID, // TODO use this to search for action
+                                            timestamp : Date.parse(act.creationDate)
+                                         }
+
+                        this.allActions.push(historyObj);
+                    }
                 });
 
 
@@ -99,14 +113,30 @@ export class MydevicesComponent implements OnInit {
                                     players : this.players.filter( player => player.teamID == team.id )
                                   }
 
-                    this.teams.push(teamObj)
+                    this.teams.push(teamObj);
+
+                    for (let act of team.data) {
+
+                        let historyObj = {
+                                            team      : team.name,
+                                            name      : null,
+                                            action    : act.actionID, // TODO use this to search for action name
+                                            points    : act.points, // TODO use this to search for action
+                                            timestamp : Date.parse(act.creationDate)
+                                         }
+
+                        this.allActions.push(historyObj);
+                    }
+
                 });
 
                 this.map = gameConfig['mapID'];
                 this.description = gameConfig['description'];
                 this.devices = this.findDevicesForGameID(gameConfigID);
 
-                console.log(":: POST GAME SELECT DATA ::", ":: TEAMS ::", this.teams, ":: PLAYERS ::", this.players)
+                this.allActions = this.allActions.sort((a,b) => (a.timestamp < b.timestamp) ? 1 : -1);
+
+                console.log(":: POST GAME SELECT DATA ::", ":: TEAMS ::", this.teams, ":: PLAYERS ::", this.players, this.allActions)
 
             })
     }
