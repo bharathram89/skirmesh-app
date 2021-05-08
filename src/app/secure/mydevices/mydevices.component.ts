@@ -60,9 +60,22 @@ export class MydevicesComponent implements OnInit {
    //    return listOfGames.filter(ele=>ele.devices.length>0)
    // }
 
-    changeGameTab(tabToChangeTo) {
-        this.currentTab = tabToChangeTo;
+
+   changeGameTab(tabToChangeTo) {
+    this.currentTab = tabToChangeTo; 
+    if(tabToChangeTo == "map"){
+       document.getElementById("teamScore").classList.remove('active');
+       document.getElementById("EventsTracker").classList.remove('active');
+    }else if(tabToChangeTo == "teamScore"){
+       document.getElementById("map").classList.remove('active');
+       document.getElementById("EventsTracker").classList.remove('active'); 
+    }else if(tabToChangeTo == "EventsTracker"){  
+       document.getElementById("teamScore").classList.remove('active');
+       document.getElementById("map").classList.remove('active');
     }
+    document.getElementById(tabToChangeTo).classList.add('active');
+ }
+
 
     selectActiveGame(gameID) {
       //need to reset teams info.
