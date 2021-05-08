@@ -75,7 +75,42 @@
                     </div>
                 </div>
                 <div *ngIf="currentTab == 'EventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
-                    aria-labelledby="v-pills-settings-tab">fourth</div>
+                    aria-labelledby="v-pills-settings-tab">
+                    <h3 class="center-cust"> Events List For Game</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Team</th>
+                                <th scope="col">Player</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Points</th>
+                                <th scope="col">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let action of allActions">
+                                <th scope="row">
+                                    <ngb-highlight>{{action.team}}
+                                    </ngb-highlight>
+                                </th>
+                                <td>
+                                    <ngb-highlight>{{action.name}}
+                                    </ngb-highlight>
+                                </td>
+                                <td>
+                                    <ngb-highlight>{{action.action}}</ngb-highlight>
+                                </td>
+                                <td>
+                                    <ngb-highlight>{{action.points}}</ngb-highlight>
+                                </td>
+                                <td>
+                                    <ngb-highlight>{{action.timestamp}}</ngb-highlight>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+                </div>
             </div>
 
         </section>

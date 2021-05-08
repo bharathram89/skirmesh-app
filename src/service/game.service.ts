@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+// import { Socket } from 'ngx-socket-io';
+import { map } from 'rxjs/operators';
 import { TokenStorageService } from './token-storage.service';
 import { UserServiceService } from './user-service.service';
 
@@ -20,6 +22,7 @@ export class GameService {
     userSvc: UserServiceService;
 
     constructor(
+      // private socket: Socket,
         private http: HttpClient,
         tokenSvc: TokenStorageService,
         userSvc: UserServiceService
@@ -49,4 +52,15 @@ export class GameService {
         return this.http.get(this.BASE + 'statistics/game?id=' + gameID )
     }
 
+    getLocations(){
+      return this.http.get(this.BASE + 'resources/locations')
+//http://api.skirmesh.net/resources/locations
+    }
+    getActions(){
+      return this.http.get(this.BASE + 'resources/actions')
+//http://api.skirmesh.net/resources/locations
+    }
+    // getMessage() {
+    //   return this.socket.fromEvent('update').pipe(map((data) => console.log(data)));
+    // }
 }

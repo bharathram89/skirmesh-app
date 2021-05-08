@@ -16,6 +16,9 @@ import { UserServiceService } from 'src/service/user-service.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+// const config: SocketIoConfig = { url: 'http://api.skirmesh.net', options: {} };
 @NgModule({
   declarations: [
     AppComponent
@@ -25,7 +28,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     GlobalModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    // SocketIoModule.forRoot(config)
   ],
   providers: [
     UserServiceService,
