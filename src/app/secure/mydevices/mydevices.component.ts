@@ -19,13 +19,14 @@ export class MydevicesComponent implements OnInit {
     activeGames;
     activeGame = false;
     map;
-    LOCATIONS;
 
     teams = [];
     players = [];
     allActions = [];
+
     locationList;
-    actions;
+    actionList;
+
     description;
     currentTab = 'map'
     tokenSvc: TokenStorageService;
@@ -51,7 +52,7 @@ export class MydevicesComponent implements OnInit {
             .subscribe(
                 ([activeGames, location, actions]) => {
                     this.locationList = location;
-                    this.actions = actions;
+                    this.actionList = actions;
                     // console.log(location, actions)
                     this.activeGames = activeGames;
                     console.log(this.activeGames, "ACTIVE GAMES IN MY DEVICES")
@@ -93,7 +94,7 @@ export class MydevicesComponent implements OnInit {
         ).subscribe(
             ([gameConfig, stats]) => {
 
-                this.activeGame = true; 
+                this.activeGame = true;
                 this.map = gameConfig['mapID'];
                 this.description = gameConfig['description'];
                 this.devices = this.findDevicesForGameID(gameConfigID);
@@ -105,9 +106,9 @@ export class MydevicesComponent implements OnInit {
                         teamID: player.teamID,
                         name: player.name,
                         is_alive: player.is_alive,
-                        lastAction: this.actions.find(ele =>ele.id == player.data[player.data.length - 1].actionID).action, // TODO Need to query actions
+                        lastAction: this.actionList.find(ele => ele.id == player.data[player.data.length - 1].actionID).action,
                         lastLocation: this.findLastLocation(player.data[player.data.length - 1].deviceID),
-                        totalPoints: player.data.reduce((prev, next) => prev + next.points, 0)
+                        totalPoints: player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
                     }
                     this.players.push(playerObj)
 
@@ -116,11 +117,11 @@ export class MydevicesComponent implements OnInit {
                         let historyObj = {
                             team: stats["team_stats"].find(ele => ele.id == player.teamID).name,
                             name: player.name,
-                            action: this.actions.find(ele =>ele.id == act.actionID).action, //this.findActionName(act.actionID), // TODO use this to search for action name
-                            points: act.actionID, // TODO use this to search for action
-                            timestamp: Date.parse(act.creationDate)
+                            action: this.actionList.find(ele =>ele.id == act.actionID).action,
+                            points: this.actionList.find(ele => ele.id == act.actionID).points,
+                            timestamp: act.creationDate
                         }
-
+                        console.log(act.creationDate);
                         this.allActions.push(historyObj);
                     }
                 });
@@ -143,9 +144,9 @@ export class MydevicesComponent implements OnInit {
                         let historyObj = {
                             team: team.name,
                             name: null,
-                            action: this.actions.find(ele =>ele.id == act.actionID).action, // TODO use this to search for action name
-                            points: act.points, // TODO use this to search for action
-                            timestamp: Date.parse(act.creationDate)
+                            action: this.actionList.find(ele =>ele.id == act.actionID).action,
+                            points: act.points,
+                            timestamp: act.creationDate
                         }
 
                         this.allActions.push(historyObj);
@@ -163,9 +164,9 @@ export class MydevicesComponent implements OnInit {
 
     getTotalPlayerScore(userActions){
         let total;
-        console.log(userActions,"user Actions",this.actions)
+        console.log(userActions,"user Actions",this.actionList)
 
-    } 
+    }
     findGameConfigIDForGame(gameID) {
         return this.activeGames.find(ele => ele.id == gameID)
     }
@@ -185,14 +186,15 @@ export class MydevicesComponent implements OnInit {
 
 
     findLastLocation(deviceID) {
-        //TODO: Grab device data and filter for location
-        let device = this.devices.find(ele => ele.id = deviceID)
-        // console.log(device,deviceID,this.devices,"devices");
+
+        let device = this.devices.find(ele => ele.id == deviceID)
+
         let location;
         if(device.location) {
-            location = this.locationList.find(ele => ele.id = device.location); 
+
+            location = this.locationList.find(ele => ele.id == device.location);
         }
-        return location && location.name ?  location.name : 'Interacted with an Objective'
+        return location && location.name ? location.name : 'Interacted with an Objective'
     }
 
     //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
