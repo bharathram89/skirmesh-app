@@ -15,23 +15,31 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 export class MydevicesComponent implements OnInit {
 
-
    devices;
    activeGames;
    activeGame = false;
    map;
-   teams = [];
+
+   teams   = [];
+   players = [];
+
    description;
    currentTab = 'map'
-   tokenSvc: TokenStorageService;
-   gameSvc: GameService;
-   deviceSvc: DeviceService;
-   userSvc: UserServiceService;
-   constructor(tokenService: TokenStorageService, gameService: GameService, deviceService: DeviceService, userService: UserServiceService) {
-      this.tokenSvc  = tokenService;
-      this.gameSvc   = gameService;
-      this.deviceSvc = deviceService;
-      this.userSvc   = userService;
+   tokenSvc   : TokenStorageService;
+   gameSvc    : GameService;
+   deviceSvc  : DeviceService;
+   userSvc    : UserServiceService;
+
+   constructor(
+        tokenService  : TokenStorageService,
+        gameService   : GameService,
+        deviceService : DeviceService,
+        userService   : UserServiceService) {
+
+        this.tokenSvc  = tokenService;
+        this.gameSvc   = gameService;
+        this.deviceSvc = deviceService;
+        this.userSvc   = userService;
    }
 
    ngOnInit() {
@@ -51,78 +59,83 @@ export class MydevicesComponent implements OnInit {
    //    return listOfGames.filter(ele=>ele.devices.length>0)
    // }
 
-   changeGameTab(tabToChangeTo) {
-      this.currentTab = tabToChangeTo;
-   }
+    changeGameTab(tabToChangeTo) {
+        this.currentTab = tabToChangeTo;
+    }
 
-   selectActiveGame(gameID) {
+    selectActiveGame(gameID) {
       //need to reset teams info.
       // this.teams = [];
-      let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
-       combineLatest([this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),gameConfigID ),this.gameSvc.getGameStats(gameID.target.value)])
-       .subscribe(([gameConfig,stats])=>{
-              this.activeGame = true;
-              console.log(this.devices,this.teams,"finsl divs",stats,gameConfig)
-         gameConfig["teams"].forEach(team => {
-            let teamObj = {id:team.id,name:team.name,color:'#'+team.color,score:this.findTeamScore(stats['team_stats'],team['id']),players:[]}
-            team.teamPlayers.forEach(player => {
-               teamObj.players.push({rfID:player.rfidID
-                                    ,is_alive:player.is_alive
-                                    ,lastAction:this.findLastAction( player.rfidID,stats['player_stats'])
-                                    ,lastLocation:this.findLastLocation( player.rfidID,stats['player_stats'])
-                                    ,totalPoints:this.findTotalPoints( player.rfidID,stats['player_stats'])
-                                 })
-            });
-            this.teams.push(teamObj)
-         });
+        let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
 
-         this.map = gameConfig['mapID'];
-         this.description = gameConfig['description'];
-         this.devices = this.findDevicesForGameID(gameConfigID);
+        combineLatest([this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(), gameConfigID),
+                                                       this.gameSvc.getGameStats(gameID.target.value)]).subscribe(
+            ([gameConfig,stats]) => {
 
-       })
+                this.activeGame = true;
+
+                stats["player_stats"].forEach(player => {
+
+                    let playerObj = ({
+                                       teamID       : player.teamID,
+                                       name         : player.name,
+                                       is_alive     : player.is_alive, // This is not available
+                                       lastAction   : player.data[player.data.length-1].actionID, // Need to query actions
+                                       lastLocation : this.findLastLocation( player.data[player.data.length-1].deviceID),
+                                       totalPoints  : player.data.reduce((prev, next) => prev + next.points, 0)
+                                     })
+                    this.players.push(playerObj)
+                });
 
 
+                stats["team_stats"].forEach(team => {
 
-   }
-   findTeamScore(stats,teamID) {
-      let gameActions = stats[0].data
-      let total = 0;
-      console.log(stats,"findTeamScore")
-      gameActions ? gameActions.filter(action => action.points ? total = total + action.points : total = total):null;
-      
-      return total
-   }
-   findGameConfigIDForGame(gameID) {
-      return this.activeGames.find(ele => ele.id == gameID)
-   }
-   findDevicesForGameID(gameID) {
-      return this.activeGames.filter(ele => ele.gameConfigID == gameID && ele.devices.length > 0)[0].devices;
-   } 
-   findLastAction( rfID, team) {
-      let gameActions = team[0].data;
-      let userActions = gameActions? gameActions.filter(action => action.rfidID == rfID):null;
-      // console.log(userActions,"findLastAction")
-      return userActions && userActions[0] && userActions[0].actionID ? userActions[0].actionID : 'Interact with a Node'
-   }
+                    let teamObj = {
+                                    teamID  : team.id,
+                                    name    : team.name,
+                                    color   : '#'+team.color,
+                                    score   : team.data.reduce((prev, next) => prev + next.points, 0),
+                                    players : this.players.filter( player => player.teamID == team.id )
+                                  }
 
-   findTotalPoints( rfID, team) {
-      let gameActions = team[0].data;
-      let userActions = gameActions ? gameActions.filter(action => action.rfidID == rfID && action.points):null;
-      let totalPoints = 0;
-      userActions? userActions.filter(action => action.points ? totalPoints = totalPoints + action.points : totalPoints = totalPoints):null;
-      // console.log(totalPoints,"findTotalPoints")
-      return totalPoints
-   }
+                    this.teams.push(teamObj)
+                });
 
-   findLastLocation(  rfID, team) {
-      let gameActions = team[0].data;
-      let userActions = gameActions ? gameActions.filter(action => action.rfidID == rfID):null;
-      // console.log(userActions,"findLastLocation")
-      return userActions && userActions[0] && userActions[0].deviceID ? userActions[0].deviceID : 'Interact with a Node'
-   }
-   //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
-   ngAfterViewInit() {
+                this.map = gameConfig['mapID'];
+                this.description = gameConfig['description'];
+                this.devices = this.findDevicesForGameID(gameConfigID);
 
-   }
+                console.log(":: POST GAME SELECT DATA ::", ":: TEAMS ::", this.teams, ":: PLAYERS ::", this.players)
+
+            })
+    }
+
+
+    findGameConfigIDForGame(gameID) {
+        return this.activeGames.find(ele => ele.id == gameID)
+    }
+
+
+    findDevicesForGameID(gameID) {
+        return this.activeGames.filter(ele => ele.gameConfigID == gameID && ele.devices.length > 0)[0].devices;
+    }
+
+
+    findLastAction( rfID, team) {
+        let gameActions = team[0].data;
+        let userActions = gameActions? gameActions.filter(action => action.rfidID == rfID):null;
+        // console.log(userActions,"findLastAction")
+        return userActions && userActions[0] && userActions[0].actionID ? userActions[0].actionID : 'Interact with a Node'
+    }
+
+
+    findLastLocation(deviceID) {
+        //TODO: Grab device data and filter for location
+        return 'Interacted with device ' + deviceID
+    }
+
+    //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
+    ngAfterViewInit() {
+
+    }
 }

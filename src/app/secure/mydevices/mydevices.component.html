@@ -29,7 +29,7 @@
                     </ul>
                 </nav>
             </div>
-            
+
             <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
                 aria-labelledby="v-pills-home-tab">
                 <div class="pull-md-3">
@@ -43,12 +43,12 @@
 
 
 
-                <div *ngFor="let team of teams" class="card team-section"> 
-                        
+                <div *ngFor="let team of teams" class="card team-section">
+
                                 <div class=" card-outline-success m-x-auto m-b-2">
                                     <div class="cust_text text-xs-center p-y-1"
                                         [style.background-color]="team.color">
-                                        <h3>{{team.name}} | Total Score: {{team.score}}</h3>
+                                        <h3>{{team.name}} | {{team.score}} pts</h3>
 
                                     </div>
 
@@ -67,9 +67,9 @@
                                                 <th scope="row">
                                                     <div class="text">
                                                         <a *ngIf="player.is_alive"
-                                                            style="color: green;">{{player.rfID}}</a>
+                                                            style="color: green;">{{player.name}}</a>
                                                         <a *ngIf="!player.is_alive"
-                                                            style="color: red;">{{player.rfID}}</a>
+                                                            style="color: red;">{{player.name}}</a>
                                                     </div>
                                                 </th>
                                                 <td>
@@ -84,9 +84,9 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                    </table> 
+                                    </table>
                                 </div>
-                                
+
                 </div>
 
 
@@ -98,7 +98,7 @@
             <div *ngIf="currentTab == 'game'" class="" id="v-pills-messages" role="tabpanel"
                 aria-labelledby="v-pills-messages-tab">Thiurd</div>
             <div *ngIf="currentTab == 'live'" class="" id="v-pills-settings" role="tabpanel"
-                aria-labelledby="v-pills-settings-tab">fourth</div> 
+                aria-labelledby="v-pills-settings-tab">fourth</div>
         </div>
 
 
