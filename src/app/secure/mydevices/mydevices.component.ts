@@ -70,28 +70,6 @@ export class MydevicesComponent implements OnInit {
         document.getElementById("teamScore").classList.remove('active');
         document.getElementById("EventsTracker").classList.remove('active');
 
-        // switch (tabToChangeTo) {
-        //
-        //     default:
-        //     case "map":
-        //
-        //         document.getElementById("teamScore").classList.remove('active');
-        //         document.getElementById("EventsTracker").classList.remove('active');
-        //         break;
-        //
-        //     case "teamScore":
-        //
-        //         document.getElementById("map").classList.remove('active');
-        //         document.getElementById("EventsTracker").classList.remove('active');
-        //         break;
-        //
-        //     case "EventsTracker":
-        //
-        //         document.getElementById("teamScore").classList.remove('active');
-        //         document.getElementById("map").classList.remove('active');
-        //         break;
-        // }
-
         document.getElementById(tabToChangeTo).classList.add('active');
     }
 
@@ -111,7 +89,7 @@ export class MydevicesComponent implements OnInit {
                 this.description = gameConfig['description'];
                 this.devices = this.findDevicesForGameID(gameConfigID);
 
-
+                // Assemble PLAYER stats from API data
                 stats["player_stats"].forEach(player => {
 
                     let playerObj = {
@@ -123,7 +101,7 @@ export class MydevicesComponent implements OnInit {
                         totalPoints: player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
                     }
                     this.players.push(playerObj)
-
+                    // Stuff it in ALL ACTIONS history also
                     for (let act of player.data) {
 
                         let date = new Date(act.creationDate);
@@ -139,20 +117,23 @@ export class MydevicesComponent implements OnInit {
                     }
                 });
 
-
+                // Assemble TEAM stats from API data
                 stats["team_stats"].forEach(team => {
 
-                    console.log(":: TEAM ::", team)
+                    let team_players = this.players.filter(player => player.teamID == team.id);
+                    let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
+
+                    console.log(":: TEAM ::", team, plyr_points)
                     let teamObj = {
                         teamID  : team.id,
                         name    : team.name,
                         color   : '#' + team.color,
-                        score   : team.data.reduce((prev, next) => prev + next.points, 0),
-                        players : this.players.filter(player => player.teamID == team.id)
+                        score   : team.data.reduce((prev, next) => prev + next.points, 0) + plyr_points,
+                        players : team_players
                     }
 
                     this.teams.push(teamObj);
-
+                    // Stuff it in ALL ACTIONS history also
                     for (let act of team.data) {
 
                         let date = new Date(act.creationDate);
@@ -176,12 +157,15 @@ export class MydevicesComponent implements OnInit {
                     var index = this.teams.map(function(t) { return t.teamID }).indexOf(team.id);
                     // this shouldn't execute after teams have action
                     if (index === -1) {
+
+                        let team_players = this.players.filter(player => player.teamID == team.id);
+                        let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
                         this.teams.push({
                                          teamID  : team.id,
                                          name    : team.name,
                                          color   : '#' + team.color,
-                                         score   : 0,
-                                         players : this.players.filter(player => player.teamID == team.id),
+                                         score   : 0 + plyr_points,
+                                         players : team_players,
                                         })
                     }
                 }
