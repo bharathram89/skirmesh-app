@@ -9,25 +9,29 @@ import { UserServiceService } from 'src/service/user-service.service';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+
     @Input() mapID
     @Input() mapData
+    
     map;
     tokenSvc : TokenStorageService
     userSvc  : UserServiceService;
-    constructor(tokenService: TokenStorageService, userService: UserServiceService) {
+
+    constructor(tokenService: TokenStorageService,
+                userService: UserServiceService) {
+
         this.userSvc  = userService;
         this.tokenSvc = tokenService;
     }
 
     ngOnInit(): void {
 
-        console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
+        console.log("** MAP COMPONENT **", this.mapID, this.mapData)
 
-
-  }
+    }
 
     updateMapState() {
-        for (let device of this.mapData){this.updateLocationState(device);}
+        for (let device of this.mapData){this.updateLocationState(device)}
     }
 
     updateLocationState(device) {

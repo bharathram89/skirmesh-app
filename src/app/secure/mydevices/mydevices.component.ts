@@ -157,11 +157,12 @@ export class MydevicesComponent implements OnInit {
                     }
 
                 });
-
+                // Check to see if teams were built from actions - if not, initialize them
+                // with empty data for display
                 for (let team of gameConfig['teams']) {
 
                     var index = this.teams.map(function(t) { return t.teamID }).indexOf(team.id);
-
+                    // this shouldn't execute after teams have action
                     if (index === -1) {
                         this.teams.push({
                                          teamID  : team.id,
