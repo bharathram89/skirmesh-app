@@ -48,9 +48,11 @@ export class MydevicesComponent implements OnInit {
 
     ngOnInit() {
 
-        combineLatest([this.gameSvc.getGames(this.tokenSvc.getToken()), this.gameSvc.getLocations(), this.gameSvc.getActions()])
+        combineLatest([this.gameSvc.getGames(this.tokenSvc.getToken()), this.gameSvc.getLocations(), this.gameSvc.getActions()
+            ])
             .subscribe(
                 ([activeGames, location, actions]) => {
+                    // console.log(socketData," socketData")
                     this.locationList = location;
                     this.actionList = actions;
                     // console.log(location, actions)
@@ -93,7 +95,6 @@ export class MydevicesComponent implements OnInit {
         this.gameSvc.getGameStats(gameID.target.value)],
         ).subscribe(
             ([gameConfig, stats]) => {
-
                 this.activeGame = true;
                 this.map = gameConfig['mapID'];
                 this.description = gameConfig['description'];

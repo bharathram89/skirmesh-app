@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { Socket } from 'ngx-socket-io';
+import { Socket } from 'ngx-socket-io';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TokenStorageService } from './token-storage.service';
 import { UserServiceService } from './user-service.service';
@@ -22,14 +23,21 @@ export class GameService {
     userSvc: UserServiceService;
 
     constructor(
-      // private socket: Socket,
+      private socket: Socket,
         private http: HttpClient,
         tokenSvc: TokenStorageService,
         userSvc: UserServiceService
     ) {
         this.userSvc = userSvc;
     }
-
+    public getMessages() {
+      return new Observable((observer) => {
+              this.socket.on('update', (message) => {
+                console.log(message,"message from socket")
+                  observer.next(message);
+              });
+      });
+  }
     getGames(token) {
         return this.http.get(this.BASE + this.GTK + token)
     }

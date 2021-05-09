@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { GameService } from 'src/service/game.service';
 // import * as bootstrap from 'bootstrap';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -14,16 +15,19 @@ export class MapComponent implements OnInit {
     map;
     tokenSvc : TokenStorageService
     userSvc  : UserServiceService;
-    constructor(tokenService: TokenStorageService, userService: UserServiceService) {
+    gameSvc  : GameService;
+    constructor(tokenService: TokenStorageService, userService: UserServiceService, gameService: GameService) {
         this.userSvc  = userService;
         this.tokenSvc = tokenService;
+        this.gameSvc = gameService;
     }
 
     ngOnInit(): void {
-
-        console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
-
-
+      this.gameSvc.getMessages().subscribe(socketData=>{
+        // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
+        console.log(socketData," socket Data")
+        this.updateLocationState(socketData);
+      }) 
   }
 
     updateMapState() {
