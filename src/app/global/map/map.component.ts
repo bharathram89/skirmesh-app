@@ -66,8 +66,7 @@ export class MapComponent implements OnInit {
 
         let element = document.getElementById("loc"+locID);
 
-        if (element && device.config == CAPTURE || device.config == REGISTER) {
-
+        if (element && (device.config == CAPTURE || device.config == REGISTER)) {
 
             if (!stable && device.team) {
 
