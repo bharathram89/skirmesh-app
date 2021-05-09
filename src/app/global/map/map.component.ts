@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ɵConsole } from '@angular/core';
 import { GameService } from 'src/service/game.service';
 // import * as bootstrap from 'bootstrap';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -6,7 +6,7 @@ import { UserServiceService } from 'src/service/user-service.service';
 
 @Component({
   selector: 'app-map',
-  templateUrl: './map.component.html',
+  templateUrl: './map.component.svg',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
@@ -25,11 +25,20 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit(): void {
+      console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData[0])
       this.gameSvc.getMessages().subscribe(socketData=>{
         // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
         console.log(socketData," socket Data")
         this.updateLocationState(socketData);
       }) 
+      // setTimeout(() => {
+      //   let newConfig= this.mapData[0];
+      //   newConfig.stable = false;
+      //   console.log(newConfig,"config info")
+      //   this.updateLocationState(newConfig)
+      // },5000);
+
+
   }
 
     updateMapState() {
