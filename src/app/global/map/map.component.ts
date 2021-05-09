@@ -10,8 +10,10 @@ import { UserServiceService } from 'src/service/user-service.service';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+
     @Input() mapID
     @Input() mapData
+    
     map;
     tokenSvc : TokenStorageService
     userSvc  : UserServiceService;
@@ -31,7 +33,7 @@ export class MapComponent implements OnInit {
   }
 
     updateMapState() {
-        for (let device of this.mapData){this.updateLocationState(device);}
+        for (let device of this.mapData){this.updateLocationState(device)}
     }
 
     updateLocationState(device) {

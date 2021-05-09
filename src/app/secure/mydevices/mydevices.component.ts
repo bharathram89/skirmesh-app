@@ -20,8 +20,8 @@ export class MydevicesComponent implements OnInit {
     activeGame = false;
     map;
 
-    teams = [];
-    players = [];
+    teams      = [];
+    players    = [];
     allActions = [];
 
     locationList;
@@ -54,10 +54,8 @@ export class MydevicesComponent implements OnInit {
                 ([activeGames, location, actions]) => {
                     // console.log(socketData," socketData")
                     this.locationList = location;
-                    this.actionList = actions;
-                    // console.log(location, actions)
-                    this.activeGames = activeGames;
-                    console.log(this.activeGames, "ACTIVE GAMES IN MY DEVICES")
+                    this.actionList   = actions;
+                    this.activeGames  = activeGames;
                 },
                 err => {
                     //show message on page no games are active.
@@ -65,23 +63,15 @@ export class MydevicesComponent implements OnInit {
             )
     }
 
-    // getGamesWithActiveDevices(listOfGames){
-    //    return listOfGames.filter(ele=>ele.devices.length>0)
-    // }
-
 
     changeGameTab(tabToChangeTo) {
+
         this.currentTab = tabToChangeTo;
-        if (tabToChangeTo == "map") {
-            document.getElementById("teamScore").classList.remove('active');
-            document.getElementById("EventsTracker").classList.remove('active');
-        } else if (tabToChangeTo == "teamScore") {
-            document.getElementById("map").classList.remove('active');
-            document.getElementById("EventsTracker").classList.remove('active');
-        } else if (tabToChangeTo == "EventsTracker") {
-            document.getElementById("teamScore").classList.remove('active');
-            document.getElementById("map").classList.remove('active');
-        }
+
+        document.getElementById("map").classList.remove('active');
+        document.getElementById("teamScore").classList.remove('active');
+        document.getElementById("EventsTracker").classList.remove('active');
+
         document.getElementById(tabToChangeTo).classList.add('active');
     }
 
@@ -100,7 +90,7 @@ export class MydevicesComponent implements OnInit {
                 this.description = gameConfig['description'];
                 this.devices = this.findDevicesForGameID(gameConfigID);
 
-
+                // Assemble PLAYER stats from API data
                 stats["player_stats"].forEach(player => {
 
                     let playerObj = {
@@ -112,12 +102,12 @@ export class MydevicesComponent implements OnInit {
                         totalPoints: player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
                     }
                     this.players.push(playerObj)
-
+                    // Stuff it in ALL ACTIONS history also
                     for (let act of player.data) {
 
                         let date = new Date(act.creationDate);
                         let historyObj = {
-                            team      : stats["team_stats"].find(ele => ele.id == player.teamID).name,
+                            team      : gameConfig["teams"].find(ele => ele.id == player.teamID).name,
                             name      : player.name,
                             action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                             points    : this.actionList.find(ele => ele.id == act.actionID).points,
@@ -128,19 +118,22 @@ export class MydevicesComponent implements OnInit {
                     }
                 });
 
-
+                // Assemble TEAM stats from API data
                 stats["team_stats"].forEach(team => {
 
+                    let team_players = this.players.filter(player => player.teamID == team.id);
+                    let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
+
                     let teamObj = {
-                        teamID: team.id,
-                        name: team.name,
-                        color: '#' + team.color,
-                        score: team.data.reduce((prev, next) => prev + next.points, 0),
-                        players: this.players.filter(player => player.teamID == team.id)
+                        teamID  : team.id,
+                        name    : team.name,
+                        color   : '#' + team.color,
+                        score   : team.data.reduce((prev, next) => prev + next.points, 0) + plyr_points,
+                        players : team_players
                     }
 
                     this.teams.push(teamObj);
-
+                    // Stuff it in ALL ACTIONS history also
                     for (let act of team.data) {
 
                         let date = new Date(act.creationDate);
@@ -157,7 +150,25 @@ export class MydevicesComponent implements OnInit {
                     }
 
                 });
+                // Check to see if teams were built from actions - if not, initialize them
+                // with empty data for display
+                for (let team of gameConfig['teams']) {
 
+                    var index = this.teams.map(function(t) { return t.teamID }).indexOf(team.id);
+                    // this shouldn't execute after teams have action
+                    if (index === -1) {
+
+                        let team_players = this.players.filter(player => player.teamID == team.id);
+                        let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
+                        this.teams.push({
+                                         teamID  : team.id,
+                                         name    : team.name,
+                                         color   : '#' + team.color,
+                                         score   : 0 + plyr_points,
+                                         players : team_players,
+                                        })
+                    }
+                }
                 // Sort actions by descending timestamp
                 this.allActions = this.allActions.sort((a, b) => b.timestamp - a.timestamp);
 
