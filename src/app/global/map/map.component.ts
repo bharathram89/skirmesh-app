@@ -65,7 +65,9 @@ export class MapComponent implements OnInit {
         let color    = '#' + device.team;
 
         let element = document.getElementById("loc"+locID);
-
+        // If the device corresponds to a location and the configuration
+        // is of CAPTURE or REGISTER ... maybe later ... MEDIC, update
+        // to beacon or fill the color as appropriate
         if (element && (device.config == CAPTURE || device.config == REGISTER)) {
 
             if (!stable && device.team) {
@@ -88,7 +90,9 @@ export class MapComponent implements OnInit {
               element.setAttribute("fill", null);
             }
         }
-        else {
+        // If we found an element, but the device is not one of the above,
+        // then give it standard styling.
+        else if (element) {
 
             element.classList.remove("owned");
             element.classList.remove("beacon");

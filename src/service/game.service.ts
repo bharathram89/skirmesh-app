@@ -33,7 +33,7 @@ export class GameService {
     public getMessages() {
       return new Observable((observer) => {
               this.socket.on('update', (message) => {
-                console.log(message,"message from socket")
+                // console.log(message,"message from socket")
                   observer.next(message);
               });
       });
