@@ -123,7 +123,6 @@ export class MydevicesComponent implements OnInit {
                     let team_players = this.players.filter(player => player.teamID == team.id);
                     let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
 
-                    console.log(":: TEAM ::", team, plyr_points)
                     let teamObj = {
                         teamID  : team.id,
                         name    : team.name,
