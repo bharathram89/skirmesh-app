@@ -86,61 +86,61 @@
     margin-right: 15px;
     margin-bottom: 15px
     }
-    
+
     .view-account .side-bar .side-menu .nav>li:last-child {
     margin-right: 0
     }
-    
+
     .view-account .side-bar .side-menu .nav>li>a {
     display: inline-block;
     color: #9499a3;
     padding: 5px;
     border-bottom: 2px solid transparent
     }
-    
+
     .view-account .side-bar .side-menu .nav>li>a:hover {
     color: #616670;
     background: none
     }
-    
+
     .view-account .side-bar .side-menu .nav>li.active a {
-    color: #40babd;
-    border-bottom: 2px solid #40babd;
+    color:  #A00000;//#40babd;
+    border-bottom: 2px solid  #A00000;// #40babd;
     background: none;
     border-right: none
     }
-    
+
     .theme-2 .view-account .side-bar .side-menu .nav>li.active a {
     color: #6dbd63;
     border-bottom-color: #6dbd63
     }
-    
+
     .theme-3 .view-account .side-bar .side-menu .nav>li.active a {
     color: #497cb1;
     border-bottom-color: #497cb1
     }
-    
+
     .theme-4 .view-account .side-bar .side-menu .nav>li.active a {
     color: #ec6952;
     border-bottom-color: #ec6952
     }
-    
+
     .view-account .side-bar .side-menu .nav>li .icon {
     display: block;
     font-size: 24px;
     margin-bottom: 5px
     }
-    
+
     .view-account .content-panel {
     padding: 30px
     }
-    
+
     .view-account .content-panel .title {
     margin-bottom: 15px;
     margin-top: 0;
     font-size: 18px
     }
-    
+
     .view-account .content-panel .fieldset-title {
     padding-bottom: 15px;
     border-bottom: 1px solid #eaeaf1;
