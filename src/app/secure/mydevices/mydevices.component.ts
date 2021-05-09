@@ -116,7 +116,7 @@ export class MydevicesComponent implements OnInit {
 
                         let date = new Date(act.creationDate);
                         let historyObj = {
-                            team      : stats["team_stats"].find(ele => ele.id == player.teamID).name,
+                            team      : gameConfig["teams"].find(ele => ele.id == player.teamID).name,
                             name      : player.name,
                             action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                             points    : this.actionList.find(ele => ele.id == act.actionID).points,
@@ -130,12 +130,13 @@ export class MydevicesComponent implements OnInit {
 
                 stats["team_stats"].forEach(team => {
 
+                    console.log(":: TEAM ::", team)
                     let teamObj = {
-                        teamID: team.id,
-                        name: team.name,
-                        color: '#' + team.color,
-                        score: team.data.reduce((prev, next) => prev + next.points, 0),
-                        players: this.players.filter(player => player.teamID == team.id)
+                        teamID  : team.id,
+                        name    : team.name,
+                        color   : '#' + team.color,
+                        score   : team.data.reduce((prev, next) => prev + next.points, 0),
+                        players : this.players.filter(player => player.teamID == team.id)
                     }
 
                     this.teams.push(teamObj);
@@ -157,6 +158,20 @@ export class MydevicesComponent implements OnInit {
 
                 });
 
+                for (let team of gameConfig['teams']) {
+
+                    var index = this.teams.map(function(t) { return t.teamID }).indexOf(team.id);
+
+                    if (index === -1) {
+                        this.teams.push({
+                                         teamID  : team.id,
+                                         name    : team.name,
+                                         color   : '#' + team.color,
+                                         score   : 0,
+                                         players : this.players.filter(player => player.teamID == team.id),
+                                        })
+                    }
+                }
                 // Sort actions by descending timestamp
                 this.allActions = this.allActions.sort((a, b) => b.timestamp - a.timestamp);
 
