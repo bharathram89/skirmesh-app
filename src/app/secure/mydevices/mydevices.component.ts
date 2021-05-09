@@ -20,8 +20,8 @@ export class MydevicesComponent implements OnInit {
     activeGame = false;
     map;
 
-    teams = [];
-    players = [];
+    teams      = [];
+    players    = [];
     allActions = [];
 
     locationList;
@@ -52,10 +52,8 @@ export class MydevicesComponent implements OnInit {
             .subscribe(
                 ([activeGames, location, actions]) => {
                     this.locationList = location;
-                    this.actionList = actions;
-                    // console.log(location, actions)
-                    this.activeGames = activeGames;
-                    console.log(this.activeGames, "ACTIVE GAMES IN MY DEVICES")
+                    this.actionList   = actions;
+                    this.activeGames  = activeGames;
                 },
                 err => {
                     //show message on page no games are active.
@@ -63,23 +61,37 @@ export class MydevicesComponent implements OnInit {
             )
     }
 
-    // getGamesWithActiveDevices(listOfGames){
-    //    return listOfGames.filter(ele=>ele.devices.length>0)
-    // }
-
 
     changeGameTab(tabToChangeTo) {
+
         this.currentTab = tabToChangeTo;
-        if (tabToChangeTo == "map") {
-            document.getElementById("teamScore").classList.remove('active');
-            document.getElementById("EventsTracker").classList.remove('active');
-        } else if (tabToChangeTo == "teamScore") {
-            document.getElementById("map").classList.remove('active');
-            document.getElementById("EventsTracker").classList.remove('active');
-        } else if (tabToChangeTo == "EventsTracker") {
-            document.getElementById("teamScore").classList.remove('active');
-            document.getElementById("map").classList.remove('active');
-        }
+
+        document.getElementById("map").classList.remove('active');
+        document.getElementById("teamScore").classList.remove('active');
+        document.getElementById("EventsTracker").classList.remove('active');
+
+        // switch (tabToChangeTo) {
+        //
+        //     default:
+        //     case "map":
+        //
+        //         document.getElementById("teamScore").classList.remove('active');
+        //         document.getElementById("EventsTracker").classList.remove('active');
+        //         break;
+        //
+        //     case "teamScore":
+        //
+        //         document.getElementById("map").classList.remove('active');
+        //         document.getElementById("EventsTracker").classList.remove('active');
+        //         break;
+        //
+        //     case "EventsTracker":
+        //
+        //         document.getElementById("teamScore").classList.remove('active');
+        //         document.getElementById("map").classList.remove('active');
+        //         break;
+        // }
+
         document.getElementById(tabToChangeTo).classList.add('active');
     }
 
