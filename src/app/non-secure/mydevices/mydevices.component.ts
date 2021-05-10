@@ -114,6 +114,7 @@ export class MydevicesComponent implements OnInit {
 
                         let date = new Date(act.creationDate);
                         let historyObj = {
+                            id        : act.id,
                             team      : gameConfig["teams"].find(ele => ele.id == player.teamID).name,
                             name      : player.name,
                             action    : this.actionList.find(ele =>ele.id == act.actionID).action,
@@ -145,6 +146,7 @@ export class MydevicesComponent implements OnInit {
 
                         let date = new Date(act.creationDate);
                         let historyObj = {
+                            id        : act.id,
                             team      : team.name,
                             name      : null,
                             action    : this.actionList.find(ele =>ele.id == act.actionID).action,
@@ -177,7 +179,7 @@ export class MydevicesComponent implements OnInit {
                     }
                 }
                 // Sort actions by descending timestamp
-                this.allActions = this.allActions.sort((a, b) => b.timestamp - a.timestamp);
+                this.allActions = this.allActions.sort((a, b) => b.id - a.id);
 
                 // Figure out if last action was capture and calculate time held since CAPTURE
                 // add those points to the total for each team to show current points status
