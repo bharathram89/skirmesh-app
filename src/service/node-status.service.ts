@@ -55,6 +55,10 @@ export class NodeConfigService {
         private http : HttpClient
     ){}
 
+    getDevicesByGameID(gameID){
+        return this.http.get(this.BASE+'resources/devices?gameID='+gameID)
+    }
+
     modifyNodeConfig(token, data){
         return this.http.put(this.BASE+this.DCTK+token, data, this.options)
     }

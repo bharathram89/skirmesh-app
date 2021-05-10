@@ -6,7 +6,7 @@ import { DeviceService } from 'src/service/device.service';
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
-
+import { NodeConfigService } from 'src/service/node-status.service';
 
 @Component({
     selector: 'app-mydevices',
@@ -20,30 +20,34 @@ export class MydevicesComponent implements OnInit {
     activeGame = false;
     map;
 
-    teams      = [];
-    players    = [];
-    allActions = [];
+    teams         = [];
+    players       = [];
+    allActions    = [];
+    deviceActions = [];
 
     locationList;
     actionList;
 
     description;
     currentTab = 'map'
-    tokenSvc: TokenStorageService;
-    gameSvc: GameService;
+    tokenSvc : TokenStorageService;
+    gameSvc  : GameService;
     deviceSvc: DeviceService;
-    userSvc: UserServiceService;
+    userSvc  : UserServiceService;
+    nodeSvc  : NodeConfigService;
 
     constructor(
         tokenService: TokenStorageService,
         gameService: GameService,
         deviceService: DeviceService,
-        userService: UserServiceService) {
+        userService: UserServiceService,
+        nodeService: NodeConfigService) {
 
-        this.tokenSvc = tokenService;
-        this.gameSvc = gameService;
+        this.tokenSvc  = tokenService;
+        this.gameSvc   = gameService;
         this.deviceSvc = deviceService;
-        this.userSvc = userService;
+        this.userSvc   = userService;
+        this.nodeSvc   = nodeService;
     }
 
     ngOnInit() {
@@ -80,15 +84,19 @@ export class MydevicesComponent implements OnInit {
         //need to reset teams info.
         // this.teams = [];
         let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
+        console.log("GAME CONFIG ID", gameID.target.value)
+
+        // Pull device data in from live devices - not config data
+        this.nodeSvc.getDevicesByGameID(gameID.target.value).subscribe((data) => {this.devices = data});
 
         combineLatest([this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(), gameConfigID),
         this.gameSvc.getGameStats(gameID.target.value)],
         ).subscribe(
             ([gameConfig, stats]) => {
+
                 this.activeGame = true;
                 this.map = gameConfig['mapID'];
                 this.description = gameConfig['description'];
-                this.devices = this.findDevicesForGameID(gameConfigID);
 
                 // Assemble PLAYER stats from API data
                 stats["player_stats"].forEach(player => {
@@ -172,17 +180,35 @@ export class MydevicesComponent implements OnInit {
                 // Sort actions by descending timestamp
                 this.allActions = this.allActions.sort((a, b) => b.timestamp - a.timestamp);
 
+                // Figure out if last action was capture and calculate time held since CAPTURE
+                // add those points to the total for each team to show current points status
+                for (let device of this.devices) {
+
+                    if (!device["teamID"]) {continue}
+
+                    let actions = this.allActions.filter(action => action.location == this.findLocationFromDeviceID(device["id"]));
+
+                    if (actions.length) {
+
+                        if (actions[0].action == "CAPTURE COMPLETE") {
+
+                            let now = new Date().getTime();
+                            let add_score = Math.floor(((now - actions[0].timestamp)/1000) / device["point_scale"]);
+
+                            let dev_team = this.teams.find(team => team.teamID == device["teamID"]);
+                            dev_team.score += add_score;
+
+                        }
+                    }
+
+                }
+
             })
     }
 
 
     findGameConfigIDForGame(gameID) {
         return this.activeGames.find(ele => ele.id == gameID)
-    }
-
-
-    findDevicesForGameID(gameID) {
-        return this.activeGames.filter(ele => ele.gameConfigID == gameID && ele.devices.length > 0)[0].devices;
     }
 
 
