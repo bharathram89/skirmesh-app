@@ -12,10 +12,10 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { FaqComponent } from './faq/faq.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
-
+import { MydevicesComponent } from './mydevices/mydevices.component'
 
 @NgModule({
-  declarations: [NonSecureComponent, FeaturesListComponent, HomeComponent, ContactUsComponent, PrivacyPolicyComponent, FaqComponent, PlayerInfoComponent, FieldInfoComponent],
+  declarations: [NonSecureComponent, FeaturesListComponent, HomeComponent, ContactUsComponent, PrivacyPolicyComponent, FaqComponent, PlayerInfoComponent, FieldInfoComponent,MydevicesComponent],
   imports: [
     CommonModule,
     NonSecureRoutingModule,

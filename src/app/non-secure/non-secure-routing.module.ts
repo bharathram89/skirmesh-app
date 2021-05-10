@@ -9,6 +9,8 @@ import { NonSecureComponent } from './non-secure.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
+import { MydevicesComponent } from './mydevices/mydevices.component'
+
 // const routes: Routes = [{ path: '', component: NonSecureComponent }];
 
 const routes: Routes = [
@@ -42,6 +44,10 @@ const routes: Routes = [
     {
       path: 'player-info',
       component: PlayerInfoComponent,
+    },
+    {
+      path: 'live-games',
+      component: MydevicesComponent,
     },
     
     {

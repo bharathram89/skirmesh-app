@@ -47,7 +47,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Register</a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Live Games</a>
+                </li>
             </ul>
 
             <!-- SECURE LINKS BELOW -->
@@ -58,10 +60,10 @@
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
                 </li>
-
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/mydevices']">Live Games</a>
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Live Games</a>
                 </li>
+                
             </ul>
 
             <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">

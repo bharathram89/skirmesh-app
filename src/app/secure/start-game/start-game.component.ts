@@ -77,7 +77,7 @@ export class StartGameComponent implements OnInit {
                     this.gameBoardActive = true;
                     this.gameInProgress = true;
 
-                    this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(),activeGames[0].gameConfigID ).subscribe(
+                    this.deviceSvc.getGameConfigsByID( activeGames[0].gameConfigID ).subscribe(
 
                         gameConfig=>{
                             this.gameData = activeGames[0]

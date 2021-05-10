@@ -87,7 +87,7 @@ export class MydevicesComponent implements OnInit {
         console.log("GAME CONFIG ID", gameID.target.value)
 
         // Pull device data in from live devices - not config data
-        combineLatest([this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(), gameConfigID),
+        combineLatest([this.deviceSvc.getGameConfigsByID(gameConfigID),
         this.gameSvc.getGameStats(gameID.target.value),
         this.nodeSvc.getDevicesByGameID(gameID.target.value)],
         ).subscribe(

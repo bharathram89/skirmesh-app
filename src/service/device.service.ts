@@ -18,6 +18,8 @@ export class DeviceService {
     BASE = 'http://api.skirmesh.net/'
     GCTK = 'resources/gameConfig?token='
 
+    GTK = 'resources/gameConfig'
+
     userSvc:UserServiceService;
 
     constructor(
@@ -41,8 +43,8 @@ export class DeviceService {
         return this.http.get(this.BASE+this.GCTK+token+'&fieldProfileID='+fieldProfileID)
     }
 
-    getGameConfigsByID(token, gameConfigID){
-        return this.http.get(this.BASE+this.GCTK+token+'&id='+gameConfigID)
+    getGameConfigsByID(gameConfigID){
+        return this.http.get(this.BASE+this.GTK+'?id='+gameConfigID)
     }
 
     deleteGameConfig(token, gameConfigID){
