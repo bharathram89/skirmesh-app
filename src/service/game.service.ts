@@ -19,7 +19,7 @@ export class GameService {
     BASE = 'http://api.skirmesh.net/'
     GTK  = 'games/activeGames'
     RGMS = 'resources/games?token='
-    
+
     userSvc: UserServiceService;
 
     constructor(
