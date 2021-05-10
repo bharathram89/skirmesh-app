@@ -107,8 +107,6 @@ export class MydevicesComponent implements OnInit {
                 this.gameStats   = stats;
                 this.gameConfig  = gameConfig;
 
-                console.log(this.gameStats, this.gameConfig, "moving stuff around");
-
                 this.calcScoreAndSetActions();
             })
     }
@@ -126,8 +124,6 @@ export class MydevicesComponent implements OnInit {
             let player = this.gameStats["player_stats"].find(ele => ele.rfidID == action.rfidID);
             if (player) {player.data.push(action)}
         }
-
-        console.log("AFTER", this.gameStats);
 
         this.calcScoreAndSetActions();
     }
