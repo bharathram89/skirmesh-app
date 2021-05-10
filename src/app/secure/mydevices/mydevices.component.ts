@@ -52,7 +52,7 @@ export class MydevicesComponent implements OnInit {
 
     ngOnInit() {
 
-        combineLatest([this.gameSvc.getGames(this.tokenSvc.getToken()), this.gameSvc.getLocations(), this.gameSvc.getActions()
+        combineLatest([this.gameSvc.getGames(), this.gameSvc.getLocations(), this.gameSvc.getActions()
             ])
             .subscribe(
                 ([activeGames, location, actions]) => {
@@ -87,13 +87,12 @@ export class MydevicesComponent implements OnInit {
         console.log("GAME CONFIG ID", gameID.target.value)
 
         // Pull device data in from live devices - not config data
-        this.nodeSvc.getDevicesByGameID(gameID.target.value).subscribe((data) => {this.devices = data});
-
         combineLatest([this.deviceSvc.getGameConfigsByID(this.tokenSvc.getToken(), gameConfigID),
-        this.gameSvc.getGameStats(gameID.target.value)],
+        this.gameSvc.getGameStats(gameID.target.value),
+        this.nodeSvc.getDevicesByGameID(gameID.target.value)],
         ).subscribe(
-            ([gameConfig, stats]) => {
-
+            ([gameConfig, stats,deviceData]) => {
+                this.devices = deviceData;
                 this.activeGame = true;
                 this.map = gameConfig['mapID'];
                 this.description = gameConfig['description'];

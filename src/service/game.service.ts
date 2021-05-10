@@ -17,9 +17,9 @@ export class GameService {
     options = { headers: this.headers };
 
     BASE = 'http://api.skirmesh.net/'
-    GTK  = 'games/activeGames?token='
+    GTK  = 'games/activeGames'
     RGMS = 'resources/games?token='
-
+    
     userSvc: UserServiceService;
 
     constructor(
@@ -38,8 +38,8 @@ export class GameService {
               });
       });
   }
-    getGames(token) {
-        return this.http.get(this.BASE + this.GTK + token)
+    getGames() {
+        return this.http.get(this.BASE + this.GTK)
     }
 
     pauseGame(token, data) {

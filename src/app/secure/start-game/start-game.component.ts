@@ -68,7 +68,7 @@ export class StartGameComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.gameSvc.getGames(this.tokenSvc.getToken()).subscribe(
+        this.gameSvc.getGames().subscribe(
             activeGames=>{
 
                 if(activeGames[0] ){
