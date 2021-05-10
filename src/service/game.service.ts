@@ -34,7 +34,7 @@ export class GameService {
 
     public getDeviceUpdate() {
       return new Observable((observer) => {
-              this.socket.on('update', (message) => {
+              this.socket.on('deviceUpdate', (message) => {
                 // console.log(message,"message from socket")
                   observer.next(message);
               });
