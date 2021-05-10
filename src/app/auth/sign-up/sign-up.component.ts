@@ -13,13 +13,26 @@ import { AuthService } from 'src/service/auth.service';
 export class SignUpComponent implements OnInit {
 
   addUser: FormGroup;
+  fbPass: FormGroup;
   fields = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
-
+  fbFields ={ pass:'',confirmPass:''}
+  fbPassword:boolean=false;
+  fbLogin:boolean=false;
+  fbData:Object;
   constructor(
     private socialAuthService: SocialAuthService,
     private authSvc: AuthService) { }
 
   ngOnInit(): void {
+    this.fbPass = new FormGroup({
+      "pass": new FormControl(this.fbFields.pass, [
+        Validators.required,
+        Validators.minLength(6)
+      ]),
+      "confirmPass": new FormControl(this.fbFields.confirmPass, [
+        Validators.required
+      ])
+    },{ validators: this.checkFBPasswords.bind(this) })
     this.addUser = new FormGroup({
 
       "fname": new FormControl(this.fields.fname, [
@@ -52,10 +65,7 @@ export class SignUpComponent implements OnInit {
       console.log('user fb login', user)
     });
     this.addUser.controls['fieldName'].disable();//needed in ngonInit to disable fieldName
-  }
-  get checkpass(){
-    return this.checkPasswords(this.addUser)
-  }
+  } 
   checkPasswords(group: FormGroup){
     const password = group.get('password').value;
   const confirmPassword = group.get('confirmPassword').value;
@@ -63,6 +73,18 @@ export class SignUpComponent implements OnInit {
   return password === confirmPassword ? null : group.controls['confirmPassword'].setErrors({ notSame: true });
 
   }
+  checkFBPasswords(group: FormGroup){
+    const password = group.get('pass').value;
+  const confirmPassword = group.get('confirmPass').value;
+
+  return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
+
+  }
+
+  get pass() { return this.fbPass.get('pass'); }
+  get confirmPass() { return this.fbPass.get('confirmPass'); }
+
+
   get fname() { return this.addUser.get('fname'); }
   get lname() { return this.addUser.get('lname'); }
   get email() { return this.addUser.get('email'); }
@@ -105,15 +127,15 @@ export class SignUpComponent implements OnInit {
   }
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
+      this.fbLogin = true;
       console.log(fbData,"fb data");
       let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
       //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
-      //how to do password?
-      let data = {
+      this.fbData = {
         "callSign": fbData.name,
         "firstName": fbData.firstName,
         "lastName": fbData.lastName,
-        "password": this.addUser.value.password,
+        "password": '',
         "email": fbData.email,
         "type": type
       }
@@ -134,7 +156,19 @@ export class SignUpComponent implements OnInit {
     },
     err=>{
       document.getElementById('userCreatFaileddMessage').classList.toggle('d-none')
-      console.log(data,err,"resp")
+      console.log(err,"resp")
+    })
+  }
+  onFBSubmit(){
+    this.fbData['password']=this.fbPass.value.pass;
+    console.log(this.fbData, this.fbPass.value.pass)
+    this.authSvc.createUser(this.fbData).subscribe(data=>{
+      document.getElementById('FBuserCreatedMessage').classList.toggle('d-none')
+      console.log(data,'fb user created')
+    },
+    err=>{
+      document.getElementById('FBuserCreatFaileddMessage').classList.toggle('d-none')
+      console.log(err,"resp")
     })
   }
 

@@ -102,5 +102,5 @@ export class SignInComponent implements OnInit {
 //show error message
       }
     )
-  }
+  } 
 }
