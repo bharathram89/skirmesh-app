@@ -8,12 +8,13 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { DeviceService } from 'src/service/device.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 import { AuthService } from 'src/service/auth.service';
 import { GameService } from 'src/service/game.service';
+import { NodeConfigService } from 'src/service/node-status.service';
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -52,23 +53,30 @@ export class StartGameComponent implements OnInit {
     gameID              = null;
     gameData            = null;
 
+
+    nodeSvc  : NodeConfigService;
+
     constructor(
         userService     : UserServiceService,
         deviceService   : DeviceService,
         tokenService    : TokenStorageService,
         authService     : AuthService,
-        gameService     : GameService
+        gameService     : GameService,
+        nodeService     : NodeConfigService
     ){
         this.authSvc       = authService;
         this.userSvc       = userService;
         this.deviceSvc     = deviceService;
         this.tokenSvc      = tokenService;
         this.gameSvc       = gameService;
+        this.nodeSvc       = nodeService;
         this.activeDevices = new BehaviorSubject({})
     }
 
     ngOnInit(): void {
+
         this.gameSvc.getGames().subscribe(
+
             activeGames=>{
 
                 if(activeGames[0] ){
@@ -77,16 +85,13 @@ export class StartGameComponent implements OnInit {
                     this.gameBoardActive = true;
                     this.gameInProgress = true;
 
-                    this.deviceSvc.getGameConfigsByID( activeGames[0].gameConfigID ).subscribe(
+                    combineLatest([this.deviceSvc.getGameConfigsByID( activeGames[0].gameConfigID ),
+                                   this.nodeSvc.getDevicesByGameID(this.gameData.id)]).subscribe(
 
-                        gameConfig=>{
-                            this.gameData = activeGames[0]
-                           // console.log(gameConfig, "selected COnfigs details")
-                           this.setSelectedGameConfig(gameConfig);
-                            this.gameBoardActive = true;
-                            this.gameInProgress = true;
-
-
+                        ([gameConfig, deviceData]) => {
+                            // Grab the latest configuration data, but use live node data
+                            gameConfig["deviceMap"] = deviceData;
+                            this.setSelectedGameConfig(gameConfig);
                         }
                      )
                 }else{
