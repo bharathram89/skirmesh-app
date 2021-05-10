@@ -50,6 +50,15 @@ export class GameService {
       });
     }
 
+    public getPlayerUpdate() {
+      return new Observable((observer) => {
+              this.socket.on('playerUpdate', (message) => {
+                // console.log(message,"message from socket")
+                  observer.next(message);
+              });
+      });
+    }
+
 
     getGames() {
         return this.http.get(this.BASE + this.GTK)
