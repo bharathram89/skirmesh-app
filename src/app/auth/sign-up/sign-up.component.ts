@@ -132,8 +132,7 @@ export class SignUpComponent implements OnInit {
       let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
       //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
       this.socialData = {
-        "provider":"facebook",
-        "id":fbData.id,
+        "facebook":JSON.stringify({"ID":fbData.id,'PROVIDER':'facebook'}),
         "callSign": fbData.name,
         "firstName": fbData.firstName,
         "lastName": fbData.lastName,
@@ -162,12 +161,7 @@ export class SignUpComponent implements OnInit {
     })
   }
   onSocialSubmit(){
-    this.socialData['password']=this.socailPass.value.pass;
-    if(this.socialData['provider'] == 'facebook'){
-      this.socialData['facebook']=JSON.stringify({"ID":this.socialData['id'],'PROVIDER':this.socialData['provider']});
-    }else if (this.socialData['provider'] == 'google'){
-      this.socialData['google']=JSON.stringify({"ID":this.socialData['id'],'PROVIDER':this.socialData['provider']});
-    }
+    this.socialData['password']=this.socailPass.value.pass; 
     console.log(this.socialData, this.socailPass.value.pass)
     this.authSvc.createUser(this.socialData).subscribe(data=>{
       document.getElementById('FBuserCreatedMessage').classList.toggle('d-none')
@@ -186,8 +180,7 @@ export class SignUpComponent implements OnInit {
       // let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
       // //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
       this.socialData = { 
-        "provider":"google",
-        "id":googleData.id, 
+        "facebook":JSON.stringify({"ID":googleData.id,'PROVIDER':'google'}), 
         "callSign": googleData.name,
         "firstName": googleData.firstName,
         "lastName": googleData.lastName,
