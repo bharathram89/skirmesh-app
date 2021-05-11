@@ -73,6 +73,11 @@ export class MydevicesComponent implements OnInit {
             this.updateActionAndCalcScore(socketData);
         })
 
+        this.gameSvc.getPlayerUpdate().subscribe(socketData=>{
+            console.log(socketData," Player Update");
+            this.updatePlayerData(socketData);
+        })
+
     }
 
 
@@ -112,6 +117,12 @@ export class MydevicesComponent implements OnInit {
     }
 
 
+    updatePlayerData(player) {
+        let index = this.players.findIndex(ele => ele.rfidID == player.rfidID);
+        this.players[index].is_alive = player.is_alive;
+    }
+
+
     updateActionAndCalcScore(action){
 
         if (action.teamID && !action.rfidID){
@@ -140,6 +151,7 @@ export class MydevicesComponent implements OnInit {
 
             let playerObj = {
                 teamID       : player.teamID,
+                rfidID       : player.rfidID,
                 name         : player.name,
                 is_alive     : player.is_alive,
                 lastAction   : this.actionList.find(ele => ele.id == player.data[player.data.length - 1].actionID).action,
