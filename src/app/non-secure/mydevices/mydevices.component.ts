@@ -138,8 +138,13 @@ export class MydevicesComponent implements OnInit {
 
         this.calcScoreAndSetActions();
     }
-
-
+    // This function grabs player and team stats from the initial load and parses
+    // them out for ease of display within the UI
+    //
+    // stats are grouped by player and team actions --- each action is parsed
+    // and scores tallied in order to have total scores for each player and
+    // give a list of running game actions.  The lastAction and lastLocation are
+    // specifically isolated to show in the UI
     calcScoreAndSetActions() {
 
         this.allActions = [];
@@ -228,11 +233,12 @@ export class MydevicesComponent implements OnInit {
                                 })
             }
         }
-        // Sort actions by descending timestamp
+        // Sort actions descending
         this.allActions = this.allActions.sort((a, b) => b.id - a.id);
-
         // Figure out if last action was capture and calculate time held since CAPTURE
         // add those points to the total for each team to show current points status
+        // THIS WILL NOT continue to stack points - a refresh is required - or it will
+        // get updated when an action or player update is pushed over the socket
         for (let device of this.devices) {
 
             if (!device["teamID"]) {continue}
