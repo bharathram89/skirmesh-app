@@ -19,7 +19,7 @@ export class GameService {
     BASE = 'http://api.skirmesh.net/'
     GTK  = 'games/activeGames'
     RGMS = 'resources/games?token='
-    
+
     userSvc: UserServiceService;
 
     constructor(
@@ -30,14 +30,36 @@ export class GameService {
     ) {
         this.userSvc = userSvc;
     }
-    public getMessages() {
+
+
+    public getDeviceUpdate() {
       return new Observable((observer) => {
-              this.socket.on('update', (message) => {
+              this.socket.on('deviceUpdate', (message) => {
                 // console.log(message,"message from socket")
                   observer.next(message);
               });
       });
-  }
+    }
+
+    public getNewAction() {
+      return new Observable((observer) => {
+              this.socket.on('newAction', (message) => {
+                // console.log(message,"message from socket")
+                  observer.next(message);
+              });
+      });
+    }
+
+    public getPlayerUpdate() {
+      return new Observable((observer) => {
+              this.socket.on('playerUpdate', (message) => {
+                // console.log(message,"message from socket")
+                  observer.next(message);
+              });
+      });
+    }
+
+
     getGames() {
         return this.http.get(this.BASE + this.GTK)
     }

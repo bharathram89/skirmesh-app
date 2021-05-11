@@ -35,9 +35,9 @@ export class MapComponent implements OnInit {
 
       console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID)
 
-      this.gameSvc.getMessages().subscribe(socketData=>{
+      this.gameSvc.getDeviceUpdate().subscribe(socketData=>{
         // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
-        console.log(socketData," socket Data");
+        console.log(socketData," Device Update");
         this.updateLocationState(socketData);
       })
 

@@ -54,8 +54,8 @@
                                     <tr *ngFor="let player of team.players">
                                         <th scope="row">
                                             <div class="text">
-                                                <a *ngIf="player.is_alive" style="color: green;">{{player.name}}</a>
-                                                <a *ngIf="!player.is_alive" style="color: red;">{{player.name}}</a>
+                                                <a *ngIf=player.is_alive style="color: #00A000;">{{player.name}}</a>
+                                                <a *ngIf=!player.is_alive style="color: #A00000;">{{player.name}}</a>
                                             </div>
                                         </th>
                                         <td>
