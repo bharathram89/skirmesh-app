@@ -1,4 +1,4 @@
-<div *ngIf="!fbLogin" class="custom_skirmesh">
+<div *ngIf="!socialLogin" class="custom_skirmesh">
 	<form action="#">
 		<div class="row justify-content-md-center">
 			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -148,8 +148,8 @@
 									<i class="fa fa-facebook-official"></i>
 								</a>
 							</div>
-							<div class="col-xs-4">
-								<a href="#" class="btn btn-lg btn-block social_icon">
+							<div (click)="signInWithGoogle()" class="col-xs-4">
+								<a  class="btn btn-lg btn-block social_icon">
 									<i class="fa fa-google-plus"></i>
 								</a>
 							</div>
@@ -169,11 +169,11 @@
 </div>
 
 
-<div *ngIf="fbLogin" class="custom_skirmesh">
+<div *ngIf="socialLogin" class="custom_skirmesh">
 	<div class="row justify-content-md-center">
 		<!-- <div class="col-8"> -->
 			<div class="login-screen">
-				<form [formGroup]="fbPass" autocomplete="off" method="POST">
+				<form [formGroup]="socailPass" autocomplete="off" method="POST">
 					<div class="col-6">
 						<h3 class="center-cust">Please Enter a password for Skirmesh</h3>
 						<div class="form-group">
@@ -217,7 +217,7 @@
 							contact us page</a>
 					</div>
 				</div>
-				<button [disabled]="fbPass.invalid" (click)="onFBSubmit()" type="submit"
+				<button [disabled]="socailPass.invalid" (click)="onSocialSubmit()" type="submit"
 				class="btn cust_skir_signup"> Sign Up!</button>
 			</div>
 		</div>

@@ -47,6 +47,12 @@ const config: SocketIoConfig = { url: 'http://api.skirmesh.net', options: {} };
             provider: new FacebookLoginProvider(
               '348781009877452'
             )
+          },
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '380914575563-o5mslfbj2klk7tdhdmr2rdogk9ugq86d.apps.googleusercontent.com'
+            )
           }
         ]
       } as SocialAuthServiceConfig,

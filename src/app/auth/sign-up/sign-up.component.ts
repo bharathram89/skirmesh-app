@@ -13,18 +13,18 @@ import { AuthService } from 'src/service/auth.service';
 export class SignUpComponent implements OnInit {
 
   addUser: FormGroup;
-  fbPass: FormGroup;
+  socailPass: FormGroup;
   fields = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
   fbFields ={ pass:'',confirmPass:''}
   fbPassword:boolean=false;
-  fbLogin:boolean=false;
-  fbData:Object;
+  socialLogin:boolean=false;
+  socialData:Object;
   constructor(
     private socialAuthService: SocialAuthService,
     private authSvc: AuthService) { }
 
   ngOnInit(): void {
-    this.fbPass = new FormGroup({
+    this.socailPass = new FormGroup({
       "pass": new FormControl(this.fbFields.pass, [
         Validators.required,
         Validators.minLength(6)
@@ -81,8 +81,8 @@ export class SignUpComponent implements OnInit {
 
   }
 
-  get pass() { return this.fbPass.get('pass'); }
-  get confirmPass() { return this.fbPass.get('confirmPass'); }
+  get pass() { return this.socailPass.get('pass'); }
+  get confirmPass() { return this.socailPass.get('confirmPass'); }
 
 
   get fname() { return this.addUser.get('fname'); }
@@ -127,11 +127,13 @@ export class SignUpComponent implements OnInit {
   }
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
-      this.fbLogin = true;
+      this.socialLogin = true;
       console.log(fbData,"fb data");
       let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
       //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
-      this.fbData = {
+      this.socialData = {
+        "provider":"facebook",
+        "id":fbData.id,
         "callSign": fbData.name,
         "firstName": fbData.firstName,
         "lastName": fbData.lastName,
@@ -159,10 +161,15 @@ export class SignUpComponent implements OnInit {
       console.log(err,"resp")
     })
   }
-  onFBSubmit(){
-    this.fbData['password']=this.fbPass.value.pass;
-    console.log(this.fbData, this.fbPass.value.pass)
-    this.authSvc.createUser(this.fbData).subscribe(data=>{
+  onSocialSubmit(){
+    this.socialData['password']=this.socailPass.value.pass;
+    if(this.socialData['provider'] == 'facebook'){
+      this.socialData['facebook']=JSON.stringify({"ID":this.socialData['id'],'PROVIDER':this.socialData['provider']});
+    }else if (this.socialData['provider'] == 'google'){
+      this.socialData['google']=JSON.stringify({"ID":this.socialData['id'],'PROVIDER':this.socialData['provider']});
+    }
+    console.log(this.socialData, this.socailPass.value.pass)
+    this.authSvc.createUser(this.socialData).subscribe(data=>{
       document.getElementById('FBuserCreatedMessage').classList.toggle('d-none')
       console.log(data,'fb user created')
     },
@@ -171,5 +178,25 @@ export class SignUpComponent implements OnInit {
       console.log(err,"resp")
     })
   }
+
+  signInWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
+      this.socialLogin = true;
+      console.log(googleData,"google Data");
+      // let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
+      // //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
+      this.socialData = { 
+        "provider":"google",
+        "id":googleData.id, 
+        "callSign": googleData.name,
+        "firstName": googleData.firstName,
+        "lastName": googleData.lastName,
+        "password": '',
+        "email": googleData.email,
+        "type": 'player'
+      }
+    });;
+  }
+
 
 }
