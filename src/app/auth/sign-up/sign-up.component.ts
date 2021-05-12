@@ -140,7 +140,7 @@ export class SignUpComponent implements OnInit {
             // we can unhash it to get the picture url if necessary and store it with their Profile.
             this.socialData = {
                 "facebookID" : fbData.id,
-                "facebook"   : JSON.stringify(fbData),
+                "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"google","skirmesh":"rocks"}),
                 "callSign"   : fbData.name,
                 "firstName"  : fbData.firstName,
                 "lastName"   : fbData.lastName,
@@ -159,7 +159,7 @@ export class SignUpComponent implements OnInit {
             // //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
             this.socialData = {
                 "googleID"  : googleData.id,
-                "google"    : JSON.stringify(googleData),
+                "google"    : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
                 "callSign"  : googleData.name,
                 "firstName" : googleData.firstName,
                 "lastName"  : googleData.lastName,

@@ -108,7 +108,7 @@ export class SignInComponent implements OnInit {
 
   signInWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
-      let data = { "google":googleData.id}
+      let data = { "googleID":googleData.id,'google': JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"})}
       this.authSvc.userLogin(data).subscribe(
         respData=>{
            
@@ -122,13 +122,12 @@ export class SignInComponent implements OnInit {
         }
       )
     });;
-  }
-
+  } 
 
 
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
-      let data = {"facebook":fbData.id }
+      let data = {"ID":fbData.id ,'facebook': JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"})}
       this.authSvc.userLogin(data).subscribe(
         respData=>{
            
