@@ -172,7 +172,7 @@ export class StartGameComponent implements OnInit {
 
         let paused = !this.gameData.is_paused;
 
-        this.gameSvc.pauseGame(this.userSvc.getToken(), {"id":this.gameData.id, "is_paused":paused}).subscribe(
+        this.gameSvc.pauseGame(this.userSvc.getToken(), {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
             data => this.gameData = data
         )
     }

@@ -65,7 +65,7 @@ export class GameService {
     }
 
     pauseGame(token, data) {
-        return this.http.put(this.BASE + this.RGMS + token, data, this.options)
+        return this.http.put(this.BASE + 'gameplay/pauseGame?token=' + token, data, this.options)
     }
 
     startGame(token, gameConfigID){
