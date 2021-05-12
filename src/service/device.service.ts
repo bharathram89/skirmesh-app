@@ -17,8 +17,8 @@ export class DeviceService {
 
     BASE = 'http://api.skirmesh.net/'
     GCTK = 'resources/gameConfig?token='
-
     GTK = 'resources/gameConfig'
+    TMTK = 'resources/team?token='
 
     userSvc:UserServiceService;
 
@@ -35,8 +35,11 @@ export class DeviceService {
     }
 
     modifyGameConfig(data, token){
-        console.log(" MODIFY GAME CONFIG DATA:" , data)
         return this.http.put(this.BASE+this.GCTK+token,data,this.options)
+    }
+    
+    deleteTeam(teamID, token){
+        return this.http.delete(this.BASE+this.TMTK+token+'&id='+teamID)
     }
 
     getGameConfigs(token, fieldProfileID){
