@@ -28,14 +28,9 @@
           Color:
           <br>
           <input type="color" formControlName="color">
-          <!-- <select [ngModel]="i" class="form-control" formControlName="color" [id]="'colorPicker'+i"
-            (change)="changeColor($event)">
 
-            <option [style.background-color]="color.value" [value]="color.id" *ngFor="let color of colors">
-              {{color.name}}</option>
-          </select> -->
         </td>
-        <td *ngIf="i > 1">
+        <td *ngIf="teams.length > 2">
           <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
         </td>
       </tr>
@@ -50,8 +45,3 @@
 
 
 </form>
-
-
-
-
-<!--  EDIT MODAL NEEDS TO MOVE TO NEW COMPONENT -->
