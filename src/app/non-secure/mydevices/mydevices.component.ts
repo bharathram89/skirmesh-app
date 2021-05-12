@@ -247,10 +247,12 @@ export class MydevicesComponent implements OnInit {
 
             if (actions.length) {
 
-                if (actions[0].action == "CAPTURE COMPLETE") {
+                let lastCapComplete = actions.find(act => act.action == "CAPTURE COMPLETE");
+
+                if (lastCapComplete) {
 
                     let now = new Date().getTime();
-                    let add_score = Math.floor(((now - actions[0].timestamp)/1000) / device["point_scale"]);
+                    let add_score = Math.floor(((now - lastCapComplete.timestamp)/1000) / device["point_scale"]);
 
                     let dev_team = this.teams.find(team => team.teamID == device["teamID"]);
                     dev_team.score += add_score;
