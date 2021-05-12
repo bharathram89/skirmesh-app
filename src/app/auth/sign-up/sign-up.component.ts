@@ -132,7 +132,7 @@ export class SignUpComponent implements OnInit {
       let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
       //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
       this.socialData = {
-        "facebook":JSON.stringify({"ID":fbData.id,'PROVIDER':'facebook'}),
+        "facebook":fbData.id,
         "callSign": fbData.name,
         "firstName": fbData.firstName,
         "lastName": fbData.lastName,
@@ -180,7 +180,7 @@ export class SignUpComponent implements OnInit {
       // let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
       // //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
       this.socialData = { 
-        "facebook":JSON.stringify({"ID":googleData.id,'PROVIDER':'google'}), 
+        "google":googleData.id, 
         "callSign": googleData.name,
         "firstName": googleData.firstName,
         "lastName": googleData.lastName,

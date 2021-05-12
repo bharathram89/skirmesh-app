@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
 import { AuthService } from 'src/service/auth.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -18,6 +19,7 @@ export class SignInComponent implements OnInit {
 
   constructor(
     private authSvc: AuthService,
+    private socialAuthService: SocialAuthService,
     private userSvc: UserServiceService,
     private tokenStorage: TokenStorageService,
     private router: Router) {
@@ -103,4 +105,44 @@ export class SignInComponent implements OnInit {
       }
     )
   } 
+
+  signInWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
+      let data = { "google":googleData.id}
+      this.authSvc.userLogin(data).subscribe(
+        respData=>{
+           
+          this.tokenStorage.saveToken(respData['token'])
+          this.router.navigate(['/secure']);
+   
+        },
+        err=>{
+          document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
+  //show error message
+        }
+      )
+    });;
+  }
+
+
+
+  loginWithFacebook(): void {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
+      let data = {"facebook":fbData.id }
+      this.authSvc.userLogin(data).subscribe(
+        respData=>{
+           
+          this.tokenStorage.saveToken(respData['token'])
+          this.router.navigate(['/secure']);
+   
+        },
+        err=>{
+          document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
+  //show error message
+        }
+      )
+    });
+  }
+
+
 }
