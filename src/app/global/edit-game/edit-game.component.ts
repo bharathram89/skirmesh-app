@@ -117,6 +117,8 @@ export class EditGameComponent implements OnInit {
 
     onNewGameModeFormSubmit() {
 
+        this.setNodes();
+
         let dataModel = this.gameModeForm.value;
         console.log(dataModel," final modal?")
         this.saveGameMode.emit(dataModel);
@@ -149,7 +151,7 @@ export class EditGameComponent implements OnInit {
     newTeam(): FormGroup {
         return this.fb.group({
                                 name  :'Team Name',
-                                color : null,
+                                color :'#000000',
                                 id    : null
                              })
     }
@@ -188,11 +190,13 @@ export class EditGameComponent implements OnInit {
 
     setNodes(){
 
+        this.gameModeForm.value.nodeModes = this.deviceConfigs
+
         this.deviceListConfigs.next({
             mode        : "create",
             mapID       : this.gameModeForm.get('map').value,
             teams       : this.gameModeForm.get('teams')['controls'],
-            nodeConfigs : this.gameModeForm.get('nodeModes').value
+            nodeConfigs : this.deviceConfigs
         })
     }
 

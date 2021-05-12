@@ -34,7 +34,6 @@ export class GameConfigComponent implements OnInit {
 
             this.gameConfigs = savedConfigs;
             this.gameConfigs.forEach(savedConfig => {
-                console.log("::SAVED CONFIGS::", savedConfig)
                 // We need to do this to attach the "#" to the front
                 // of each color, because it's not held in the DB
                 savedConfig.teams.forEach(team => {
@@ -78,7 +77,7 @@ export class GameConfigComponent implements OnInit {
 
     onGameModeFormSubmit(dataModel) {
 
-        console.log("::DATA MODEL::", dataModel)
+        console.log("::GAME MODE FORM SUBMIT DATA MODEL::", dataModel)
 
         if (dataModel.id) {
             let teams =[];
@@ -94,16 +93,15 @@ export class GameConfigComponent implements OnInit {
 
             let apiData = {
                 id             : dataModel.id,
-                mapID          : this.userSvc.findMapID(dataModel.map),
+                mapID          : dataModel.map,
                 fieldProfileID : this.userSvc.getFieldProfileID(),
                 description    : dataModel.name,
                 deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
 
-            // console.log(dataModel, "modal to edit", apiData)
-
-            this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(data => {})
+            this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(
+                data => {})
             this.gameModes = this.gameModes.map(gameMode => {
 
                 if (gameMode.id === dataModel.id) {
@@ -111,7 +109,7 @@ export class GameConfigComponent implements OnInit {
                 } else {
                     return gameMode;
                 }
-          });
+            });
         }
 
         else {
@@ -123,9 +121,6 @@ export class GameConfigComponent implements OnInit {
                 deviceMap      : dataModel.nodeModes,
                 teams          : dataModel.teams
             }
-
-            console.log('create gameconfig',dataModel)
-
             // dataModel.map = this.userSvc.findMapID(dataModel.map)
             dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR?
 
