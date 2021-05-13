@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { FindGameComponent } from './find-game/find-game.component';
+import { DashboardComponent } from './dashboard/dashboard.component'; 
 import { ManageGameComponent } from './manage-game/manage-game.component'; 
 import { ProfileComponent } from './profile/profile.component';
 import { SecureComponent } from './secure/secure.component';
@@ -31,10 +30,6 @@ const routes: Routes = [
       {
         path: 'manageGame',
         component: ManageGameComponent
-      },
-      {
-        path: 'findGame',
-        component: FindGameComponent
       }, 
     ]
   }

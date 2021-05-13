@@ -53,7 +53,7 @@
             </ul>
 
             <!-- SECURE LINKS BELOW -->
-            <ul class="navbar-nav mt-2 mt-lg-0" *ngIf="isSecure">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure">
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_dashboard" [routerLink]="['/secure/dashboard']">Dashboard</a>
                 </li>
@@ -66,14 +66,11 @@
                 
             </ul>
 
-            <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/findGame']">Find Games</a>
-                </li>
+            <!-- <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/currentGame']">Current Games</a>
                 </li>
-            </ul>
+            </ul> -->
 
             <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isField">
                 <li class="nav-item">
