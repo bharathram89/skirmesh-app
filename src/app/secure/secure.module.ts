@@ -9,6 +9,7 @@ import { StartGameComponent } from './start-game/start-game.component';
 import { ManageGameComponent } from './manage-game/manage-game.component'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
  
 @NgModule({
     declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent],
@@ -17,7 +18,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         SecureRoutingModule,
         GlobalModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TypeaheadModule.forRoot()
     ]
 })
 export class SecureModule {

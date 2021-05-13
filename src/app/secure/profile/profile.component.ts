@@ -11,7 +11,9 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 
 export class ProfileComponent implements OnInit {
-
+  playerSelected: string;//this is the selected player from list
+  RFIDScanned: string;//load the rfid scanned to this location
+  players: any[]=[{name:'Bart',id:1},{name:'Brandon',id:2},{name:'Rob',id:3},{name:'Dusty',id:4}]//this is the list of call signs
   pfNav: HTMLElement;
   securityNav: HTMLElement;
   settingsNav: HTMLElement;
@@ -151,7 +153,10 @@ export class ProfileComponent implements OnInit {
     this.securitySection.style.display = 'block';
     this.settingsSection.style.display = 'none';
   }
+  connectRfidToPlayer(){
+    
 
+  }
   onSubmit() {
 
     let data  = {"user":{}, "field":{}, "player":{}}

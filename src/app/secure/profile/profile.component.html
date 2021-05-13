@@ -6,9 +6,10 @@
         <div class="side-bar">
           <nav class="side-menu">
             <ul class="nav">
-              <li id="profileNav" (click)="profile()" class="active"><a><span class="fa fa-user"></span> Profile</a></li>
-              <li id="settingsNav" (click)="settings()" ><a><span class="fa fa-cog"></span> Settings</a></li>
-              <li id="securityNav" (click)="security()" ><a><span class="fa fa-credit-card"></span> Security</a></li>
+              <li id="profileNav" (click)="profile()" class="active"><a><span class="fa fa-user"></span> Profile</a>
+              </li>
+              <li id="settingsNav" (click)="settings()"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
+              <li id="securityNav" (click)="security()"><a><span class="fa fa-credit-card"></span> Security</a></li>
             </ul>
           </nav>
         </div>
@@ -19,12 +20,14 @@
               <h3 class="fieldset-title">Personal Info</h3>
               <div class="form-group avatar">
                 <figure class="figure col-md-2 col-sm-3 col-xs-12">
-                  <img id="profileImage" class="img-rounded img-responsive" src="{{currentVals.imageData}}" onerror="this.onerror=null; this.src='https://bootdey.com/img/Content/avatar/avatar1.png'"
-                    alt="">
+                  <img id="profileImage" class="img-rounded img-responsive" src="{{currentVals.imageData}}"
+                    onerror="this.onerror=null; this.src='https://bootdey.com/img/Content/avatar/avatar1.png'" alt="">
                 </figure>
                 <div class="form-inline col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="profileImage" (change)="getFile($event)" type="file" class="file-uploader pull-left" accept="image/*">
-                  <button type="submit" (click)="saveImage()" class="btn btn-sm btn-primary btn-default-alt pull-left">Update Image</button>
+                  <input formControlName="profileImage" (change)="getFile($event)" type="file"
+                    class="file-uploader pull-left" accept="image/*">
+                  <button type="submit" (click)="saveImage()"
+                    class="btn btn-sm btn-primary btn-default-alt pull-left">Update Image</button>
                 </div>
               </div>
 
@@ -32,37 +35,42 @@
               <div class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">First Name</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="firstName" type="text" class="form-control" placeholder="{{currentVals.firstName}}">
+                  <input formControlName="firstName" type="text" class="form-control"
+                    placeholder="{{currentVals.firstName}}">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="lastName" type="text" class="form-control"  placeholder="{{currentVals.lastName}}">
+                  <input formControlName="lastName" type="text" class="form-control"
+                    placeholder="{{currentVals.lastName}}">
                 </div>
               </div>
-              <div  *ngIf="isPlayer" class="form-group">
+              <div *ngIf="isPlayer" class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">Clan Tag</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="clanTag" type="text" class="form-control"  placeholder="{{currentVals.clanTag}}">
+                  <input formControlName="clanTag" type="text" class="form-control"
+                    placeholder="{{currentVals.clanTag}}">
                 </div>
               </div>
-              <div  *ngIf="isPlayer" class="form-group">
+              <div *ngIf="isPlayer" class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">Bio</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="bio" type="text" class="form-control"  placeholder="{{currentVals.bio}}">
+                  <input formControlName="bio" type="text" class="form-control" placeholder="{{currentVals.bio}}">
                 </div>
               </div>
-              <div  *ngIf="isField" class="form-group">
+              <div *ngIf="isField" class="form-group">
                 <label class="col-sm-3 col-xs-12 control-label">Field Name</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="fieldName" type="text" class="form-control"  placeholder="{{currentVals.fieldName}}">
+                  <input formControlName="fieldName" type="text" class="form-control"
+                    placeholder="{{currentVals.fieldName}}">
                 </div>
               </div>
-              <div  *ngIf="isField" class="form-group">
+              <div *ngIf="isField" class="form-group">
                 <label class="col-sm-3 col-xs-12 control-label">Field Description</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="profile" type="text" class="form-control"  placeholder="{{currentVals.profile}}">
+                  <input formControlName="profile" type="text" class="form-control"
+                    placeholder="{{currentVals.profile}}">
                 </div>
               </div>
             </fieldset>
@@ -71,13 +79,13 @@
               <div class="form-group">
                 <label class="col-sm-3 col-xs-12 control-label">Email</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="email" type="email" class="form-control"  placeholder="{{currentVals.email}}">
+                  <input formControlName="email" type="email" class="form-control" placeholder="{{currentVals.email}}">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 col-xs-12 control-label">Phone</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input formControlName="phone" type="text" class="form-control"  placeholder="{{currentVals.phone}}">
+                  <input formControlName="phone" type="text" class="form-control" placeholder="{{currentVals.phone}}">
                 </div>
               </div>
             </fieldset>
@@ -90,48 +98,48 @@
           </form>
           <div class="row">
             <div id="userCreatedMessage" class="alert alert-primary d-none center-cust">
-               Your profile has been updated!<br>
+              Your profile has been updated!<br>
             </div>
             <div id="userCreatFaileddMessage" class="alert alert-danger d-none center-cust">
-               We are sorry we were not able to update your profile at this time <br>
-               Please try again or <a [routerLink]="['/non-secure/contact-us']" >contact us.</a>
+              We are sorry we were not able to update your profile at this time <br>
+              Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us.</a>
             </div>
-           </div>
+          </div>
           <div id="socalMedia">
             <div class="row">
               <div class="col">
-                <div id="fb_card" class="card" >
+                <div id="fb_card" class="card">
                   <div class="card-body">
                     <i class="fa fa-facebook fa-5x"></i>
                     <h5 class="card-title">Facebook Connection</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Connected: </h6>
                     <p class="card-text">If you are connected you can share data.</p>
-                    <a href="#"  id="fb_connect" class="card-link">Connect</a>
+                    <a href="#" id="fb_connect" class="card-link">Connect</a>
                     <a href="#" id="fb_disconnect" class="card-link">Disconnect</a>
                   </div>
                 </div>
               </div>
               <div class="col">
-                <div id="twitter_card" class="card" >
+                <div id="twitter_card" class="card">
                   <div class="card-body">
                     <i class="fa fa-twitter fa-5x"></i>
                     <h5 class="card-title">Twitter Connection</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Connected:</h6>
                     <p class="card-text">If you are connected you can share data.</p>
-                    <a href="#"   id="twitter_connect" class="card-link">Connect</a>
+                    <a href="#" id="twitter_connect" class="card-link">Connect</a>
                     <a href="#" id="twitter_disconnect" class="card-link">Disconnect</a>
                   </div>
                 </div>
               </div>
               <div class="col">
-                <div id="yt" class="card" >
+                <div id="yt" class="card">
                   <div class="card-body">
                     <i class="fa fa-youtube fa-5x"></i>
                     <h5 class="card-title">Youtube Connection</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Connected: </h6>
                     <p class="card-text">If you are connected you can share data.</p>
-                    <a href="#"   id="yt" class="card-link">Connect</a>
-                    <a href="#"   id="yt" class="card-link">Disconnect</a>
+                    <a href="#" id="yt" class="card-link">Connect</a>
+                    <a href="#" id="yt" class="card-link">Disconnect</a>
                   </div>
                 </div>
               </div>
@@ -139,74 +147,17 @@
           </div>
         </div>
         <div id="settings" class="content-panel">
-          <h2 class="title center-cust">Manage Settings</h2>
-          <form class="form-horizontal">
-            <fieldset class="fieldset">
-              <h3 class="fieldset-title">Device Info</h3>
-
-
-
-              <div class="form-group">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                  Launch demo modal
-                </button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="form-group">
-                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="Sanders">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Clan Tag</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="Rebecca">
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="fieldset">
-              <h3 class="fieldset-title">Contact Info</h3>
-              <div class="form-group">
-                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="email" class="form-control" value="Rebecca@website.com">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Phone</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="SpeedyBecky">
-                </div>
-              </div>
-            </fieldset>
-            <hr>
-            <div class="form-group">
-              <div class="col-md-10 col-sm-9 col-xs-12 col-md-push-2 col-sm-push-3 col-xs-push-0">
-                <input (click)="onSubmit()" class="btn btn-primary" type="submit" value="Update Profile">
-              </div>
-            </div>
-          </form>
+          <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
+          <div class='row'>
+            <pre class="card card-block card-header mb-3">Please Scan RFID wait for rfid to appear on screen then search for player with callsign</pre>
+            <pre class="card card-block card-header mb-3">Scanned RFID: {{RFIDScanned | json}}</pre>
+            <br>
+            <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected" [typeahead]="players"  typeaheadOptionField="name" [adaptivePosition]="true" class="form-control">
+             
+            <button (click)="connectRfidToPlayer()" type="button" class="btn btn-success">Connect</button>
+            <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
+            <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
+          </div> 
         </div>
         <div *ngIf="isField" id="gameConfigs" class="content-panel">
           <h2 class="title center-cust">Manage Settings</h2>
