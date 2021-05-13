@@ -12,8 +12,7 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from 'angularx-social-login';
-import { UserServiceService } from 'src/service/user-service.service';
-
+import { UserServiceService } from 'src/service/user-service.service'; 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
