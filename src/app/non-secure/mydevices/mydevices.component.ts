@@ -159,13 +159,14 @@ export class MydevicesComponent implements OnInit {
                 rfidID       : player.rfidID,
                 name         : player.name,
                 is_alive     : player.is_alive,
-                lastAction   : this.actionList.find(ele => ele.id == player.data[player.data.length - 1].actionID).action,
-                lastLocation : this.findLocationFromDeviceID(player.data[player.data.length - 1].deviceID),
+                lastAction   : this.actionList.find(ele => ele.id == player.data.sort((a, b) => b.id - a.id)[0].actionID).action,
+                lastLocation : this.findLocationFromDeviceID(player.data.sort((a, b) => b.id - a.id)[0].deviceID),
                 totalPoints  : player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
             }
             this.players.push(playerObj)
+            console.log(player.data.sort((a, b) => b.id - a.id))
             // Stuff it in ALL ACTIONS history also
-            for (let act of player.data) {
+            for (let act of player.data.sort((a, b) => b.id - a.id)) {
 
                 let date = new Date(act.creationDate);
                 let historyObj = {
@@ -261,8 +262,8 @@ export class MydevicesComponent implements OnInit {
             }
 
         }
-
-
+        // Purge all the stuff without a player name to show the stuff that matters
+        this.allActions = this.allActions.filter(act => act.name);
     }
 
 

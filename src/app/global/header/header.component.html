@@ -8,8 +8,9 @@
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
-            alt="user" />
+
+        <img class="hc_custom img-fluid" src="../../../assets/images/logo.png" alt="user" />
+        <!-- <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png" alt="user" /> -->
 
         <div class="collapse navbar-collapse" id="navdrop">
 
@@ -22,9 +23,9 @@
                         Info
                     </a>
                     <div id="infoDropdown" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/home']">Home</a>
+                        <!-- <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/home']">Home</a> -->
                         <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/feature-list']">Features</a>
-                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/player-info']">Player Info</a>
+                        <!-- <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/player-info']">Player Info</a> -->
                         <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/field-info']">Field Info</a>
                     </div>
                 </li>
@@ -33,13 +34,13 @@
             <!-- NON SECURE LINKS BELOW -->
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="!isSecure">
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_home" [routerLink]="['/non-secure/home']">Home </a>
+                    <!-- <a class="nav-link" id="nav_home" [routerLink]="['/non-secure/home']">Home </a> -->
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/feature-list']">Features</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_playerInfo" [routerLink]="['/non-secure/player-info']">Player Info</a>
+                    <!-- <a class="nav-link" id="nav_playerInfo" [routerLink]="['/non-secure/player-info']">Player Info</a> -->
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Info</a>
@@ -63,10 +64,13 @@
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Live Games</a>
                 </li>
-                
+
             </ul>
 
             <!-- <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/findGame']">Find Games</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/currentGame']">Current Games</a>
                 </li>
@@ -74,10 +78,10 @@
 
             <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isField">
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Start/Manage Game</a>
+                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Start and Manage Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Manage Games Modes</a>
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Game Modes</a>
                 </li>
 
             </ul>
@@ -86,16 +90,14 @@
             <ul class="navbar-nav my-2 my-lg-0" *ngIf="!isSecure">
                 <div class="form-inline">
                     <button class="btn btn-outline-success my-2 my-sm-0" [routerLink]="['/auth/login']"
-                        type="submit">Sign
-                        In</button>
+                        type="submit">Sign In</button>
                 </div>
 
             </ul>
 
             <ul class="navbar-nav my-2 my-lg-0" *ngIf="isSecure">
                 <div class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign
-                        Out</button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign Out</button>
                 </div>
 
             </ul>
