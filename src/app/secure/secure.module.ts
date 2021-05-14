@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
- 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 @NgModule({
     declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent],
     imports: [
@@ -21,7 +21,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
         FormsModule,
         ReactiveFormsModule,
         TypeaheadModule.forRoot(),
-        NgxDatatableModule
+        NgxDatatableModule, 
+        NgxChartsModule
     ]
 })
 export class SecureModule {

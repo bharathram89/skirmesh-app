@@ -94,7 +94,5 @@ export class GameService {
       return this.http.get(this.BASE + 'resources/actions')
 //http://api.skirmesh.net/resources/locations
     }
-    // getMessage() {
-    //   return this.socket.fromEvent('update').pipe(map((data) => console.log(data)));
-    // }
+    
 }

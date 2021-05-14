@@ -2,14 +2,12 @@
   <div class="row">
     <div class="col-lg-4">
       <div class="card card-profile">
-        <div
-          class="card-header"></div>
-        <div class="card-body text-center"><img src="{{currentVals.imageData}}"
-            class="card-profile-img">
+        <div class="card-header"></div>
+        <div class="card-body text-center"><img src="{{currentVals.imageData}}" class="card-profile-img">
           <h3 *ngIf="isField" class="mb-3">{{currentVals.fieldName}}</h3>
-          <p  *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
+          <p *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
           <h3 *ngIf="isPlayer" class="mb-3">{{currentVals.callSign}}</h3>
-          <p  *ngIf="isPlayer" class="mb-4">{{currentVals.bio}}</p>
+          <p *ngIf="isPlayer" class="mb-4">{{currentVals.bio}}</p>
           <button class="btn btn-outline-dark btn-sm"><span class="fa fa-twitter"></span> Follow</button>
         </div>
       </div>
@@ -40,19 +38,23 @@
       <form class="card">
         <div class="card-body">
           <h2 class="card-title"> Stats Summary </h2>
-          <div class="row"> </div>
+          <div class="row" *ngIf="isPlayer">
+            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme" [results]="pieData"
+              [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)"
+              (deactivate)="onDeactivate($event)">
+            </ngx-charts-advanced-pie-chart>
 
-          <h3> Total Points: {{ totalPoints }} </h3>
-          <br/>
-          <h4> Total Captures: {{ totalCaptures }} </h4>
-          <h4> Total Assists: {{ totalAssists }} </h4>
-          <h4> Total Medics: {{ totalMedics }} </h4>
-          <h4> Total Bombs Armed: {{ totalBombArm }} </h4>
-          <h4> Total Bombs Disarmed: {{ totalBombDis }} </h4>
-
+            <h3> Total Points: {{ totalPoints }} </h3>
+            <br />
+            <h4> Total Captures: {{ totalCaptures }} </h4>
+            <h4> Total Assists: {{ totalAssists }} </h4>
+            <h4> Total Medics: {{ totalMedics }} </h4>
+            <h4> Total Bombs Armed: {{ totalBombArm }} </h4>
+            <h4> Total Bombs Disarmed: {{ totalBombDis }} </h4>
+          </div>
         </div>
         <div class="card-footer text-right">
-           Facebook Share
+          Facebook Share
         </div>
       </form>
       <div class="card">
@@ -62,11 +64,11 @@
         <div class="list-group card-list-group">
           <a href="https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/filter.component.ts"
             target="_blank"></a>
-            <input type="text" style="padding:8px;margin:15px auto;width:30%;"
-              placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
-            <ngx-datatable #table class="material" [columns]="columns" [columnMode]="ColumnMode.force"
-              [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="rows">
-            </ngx-datatable>
+          <input type="text" style="padding:8px;margin:15px auto;width:30%;"
+            placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
+          <ngx-datatable #table class="material" [columns]="columns" [columnMode]="ColumnMode.force" [headerHeight]="50"
+            [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="rows">
+          </ngx-datatable>
         </div>
       </div>
 
