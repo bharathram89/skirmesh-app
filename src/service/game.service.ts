@@ -59,6 +59,9 @@ export class GameService {
       });
     }
 
+    getGamesByFieldProfile(token, fieldProfileID) {
+        return this.http.get(this.BASE + 'resources/gamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
+    }
 
     getGames() {
         return this.http.get(this.BASE + this.GTK)
@@ -94,5 +97,5 @@ export class GameService {
       return this.http.get(this.BASE + 'resources/actions')
 //http://api.skirmesh.net/resources/locations
     }
-    
+
 }

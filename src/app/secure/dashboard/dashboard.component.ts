@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
   }
   temp = [];
   columns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
-  fieldGameConfigStats:any[];
+
   isPlayer;
   isField;
 
@@ -69,6 +69,7 @@ export class DashboardComponent implements OnInit {
   totalBombArm = 0;
   totalBombDis = 0;
 
+  gameHistData = [];
 
   gameSvc: GameService;
   authSvc: AuthService;
@@ -90,26 +91,23 @@ export class DashboardComponent implements OnInit {
     this.isPlayer = this.userSvc.isPlayer;
     this.isField = this.userSvc.isField;
 
-    combineLatest([this.userSvc.getUserData(), this.gameSvc.getActions(),this.gameSvc.getPastGames()]).subscribe(([userData, actions,pastGames]) => {
+    combineLatest([this.userSvc.getUserData(), this.gameSvc.getActions()]).subscribe(([userData, actions]) => {
 
       this.actionList = actions;
 
-      if (this.isPlayer) {
-          this.setGameScoreStats(userData);
-      }
-
       if (this.isField) {
-          this.setGameHistStats(userData);
-      }
 
-      if (this.isField) {
-        this.setFieldGameStats(pastGames)
+        this.setGameHistStats(userData);
+
         this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
         this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
         this.currentVals.fieldProfileID = userData.fieldProfile.id;
         this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
       }
-      else if (this.isPlayer) { 
+      else if (this.isPlayer) {
+
+        this.setGameScoreStats(userData);
+
         this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
         this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
         this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
@@ -130,27 +128,16 @@ export class DashboardComponent implements OnInit {
     })
   }
 
-  setFieldGameStats(pastGames){
-  console.log(pastGames,"pg")
-  let gameconfigArr:any[]=[];
-  for (let gameConfig of pastGames) {
-    gameconfigArr.push({name:gameConfig.gameConfigID,value:gameConfig.games.length})
-    for (let game of gameConfig.games) { 
-
-    }
-  }
-  this.fieldGameConfigStats=gameconfigArr;
-  }
   onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+    // console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
 
   onActivate(data): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
+    // console.log('Activate', JSON.parse(JSON.stringify(data)));
   }
 
   onDeactivate(data): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+    // console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
   updateFilter(event) {
@@ -208,69 +195,107 @@ export class DashboardComponent implements OnInit {
       }
 
     }
-    this.pieData = [{name:"Medic",value:this.totalMedics},
-                    {name:"Capture",value:this.totalCaptures},
+    this.pieData = [{name:"Medics",value:this.totalMedics},
+                    {name:"Captures",value:this.totalCaptures},
                     {name:"Assists",value:this.totalAssists},
-                    {name:"Bomb Armed",value:this.totalBombArm},
-                    {name:"Bomb Difused",value:this.totalBombDis}]
+                    {name:"Bombs Armed",value:this.totalBombArm},
+                    {name:"Bombs Diffused",value:this.totalBombDis}]
   }
 
 
+    printTimeFromTotalMilli(milli) {
+
+        let tot_secs = milli/1000;
+
+        let hrs = Math.floor(tot_secs / 3600);
+        tot_secs %= 3600;
+        let mins = Math.floor(tot_secs / 60);
+        let secs = tot_secs % 60;
+
+        return [hrs,mins,secs]
+    }
+
   setGameHistStats(userData) {
 
-    console.log(":: FIELD DATA ::", userData);
+    let games;
+    this.gameSvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
 
-  //   let gameConfigs;
-  //   this.deviceSvc.getGameConfigs(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
-  //       data => {gameConfigs = data;
-  //               console.log(data)}
-  //   )
-  //
-  //   console.log(gameConfigs)
-  //
-  //   let actions = [];
-  //
-  //   for (let rfid of userData.rfids) {
-  //     for (let action of rfid.gameActions) {
-  //       actions.push(action)
-  //     }
-  //   }
-  //
-  //   this.allActions = actions.sort((a, b) => b.id - a.id)
-  //
-  //   for (let action of actions) {
-  //
-  //     let points = this.actionList.find(ele => ele.id == action.actionID).points;
-  //
-  //     switch (action.actionID) {
-  //
-  //       case MEDIC:
-  //         this.totalMedics += points;
-  //         break;
-  //
-  //       case CAPTURE:
-  //         this.totalCaptures += points;
-  //         break;
-  //
-  //       case ASSIST:
-  //         this.totalAssists += points;
-  //         break;
-  //
-  //       case BOMB_ARM:
-  //         this.totalBombArm += points;
-  //         break;
-  //
-  //       case BOMB_DIF:
-  //         this.totalBombDis += points;
-  //         break;
-  //     }
-  //
-  //   }
-  //   this.pieData = [{name:"Medic",value:this.totalMedics},
-  //                   {name:"Capture",value:this.totalCaptures},
-  //                   {name:"Assists",value:this.totalAssists},
-  //                   {name:"Bomb Armed",value:this.totalBombArm},
-  //                   {name:"Bomb Difused",value:this.totalBombDis}]
+        data => {
+
+            games = data;
+
+            for (let game of games.sort((a, b) => b.id - a.id)) {
+
+                if (!game.gameActions.length || !game.endTime){
+                    continue
+                }
+
+                let medics   = 0;
+                let captures = 0;
+                let assists  = 0;
+                let bombArm  = 0;
+                let bombDis  = 0;
+
+                for (let action of game.gameActions){
+                    switch (action.actionID) {
+
+                      case MEDIC:
+                        medics ++;
+                        this.totalMedics++;
+                        break;
+
+                      case CAPTURE:
+                        captures ++;
+                        this.totalCaptures++;
+                        break;
+
+                      case ASSIST:
+                        assists ++;
+                        this.totalAssists++;
+                        break;
+
+                      case BOMB_ARM:
+                        bombArm ++;
+                        this.totalBombArm++;
+                        break;
+
+                      case BOMB_DIF:
+                        bombDis ++;
+                        this.totalBombDis;
+                        break;
+                    }
+                }
+
+                let duration = Date.parse(game.endTime) - Date.parse(game.startTime)
+
+                let pieData = [{name:"Medics",        value:medics},
+                               {name:"Captures",      value:captures},
+                               {name:"Assists",      value:assists},
+                               {name:"Bombs Armed",   value:bombArm},
+                               {name:"Bombs Diffused",value:bombDis}]
+
+                this.gameHistData.push({
+
+                    id       : game.id,
+                    start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
+                    end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
+                    pieData  : pieData,
+                    duration : new Date(duration).toUTCString().slice(17,25)
+
+                })
+
+
+            }
+
+
+            this.pieData = [{name:"Medics",        value:this.totalMedics},
+                            {name:"Captures",      value:this.totalCaptures},
+                            {name:"Assists",      value:this.totalAssists},
+                            {name:"Bombs Armed",   value:this.totalBombArm},
+                            {name:"Bombs Diffused",value:this.totalBombDis}]
+
+        }
+    )
   }
 
 
