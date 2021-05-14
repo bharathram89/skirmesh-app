@@ -6,6 +6,9 @@
         </div>
 
         <div *ngIf="!activeGame">
+
+            <h2 *ngIf="!gameCardData.length"> Whaaaa!?..There are no active games? </h2>
+            <h4 *ngIf="!gameCardData.length"> Check back later. Games pop up all the time! </h4>
             <div
                 *ngFor="let gameData of gameCardData; let i = index"
                 [value]="activeGame.id"
