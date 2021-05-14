@@ -145,26 +145,33 @@ export class ProfileComponent implements OnInit {
   profile() {
     this.pfNav.classList.add('active')
     this.securityNav.classList.remove('active')
-    this.settingsNav.classList.remove('active')
+    if(this.isField){
+      document.getElementById('settingsNav').classList.remove('active')
+      this.settingsSection.style.display = 'none';
+    }
     this.pfSection.style.display = 'block';
     this.securitySection.style.display = 'none';
-    this.settingsSection.style.display = 'none';
   }
   settings() {
     this.pfNav.classList.remove('active')
     this.securityNav.classList.remove('active')
-    this.settingsNav.classList.add('active')
+    if(this.isField){
+      document.getElementById('settingsNav').classList.add('active')
+      this.settingsSection.style.display = 'block';
+    } 
     this.pfSection.style.display = 'none';
-    this.securitySection.style.display = 'none';
-    this.settingsSection.style.display = 'block';
+    this.securitySection.style.display = 'none'; 
   }
   security() {
     this.pfNav.classList.remove('active')
     this.securityNav.classList.add('active')
-    this.settingsNav.classList.remove('active')
+
+    if(this.isField){
+      document.getElementById('settingsNav').classList.remove('active')
+      this.settingsSection.style.display = 'none';
+    }  
     this.pfSection.style.display = 'none';
-    this.securitySection.style.display = 'block';
-    this.settingsSection.style.display = 'none';
+    this.securitySection.style.display = 'block'; 
   }
   connectRfidToPlayer(){
 
