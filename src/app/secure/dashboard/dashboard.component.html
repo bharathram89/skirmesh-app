@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-4">
       <div class="card card-profile">
-        <div 
+        <div
           class="card-header"></div>
         <div class="card-body text-center"><img src="{{currentVals.imageData}}"
             class="card-profile-img">
@@ -13,12 +13,12 @@
           <button class="btn btn-outline-dark btn-sm"><span class="fa fa-twitter"></span> Follow</button>
         </div>
       </div>
-     
+
       <form class="card">
         <div class="card-header">
           <h3 class="card-title">My Profile</h3>
         </div>
-        <div class="card-body"> 
+        <div class="card-body">
           <div class="form-group">
             <label class="form-label">Name: {{currentVals.firstName}} {{currentVals.lastName}}</label>
           </div>
@@ -26,23 +26,30 @@
             <label class="form-label">Email: {{currentVals.email}}</label>
           </div>
           <div class="form-group">
-            <label class="form-label">Phone: {{currentVals.phone}} </label> 
-          </div> 
+            <label class="form-label">Phone: {{currentVals.phone}} </label>
+          </div>
           <div *ngIf="isPlayer" class="form-group">
-            <label class="form-label">Clan: {{currentVals.clanTag}} </label> 
+            <label class="form-label">Clan: {{currentVals.clanTag}} </label>
           </div>
         </div>
-        <div class="card-footer text-right"> 
+        <div class="card-footer text-right">
         </div>
       </form>
     </div>
     <div class="col-lg-8">
       <form class="card">
         <div class="card-body">
-          <h3 class="card-title">Stats Summary</h3>
-          <div class="row">
-            
-          </div>
+          <h2 class="card-title"> Stats Summary </h2>
+          <div class="row"> </div>
+
+          <h3> Total Points: {{ totalPoints }} </h3>
+          <br/>
+          <h4> Total Captures: {{ totalCaptures }} </h4>
+          <h4> Total Assists: {{ totalAssists }} </h4>
+          <h4> Total Medics: {{ totalMedics }} </h4>
+          <h4> Total Bombs Armed: {{ totalBombArm }} </h4>
+          <h4> Total Bombs Disarmed: {{ totalBombDis }} </h4>
+
         </div>
         <div class="card-footer text-right">
            Facebook Share
