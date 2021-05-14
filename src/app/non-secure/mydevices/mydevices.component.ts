@@ -250,7 +250,7 @@ export class MydevicesComponent implements OnInit {
 
                 let lastCapComplete = actions.find(act => act.action == "CAPTURE COMPLETE");
 
-                if (lastCapComplete) {
+                if (lastCapComplete && device.config == 0x0A) {
 
                     let now = new Date().getTime();
                     let add_score = Math.floor(((now - lastCapComplete.timestamp)/1000) / device["point_scale"]);
