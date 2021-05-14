@@ -48,26 +48,16 @@
 
           <div class="row" *ngIf="isField">
 
-              <h2>Combined Game Stats</h2>
+            <h2>Combined Game Stats</h2>
 
-              <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme" [results]="pieData"
-                [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)"
-                (deactivate)="onDeactivate($event)">
-              </ngx-charts-advanced-pie-chart>
+            <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme" [results]="pieData"
+              [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)"
+              (deactivate)="onDeactivate($event)">
+            </ngx-charts-advanced-pie-chart>
 
-              <h2>Individual Game Stats</h2>
+            <h2>Individual Game Stats</h2>
 
-              <div *ngFor="let game of gameHistData; let i = index">
 
-                 <h3>Game #: {{game.id}}</h3>
-                 <h4>Start Time: {{ game.start}}</h4>
-                 <h4>End Time: {{ game.end }}</h4>
-                <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme" [results]="game.pieData"
-                  [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)"
-                  (deactivate)="onDeactivate($event)">
-                </ngx-charts-advanced-pie-chart>
-
-            </div>
 
           </div>
         </div>
@@ -77,17 +67,20 @@
       </form>
       <div class="card">
         <div class="card-header">
-          <h2 class="center-cust">Game History</h2>
+          <h2 class="center-cust">Individual Game Stats</h2>
         </div>
-        <div class="list-group card-list-group">
-          <a href="https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/filter.component.ts"
-            target="_blank"></a>
-          <input type="text" style="padding:8px;margin:15px auto;width:30%;"
-            placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
-          <ngx-datatable #table class="material" [columns]="columns" [columnMode]="ColumnMode.force" [headerHeight]="50"
-            [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="rows">
-          </ngx-datatable>
-        </div>
+        <accordion>
+          <accordion-group *ngFor="let game of gameHistData; let i = index" heading="Game #: {{game.id}}"
+          [panelClass]="customClass"
+          [isOpen]="isFirstOpen"> 
+          <h4>Start Time: {{ game.start}}</h4>
+          <h4>End Time: {{ game.end }}</h4>
+          <ngx-charts-advanced-pie-chart [view]="view" [scheme]="colorScheme" [results]="game.pieData"
+            [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)">
+          </ngx-charts-advanced-pie-chart>
+</accordion-group>
+        </accordion> 
       </div>
 
     </div>
