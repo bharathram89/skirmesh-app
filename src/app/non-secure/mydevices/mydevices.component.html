@@ -2,12 +2,7 @@
     <div>
 
         <div *ngIf="activeGame">
-            <select (change)="selectActiveGame($event)" class="form-control">
-                <option value="none" selected disabled> -- Select An Active Game -- </option>
-                <option *ngFor="let gameData of gameCardData ; let i = index" [value]="gameData.id">
-                    Game# {{gameData.id}} --- {{gameData.description}} --- {{gameData.startTime.slice(0,16)}}
-                </option>
-            </select>
+            <div class="btn-primary btn" (click)="goBackToMainMenu()"> Go Back </div>
         </div>
 
         <div *ngIf="!activeGame">

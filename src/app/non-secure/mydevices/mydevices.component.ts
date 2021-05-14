@@ -296,4 +296,8 @@ export class MydevicesComponent implements OnInit {
     ngAfterViewInit() {
 
     }
+
+    goBackToMainMenu() {
+        this.activeGame = false;
+    }
 }
