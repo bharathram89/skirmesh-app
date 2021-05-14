@@ -67,7 +67,6 @@ export class DashboardComponent implements OnInit {
   totalMedics = 0;
   totalBombArm = 0;
   totalBombDis = 0;
-  totalPoints = 0;
 
 
   gameSvc: GameService;
@@ -85,7 +84,7 @@ export class DashboardComponent implements OnInit {
     this.isField = this.userSvc.isField;
 
     combineLatest([this.userSvc.getUserData(), this.gameSvc.getActions()]).subscribe(([userData, actions]) => {
-      
+
       this.actionList = actions;
 
       this.setGameStats(userData);
@@ -110,7 +109,7 @@ export class DashboardComponent implements OnInit {
       this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
 
       this.currentVals.userID = userData.id;
-       
+
       this.authSvc.getImage(this.currentVals.imageID).subscribe(
         imageData => {
           this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
@@ -160,33 +159,33 @@ export class DashboardComponent implements OnInit {
     this.allActions = actions.sort((a, b) => b.id - a.id)
 
     for (let action of actions) {
-      this.totalPoints += this.actionList.find(ele => ele.id == action.actionID).points;
+
+      let points = this.actionList.find(ele => ele.id == action.actionID).points;
 
       switch (action.actionID) {
 
         case MEDIC:
-          this.totalMedics++;
+          this.totalMedics += points;
           break;
 
         case CAPTURE:
-          this.totalCaptures++;
+          this.totalCaptures += points;
           break;
 
         case ASSIST:
-          this.totalAssists++;
+          this.totalAssists += points;
           break;
 
         case BOMB_ARM:
-          this.totalBombArm++;
+          this.totalBombArm += points;
           break;
 
         case BOMB_DIF:
-          this.totalBombDis++;
+          this.totalBombDis += points;
           break;
       }
 
     }
     this.pieData = [{name:"Medic",value:this.totalMedics},{name:"Capture",value:this.totalCaptures},{name:"Assists",value:this.totalAssists},{name:"Bomb Armed",value:this.totalBombArm},{name:"Bomb Difused",value:this.totalBombDis}  ]
-    console.log("TOTALS:  medic", this.totalMedics, "capture", this.totalCaptures)
   }
 }
