@@ -56,6 +56,7 @@ export class DashboardComponent implements OnInit {
   }
   temp = [];
   columns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
+  fieldGameConfigStats:any[];
   isPlayer;
   isField;
 
@@ -83,21 +84,22 @@ export class DashboardComponent implements OnInit {
     this.isPlayer = this.userSvc.isPlayer;
     this.isField = this.userSvc.isField;
 
-    combineLatest([this.userSvc.getUserData(), this.gameSvc.getActions()]).subscribe(([userData, actions]) => {
+    combineLatest([this.userSvc.getUserData(), this.gameSvc.getActions(),this.gameSvc.getPastGames()]).subscribe(([userData, actions,pastGames]) => {
 
       this.actionList = actions;
 
-      this.setGameStats(userData);
 
       console.log("PLAYER.TEAMPLAYER.ID", userData)
 
       if (this.isField) {
+        this.setFieldGameStats(pastGames)
         this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
         this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
         this.currentVals.fieldProfileID = userData.fieldProfile.id;
         this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
       }
       else if (this.isPlayer) {
+        this.setGameStats(userData);
         this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
         this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
         this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
@@ -118,7 +120,17 @@ export class DashboardComponent implements OnInit {
     })
   }
 
+  setFieldGameStats(pastGames){
+  console.log(pastGames,"pg")
+  let gameconfigArr:any[]=[];
+  for (let gameConfig of pastGames) {
+    gameconfigArr.push({name:gameConfig.gameConfigID,value:gameConfig.games.length})
+    for (let game of gameConfig.games) { 
 
+    }
+  }
+  this.fieldGameConfigStats=gameconfigArr;
+  }
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
