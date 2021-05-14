@@ -105,7 +105,7 @@
               Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us.</a>
             </div>
           </div>
-          <div id="socalMedia">
+          <div *ngIf="isPlayer" id="socalMedia">
             <div class="row">
               <div class="col">
                 <div id="fb_card" class="card">
@@ -149,155 +149,73 @@
         <div id="settings" class="content-panel">
           <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
           <div class='row'>
-            <pre class="card card-block card-header mb-3">Please Scan RFID wait for rfid to appear on screen then search for player with callsign</pre>
+            <pre
+              class="card card-block card-header mb-3">Please Scan RFID wait for rfid to appear on screen then search for player with callsign</pre>
             <pre class="card card-block card-header mb-3">Scanned RFID: {{RFIDScanned | json}}</pre>
             <br>
-            <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected" [typeahead]="players"  typeaheadOptionField="name" [adaptivePosition]="true" class="form-control">
-             
+            <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected" [typeahead]="players"
+              typeaheadOptionField="name" [adaptivePosition]="true" class="form-control">
+
             <button (click)="connectRfidToPlayer()" type="button" class="btn btn-success">Connect</button>
             <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
             <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
-          </div> 
-        </div>
-        <div *ngIf="isField" id="gameConfigs" class="content-panel">
-          <h2 class="title center-cust">Manage Settings</h2>
-          <form class="form-horizontal">
-            <fieldset class="fieldset">
-              <h3 class="fieldset-title">Device Info</h3>
-
-
-
-              <div class="form-group">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                  Launch demo modal
-                </button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="form-group">
-                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="Sanders">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Clan Tag</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="Rebecca">
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="fieldset">
-              <h3 class="fieldset-title">Contact Info</h3>
-              <div class="form-group">
-                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="email" class="form-control" value="Rebecca@website.com">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Phone</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="SpeedyBecky">
-                </div>
-              </div>
-            </fieldset>
-            <hr>
-            <div class="form-group">
-              <div class="col-md-10 col-sm-9 col-xs-12 col-md-push-2 col-sm-push-3 col-xs-push-0">
-                <input class="btn btn-primary" type="submit" value="Update Profile">
-              </div>
-            </div>
-          </form>
+          </div>
         </div>
         <div id="security" class="content-panel">
           <h2 class="title center-cust">Manage Security</h2>
-          <form class="form-horizontal">
-            <fieldset class="fieldset">
-              <h3 class="fieldset-title">Device Info</h3>
 
-
-
-              <div class="form-group">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                  Launch demo modal
-                </button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
+          <div class="custom_skirmesh">
+            <div class="row justify-content-md-center">
+              <!-- <div class="col-8"> -->
+              <div class="login-screen">
+                <form [formGroup]="passReset" autocomplete="off" method="POST">
+                  <div class="col-6">
+                    <h3 class="center-cust">Enter a new password and confirm password to change your password</h3>
+                    <div class="form-group">
+                      <input formControlName="pass" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div *ngIf="pass.invalid && (pass.dirty || pass.touched) " class="alert alert-danger ">
+                      <div *ngIf="pass.errors?.required ">
+                        Password is required
                       </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                      <div *ngIf="pass.errors?.minlength ">
+                        Password needs to be min of 5 characters
                       </div>
                     </div>
                   </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <input formControlName="confirmPass" type="password" class="form-control"
+                        placeholder="Confirm Password">
+                    </div>
+                    <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
+                      class="alert alert-danger ">
+                      <div *ngIf="confirmPass.errors?.required ">
+                        Confirm password is required
+                      </div>
+                      <div *ngIf="confirmPass.errors?.notSame">
+                        Passwords needs to match
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <div>
+                  <div id="FBuserCreatedMessage" class="alert alert-primary d-none center-cust">
+                    Your password is changed<br>
+                    <a [routerLink]="['/auth/login']">LOGIN</a>.
+                  </div>
+                  <div id="FBuserCreatFaileddMessage" class="alert alert-danger d-none center-cust">
+                    We are sorry we were not able to change your password at this time <br>
+                    Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
+                      contact us page</a>
+                  </div>
                 </div>
-
-              </div>
-              <div class="form-group">
-                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="Sanders">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-2 col-sm-3 col-xs-12 control-label">Clan Tag</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="Rebecca">
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="fieldset">
-              <h3 class="fieldset-title">Contact Info</h3>
-              <div class="form-group">
-                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="email" class="form-control" value="Rebecca@website.com">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-2  col-sm-3 col-xs-12 control-label">Phone</label>
-                <div class="col-md-10 col-sm-9 col-xs-12">
-                  <input type="text" class="form-control" value="SpeedyBecky">
-                </div>
-              </div>
-            </fieldset>
-            <hr>
-            <div class="form-group">
-              <div class="col-md-10 col-sm-9 col-xs-12 col-md-push-2 col-sm-push-3 col-xs-push-0">
-                <input class="btn btn-primary" type="submit" value="Update Profile">
+                <button [disabled]="passReset.invalid" (click)="onPasswordReset()" type="submit"
+                  class="btn btn-primary cust_skir_signup"> Reset Password</button>
               </div>
             </div>
-          </form>
+            <!-- </div> -->
+          </div>
         </div>
       </div>
     </section>

@@ -20,9 +20,9 @@ export class ProfileComponent implements OnInit {
   pfSection: HTMLElement;
   securitySection: HTMLElement;
   settingsSection: HTMLElement;
-
+  passReset: FormGroup;
   base64toUpload;
-
+  resetPass = { pass:'',confirmPass:''}
   profileForm: FormGroup;
   fields = { firstName:    '',
              lastName:     '',
@@ -79,7 +79,15 @@ export class ProfileComponent implements OnInit {
     this.isPlayer        = this.userSvc.isPlayer;
     this.isField         = this.userSvc.isField;
 
-
+    this.passReset = new FormGroup({
+      "pass": new FormControl(this.resetPass.pass, [
+        Validators.required,
+        Validators.minLength(6)
+      ]),
+      "confirmPass": new FormControl(this.resetPass.confirmPass, [
+        Validators.required
+      ])
+    },{ validators: this.checkPasswords.bind(this) })
     this.profileForm = new FormGroup({
 
       "firstName":    new FormControl(this.fields.firstName, [Validators.required]),
@@ -129,6 +137,11 @@ export class ProfileComponent implements OnInit {
   }
 
 
+  get pass() { return this.passReset.get('pass'); }
+  get confirmPass() { return this.passReset.get('confirmPass'); }
+  onPasswordReset(){
+    
+  }
   profile() {
     this.pfNav.classList.add('active')
     this.securityNav.classList.remove('active')
@@ -154,7 +167,7 @@ export class ProfileComponent implements OnInit {
     this.settingsSection.style.display = 'none';
   }
   connectRfidToPlayer(){
-    
+
 
   }
   onSubmit() {
@@ -195,6 +208,13 @@ export class ProfileComponent implements OnInit {
     //saveProfile
   }
 
+  checkPasswords(group: FormGroup){
+    const password = group.get('pass').value;
+  const confirmPassword = group.get('confirmPass').value;
+
+  return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
+
+  }
 
   getFile(event) {
 

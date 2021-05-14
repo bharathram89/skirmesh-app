@@ -10,6 +10,7 @@ import { ManageGameComponent } from './manage-game/manage-game.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
  
 @NgModule({
     declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent],
@@ -19,7 +20,8 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
         GlobalModule,
         FormsModule,
         ReactiveFormsModule,
-        TypeaheadModule.forRoot()
+        TypeaheadModule.forRoot(),
+        NgxDatatableModule
     ]
 })
 export class SecureModule {

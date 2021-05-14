@@ -14,7 +14,7 @@ import {
 } from 'angularx-social-login';
 import { UserServiceService } from 'src/service/user-service.service'; 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+ 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 const config: SocketIoConfig = { url: 'http://api.skirmesh.net', options: {} };
