@@ -25,6 +25,8 @@ export class MydevicesComponent implements OnInit {
     players       = [];
     allActions    = [];
     deviceActions = [];
+    gameConfigs   = [];
+    gameCardData  = [];
     gameStats;
 
     locationList;
@@ -62,11 +64,17 @@ export class MydevicesComponent implements OnInit {
                     this.locationList = location;
                     this.actionList   = actions;
                     this.activeGames  = activeGames;
-                },
-                err => {
-                    //show message on page no games are active.
-                }
-            )
+
+                    for (let game of this.activeGames){
+                        this.deviceSvc.getGameConfigsByID(game.gameConfigID).subscribe(
+                            data => {
+                                this.gameCardData.push({'description': data["description"],
+                                                        'startTime'  : game.startTime,
+                                                        'id'         : game.id,
+                                                        'mapID'      : data["mapID"],
+                                                        'devices'    : game.devices});
+                            })
+                    }})
 
         this.gameSvc.getNewAction().subscribe(socketData=>{
             console.log(socketData," New Action");
@@ -164,7 +172,7 @@ export class MydevicesComponent implements OnInit {
                 totalPoints  : player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
             }
             this.players.push(playerObj)
-            console.log(player.data.sort((a, b) => b.id - a.id))
+
             // Stuff it in ALL ACTIONS history also
             for (let act of player.data.sort((a, b) => b.id - a.id)) {
 

@@ -1,12 +1,50 @@
 <div class="container-fluid">
     <div>
-        <select (change)="selectActiveGame($event)" class="form-control">
-            <option value="none" selected disabled> -- Select An Active Game -- </option>
-            <option *ngFor="let activeGame of activeGames ; let i = index" [value]="activeGame.id">
-                Game# {{activeGame.id}} --- {{description}} --- {{activeGame.startTime.slice(0,16)}}
-            </option>
-        </select>
+
+        <div *ngIf="activeGame">
+            <select (change)="selectActiveGame($event)" class="form-control">
+                <option value="none" selected disabled> -- Select An Active Game -- </option>
+                <option *ngFor="let gameData of gameCardData ; let i = index" [value]="gameData.id">
+                    Game# {{gameData.id}} --- {{gameData.description}} --- {{gameData.startTime.slice(0,16)}}
+                </option>
+            </select>
+        </div>
+
+        <div *ngIf="!activeGame">
+            <div
+                *ngFor="let gameData of gameCardData; let i = index"
+                [value]="activeGame.id"
+                class="card user-card"
+                >
+
+                <div class="card-header">
+
+                    Game# {{gameData.id}} - {{gameData.description}}
+
+                    <div class="btn-primary btn" [value]="gameData.id" (click)="selectActiveGame($event)"> VIEW </div>
+
+                </div>
+
+                <div class="card-body" [value]="activeGame.id">
+
+                    <div class="form-group" [value]="activeGame.id">
+                        Start: {{gameData.startTime.slice(0,12)}} {{gameData.startTime.slice(17,22)}}
+                    </div>
+
+                    <div>
+                        <app-map [mapID]="gameData.mapID" [mapData]="gameData.devices"></app-map>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+
+
+
     <div *ngIf="activeGame" class="view-account" id="activeGame">
         <section class="module">
             <div class="module-inner">
