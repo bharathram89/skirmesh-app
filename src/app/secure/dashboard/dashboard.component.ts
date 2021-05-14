@@ -259,7 +259,7 @@ export class DashboardComponent implements OnInit {
   //                   {name:"Assists",value:this.totalAssists},
   //                   {name:"Bomb Armed",value:this.totalBombArm},
   //                   {name:"Bomb Difused",value:this.totalBombDis}]
-  // }
+  }
 
 
 }
