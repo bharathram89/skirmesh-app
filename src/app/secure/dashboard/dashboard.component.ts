@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
   isDoughnut: boolean = false;
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#CC5500', '#AAAAAA']
   };
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -72,10 +72,16 @@ export class DashboardComponent implements OnInit {
   gameSvc: GameService;
   authSvc: AuthService;
   userSvc: UserServiceService;
-  constructor(gameService: GameService, authService: AuthService, userService: UserServiceService) {
+  deviceSvc: DeviceService;
+
+  constructor(gameService: GameService,
+              authService: AuthService,
+              userService: UserServiceService,
+              deviceService: DeviceService) {
     this.gameSvc = gameService;
     this.authSvc = authService;
     this.userSvc = userService;
+    this.deviceSvc = deviceService;
   }
 
   ngOnInit(): void {
@@ -87,9 +93,13 @@ export class DashboardComponent implements OnInit {
 
       this.actionList = actions;
 
-      this.setGameStats(userData);
+      if (this.isPlayer) {
+          this.setGameScoreStats(userData);
+      }
 
-      console.log("PLAYER.TEAMPLAYER.ID", userData)
+      if (this.isField) {
+          this.setGameHistStats(userData);
+      }
 
       if (this.isField) {
         this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
@@ -146,7 +156,7 @@ export class DashboardComponent implements OnInit {
     this.table.offset = 0;
   }
 
-  setGameStats(userData) {
+  setGameScoreStats(userData) {
 
     let actions = [];
 
@@ -186,6 +196,70 @@ export class DashboardComponent implements OnInit {
       }
 
     }
-    this.pieData = [{name:"Medic",value:this.totalMedics},{name:"Capture",value:this.totalCaptures},{name:"Assists",value:this.totalAssists},{name:"Bomb Armed",value:this.totalBombArm},{name:"Bomb Difused",value:this.totalBombDis}  ]
+    this.pieData = [{name:"Medic",value:this.totalMedics},
+                    {name:"Capture",value:this.totalCaptures},
+                    {name:"Assists",value:this.totalAssists},
+                    {name:"Bomb Armed",value:this.totalBombArm},
+                    {name:"Bomb Difused",value:this.totalBombDis}]
   }
+
+
+  setGameHistStats(userData) {
+
+    console.log(":: FIELD DATA ::", userData);
+
+  //   let gameConfigs;
+  //   this.deviceSvc.getGameConfigs(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
+  //       data => {gameConfigs = data;
+  //               console.log(data)}
+  //   )
+  //
+  //   console.log(gameConfigs)
+  //
+  //   let actions = [];
+  //
+  //   for (let rfid of userData.rfids) {
+  //     for (let action of rfid.gameActions) {
+  //       actions.push(action)
+  //     }
+  //   }
+  //
+  //   this.allActions = actions.sort((a, b) => b.id - a.id)
+  //
+  //   for (let action of actions) {
+  //
+  //     let points = this.actionList.find(ele => ele.id == action.actionID).points;
+  //
+  //     switch (action.actionID) {
+  //
+  //       case MEDIC:
+  //         this.totalMedics += points;
+  //         break;
+  //
+  //       case CAPTURE:
+  //         this.totalCaptures += points;
+  //         break;
+  //
+  //       case ASSIST:
+  //         this.totalAssists += points;
+  //         break;
+  //
+  //       case BOMB_ARM:
+  //         this.totalBombArm += points;
+  //         break;
+  //
+  //       case BOMB_DIF:
+  //         this.totalBombDis += points;
+  //         break;
+  //     }
+  //
+  //   }
+  //   this.pieData = [{name:"Medic",value:this.totalMedics},
+  //                   {name:"Capture",value:this.totalCaptures},
+  //                   {name:"Assists",value:this.totalAssists},
+  //                   {name:"Bomb Armed",value:this.totalBombArm},
+  //                   {name:"Bomb Difused",value:this.totalBombDis}]
+  // }
+
+
 }
