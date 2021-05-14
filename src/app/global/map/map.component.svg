@@ -2,9 +2,9 @@
    <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="map"
-      viewBox="0 0 210 292" version="1.1" id="svg8">
-      <defs id="defs2" />
-      <g id="layer1">
+      viewBox="0 0 210 292" version="1.1" id="map2">
+    <defs/>
+      <g>
          <image xlink:href="../../../assets/images/salina_gambit.png" y="-0.29215574" x="1.9073366"
             preserveAspectRatio="none" height="293.66766" width="206.60199" />
          <path id="loc17" class="location"
@@ -60,11 +60,12 @@
       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
       xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="svg10" class="map" viewBox="0 0 243.40157 363.59055" sodipodi:docname="ballahack.svg"
-      inkscape:version="1.0.2 (e86c8708, 2021-01-15)">
+      inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
+      id="map4">
       <metadata>
       </metadata>
       <defs />
-      <g id="g34">
+      <g>
          <image xlink:href="../../../assets/images/ballahack.png" width="243.40157" height="363.59055" preserveAspectRatio="none" />
          <path class="location"
             d="m 110.73596,50.660582 19.27792,18.829596 20.62289,5.828209 27.34775,0.448324 1.34497,-28.244396 -8.06982,-20.174567 -12.55307,-12.104741 h -20.62289 l -12.55307,18.829597 z"
@@ -136,7 +137,8 @@
        xmlns="http://www.w3.org/2000/svg"
        xmlns:xlink="http://www.w3.org/1999/xlink"
        version="1.1"
-       viewBox="0 0 847 626">
+       viewBox="0 0 847 626"
+       id="map5">
       <metadata>
       </metadata>
       <defs/>
@@ -202,6 +204,54 @@
     </svg>
 </div>
 
+<div *ngIf="mapID==6">
+    <svg
+       version="1.1"
+       viewBox="0 0 562 764"
+       id="map6">
+      <metadata/>
+      <defs/>
+      <g>
+        <image
+           xlink:href="../../../assets/images/KDK_Airsoft.png"
+           preserveAspectRatio="none"
+           height="764"
+           width="562" />
+        <path
+           d="M 189.35142,294.86067 H 6.594328 L 6.5394408,5.2315526 221.36007,5.5585247 189.97075,36.94784 Z"
+           id="loc56"
+           class="location" />
+        <path
+           d="m 221.36007,5.5585247 90.77827,0.5220923 33.44339,50.671808 v 94.249565 l 12.22112,26.4061 v 29.86669 l 1.19467,32.85335 0.59733,54.35736 -170.24343,0.37518 0.61933,-257.91283 z"
+           id="loc57"
+           class="location" />
+        <path
+           d="m 359.59485,294.48549 195.32811,0.59733 0.59733,-290.3041508 -243.38195,1.3019478 33.44339,50.671808 v 94.249565 l 12.22112,26.4061 v 30.46402 l 1.19467,31.65868 z"
+           id="loc58"
+           class="location" />
+        <path
+           d="M 6.594328,294.86067 H 189.35142 l -2.38599,61.15018 -16.12801,12.54401 13.73868,19.71201 0.59733,83.62671 -178.6027599,-0.59733 z"
+           id="loc59"
+           class="location" />
+        <path
+           d="m 189.35142,294.86067 170.24343,-0.37518 2.38934,33.45068 16.12801,27.47735 14.93334,13.14134 -12.54401,17.32268 v 86.01604 h -195.3281 l -0.59733,-83.62671 -13.73868,-19.71201 16.12801,-12.54401 z"
+           id="loc60"
+           class="location" />
+        <path
+           d="m 359.59485,294.48549 195.32811,0.59733 0.59733,176.81076 H 380.50153 v -86.01604 l 12.54401,-17.32268 -14.93334,-13.14134 -16.12801,-27.47735 z"
+           id="loc61"
+           class="location" />
+        <path
+           d="m 6.5706701,471.29625 178.6027599,0.59733 h 33.45068 v 65.7067 l -13.73867,31.06135 -1.19467,188.75743 H 5.9733365 Z"
+           id="loc62"
+           class="location" />
+        <path
+           d="m 218.62411,471.89358 v 65.7067 l -13.73867,31.06135 -1.19467,188.75743 H 424.70422 V 695.8937 l 14.33601,-20.30935 7.76534,-24.49068 -0.59734,-136.19207 h 108.71473 l 0.59733,-43.00802 H 380.50153 Z"
+           id="loc63"
+           class="location" />
+      </g>
+    </svg>
+</div>
 
 
 <div>

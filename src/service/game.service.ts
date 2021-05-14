@@ -64,6 +64,10 @@ export class GameService {
         return this.http.get(this.BASE + this.GTK)
     }
 
+    getPastGames() {
+        return this.http.get(this.BASE + '/games/pastGames')
+    }
+
     pauseGame(token, data) {
         return this.http.put(this.BASE + 'gameplay/pauseGame?token=' + token, data, this.options)
     }

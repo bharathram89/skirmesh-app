@@ -8,7 +8,7 @@
             <ul class="nav">
               <li id="profileNav" (click)="profile()" class="active"><a><span class="fa fa-user"></span> Profile</a>
               </li>
-              <li id="settingsNav" (click)="settings()"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
+              <li *ngIf="isField" id="settingsNav" (click)="settings()"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
               <li id="securityNav" (click)="security()"><a><span class="fa fa-credit-card"></span> Security</a></li>
             </ul>
           </nav>
@@ -150,7 +150,7 @@
           <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
           <div class='row'>
             <pre
-              class="card card-block card-header mb-3">Please Scan RFID wait for rfid to appear on screen then search for player with callsign</pre>
+              class="card card-block card-header mb-3">Please Scan RFID at Controller and wait for rfid to appear on screen.</pre>
             <pre class="card card-block card-header mb-3">Scanned RFID: {{RFIDScanned | json}}</pre>
             <br>
             <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected" [typeahead]="players"
@@ -179,7 +179,7 @@
                         Password is required
                       </div>
                       <div *ngIf="pass.errors?.minlength ">
-                        Password needs to be min of 5 characters
+                        Password needs to be min of 6 characters
                       </div>
                     </div>
                   </div>
