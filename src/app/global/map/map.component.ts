@@ -33,8 +33,6 @@ export class MapComponent implements OnInit {
 
     ngOnInit(): void {
 
-      console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID)
-
       this.gameSvc.getDeviceUpdate().subscribe(socketData=>{
         // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
         console.log(socketData," Device Update");
