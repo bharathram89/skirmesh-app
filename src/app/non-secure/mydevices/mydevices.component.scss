@@ -21,7 +21,15 @@ div.view-btn {
 }
 
 .card{
-    width: 33%;
+    // @media  (max-width: 500px) {
+    //     width: 33%;
+    // }
+    @media  (min-width: 700px) {
+        width: 50%;
+    }
+    @media  (min-width: 901px) {
+        width: 33%
+    }
     margin: 1rem;
 }
 
