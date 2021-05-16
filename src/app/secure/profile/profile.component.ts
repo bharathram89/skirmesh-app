@@ -140,7 +140,11 @@ export class ProfileComponent implements OnInit {
   get pass() { return this.passReset.get('pass'); }
   get confirmPass() { return this.passReset.get('confirmPass'); }
   onPasswordReset(){
-    
+    let data = {'password':this.passReset.get('pass').value}
+    this.authSvc.updatePass(data).subscribe(
+      resp=>{console.log('password Reset response',resp)},
+      err=>{console.log('password Reset failed',err)}
+    )
   }
   profile() {
     this.pfNav.classList.add('active')

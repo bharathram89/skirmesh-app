@@ -98,7 +98,6 @@ export class DashboardComponent implements OnInit {
       if (this.isField) {
 
         this.setGameHistStats(userData);
-
         this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
         this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
         this.currentVals.fieldProfileID = userData.fieldProfile.id;
@@ -119,12 +118,14 @@ export class DashboardComponent implements OnInit {
       this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
 
       this.currentVals.userID = userData.id;
-
-      this.authSvc.getImage(this.currentVals.imageID).subscribe(
-        imageData => {
-          this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
-        }
-      )
+      if(this.currentVals.imageID){
+        this.authSvc.getImage(this.currentVals.imageID).subscribe(
+          imageData => {
+            this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
+          }
+        )
+      }
+      
     })
   }
 
