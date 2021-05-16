@@ -62,7 +62,7 @@ export class MapComponent implements OnInit {
   updateTooltipContent(location) {
     location = location.replace('loc', '')
     let data = this.deviceData.find(ele => ele.location == location)
-    this.content = location + " it works"
+    this.content = location + "  "
     console.log(this.deviceData, data, location)
   }
   updateLocationState(device) {
