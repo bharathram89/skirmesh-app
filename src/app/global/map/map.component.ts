@@ -19,8 +19,8 @@ const BOMB = 0xBB;
 export class MapComponent implements OnInit {
 
   @Input() mapID
-  @Input() mapData
-  content = 'it works'
+  @Input() deviceData
+  content = ' '
   map;
   tokenSvc: TokenStorageService
   userSvc: UserServiceService;
@@ -34,14 +34,14 @@ export class MapComponent implements OnInit {
   ngOnInit(): void {
 
     this.gameSvc.getDeviceUpdate().subscribe(socketData => {
-      // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," mapData: ",this.mapData)
+      // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," deviceData: ",this.deviceData)
       console.log(socketData, " Device Update");
       this.updateLocationState(socketData);
     })
 
     // Leaving for Bharath to debug and play.
     // setTimeout(() => {
-    //   let newConfig= this.mapData[0];
+    //   let newConfig= this.deviceData[0];
     //   newConfig.stable = false;
     //   console.log(newConfig,"config info")
     //   this.updateLocationState(newConfig)
@@ -57,13 +57,13 @@ export class MapComponent implements OnInit {
     this.updateMapState()
   }
   updateMapState() {
-    for (let device of this.mapData) { this.updateLocationState(device) }
+    for (let device of this.deviceData) { this.updateLocationState(device) }
   }
   updateTooltipContent(location) {
     location = location.replace('loc', '')
-    let data = this.mapData.find(ele => ele.location == location) 
+    let data = this.deviceData.find(ele => ele.location == location)
     this.content = location + " it works"
-    console.log(this.mapData, data, location)
+    console.log(this.deviceData, data, location)
   }
   updateLocationState(device) {
 
