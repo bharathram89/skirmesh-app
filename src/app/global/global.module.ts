@@ -18,6 +18,7 @@ import { DeviceListComponent } from './device-list/device-list.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MapComponent } from './map/map.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, GameConfigComponent, TabsComponent, TabComponent,
     TabsComponent,
@@ -33,7 +34,8 @@ import { MapComponent } from './map/map.component';
     FormsModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-    ColorPickerModule
+    ColorPickerModule,
+    TooltipModule.forRoot()
 
   ],
   exports: [FooterComponent, HeaderComponent,GameConfigComponent,DeviceListComponent,MapComponent]
