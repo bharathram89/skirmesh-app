@@ -24,20 +24,22 @@ export class ProfileComponent implements OnInit {
   base64toUpload;
   resetPass = { pass:'',confirmPass:''}
   profileForm: FormGroup;
-  fields = { firstName:    '',
-             lastName:     '',
-             email:        '',
-             clanTag:      '',
-             phone:        '',
-             bio:          '',
-             profile:      '',
-             fieldName:    '',
-             callSign:     '',
-             profileImage: ''
+  field = { firstName:    '',
+            lastName:     '',
+            email:        '',
+            clanTag:      '',
+            phone:        '',
+            bio:          '',
+            profile:      '',
+            fieldName:    '',
+            callSign:     '',
+            profileImage: ''
            }
 
   isField: boolean;
   isPlayer: boolean;
+
+  rfidToPair;
 
   currentVals = {
                   firstName:      '',
@@ -90,16 +92,16 @@ export class ProfileComponent implements OnInit {
     },{ validators: this.checkPasswords.bind(this) })
     this.profileForm = new FormGroup({
 
-      "firstName":    new FormControl(this.fields.firstName, [Validators.required]),
-      "lastName":     new FormControl(this.fields.lastName, [Validators.required]),
-      "email":        new FormControl(this.fields.email, [Validators.required,Validators.email]),
-      "clanTag":      new FormControl(this.fields.clanTag, []),
-      "phone":        new FormControl(this.fields.phone, []),
-      "bio":          new FormControl(this.fields.bio, []),
-      "profile":      new FormControl(this.fields.profile, []),
-      "fieldName":    new FormControl(this.fields.fieldName, []),
-      "callSign":     new FormControl(this.fields.callSign, []),
-      "profileImage": new FormControl(this.fields.profileImage, [])
+      "firstName":    new FormControl(this.field.firstName, [Validators.required]),
+      "lastName":     new FormControl(this.field.lastName, [Validators.required]),
+      "email":        new FormControl(this.field.email, [Validators.required,Validators.email]),
+      "clanTag":      new FormControl(this.field.clanTag, []),
+      "phone":        new FormControl(this.field.phone, []),
+      "bio":          new FormControl(this.field.bio, []),
+      "profile":      new FormControl(this.field.profile, []),
+      "fieldName":    new FormControl(this.field.fieldName, []),
+      "callSign":     new FormControl(this.field.callSign, []),
+      "profileImage": new FormControl(this.field.profileImage, [])
 
     })
 
@@ -134,6 +136,18 @@ export class ProfileComponent implements OnInit {
         this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
       }
     )
+
+    // if (this.isField){
+    //   setInterval(this.checkRfidToPair, 5000);
+    // }
+
+
+  }
+
+  checkRfidToPair() {
+
+    console.log("check for RFID here")
+
   }
 
 
@@ -162,9 +176,9 @@ export class ProfileComponent implements OnInit {
     if(this.isField){
       document.getElementById('settingsNav').classList.add('active')
       this.settingsSection.style.display = 'block';
-    } 
+    }
     this.pfSection.style.display = 'none';
-    this.securitySection.style.display = 'none'; 
+    this.securitySection.style.display = 'none';
   }
   security() {
     this.pfNav.classList.remove('active')
@@ -173,9 +187,9 @@ export class ProfileComponent implements OnInit {
     if(this.isField){
       document.getElementById('settingsNav').classList.remove('active')
       this.settingsSection.style.display = 'none';
-    }  
+    }
     this.pfSection.style.display = 'none';
-    this.securitySection.style.display = 'block'; 
+    this.securitySection.style.display = 'block';
   }
   connectRfidToPlayer(){
 
