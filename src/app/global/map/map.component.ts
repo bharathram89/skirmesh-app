@@ -20,7 +20,7 @@ export class MapComponent implements OnInit {
 
   @Input() mapID
   @Input() deviceData
-  content = ' '
+  tooltipContent = ' '
   map;
   tokenSvc: TokenStorageService
   userSvc: UserServiceService;
@@ -55,6 +55,21 @@ export class MapComponent implements OnInit {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.updateMapState()
+
+    let paths = document.getElementsByClassName("location");
+
+    for (let i = 0; i < paths.length; i++) {
+
+        paths[i].addEventListener("mouseenter", event => {
+
+            let target = event.target as HTMLTextAreaElement;
+
+            this.tooltipContent = target.id
+
+
+        });
+    }
+
   }
   updateMapState() {
     for (let device of this.deviceData) { this.updateLocationState(device) }
@@ -62,7 +77,7 @@ export class MapComponent implements OnInit {
   updateTooltipContent(location) {
     location = location.replace('loc', '')
     let data = this.deviceData.find(ele => ele.location == location)
-    this.content = location + "  "
+    this.tooltipContent = location + "  "
     console.log(this.deviceData, data, location)
   }
   updateLocationState(device) {
