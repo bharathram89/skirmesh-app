@@ -20,12 +20,22 @@ export class MapComponent implements OnInit {
 
   @Input() mapID
   @Input() deviceData
+
   tooltipContent = ' '
+
   map;
+  locationList;
+  mapData;
+
   tokenSvc: TokenStorageService
   userSvc: UserServiceService;
   gameSvc: GameService;
-  constructor(tokenService: TokenStorageService, userService: UserServiceService, gameService: GameService) {
+
+  constructor(
+      tokenService: TokenStorageService,
+      userService: UserServiceService,
+      gameService: GameService
+  ) {
     this.userSvc = userService;
     this.tokenSvc = tokenService;
     this.gameSvc = gameService;
@@ -39,47 +49,47 @@ export class MapComponent implements OnInit {
       this.updateLocationState(socketData);
     })
 
-    // Leaving for Bharath to debug and play.
-    // setTimeout(() => {
-    //   let newConfig= this.deviceData[0];
-    //   newConfig.stable = false;
-    //   console.log(newConfig,"config info")
-    //   this.updateLocationState(newConfig)
-    // },5000);
-
-    // Set a timeout to load map data...give time to load the pages.
-    // Without the timeout the map doesn't initialize --Fixed with moving to ngAfterViewInit.
-    // setTimeout(() => {this.updateMapState();}, 200);
   }
+
+
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.updateMapState()
 
-    let paths = document.getElementsByClassName("location");
+    this.gameSvc.getMapData(this.mapID).subscribe(
 
-    for (let i = 0; i < paths.length; i++) {
+        mapData => {
 
-        paths[i].addEventListener("mouseenter", event => {
+            this.mapData = mapData;
+            this.locationList = this.mapData.locations;
 
-            let target = event.target as HTMLTextAreaElement;
+            let paths = document.getElementsByClassName("location");
 
-            this.tooltipContent = target.id
+            for (let i = 0; i < paths.length; i++) {
 
+                paths[i].addEventListener("mouseenter", event => {
 
-        });
-    }
+                    let target = event.target as HTMLTextAreaElement;
+
+                    let loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+                    this.tooltipContent = loc ? loc.name : "Mystery Zone";
+
+                });
+            }
+
+        }
+    )
+
 
   }
+
+
   updateMapState() {
     for (let device of this.deviceData) { this.updateLocationState(device) }
   }
-  updateTooltipContent(location) {
-    location = location.replace('loc', '')
-    let data = this.deviceData.find(ele => ele.location == location)
-    this.tooltipContent = location + "  "
-    console.log(this.deviceData, data, location)
-  }
+
+
   updateLocationState(device) {
 
     let locID = device.location;
@@ -122,4 +132,7 @@ export class MapComponent implements OnInit {
     }
 
   }
+
+
+
 }

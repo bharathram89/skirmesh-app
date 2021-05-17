@@ -93,6 +93,12 @@ export class GameService {
       return this.http.get(this.BASE + 'resources/locations')
 //http://api.skirmesh.net/resources/locations
     }
+
+    getMapData(mapID){
+      return this.http.get(this.BASE + 'resources/map?id=' + mapID)
+//http://api.skirmesh.net/resources/locations
+    }
+
     getActions(){
       return this.http.get(this.BASE + 'resources/actions')
 //http://api.skirmesh.net/resources/locations
