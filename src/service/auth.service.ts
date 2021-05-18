@@ -16,7 +16,7 @@ export class AuthService {
   });
   options = { headers: this.headers };
 
-  BASE = 'http://api.skirmesh.net/';
+  BASE = 'https://api.skirmesh.net/';
 
 
   createUser(data){

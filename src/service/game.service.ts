@@ -16,7 +16,7 @@ export class GameService {
     });
     options = { headers: this.headers };
 
-    BASE = 'http://api.skirmesh.net/'
+    BASE = 'https://api.skirmesh.net/'
     GTK  = 'games/activeGames'
     RGMS = 'resources/games?token='
 

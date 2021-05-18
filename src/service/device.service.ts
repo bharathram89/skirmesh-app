@@ -15,7 +15,7 @@ export class DeviceService {
     });
     options = { headers: this.headers };
 
-    BASE = 'http://api.skirmesh.net/'
+    BASE = 'https://api.skirmesh.net/'
     GCTK = 'resources/gameConfig?token='
     GTK = 'resources/gameConfig'
     TMTK = 'resources/team?token='

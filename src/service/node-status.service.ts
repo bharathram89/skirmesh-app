@@ -47,7 +47,7 @@ export class NodeConfigService {
     });
     options = { headers: this.headers };
 
-    BASE = 'http://api.skirmesh.net/'
+    BASE = 'https://api.skirmesh.net/'
     DCTK = 'resources/device?token='
 
 
