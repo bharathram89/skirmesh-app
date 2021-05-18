@@ -50,7 +50,7 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '380914575563-o5mslfbj2klk7tdhdmr2rdogk9ugq86d.apps.googleusercontent.com'
+              '98485917851-59rpr54k2aeunme72jmhkpe625hjl3d1.apps.googleusercontent.com'
             )
           }
         ]
