@@ -17,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
  
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: 'http://api.skirmesh.net', options: {} };
+const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
 
 @NgModule({
   declarations: [
