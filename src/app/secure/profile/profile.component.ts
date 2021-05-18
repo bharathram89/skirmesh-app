@@ -113,13 +113,13 @@ export class ProfileComponent implements OnInit {
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
           this.currentVals.fieldProfileID = userData.fieldProfile.id;
-          this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
+          this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : null;
         }
         else if (this.isPlayer) {
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-          this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
-          this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
+          this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
+          this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : null;
         }
         this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
         this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
@@ -130,12 +130,13 @@ export class ProfileComponent implements OnInit {
 
       }
     )
-
-    this.authSvc.getImage(this.currentVals.imageID).subscribe(
-      imageData => {
-        this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
+      if(this.currentVals.imageID){ 
+        this.authSvc.getImage(this.currentVals.imageID).subscribe(
+          imageData => {
+            this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
+          }
+        )
       }
-    )
 
     // if (this.isField){
     //   setInterval(this.checkRfidToPair, 5000);
