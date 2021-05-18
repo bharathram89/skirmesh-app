@@ -155,7 +155,7 @@ export class ProfileComponent implements OnInit {
   get confirmPass() { return this.passReset.get('confirmPass'); }
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
-    this.authSvc.updatePass(data).subscribe(
+    this.authSvc.updatePass(this.userSvc.getToken() ,data).subscribe(
       resp=>{console.log('password Reset response',resp)},
       err=>{console.log('password Reset failed',err)}
     )
