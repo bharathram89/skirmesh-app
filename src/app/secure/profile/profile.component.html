@@ -221,15 +221,28 @@
                 </div>
 
                 <div class="col-6">
+
                   <div class="form-group">
                     <input formControlName="confirmUid" class="form-control"
                       placeholder="Confirm RFID">
                   </div>
+
                   <div *ngIf="confirmUid.invalid && (confirmUid.dirty || confirmUid.touched) "
                     class="alert alert-danger ">
+
                     <div *ngIf="confirmUid.errors?.required ">
                       Confirmation RFID is required
-                    </div> 
+                    </div>
+                    <div *ngIf="confirmUid.errors?.invalidRfid ">
+                      RFID is not valid
+                    </div>
+                    <div *ngIf="confirmUid.errors?.invalidLength ">
+                      RFID must be 8 characters
+                    </div>
+                    <div *ngIf="confirmUid.errors?.notMatched ">
+                      RFIDs must match
+                    </div>
+                    
                   </div>
                 </div>
               </form>

@@ -316,12 +316,19 @@ export class ProfileComponent implements OnInit {
     const uid        = group.get('uid').value;
     const confirmUid = group.get('confirmUid').value;
 
-    if      (uid.length != 8)     {return false}
-    else if (!uid === confirmUid) {return false}
-
     for (let i = 0; i < uid.length; i += 2) {
 
-        if (!parseInt(uid.slice(i, i+2), 16)) {return false}
+        if (!parseInt(uid.slice(i, i+2), 16)) {
+            return group.controls['confirmUid'].setErrors({ invalidRfid: true });
+        }
+    }
+
+    if (uid.length != 8) {
+        return group.controls['confirmUid'].setErrors({ invalidLength: true });
+    }
+    
+    if (uid != confirmUid) {
+        return group.controls['confirmUid'].setErrors({ notMatched: true });
     }
 
     return true
