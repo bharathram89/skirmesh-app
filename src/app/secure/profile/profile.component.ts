@@ -314,10 +314,17 @@ export class ProfileComponent implements OnInit {
   checkRFIDs(group: FormGroup) {
 
     const uid        = group.get('uid').value;
-    const confirmUID = group.get('confirmUID').value;
+    const confirmUid = group.get('confirmUid').value;
 
-    console.log(uid.slice(-2))
+    if      (uid.length != 8)     {return false}
+    else if (!uid === confirmUid) {return false}
 
+    for (let i = 0; i < uid.length; i += 2) {
+
+        if (!parseInt(uid.slice(i, i+2), 16)) {return false}
+    }
+
+    return true
 
   }
 
