@@ -1,5 +1,6 @@
 import { tokenName } from '@angular/compiler';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 
@@ -18,6 +19,7 @@ export class UserServiceService {
   fieldProfile;
   fieldPf;
   constructor(
+    private http:  HttpClient,
     tokenService: TokenStorageService
   ) {
     this.tokenSvc= tokenService;
@@ -26,6 +28,23 @@ export class UserServiceService {
     this.userData = new BehaviorSubject({});
     this.fieldProfile = new BehaviorSubject({});
   }
+
+  headers =new HttpHeaders({
+    'Content-Type': 'application/json'
+  });
+  options = { headers: this.headers };
+
+  BASE = 'https://api.skirmesh.net/';
+
+
+  getFieldProfileFromAPI(token, fieldProfileID) {
+      return this.http.get(this.BASE + 'resources/fieldProfile?token=' + token + '&id=' + fieldProfileID)
+  }
+
+  getUserListFromAPI(token) {
+      return this.http.get(this.BASE + 'resources/user_list?token=' + token)
+  }
+
   setUserData(userData){
     if(userData.user.type=='field'){
       this.isField = true;
@@ -42,6 +61,7 @@ export class UserServiceService {
     this.userData.next(userData.user)
     this.tokenSvc.saveToken(userData.token)
   }
+
   findMapID(mapName){
     let id ;
     this.fieldPf.maps.forEach(map => {
@@ -51,6 +71,7 @@ export class UserServiceService {
     });
     return id;
   }
+
   findMapName(mapID){
     let name ;
     this.fieldPf.maps.forEach(map => {
@@ -60,30 +81,39 @@ export class UserServiceService {
     });
     return name;
   }
+
   findLocationID(mapid,locationName){
     return this.getLocationsForMap(mapid).find(loc=>loc.name == locationName).id
   }
+
   findLocationName(mapid,locationid){
     return this.getLocationsForMap(this.findMapID(mapid)).find(loc=>loc.id == locationid).name
   }
+
   getFieldProfileID(){
     return this.fieldProfileID;
   }
+
   getFieldProfile(){
     return this.fieldProfile;
   }
+
   setSignIn(val: boolean) {
     this.signedIn.next(val);
   }
+
   isSignedIn() {
     return this.signedIn;
   }
+
   getUserTye(){
     return this.userType;
   }
+
   getUserData(){
     return this.userData;
   }
+
   getToken(){
     return this.token;
   }
@@ -91,9 +121,11 @@ export class UserServiceService {
   getGameModes(){
     return this.fieldPf.gameConfigs;
   }
+
   getLocationsForMap(mapID){
     return this.fieldPf.maps.find(ele=> ele.id==mapID).locations
   }
+
   findTeam(gameConfigID,teamName){
     console.log(this.fieldProfile,teamName,gameConfigID,"vals")
   }

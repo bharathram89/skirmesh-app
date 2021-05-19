@@ -33,8 +33,8 @@ export class AuthService {
     return this.http.get(this.BASE + 'resources/user?token='+token)
   }
 
-  updatePass(pass){
-    return this.http.put(this.BASE + 'resources/user', pass, this.options)
+  updatePass(token,pass){
+    return this.http.put(this.BASE + 'resources/user?token='+token, pass, this.options)
   }
 
   saveProfile(token, data){
@@ -72,4 +72,6 @@ export class AuthService {
   getImage(imageID) {
     return this.http.get(this.BASE + 'resources/serve_image/'+imageID)
   }
+
+
 }
