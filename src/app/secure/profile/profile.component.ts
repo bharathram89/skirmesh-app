@@ -158,6 +158,14 @@ export class ProfileComponent implements OnInit {
 
   }
 
+  clearRfidPairField() {
+
+      let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
+
+      this.userSvc.updateFieldProfile(this.userSvc.getToken(), data).subscribe(
+          resp => this.rfidToPair = resp["pair_uid"]
+      )
+  }
 
   checkRfidToPair() {
 
@@ -168,8 +176,11 @@ export class ProfileComponent implements OnInit {
 
   pairRfidToPlayer(){
 
-      console.log("WILL PAIR User:", this.playerSelected, "to UID", this.rfidToPair)
+      let data = {userID: this.playerSelected.id, fieldID:this.currentVals.fieldProfileID}
 
+      this.userSvc.pairUidFromFieldProfileToUser(this.userSvc.getToken(), data).subscribe(
+          // resp => console.log(resp)
+      )
   }
 
 
@@ -198,12 +209,18 @@ export class ProfileComponent implements OnInit {
 
 
   settings() {
+
     this.pfNav.classList.remove('active')
     this.securityNav.classList.remove('active')
+
     if(this.isField){
       document.getElementById('settingsNav').classList.add('active')
       this.settingsSection.style.display = 'block';
+
+      this.clearRfidPairField();
+
     }
+
     this.pfSection.style.display = 'none';
     this.securitySection.style.display = 'none';
   }

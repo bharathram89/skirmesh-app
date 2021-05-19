@@ -156,7 +156,7 @@
         <div id="settings" class="content-panel">
           <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
 
-          <button  type="button" class="btn btn-sm btn-danger">Clear RFID</button>
+          <button (click)="clearRfidPairField()" type="button" class="btn btn-sm btn-danger">Clear RFID</button>
           <button (click)="checkRfidToPair()" type="button" class="btn btn-sm btn-primary">Check RFID</button>
 
           <div class='row'>
@@ -172,15 +172,15 @@
             <select class="form-control"
                 [(ngModel)]="playerSelected">
                 <option *ngFor="let player of playerList; let i = index"
-                    [ngValue]=player.id>
+                    [ngValue]=player>
                     {{player.callSign}}
                 </option>
             </select>
 
-            <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected" [typeahead]="playerList"
-              typeaheadOptionField="name" [adaptivePosition]="true" class="form-control">
+            <!-- <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected.callSign" [typeahead]="playerList"
+              typeaheadOptionField="name" [adaptivePosition]="true" class="form-control"> -->
 
-            <button (click)="pairRfidToPlayer()" type="button" class="btn btn-success">Connect</button>
+            <button (click)="pairRfidToPlayer()" type="button" class="btn btn-success">Pair RFID</button>
             <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
             <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
           </div>
