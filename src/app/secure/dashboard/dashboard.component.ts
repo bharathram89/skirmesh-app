@@ -159,13 +159,27 @@ export class DashboardComponent implements OnInit {
   setGameScoreStats(userData) {
 
     let actions = [];
-
+    let gameActions = []
+    let games =[];
     for (let rfid of userData.rfids) {
       for (let action of rfid.gameActions) {
         actions.push(action)
+        if(!games.includes(action.gameID)){
+          games.push(action.gameID);
+          let data = {id : action.gameID , actions:[]}
+          data.actions.push(action)
+          gameActions.push(data)
+        }else{
+          for (let game of gameActions) {
+            if(game.id == action.gameID){
+              game.actions.push(action)
+            }
+          }
+        }
       }
     }
 
+    console.log(gameActions,"gameActions")
     this.allActions = actions.sort((a, b) => b.id - a.id)
 
     for (let action of actions) {
@@ -194,6 +208,16 @@ export class DashboardComponent implements OnInit {
           this.totalBombDis += points;
           break;
       }
+    //   this.gameHistData.push({
+
+    //     id       : game.id,
+    //     start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
+    //     end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
+    //     pieData  : pieData,
+    //     duration : new Date(duration).toUTCString().slice(17,25)
+
+    // })
+    // console.log(action,'action')
 
     }
     this.pieData = [{name:"Medics",value:this.totalMedics},
