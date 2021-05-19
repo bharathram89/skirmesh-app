@@ -326,7 +326,7 @@ export class ProfileComponent implements OnInit {
     if (uid.length != 8) {
         return group.controls['confirmUid'].setErrors({ invalidLength: true });
     }
-    
+
     if (uid != confirmUid) {
         return group.controls['confirmUid'].setErrors({ notMatched: true });
     }
@@ -338,7 +338,10 @@ export class ProfileComponent implements OnInit {
 
   onSubmitPairRfid() {
 
-      console.log("SUBMITTING PAIR COMMAND")
+      let uid = this.uidEntry.get("uid").value.toLowerCase();
+      let userID =  this.currentVals.userID;
+
+      console.log("SUBMITTING PAIR COMMAND", uid, userID)
   }
 
 
