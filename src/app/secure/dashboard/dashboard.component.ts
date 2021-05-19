@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit {
           }
         )
       }
-      
+
     })
   }
 
@@ -158,73 +158,91 @@ export class DashboardComponent implements OnInit {
 
   setGameScoreStats(userData) {
 
-    let actions = [];
-    let gameActions = []
-    let games =[];
+    let actions     = [];
+    let gameActions = [];
+    let games       = [];
+
     for (let rfid of userData.rfids) {
+
       for (let action of rfid.gameActions) {
+
         actions.push(action)
-        if(!games.includes(action.gameID)){
-          games.push(action.gameID);
-          let data = {id : action.gameID , actions:[]}
-          data.actions.push(action)
-          gameActions.push(data)
-        }else{
-          for (let game of gameActions) {
-            if(game.id == action.gameID){
-              game.actions.push(action)
-            }
-          }
+
+        if (!games.find(ele => ele.id == action.gameID)) {
+
+          let data = {id:action.gameID, actions:[]}
+          games.push(data)
+          games.find(ele => ele.id == action.gameID).actions.push(action)
+        }
+        else {
+          games.find(ele => ele.id == action.gameID).actions.push(action)
         }
       }
     }
 
-    console.log(gameActions,"gameActions")
-    this.allActions = actions.sort((a, b) => b.id - a.id)
+    games = games.sort((a,b) => b.id - a.id);
 
-    for (let action of actions) {
+    for (let game of games) {
 
-      let points = this.actionList.find(ele => ele.id == action.actionID).points;
+        let medics   = 0;
+        let captures = 0;
+        let assists  = 0;
+        let bombArm  = 0;
+        let bombDis  = 0;
 
-      switch (action.actionID) {
+        for (let action of game.actions) {
 
-        case MEDIC:
-          this.totalMedics += points;
-          break;
+          let points = this.actionList.find(ele => ele.id == action.actionID).points;
 
-        case CAPTURE:
-          this.totalCaptures += points;
-          break;
+          switch (action.actionID) {
 
-        case ASSIST:
-          this.totalAssists += points;
-          break;
+            case MEDIC:
+              medics += points;
+              this.totalMedics += points;
+              break;
 
-        case BOMB_ARM:
-          this.totalBombArm += points;
-          break;
+            case CAPTURE:
+              captures += points;
+              this.totalCaptures += points;
+              break;
 
-        case BOMB_DIF:
-          this.totalBombDis += points;
-          break;
-      }
-    //   this.gameHistData.push({
+            case ASSIST:
+              assists += points;
+              this.totalAssists += points;
+              break;
 
-    //     id       : game.id,
-    //     start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
-    //     end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
-    //     pieData  : pieData,
-    //     duration : new Date(duration).toUTCString().slice(17,25)
+            case BOMB_ARM:
+              bombArm += points;
+              this.totalBombArm += points;
+              break;
 
-    // })
-    // console.log(action,'action')
+            case BOMB_DIF:
+              bombDis += points;
+              this.totalBombDis += points;
+              break;
+          }
+        }
+
+        this.gameHistData.push({
+
+            id       : game.id,
+            // start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
+            // end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
+            pieData  : [{name:"Medics",         value:medics},
+                        {name:"Captures",       value:captures},
+                        {name:"Assists",        value:assists},
+                        {name:"Bombs Armed",    value:bombArm},
+                        {name:"Bombs Diffused", value:bombDis}]
+            // duration : new Date(duration).toUTCString().slice(17,25)
+
+        })
 
     }
-    this.pieData = [{name:"Medics",value:this.totalMedics},
-                    {name:"Captures",value:this.totalCaptures},
-                    {name:"Assists",value:this.totalAssists},
-                    {name:"Bombs Armed",value:this.totalBombArm},
-                    {name:"Bombs Diffused",value:this.totalBombDis}]
+    this.pieData = [{name:"Medics",         value:this.totalMedics},
+                    {name:"Captures",       value:this.totalCaptures},
+                    {name:"Assists",        value:this.totalAssists},
+                    {name:"Bombs Armed",    value:this.totalBombArm},
+                    {name:"Bombs Diffused", value:this.totalBombDis}]
   }
 
 
@@ -266,27 +284,27 @@ export class DashboardComponent implements OnInit {
 
                       case MEDIC:
                         medics ++;
-                        this.totalMedics++;
+                        this.totalMedics ++;
                         break;
 
                       case CAPTURE:
                         captures ++;
-                        this.totalCaptures++;
+                        this.totalCaptures ++;
                         break;
 
                       case ASSIST:
                         assists ++;
-                        this.totalAssists++;
+                        this.totalAssists ++;
                         break;
 
                       case BOMB_ARM:
                         bombArm ++;
-                        this.totalBombArm++;
+                        this.totalBombArm ++;
                         break;
 
                       case BOMB_DIF:
                         bombDis ++;
-                        this.totalBombDis;
+                        this.totalBombDis ++;
                         break;
                     }
                 }
@@ -315,7 +333,7 @@ export class DashboardComponent implements OnInit {
 
             this.pieData = [{name:"Medics",        value:this.totalMedics},
                             {name:"Captures",      value:this.totalCaptures},
-                            {name:"Assists",      value:this.totalAssists},
+                            {name:"Assists",       value:this.totalAssists},
                             {name:"Bombs Armed",   value:this.totalBombArm},
                             {name:"Bombs Diffused",value:this.totalBombDis}]
 
