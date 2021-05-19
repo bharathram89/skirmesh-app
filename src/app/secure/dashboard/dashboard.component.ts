@@ -158,25 +158,18 @@ export class DashboardComponent implements OnInit {
 
   setGameScoreStats(userData) {
 
-    let actions     = [];
-    let gameActions = [];
     let games       = [];
 
     for (let rfid of userData.rfids) {
 
       for (let action of rfid.gameActions) {
+        // Look to see if that game exists, if not create it
+        // and stuff actions under the right game
+        let game = games.find(ele => ele.id == action.gameID)
 
-        actions.push(action)
+        if (game) { game.actions.push(action) }
+        else      { games.push({id:action.gameID, actions:[action]}) }
 
-        if (!games.find(ele => ele.id == action.gameID)) {
-
-          let data = {id:action.gameID, actions:[]}
-          games.push(data)
-          games.find(ele => ele.id == action.gameID).actions.push(action)
-        }
-        else {
-          games.find(ele => ele.id == action.gameID).actions.push(action)
-        }
       }
     }
 
