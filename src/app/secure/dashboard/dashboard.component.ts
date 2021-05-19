@@ -109,7 +109,7 @@ export class DashboardComponent implements OnInit {
 
         this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
         this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-        this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
+        this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
         this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
       }
       this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
