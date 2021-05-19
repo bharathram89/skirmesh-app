@@ -11,19 +11,22 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 
 export class ProfileComponent implements OnInit {
-  playerSelected: string;//this is the selected player from list
-  RFIDScanned: string;//load the rfid scanned to this location
-  players: any[]=[{name:'Bart',id:1},{name:'Brandon',id:2},{name:'Rob',id:3},{name:'Dusty',id:4}]//this is the list of call signs
-  pfNav: HTMLElement;
-  securityNav: HTMLElement;
-  settingsNav: HTMLElement;
-  pfSection: HTMLElement;
-  securitySection: HTMLElement;
-  settingsSection: HTMLElement;
-  passReset: FormGroup;
+
+  playerSelected; //this is the selected player from list
+  rfidToPair;
+  playerList;
+
+  pfNav           : HTMLElement;
+  securityNav     : HTMLElement;
+  settingsNav     : HTMLElement;
+  pfSection       : HTMLElement;
+  securitySection : HTMLElement;
+  settingsSection : HTMLElement;
+  passReset       : FormGroup;
   base64toUpload;
   resetPass = { pass:'',confirmPass:''}
-  profileForm: FormGroup;
+  profileForm     : FormGroup;
+
   field = { firstName:    '',
             lastName:     '',
             email:        '',
@@ -38,8 +41,6 @@ export class ProfileComponent implements OnInit {
 
   isField: boolean;
   isPlayer: boolean;
-
-  rfidToPair;
 
   currentVals = {
                   firstName:      '',
@@ -62,7 +63,10 @@ export class ProfileComponent implements OnInit {
   authSvc: AuthService;
 
 
-  constructor(private userService: UserServiceService, private authService: AuthService) {
+  constructor(
+      private userService: UserServiceService,
+      private authService: AuthService
+  ) {
     this.authSvc = authService;
     this.userSvc = userService;
   }
@@ -107,20 +111,25 @@ export class ProfileComponent implements OnInit {
 
 
     this.userSvc.getUserData().subscribe(
+
       userData => {
 
         if (this.isField) {
+
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
           this.currentVals.fieldProfileID = userData.fieldProfile.id;
           this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
         }
+
         else if (this.isPlayer) {
+
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
           this.currentVals.callSign = userData.playerProfile.callSign ? userData.callSign : 'Whats your callsign!';
           this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
         }
+
         this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
         this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
         this.currentVals.email = userData.email ? userData.email : 'E-mail';
@@ -128,8 +137,7 @@ export class ProfileComponent implements OnInit {
 
         this.currentVals.userID = userData.id;
 
-      }
-    )
+      })
 
     this.authSvc.getImage(this.currentVals.imageID).subscribe(
       imageData => {
@@ -137,22 +145,35 @@ export class ProfileComponent implements OnInit {
       }
     )
 
-    // if (this.isField){
-    //   setInterval(this.checkRfidToPair, 5000);
-    // }
+
+    if (this.isField) {
+
+        this.userSvc.getUserListFromAPI(this.userSvc.getToken()).subscribe(
+            data => this.playerList = data
+        )
+    }
 
 
   }
 
+
   checkRfidToPair() {
 
-    console.log("check for RFID here")
+      this.userSvc.getFieldProfileFromAPI(this.userSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
+          data => this.rfidToPair = data["pair_uid"]
+      )
+  }
+
+  pairRfidToPlayer(){
+
+      console.log("WILL PAIR User:", this.playerSelected, "to UID", this.rfidToPair)
 
   }
 
 
   get pass() { return this.passReset.get('pass'); }
   get confirmPass() { return this.passReset.get('confirmPass'); }
+
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
     this.authSvc.updatePass(this.userSvc.getToken() ,data).subscribe(
@@ -160,6 +181,8 @@ export class ProfileComponent implements OnInit {
       err=>{console.log('password Reset failed',err)}
     )
   }
+
+
   profile() {
     this.pfNav.classList.add('active')
     this.securityNav.classList.remove('active')
@@ -170,6 +193,8 @@ export class ProfileComponent implements OnInit {
     this.pfSection.style.display = 'block';
     this.securitySection.style.display = 'none';
   }
+
+
   settings() {
     this.pfNav.classList.remove('active')
     this.securityNav.classList.remove('active')
@@ -180,6 +205,8 @@ export class ProfileComponent implements OnInit {
     this.pfSection.style.display = 'none';
     this.securitySection.style.display = 'none';
   }
+
+
   security() {
     this.pfNav.classList.remove('active')
     this.securityNav.classList.add('active')
@@ -191,10 +218,8 @@ export class ProfileComponent implements OnInit {
     this.pfSection.style.display = 'none';
     this.securitySection.style.display = 'block';
   }
-  connectRfidToPlayer(){
 
 
-  }
   onSubmit() {
 
     let data  = {"user":{}, "field":{}, "player":{}}
@@ -233,6 +258,7 @@ export class ProfileComponent implements OnInit {
     //saveProfile
   }
 
+
   checkPasswords(group: FormGroup){
     const password = group.get('pass').value;
   const confirmPassword = group.get('confirmPass').value;
@@ -240,6 +266,7 @@ export class ProfileComponent implements OnInit {
   return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
 
   }
+
 
   getFile(event) {
 
@@ -258,6 +285,7 @@ export class ProfileComponent implements OnInit {
     }
 
   }
+
 
   saveImage() {
 

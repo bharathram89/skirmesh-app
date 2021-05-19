@@ -72,4 +72,6 @@ export class AuthService {
   getImage(imageID) {
     return this.http.get(this.BASE + 'resources/serve_image/'+imageID)
   }
+
+
 }
