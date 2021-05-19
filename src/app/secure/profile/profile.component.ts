@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
 
   base64toUpload;
   resetPass = { pass:'', confirmPass:''}
-  enterUID  = { uid: '', confirmUID: ''}
+  enterUID  = { uid: '', confirmUid: ''}
   profileForm     : FormGroup;
 
   field = { firstName:    '',
@@ -105,7 +105,7 @@ export class ProfileComponent implements OnInit {
         Validators.maxLength(8),
         Validators.minLength(8)
       ]),
-      "confirmUid": new FormControl(this.enterUID.confirmUID, [
+      "confirmUid": new FormControl(this.enterUID.confirmUid, [
         Validators.required
       ])
     },{ validators: this.checkRFIDs.bind(this) })
@@ -204,7 +204,7 @@ export class ProfileComponent implements OnInit {
   get confirmPass() { return this.passReset.get('confirmPass'); }
 
   get uid() { return this.uidEntry.get('uid'); }
-  get confirmUID() { return this.uidEntry.get('confirmUid'); }
+  get confirmUid() { return this.uidEntry.get('confirmUid'); }
 
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}

@@ -209,7 +209,10 @@
                       RFID is required
                     </div>
 
-                    <div *ngIf="uid.errors?.minlength || uid.errors?.maxLength">
+                    <div *ngIf="uid.errors?.minlength">
+                      RFID must be 8 characters
+                    </div>
+                    <div *ngIf="uid.errors?.maxlength">
                       RFID must be 8 characters
                     </div>
 
@@ -222,14 +225,11 @@
                     <input formControlName="confirmUid" class="form-control"
                       placeholder="Confirm RFID">
                   </div>
-                  <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
+                  <div *ngIf="confirmUid.invalid && (confirmUid.dirty || confirmUid.touched) "
                     class="alert alert-danger ">
                     <div *ngIf="confirmUid.errors?.required ">
                       Confirmation RFID is required
-                    </div>
-                    <div *ngIf="confirmUid.errors?.notSame">
-                      RFIDs need to match
-                    </div>
+                    </div> 
                   </div>
                 </div>
               </form>
