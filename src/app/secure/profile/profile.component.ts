@@ -215,6 +215,10 @@ export class ProfileComponent implements OnInit {
   }
 
 
+  _closeTabs(){
+
+
+  }
   profile() {
 
     this.pfNav.classList.add('active')
@@ -309,6 +313,18 @@ export class ProfileComponent implements OnInit {
 
   checkRFIDs(group: FormGroup) {
 
+    const uid        = group.get('uid').value;
+    const confirmUID = group.get('confirmUID').value;
+
+    console.log(uid.slice(-2))
+
+
+  }
+
+
+  onSubmitPairRfid() {
+
+      console.log("SUBMITTING PAIR COMMAND")
   }
 
 

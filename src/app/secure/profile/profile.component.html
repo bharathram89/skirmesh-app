@@ -234,7 +234,7 @@
                 </div>
               </form>
 
-              <button [disabled]="uidEntry.invalid"  type="submit"
+              <button [disabled]="uidEntry.invalid"  type="submit" (click)="onSubmitPairRfid()"
                 class="btn btn-primary cust_skir_signup"> Pair RFID to your account</button>
             </div>
 
