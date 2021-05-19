@@ -22,9 +22,13 @@ export class ProfileComponent implements OnInit {
   pfSection       : HTMLElement;
   securitySection : HTMLElement;
   settingsSection : HTMLElement;
+
   passReset       : FormGroup;
+  uidEntry        : FormGroup;
+
   base64toUpload;
-  resetPass = { pass:'',confirmPass:''}
+  resetPass = { pass:'', confirmPass:''}
+  enterUID  = { uid: '', confirmUid: ''}
   profileForm     : FormGroup;
 
   field = { firstName:    '',
@@ -94,6 +98,18 @@ export class ProfileComponent implements OnInit {
         Validators.required
       ])
     },{ validators: this.checkPasswords.bind(this) })
+
+    this.uidEntry = new FormGroup({
+      "uid": new FormControl(this.enterUID.uid, [
+        Validators.required,
+        Validators.maxLength(8),
+        Validators.minLength(8)
+      ]),
+      "confirmUid": new FormControl(this.enterUID.confirmUid, [
+        Validators.required
+      ])
+    },{ validators: this.checkRFIDs.bind(this) })
+
     this.profileForm = new FormGroup({
 
       "firstName":    new FormControl(this.field.firstName, [Validators.required]),
@@ -158,6 +174,14 @@ export class ProfileComponent implements OnInit {
 
   }
 
+  clearRfidPairField() {
+
+      let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
+
+      this.userSvc.updateFieldProfile(this.userSvc.getToken(), data).subscribe(
+          resp => this.rfidToPair = resp["pair_uid"]
+      )
+  }
 
   checkRfidToPair() {
 
@@ -168,13 +192,19 @@ export class ProfileComponent implements OnInit {
 
   pairRfidToPlayer(){
 
-      console.log("WILL PAIR User:", this.playerSelected, "to UID", this.rfidToPair)
+      let data = {userID: this.playerSelected.id, fieldID:this.currentVals.fieldProfileID}
 
+      this.userSvc.pairUidFromFieldProfileToUser(this.userSvc.getToken(), data).subscribe(
+          // resp => console.log(resp)
+      )
   }
 
 
   get pass() { return this.passReset.get('pass'); }
   get confirmPass() { return this.passReset.get('confirmPass'); }
+
+  get uid() { return this.uidEntry.get('uid'); }
+  get confirmUid() { return this.uidEntry.get('confirmUid'); }
 
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
@@ -185,38 +215,48 @@ export class ProfileComponent implements OnInit {
   }
 
 
+  _closeTabs(){
+
+
+  }
   profile() {
+
     this.pfNav.classList.add('active')
     this.securityNav.classList.remove('active')
-    if(this.isField){
-      document.getElementById('settingsNav').classList.remove('active')
-      this.settingsSection.style.display = 'none';
-    }
+
+    document.getElementById('settingsNav').classList.remove('active')
+    this.settingsSection.style.display = 'none';
+
     this.pfSection.style.display = 'block';
     this.securitySection.style.display = 'none';
   }
 
 
   settings() {
+
     this.pfNav.classList.remove('active')
     this.securityNav.classList.remove('active')
+
+    document.getElementById('settingsNav').classList.add('active')
+    this.settingsSection.style.display = 'block';
+
     if(this.isField){
-      document.getElementById('settingsNav').classList.add('active')
-      this.settingsSection.style.display = 'block';
+      this.clearRfidPairField();
     }
+
     this.pfSection.style.display = 'none';
     this.securitySection.style.display = 'none';
   }
 
 
   security() {
+
     this.pfNav.classList.remove('active')
     this.securityNav.classList.add('active')
 
-    if(this.isField){
-      document.getElementById('settingsNav').classList.remove('active')
-      this.settingsSection.style.display = 'none';
-    }
+    document.getElementById('settingsNav').classList.remove('active')
+    this.settingsSection.style.display = 'none';
+
     this.pfSection.style.display = 'none';
     this.securitySection.style.display = 'block';
   }
@@ -262,11 +302,46 @@ export class ProfileComponent implements OnInit {
 
 
   checkPasswords(group: FormGroup){
+
     const password = group.get('pass').value;
-  const confirmPassword = group.get('confirmPass').value;
+    const confirmPassword = group.get('confirmPass').value;
 
-  return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
+    return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
 
+  }
+
+
+  checkRFIDs(group: FormGroup) {
+
+    const uid        = group.get('uid').value;
+    const confirmUid = group.get('confirmUid').value;
+
+    for (let i = 0; i < uid.length; i += 2) {
+
+        if (!parseInt(uid.slice(i, i+2), 16)) {
+            return group.controls['confirmUid'].setErrors({ invalidRfid: true });
+        }
+    }
+
+    if (uid.length != 8) {
+        return group.controls['confirmUid'].setErrors({ invalidLength: true });
+    }
+
+    if (uid != confirmUid) {
+        return group.controls['confirmUid'].setErrors({ notMatched: true });
+    }
+
+    return true
+
+  }
+
+
+  onSubmitPairRfid() {
+
+      let uid = this.uidEntry.get("uid").value.toLowerCase();
+      let userID =  this.currentVals.userID;
+
+      console.log("SUBMITTING PAIR COMMAND", uid, userID)
   }
 
 

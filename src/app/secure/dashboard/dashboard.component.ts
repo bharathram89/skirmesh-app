@@ -7,9 +7,9 @@ import { GameService } from 'src/service/game.service';
 import { UserServiceService } from 'src/service/user-service.service';
 
 // actionIDs associated with specific actions
-const MEDIC = 11;
-const CAPTURE = 2;
-const ASSIST = 3;
+const MEDIC    = 11;
+const CAPTURE  = 2;
+const ASSIST   = 3;
 const BOMB_ARM = 8;
 const BOMB_DIF = 9;
 
@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit {
           }
         )
       }
-      
+
     })
   }
 
@@ -158,49 +158,84 @@ export class DashboardComponent implements OnInit {
 
   setGameScoreStats(userData) {
 
-    let actions = [];
+    let games       = [];
 
     for (let rfid of userData.rfids) {
+
       for (let action of rfid.gameActions) {
-        actions.push(action)
+        // Look to see if that game exists, if not create it
+        // and stuff actions under the right game
+        let game = games.find(ele => ele.id == action.gameID)
+
+        if (game) { game.actions.push(action) }
+        else      { games.push({id:action.gameID, actions:[action]}) }
+
       }
     }
 
-    this.allActions = actions.sort((a, b) => b.id - a.id)
+    games = games.sort((a,b) => b.id - a.id);
 
-    for (let action of actions) {
+    for (let game of games) {
 
-      let points = this.actionList.find(ele => ele.id == action.actionID).points;
+        let medics   = 0;
+        let captures = 0;
+        let assists  = 0;
+        let bombArm  = 0;
+        let bombDis  = 0;
 
-      switch (action.actionID) {
+        for (let action of game.actions) {
 
-        case MEDIC:
-          this.totalMedics += points;
-          break;
+          let points = this.actionList.find(ele => ele.id == action.actionID).points;
 
-        case CAPTURE:
-          this.totalCaptures += points;
-          break;
+          switch (action.actionID) {
 
-        case ASSIST:
-          this.totalAssists += points;
-          break;
+            case MEDIC:
+              medics += points;
+              this.totalMedics += points;
+              break;
 
-        case BOMB_ARM:
-          this.totalBombArm += points;
-          break;
+            case CAPTURE:
+              captures += points;
+              this.totalCaptures += points;
+              break;
 
-        case BOMB_DIF:
-          this.totalBombDis += points;
-          break;
-      }
+            case ASSIST:
+              assists += points;
+              this.totalAssists += points;
+              break;
+
+            case BOMB_ARM:
+              bombArm += points;
+              this.totalBombArm += points;
+              break;
+
+            case BOMB_DIF:
+              bombDis += points;
+              this.totalBombDis += points;
+              break;
+          }
+        }
+
+        this.gameHistData.push({
+
+            id       : game.id,
+            // start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
+            // end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
+            pieData  : [{name:"Medics",         value:medics},
+                        {name:"Captures",       value:captures},
+                        {name:"Assists",        value:assists},
+                        {name:"Bombs Armed",    value:bombArm},
+                        {name:"Bombs Diffused", value:bombDis}]
+            // duration : new Date(duration).toUTCString().slice(17,25)
+
+        })
 
     }
-    this.pieData = [{name:"Medics",value:this.totalMedics},
-                    {name:"Captures",value:this.totalCaptures},
-                    {name:"Assists",value:this.totalAssists},
-                    {name:"Bombs Armed",value:this.totalBombArm},
-                    {name:"Bombs Diffused",value:this.totalBombDis}]
+    this.pieData = [{name:"Medics",         value:this.totalMedics},
+                    {name:"Captures",       value:this.totalCaptures},
+                    {name:"Assists",        value:this.totalAssists},
+                    {name:"Bombs Armed",    value:this.totalBombArm},
+                    {name:"Bombs Diffused", value:this.totalBombDis}]
   }
 
 
@@ -227,6 +262,7 @@ export class DashboardComponent implements OnInit {
 
             for (let game of games.sort((a, b) => b.id - a.id)) {
 
+                console.log(game.id, game.gameActions)
                 if (!game.gameActions.length || !game.endTime){
                     continue
                 }
@@ -242,27 +278,27 @@ export class DashboardComponent implements OnInit {
 
                       case MEDIC:
                         medics ++;
-                        this.totalMedics++;
+                        this.totalMedics ++;
                         break;
 
                       case CAPTURE:
                         captures ++;
-                        this.totalCaptures++;
+                        this.totalCaptures ++;
                         break;
 
                       case ASSIST:
                         assists ++;
-                        this.totalAssists++;
+                        this.totalAssists ++;
                         break;
 
                       case BOMB_ARM:
                         bombArm ++;
-                        this.totalBombArm++;
+                        this.totalBombArm ++;
                         break;
 
                       case BOMB_DIF:
                         bombDis ++;
-                        this.totalBombDis;
+                        this.totalBombDis ++;
                         break;
                     }
                 }
@@ -271,7 +307,7 @@ export class DashboardComponent implements OnInit {
 
                 let pieData = [{name:"Medics",        value:medics},
                                {name:"Captures",      value:captures},
-                               {name:"Assists",      value:assists},
+                               {name:"Assists",       value:assists},
                                {name:"Bombs Armed",   value:bombArm},
                                {name:"Bombs Diffused",value:bombDis}]
 
@@ -291,12 +327,14 @@ export class DashboardComponent implements OnInit {
 
             this.pieData = [{name:"Medics",        value:this.totalMedics},
                             {name:"Captures",      value:this.totalCaptures},
-                            {name:"Assists",      value:this.totalAssists},
+                            {name:"Assists",       value:this.totalAssists},
                             {name:"Bombs Armed",   value:this.totalBombArm},
                             {name:"Bombs Diffused",value:this.totalBombDis}]
 
         }
     )
+
+    console.log(this.gameHistData)
   }
 
 
