@@ -7,9 +7,9 @@ import { GameService } from 'src/service/game.service';
 import { UserServiceService } from 'src/service/user-service.service';
 
 // actionIDs associated with specific actions
-const MEDIC = 11;
-const CAPTURE = 2;
-const ASSIST = 3;
+const MEDIC    = 11;
+const CAPTURE  = 2;
+const ASSIST   = 3;
 const BOMB_ARM = 8;
 const BOMB_DIF = 9;
 
@@ -262,6 +262,7 @@ export class DashboardComponent implements OnInit {
 
             for (let game of games.sort((a, b) => b.id - a.id)) {
 
+                console.log(game.id, game.gameActions)
                 if (!game.gameActions.length || !game.endTime){
                     continue
                 }
@@ -306,7 +307,7 @@ export class DashboardComponent implements OnInit {
 
                 let pieData = [{name:"Medics",        value:medics},
                                {name:"Captures",      value:captures},
-                               {name:"Assists",      value:assists},
+                               {name:"Assists",       value:assists},
                                {name:"Bombs Armed",   value:bombArm},
                                {name:"Bombs Diffused",value:bombDis}]
 
@@ -332,6 +333,8 @@ export class DashboardComponent implements OnInit {
 
         }
     )
+
+    console.log(this.gameHistData)
   }
 
 

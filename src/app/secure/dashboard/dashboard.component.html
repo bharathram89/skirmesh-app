@@ -77,7 +77,7 @@
           [isOpen]="isFirstOpen">
 
           <h4 *ngIf="isField">Start Time: {{ game.start}}</h4>
-          <h4 *ngIF="isField">End Time: {{ game.end }}</h4>
+          <h4 *ngIf="isField">End Time: {{ game.end }}</h4>
 
           <ngx-charts-advanced-pie-chart   [scheme]="colorScheme" [results]="game.pieData"
             [gradient]="gradient" (select)="onSelect($event)" (activate)="onActivate($event)"
