@@ -22,9 +22,13 @@ export class ProfileComponent implements OnInit {
   pfSection       : HTMLElement;
   securitySection : HTMLElement;
   settingsSection : HTMLElement;
+
   passReset       : FormGroup;
+  uidEntry        : FormGroup;
+
   base64toUpload;
-  resetPass = { pass:'',confirmPass:''}
+  resetPass = { pass:'', confirmPass:''}
+  enterUID  = { uid: '', confirmUID: ''}
   profileForm     : FormGroup;
 
   field = { firstName:    '',
@@ -94,6 +98,18 @@ export class ProfileComponent implements OnInit {
         Validators.required
       ])
     },{ validators: this.checkPasswords.bind(this) })
+
+    this.uidEntry = new FormGroup({
+      "uid": new FormControl(this.enterUID.uid, [
+        Validators.required,
+        Validators.maxLength(8),
+        Validators.minLength(8)
+      ]),
+      "confirmUid": new FormControl(this.enterUID.confirmUID, [
+        Validators.required
+      ])
+    },{ validators: this.checkRFIDs.bind(this) })
+
     this.profileForm = new FormGroup({
 
       "firstName":    new FormControl(this.field.firstName, [Validators.required]),
@@ -187,6 +203,9 @@ export class ProfileComponent implements OnInit {
   get pass() { return this.passReset.get('pass'); }
   get confirmPass() { return this.passReset.get('confirmPass'); }
 
+  get uid() { return this.uidEntry.get('uid'); }
+  get confirmUID() { return this.uidEntry.get('confirmUid'); }
+
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
     this.authSvc.updatePass(this.userSvc.getToken() ,data).subscribe(
@@ -197,12 +216,13 @@ export class ProfileComponent implements OnInit {
 
 
   profile() {
+
     this.pfNav.classList.add('active')
     this.securityNav.classList.remove('active')
-    if(this.isField){
-      document.getElementById('settingsNav').classList.remove('active')
-      this.settingsSection.style.display = 'none';
-    }
+
+    document.getElementById('settingsNav').classList.remove('active')
+    this.settingsSection.style.display = 'none';
+
     this.pfSection.style.display = 'block';
     this.securitySection.style.display = 'none';
   }
@@ -213,12 +233,11 @@ export class ProfileComponent implements OnInit {
     this.pfNav.classList.remove('active')
     this.securityNav.classList.remove('active')
 
+    document.getElementById('settingsNav').classList.add('active')
+    this.settingsSection.style.display = 'block';
+
     if(this.isField){
-      document.getElementById('settingsNav').classList.add('active')
-      this.settingsSection.style.display = 'block';
-
       this.clearRfidPairField();
-
     }
 
     this.pfSection.style.display = 'none';
@@ -227,13 +246,13 @@ export class ProfileComponent implements OnInit {
 
 
   security() {
+
     this.pfNav.classList.remove('active')
     this.securityNav.classList.add('active')
 
-    if(this.isField){
-      document.getElementById('settingsNav').classList.remove('active')
-      this.settingsSection.style.display = 'none';
-    }
+    document.getElementById('settingsNav').classList.remove('active')
+    this.settingsSection.style.display = 'none';
+
     this.pfSection.style.display = 'none';
     this.securitySection.style.display = 'block';
   }
@@ -279,10 +298,16 @@ export class ProfileComponent implements OnInit {
 
 
   checkPasswords(group: FormGroup){
-    const password = group.get('pass').value;
-  const confirmPassword = group.get('confirmPass').value;
 
-  return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
+    const password = group.get('pass').value;
+    const confirmPassword = group.get('confirmPass').value;
+
+    return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
+
+  }
+
+
+  checkRFIDs(group: FormGroup) {
 
   }
 

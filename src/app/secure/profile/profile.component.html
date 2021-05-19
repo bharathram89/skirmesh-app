@@ -6,13 +6,13 @@
         <div class="side-bar">
           <nav class="side-menu">
             <ul class="nav">
-              <li id="profileNav" (click)="profile()" class="active"><a><span class="fa fa-user"></span> Profile</a>
-              </li>
-              <li *ngIf="isField"  id="settingsNav" (click)="settings()"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
+              <li id="profileNav" (click)="profile()" class="active"><a><span class="fa fa-user"></span> Profile</a></li>
+              <li id="settingsNav" (click)="settings()"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
               <li id="securityNav" (click)="security()"><a><span class="fa fa-credit-card"></span> Security</a></li>
             </ul>
           </nav>
         </div>
+
         <div id="profile" class="content-panel">
           <h2 class="title center-cust">Manage Profile</h2>
           <form [formGroup]="profileForm" autocomplete="off" method="PUT" class="form-horizontal">
@@ -153,38 +153,97 @@
             </div>
           </div> -->
         </div>
+
+
+
         <div id="settings" class="content-panel">
-          <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
 
-          <button (click)="clearRfidPairField()" type="button" class="btn btn-sm btn-danger">Clear RFID</button>
-          <button (click)="checkRfidToPair()" type="button" class="btn btn-sm btn-primary">Check RFID</button>
+            <div *ngIf="isField">
+              <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
 
-          <div class='row'>
+              <button (click)="clearRfidPairField()" type="button" class="btn btn-sm btn-danger">Clear RFID</button>
+              <button (click)="checkRfidToPair()" type="button" class="btn btn-sm btn-primary">Check RFID</button>
+
+              <div class='row'>
 
 
-            <p class="card card-block card-header mb-3">
-                Scan RFID at Controller and Check for the RFID.
-            </p>
-            <br>
-            <p class="card card-block card-header mb-3">Scanned RFID: {{ rfidToPair }}</p>
-            <br>
+                <p class="card card-block card-header mb-3">
+                    Scan RFID at Controller and Check for the RFID.
+                </p>
+                <br>
+                <p class="card card-block card-header mb-3">Scanned RFID: {{ rfidToPair }}</p>
+                <br>
 
-            <select class="form-control"
-                [(ngModel)]="playerSelected">
-                <option *ngFor="let player of playerList; let i = index"
-                    [ngValue]=player>
-                    {{player.callSign}}
-                </option>
-            </select>
+                <select class="form-control"
+                    [(ngModel)]="playerSelected">
+                    <option *ngFor="let player of playerList; let i = index"
+                        [ngValue]=player>
+                        {{player.callSign}}
+                    </option>
+                </select>
 
-            <!-- <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected.callSign" [typeahead]="playerList"
-              typeaheadOptionField="name" [adaptivePosition]="true" class="form-control"> -->
+                <!-- <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected.callSign" [typeahead]="playerList"
+                  typeaheadOptionField="name" [adaptivePosition]="true" class="form-control"> -->
 
-            <button (click)="pairRfidToPlayer()" type="button" class="btn btn-success">Pair RFID</button>
-            <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
-            <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
-          </div>
+                <button (click)="pairRfidToPlayer()" type="button" class="btn btn-success">Pair RFID</button>
+                <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
+                <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
+              </div>
+            </div>
+
+            <div *ngIf="isPlayer" class="login-screen">
+
+              <form [formGroup]="uidEntry" autocomplete="off" method="POST">
+
+                <div class="col-6">
+                  <h3 class="center-cust">Look for the RFID on the reverse of your band.
+                                          Type it in exactly as shown on the band to associate
+                                          the band to your profile. </h3>
+                  <div class="form-group">
+                    <input formControlName="uid" class="form-control" placeholder="RFID">
+                  </div>
+
+                  <div *ngIf="uid.invalid && (uid.dirty || uid.touched) " class="alert alert-danger ">
+
+                    <div *ngIf="uid.errors?.required ">
+                      RFID is required
+                    </div>
+
+                    <div *ngIf="uid.errors?.minlength || uid.errors?.maxLength">
+                      RFID must be 8 characters
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="col-6">
+                  <div class="form-group">
+                    <input formControlName="confirmUid" class="form-control"
+                      placeholder="Confirm RFID">
+                  </div>
+                  <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
+                    class="alert alert-danger ">
+                    <div *ngIf="confirmUid.errors?.required ">
+                      Confirmation RFID is required
+                    </div>
+                    <div *ngIf="confirmUid.errors?.notSame">
+                      RFIDs need to match
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <button [disabled]="uidEntry.invalid"  type="submit"
+                class="btn btn-primary cust_skir_signup"> Pair RFID to your account</button>
+            </div>
+
+
+
         </div>
+
+
+
         <div id="security" class="content-panel">
           <h2 class="title center-cust">Manage Security</h2>
 
