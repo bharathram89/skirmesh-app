@@ -10,6 +10,7 @@ import { PlayerInfoComponent } from './player-info/player-info.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 import { MydevicesComponent } from './mydevices/mydevices.component'
+import { HowToUseComponent } from './how-to-use/how-to-use.component';
 
 // const routes: Routes = [{ path: '', component: NonSecureComponent }];
 
@@ -49,7 +50,10 @@ const routes: Routes = [
       path: 'live-games',
       component: MydevicesComponent,
     },
-    
+    {
+      path: 'how-to-use',
+      component: HowToUseComponent,
+    }, 
     {
       path: "",
       redirectTo:'/non-secure/home'
