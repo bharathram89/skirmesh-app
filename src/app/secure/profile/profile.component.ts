@@ -197,6 +197,9 @@ export class ProfileComponent implements OnInit {
       this.userSvc.pairUidFromFieldProfileToUser(this.userSvc.getToken(), data).subscribe(
           // resp => console.log(resp)
       )
+      // TODO: Give a success response to the user.
+
+      this.rfidToPair = null;
   }
 
 
