@@ -68,7 +68,9 @@ export class AuthService {
     );
 
   }
-
+  deleteUser(token){
+    return this.http.delete(this.BASE + 'resources/user?token='+token );
+  }
   getImage(imageID) {
     return this.http.get(this.BASE + 'resources/serve_image/'+imageID)
   }
