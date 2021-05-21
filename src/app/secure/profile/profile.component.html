@@ -242,7 +242,7 @@
                     <div *ngIf="confirmUid.errors?.notMatched ">
                       RFIDs must match
                     </div>
-                    
+
                   </div>
                 </div>
               </form>
@@ -253,7 +253,7 @@
                    Wristband registered to your profile
                 </div>
                 <div *ngIf="rfidConnected == false" class="alert alert-danger" role="alert">
-                  Registration of wristband to profile failed 
+                  Registration of wristband to profile failed
                 </div>
             </div>
 
@@ -270,7 +270,7 @@
             <div class="row justify-content-md-center">
               <!-- <div class="col-8"> -->
               <div class="login-screen">
-               
+
 
 
                   <accordion>
@@ -278,9 +278,8 @@
                     <accordion-group heading="Reset Password">
                       <form [formGroup]="passReset" autocomplete="off" method="POST">
                         <div class="col-6">
-                          <h3 class="center-cust">Enter a new password and confirm password to change your password</h3>
                           <div class="form-group">
-                            <input formControlName="pass" type="password" class="form-control" placeholder="Password">
+                            <input formControlName="pass" type="password" class="form-control" placeholder="New Password">
                           </div>
                           <div *ngIf="pass.invalid && (pass.dirty || pass.touched) " class="alert alert-danger ">
                             <div *ngIf="pass.errors?.required ">
@@ -294,7 +293,7 @@
                         <div class="col-6">
                           <div class="form-group">
                             <input formControlName="confirmPass" type="password" class="form-control"
-                              placeholder="Confirm Password">
+                              placeholder="Confirm New Password">
                           </div>
                           <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
                             class="alert alert-danger ">
@@ -335,12 +334,12 @@
                         </div>
                       </div>
                     </accordion-group>
-    
+
                     </accordion>
               </div>
 
-            
-             
+
+
 
 
             </div>
