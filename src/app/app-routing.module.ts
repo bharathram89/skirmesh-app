@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: "*",
-    redirectTo:'/auth/login'
+    redirectTo:'/non-secure/home'
   }
 ];
 const routerOptions: ExtraOptions = {
