@@ -127,7 +127,7 @@ export class SignInComponent implements OnInit {
 
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
-      let data = {"ID":fbData.id ,'facebook': JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"})}
+      let data = {"facebookID":fbData.id ,'facebook': JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"})}
       this.authSvc.userLogin(data).subscribe(
         respData=>{
            

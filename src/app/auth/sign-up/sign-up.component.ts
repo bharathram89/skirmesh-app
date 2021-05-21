@@ -140,7 +140,7 @@ export class SignUpComponent implements OnInit {
             // we can unhash it to get the picture url if necessary and store it with their Profile.
             this.socialData = {
                 "facebookID" : fbData.id,
-                "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"google","skirmesh":"rocks"}),
+                "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
                 "callSign"   : fbData.name,
                 "firstName"  : fbData.firstName,
                 "lastName"   : fbData.lastName,

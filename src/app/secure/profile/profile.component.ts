@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { subscribeOn } from 'rxjs/operators';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -11,11 +12,14 @@ import { UserServiceService } from 'src/service/user-service.service';
 })
 
 export class ProfileComponent implements OnInit {
-
+  rfidConnected;
   playerSelected; //this is the selected player from list
   rfidToPair;
   playerList;
-
+  deleteAccount = false;
+  passResetPassed = false;
+  passResetFailed = false;
+  deleteUserFailed = false;
   pfNav           : HTMLElement;
   securityNav     : HTMLElement;
   settingsNav     : HTMLElement;
@@ -69,7 +73,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
       private userService: UserServiceService,
-      private authService: AuthService
+      private authService: AuthService,
+      private router: Router
   ) {
     this.authSvc = authService;
     this.userSvc = userService;
@@ -174,6 +179,21 @@ export class ProfileComponent implements OnInit {
 
   }
 
+  deleteCheckboxClicked(){
+    this.deleteAccount = !this.deleteAccount;
+  }
+
+  deleteSkirmeshAccount(){
+    this.authSvc.deleteUser(this.userSvc.getToken()).subscribe(
+      resp => {
+        this.router.navigate(['/non-secure']);
+      },
+      err => {
+        this.deleteUserFailed = true;
+      }
+  )
+  }
+
   clearRfidPairField() {
 
       let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
@@ -195,8 +215,17 @@ export class ProfileComponent implements OnInit {
       let data = {userID: this.playerSelected.id, fieldID:this.currentVals.fieldProfileID}
 
       this.userSvc.pairUidFromFieldProfileToUser(this.userSvc.getToken(), data).subscribe(
-          // resp => console.log(resp)
+          resp =>{
+             console.log(resp)
+             this.rfidConnected = true;
+             this.rfidToPair = null;
+            },
+          err =>{
+            this.rfidConnected = false;
+          }
       )
+      // TODO: Give a success response to the user.
+
   }
 
 
@@ -209,8 +238,8 @@ export class ProfileComponent implements OnInit {
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
     this.authSvc.updatePass(this.userSvc.getToken() ,data).subscribe(
-      resp=>{console.log('password Reset response',resp)},
-      err=>{console.log('password Reset failed',err)}
+      resp=>{ this.passResetFailed  = false; this.passResetPassed= true; console.log('password Reset response',resp)},
+      err=>{ this.passResetFailed  = true; this.passResetPassed= false; console.log('password Reset failed',err)}
     )
   }
 
