@@ -62,15 +62,19 @@ export class AuthService {
 
   saveImage(token, data) {
 
-    this.http.put(this.BASE + 'resources/image', data).subscribe(
+    this.http.put(this.BASE + 'resources/image?token=' + token, data).subscribe(
       resp => { console.log(resp, "resp") },
       err => { console.log(err, "err in update image") }
     );
 
   }
+
+
   deleteUser(token){
     return this.http.delete(this.BASE + 'resources/user?token='+token );
   }
+
+
   getImage(imageID) {
     return this.http.get(this.BASE + 'resources/serve_image/'+imageID)
   }
