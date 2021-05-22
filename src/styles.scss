@@ -2,3 +2,12 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.btn:hover, li.nav-item:hover {
+    transform: scale(1.08);
+}
+
+.btn:active, li.nav-item:active {
+    transform: scale(0.92);
+}
