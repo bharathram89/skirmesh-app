@@ -370,7 +370,7 @@ export class ProfileComponent implements OnInit {
       let uid = this.uidEntry.get("uid").value.toLowerCase();
       let userID =  this.currentVals.userID;
 
-      let data = {uid:uid, userID:userID};
+      let data = {uid:uid.toLowerCase(), userID:userID};
 
       this.userSvc.pairUid(this.userSvc.getToken(), data).subscribe(
           resp =>{},
