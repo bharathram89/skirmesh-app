@@ -122,11 +122,8 @@ export class DeviceListComponent implements OnInit {
 
         if (this.mode == 'active') {
             //update the database here
-            console.log(":: XMIT DEVICE TO DB ::", device)
             this.nodeSvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
-                data => {
-                    console.log("::API RESPONSE TO DEVICE UPDATE::", data)
-                }
+                data => {}
             );
         }
         else {}
@@ -136,7 +133,7 @@ export class DeviceListComponent implements OnInit {
     }
 
     locationSelected(event, device) {
-        // console.log(device.location,"location selected print", "::LOC VAL::", event.target)
+
         this.selectedLocations = this.selectedLocations.filter(loc=>loc!=this.previousSelected)
 
         if (device.location) {this.selectedLocations.push(device.location)}

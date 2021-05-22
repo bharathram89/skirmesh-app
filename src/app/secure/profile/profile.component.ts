@@ -216,7 +216,6 @@ export class ProfileComponent implements OnInit {
 
       this.userSvc.pairUidFromFieldProfileToUser(this.userSvc.getToken(), data).subscribe(
           resp =>{
-             console.log(resp)
              this.rfidConnected = true;
              this.rfidToPair = null;
             },
@@ -238,8 +237,12 @@ export class ProfileComponent implements OnInit {
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
     this.authSvc.updatePass(this.userSvc.getToken() ,data).subscribe(
-      resp=>{ this.passResetFailed  = false; this.passResetPassed= true; console.log('password Reset response',resp)},
-      err=>{ this.passResetFailed  = true; this.passResetPassed= false; console.log('password Reset failed',err)}
+      resp=>{ this.passResetFailed  = false;
+              this.passResetPassed= true;
+            },
+      err=>{ this.passResetFailed  = true;
+             this.passResetPassed= false;
+             console.log('password Reset failed',err)}
     )
   }
 
@@ -304,7 +307,6 @@ export class ProfileComponent implements OnInit {
       this.profileForm.value.profile ? data.field['profile'] = this.profileForm.value.profile : null;
       // Need to include fieldProfile.id
       data.field['id'] = this.currentVals.fieldProfileID;
-      // console.log(data.field);
 
     } else if (this.isPlayer) {
       this.profileForm.value.callSign ? data.user['callSign'] = this.profileForm.value.callSign:null;
@@ -313,17 +315,15 @@ export class ProfileComponent implements OnInit {
       // Need to include the playerProfile.id
       data.player['id'] = this.currentVals.userID;
     }
-    // console.log(data.player)
+
     this.authSvc.saveProfile(this.userSvc.getToken(), data).subscribe(
       resp => {
         // this.profileForm.reset();
         document.getElementById('userCreatedMessage').classList.remove('d-none')
-        // console.log(resp, "resp")
       },
       err=>{
         this.profileForm.reset();
         document.getElementById('userCreatFaileddMessage').classList.remove('d-none')
-        console.log(err, "err in update profile")
       }
     )
     //saveProfile

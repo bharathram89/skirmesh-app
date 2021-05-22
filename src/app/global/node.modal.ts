@@ -182,7 +182,6 @@ export function makeDeviceModal(device): DeviceSettings[] {
 
     ds        = new DeviceSettings(id,device.enabled,addr,loc,gID,med,bmb,cap,reg,query)
 
-    console.log(":: MAKE DEVICE ::", ds);
     return ds;
 }
 
@@ -217,6 +216,6 @@ export function makeDeviceModals(devices, createNewModals=false): DeviceSettings
         }
         arr.push(ds)
     });
-    console.log(":: MAKE DEVICES ::", arr);
+
     return arr;
 }

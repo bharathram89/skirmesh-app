@@ -124,7 +124,6 @@ export class EditGameComponent implements OnInit {
         this.setNodes();
 
         let dataModel = this.gameModeForm.value;
-        console.log(dataModel," final modal?")
         this.saveGameMode.emit(dataModel);
     }
 

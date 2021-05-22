@@ -54,7 +54,6 @@ export class GameConfigComponent implements OnInit {
 
     onDeleteMode(gameMode) {
         this.deviceSvc.deleteGameConfig(this.userSvc.getToken(), gameMode.id).subscribe(data => {
-        // console.log(data,"delete")
             this.gameModes = this.gameModes.filter(function (obj) {
                 return obj.id !== gameMode.id;
             });
@@ -62,7 +61,7 @@ export class GameConfigComponent implements OnInit {
     }
 
     onEditMode(gameMode) {
-        console.log(this.tabsComponent,this.editModeTemplate,gameMode,"edit call");
+
         this.tabsComponent.openTab(
               gameMode.name,
               this.editModeTemplate,
@@ -76,8 +75,6 @@ export class GameConfigComponent implements OnInit {
     }
 
     onGameModeFormSubmit(dataModel) {
-
-        console.log("::GAME MODE FORM SUBMIT DATA MODEL::", dataModel)
 
         if (dataModel.id) {
             let teams =[];

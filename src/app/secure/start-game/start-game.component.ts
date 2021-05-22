@@ -101,7 +101,6 @@ export class StartGameComponent implements OnInit {
                         }
                     )
                 }
-               console.log( activeGames," LIST OF ACTIVE GAMES IN START GAME")
             },
             err=>{
                //show message on page no games are active.
@@ -128,7 +127,6 @@ export class StartGameComponent implements OnInit {
             data => {
 
                 this.gameData = data
-                console.log(":: START GAME - GAME DATA ::", data)
             }, err=>{console.log(err)}
         )
 
@@ -146,8 +144,6 @@ export class StartGameComponent implements OnInit {
 
     setSelectedGameConfig(mode){
 
-        console.log(":: SETTING SELECTED GAME CONFIG ::", mode.deviceMap)
-
         this.selectedGameMode = mode;
         this.teams            = mode.teams;
         this.mapID            = mode.mapID;
@@ -164,7 +160,6 @@ export class StartGameComponent implements OnInit {
 
 
     nodeConfigs(event){
-        console.log(":::START GAME nodeCONFIGS:::", event);
     }
 
 
