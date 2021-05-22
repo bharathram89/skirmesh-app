@@ -17,8 +17,8 @@
 						</ul>
 						<br>
 						<form [formGroup]="login" autocomplete="off" method="POST">
-							<div id="callSign" class="form-group input-group">
-								<input formControlName="callSign" type="text" class="form-control"
+							<div class="form-group input-group">
+								<input  id="callSign" formControlName="callSign" type="text" class="form-control"
 									placeholder="Callsign">
 								<div *ngIf="callSign.invalid && (callSign.dirty || callSign.touched) "
 									class="alert alert-danger ">
@@ -27,8 +27,8 @@
 									</div>
 								</div>
 							</div>
-							<div  id="fieldName" class="form-group input-group ">
-								<input style="display: none;" formControlName="fieldName" type="text"
+							<div  class="form-group input-group ">
+								<input  id="fieldName" style="display: none;" formControlName="fieldName" type="text"
 									class="form-control" placeholder="Field Name">
 								<div *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) "
 									class="alert alert-danger ">
