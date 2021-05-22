@@ -212,9 +212,10 @@ export class ProfileComponent implements OnInit {
 
   pairRfidToPlayer(){
 
-      let data = {userID: this.playerSelected.id, fieldID:this.currentVals.fieldProfileID}
+      let data = {userID : this.playerSelected.id,
+                  fieldID: this.currentVals.fieldProfileID}
 
-      this.userSvc.pairUidFromFieldProfileToUser(this.userSvc.getToken(), data).subscribe(
+      this.userSvc.pairUid(this.userSvc.getToken(), data).subscribe(
           resp =>{
              this.rfidConnected = true;
              this.rfidToPair = null;
@@ -247,10 +248,9 @@ export class ProfileComponent implements OnInit {
   }
 
 
-  _closeTabs(){
+  _closeTabs(){}
 
 
-  }
   profile() {
 
     this.pfNav.classList.add('active')
@@ -370,7 +370,12 @@ export class ProfileComponent implements OnInit {
       let uid = this.uidEntry.get("uid").value.toLowerCase();
       let userID =  this.currentVals.userID;
 
-      console.log("SUBMITTING PAIR COMMAND", uid, userID)
+      let data = {uid:uid, userID:userID};
+
+      this.userSvc.pairUid(this.userSvc.getToken(), data).subscribe(
+          resp =>{},
+          err =>{}
+      )
   }
 
 

@@ -45,7 +45,7 @@ export class UserServiceService {
       return this.http.get(this.BASE + 'resources/user_list?token=' + token)
   }
 
-  pairUidFromFieldProfileToUser(token, data) {
+  pairUid(token, data) {
       return this.http.put(this.BASE + 'resources/pair_rfid?token=' + token, data, this.options)
   }
 
