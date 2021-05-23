@@ -63,6 +63,10 @@ export class GameService {
         return this.http.get(this.BASE + 'resources/gamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
     }
 
+    getActiveGamesByFieldProfile(token, fieldProfileID) {
+        return this.http.get(this.BASE + 'games/activeGamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
+    }
+
     getGames() {
         return this.http.get(this.BASE + this.GTK)
     }

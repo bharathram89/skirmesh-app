@@ -75,26 +75,28 @@ export class StartGameComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.gameSvc.getGames().subscribe(
+        this.gameSvc.getActiveGamesByFieldProfile(this.userSvc.getToken(), this.userSvc.getFieldProfileID()).subscribe(
 
-            activeGames=>{
+            activeGameConfig=>{
 
-                if(activeGames[0] ){
+                if(activeGameConfig){
+                    // Active games route starts query with fieldProfileID and
+                    // returns the gameConfig, which contains the game - allways
+                    // in the first available index
 
-                    this.gameData = activeGames[0];
+                    let game = activeGameConfig["games"][0]
+                    this.gameData = game;
                     this.gameBoardActive = true;
                     this.gameInProgress = true;
 
-                    combineLatest([this.deviceSvc.getGameConfigsByID( activeGames[0].gameConfigID ),
-                                   this.nodeSvc.getDevicesByGameID(this.gameData.id)]).subscribe(
+                    activeGameConfig["deviceMap"] = game.devices;
 
-                        ([gameConfig, deviceData]) => {
-                            // Grab the latest configuration data, but use live node data
-                            gameConfig["deviceMap"] = deviceData;
-                            this.setSelectedGameConfig(gameConfig);
-                        }
-                     )
-                }else{
+                    this.setSelectedGameConfig(activeGameConfig);
+
+                }
+
+                else{
+
                     this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
                         savedConfigs => {
                             this.gameModes = savedConfigs;
