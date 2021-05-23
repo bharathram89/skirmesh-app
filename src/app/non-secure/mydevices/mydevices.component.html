@@ -16,7 +16,7 @@
 
                 <div class="card-header">
 
-                    <div class="btn-primary btn view-btn" (click)="selectActiveGame($event)"> VIEW </div>
+                    <div class="btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> VIEW </div>
 
                     <h5> {{gameData.description}} </h5>
                     <p> Game# {{gameData.id}} </p>
