@@ -7,28 +7,27 @@
 
         <div *ngIf="!activeGame">
 
-            <h2 *ngIf="!gameCardData.length"> Whaaaa!?..There are no active games? </h2>
-            <h4 *ngIf="!gameCardData.length"> Check back later. Games pop up all the time! </h4>
+            <h3 *ngIf="!gameCardData.length"> Whaaaa!?..There are no active games? </h3>
+            <h5 *ngIf="!gameCardData.length"> Check back later. Games pop up all the time! </h5>
             <div
                 *ngFor="let gameData of gameCardData; let i = index"
-                [value]="activeGame.id"
                 class="card user-card"
                 >
 
                 <div class="card-header">
 
-                    <div class="btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> VIEW </div>
+                    <div class="btn-primary btn view-btn" (click)="selectActiveGame($event)"> VIEW </div>
 
-                    <h3> {{gameData.description}} </h3>
-                    <h5> Game# {{gameData.id}} </h5>
+                    <h5> {{gameData.description}} </h5>
+                    <p> Game# {{gameData.id}} </p>
 
                 </div>
 
-                <div class="card-body" [value]="activeGame.id">
+                <div class="card-body">
 
-                    <div class="form-group" [value]="activeGame.id">
+                    <p>
                         Start: {{gameData.startTime.slice(0,12)}} {{gameData.startTime.slice(17,22)}}
-                    </div>
+                    </p>
 
                     <div>
                         <app-map [mapID]="gameData.mapID" [deviceData]="gameData.devices"></app-map>
@@ -40,7 +39,6 @@
         </div>
 
     </div>
-
 
 
 
