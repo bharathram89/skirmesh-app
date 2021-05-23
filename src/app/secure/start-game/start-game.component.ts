@@ -100,7 +100,7 @@ export class StartGameComponent implements OnInit {
                //show message on page no games are active.
             }
          )
-
+         // This sets the dropdown menu with available game configurations
          this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
              savedConfigs => {
                  this.gameModes = savedConfigs;
@@ -110,7 +110,7 @@ export class StartGameComponent implements OnInit {
     }
 
     changeGame(games){
-
+        // When a dropdown menu selection is made - update the gameboard
         let gameConfigID = games.target.value;
         this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
 
@@ -118,22 +118,21 @@ export class StartGameComponent implements OnInit {
     }
 
     startGame(){
-
+        // On start game, push all device configuration data to each
+        // device to baseline all configurations from saved configs
         let mode = this.selectedGameMode;
 
-        if (!mode) {return console.log("NO GAME SELECTED")};
-
         this.gameSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
-            data => {
 
+            data => {
                 this.gameData = data
-            }, err=>{console.log(err)}
+            },
+            err=>{console.log(err)}
         )
 
         this.setSelectedGameConfig(mode);
-
+        // gameInProgress is used to show or hide game buttons (pause/end)
         this.gameInProgress = true;
-
     }
 
 
@@ -178,6 +177,7 @@ export class StartGameComponent implements OnInit {
         let safe = confirm("Do you really want to end the game?");
 
         if (safe) {
+            
             this.tokenSvc.endGame();
 
             this.gameSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
