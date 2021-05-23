@@ -11,7 +11,7 @@
                             {{gameMode.description}}</option>
                     </select>
                     <br>
-                    <button type="button" class="bg-primary btn" (click)="startGame()">START GAME</button>
+                    <button type="button" class="bg-primary btn" [disabled]="!gameBoardActive" (click)="startGame()">START GAME</button>
                 </div>
             </div>
         </div>
