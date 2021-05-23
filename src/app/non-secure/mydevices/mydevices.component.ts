@@ -78,12 +78,18 @@ export class MydevicesComponent implements OnInit {
 
         this.gameSvc.getNewAction().subscribe(socketData=>{
             console.log(socketData," New Action");
-            this.updateActionAndCalcScore(socketData);
+
+            if(this.activeGame){
+                this.updateActionAndCalcScore(socketData);
+            }
         })
 
         this.gameSvc.getPlayerUpdate().subscribe(socketData=>{
             console.log(socketData," Player Update");
-            this.updatePlayerData(socketData);
+
+            if(this.activeGame){
+                this.updatePlayerData(socketData);
+            }
         })
 
     }
