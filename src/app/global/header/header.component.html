@@ -8,7 +8,7 @@
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
- 
+
         <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png" alt="user" />
 
         <div class="collapse navbar-collapse" id="navdrop">
@@ -23,7 +23,7 @@
                     </a>
                     <div id="infoDropdown" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/home']">Home</a>
-                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/feature-list']">Features</a> 
+                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/feature-list']">Features</a>
                         <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/field-info']">Field Info</a>
                     </div>
                 </li>
@@ -35,7 +35,7 @@
                     <a class="nav-link" id="nav_home" [routerLink]="['/non-secure/home']">Home </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']">About Us</a>
+                    <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']"> How it works </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Info</a>
@@ -59,14 +59,14 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Live Games</a>
-                </li> 
+                </li>
                 <li *ngIf=" isField" class="nav-item">
                     <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Start and Manage Games</a>
                 </li>
                 <li *ngIf=" isField" class="nav-item">
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Game Modes</a>
-                </li>  
-    
+                </li>
+
             </ul>
 
             <!-- <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
