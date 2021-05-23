@@ -83,8 +83,8 @@ export class StartGameComponent implements OnInit {
                     // Active games route starts query with fieldProfileID and
                     // returns the gameConfig, which contains the game - allways
                     // in the first available index
+                    let game = activeGameConfig["games"][activeGameConfig["games"].length-1]
 
-                    let game = activeGameConfig["games"][0]
                     this.gameData = game;
                     this.gameBoardActive = true;
                     this.gameInProgress = true;
@@ -94,19 +94,16 @@ export class StartGameComponent implements OnInit {
                     this.setSelectedGameConfig(activeGameConfig);
 
                 }
-
-                else{
-
-                    this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
-                        savedConfigs => {
-                            this.gameModes = savedConfigs;
-                        }
-                    )
-                }
             },
             err=>{
                //show message on page no games are active.
             }
+         )
+
+         this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
+             savedConfigs => {
+                 this.gameModes = savedConfigs;
+             }
          )
 
     }
