@@ -81,18 +81,19 @@ export class StartGameComponent implements OnInit {
 
                 if(activeGameConfig){
                     // Active games route starts query with fieldProfileID and
-                    // returns the gameConfig, which contains the game - allways
-                    // in the first available index
-                    let game = activeGameConfig["games"][activeGameConfig["games"].length-1]
+                    // returns the gameConfig, which contains the game
+                    // Look for the game that is not ended
+                    let game = activeGameConfig["games"].find(ele => ele.endTime == null)
 
-                    this.gameData = game;
-                    this.gameBoardActive = true;
-                    this.gameInProgress = true;
+                    if (game) {
+                        this.gameData = game;
+                        this.gameBoardActive = true;
+                        this.gameInProgress = true;
 
-                    activeGameConfig["deviceMap"] = game.devices;
+                        activeGameConfig["deviceMap"] = game.devices;
 
-                    this.setSelectedGameConfig(activeGameConfig);
-
+                        this.setSelectedGameConfig(activeGameConfig);
+                    }
                 }
             },
             err=>{
