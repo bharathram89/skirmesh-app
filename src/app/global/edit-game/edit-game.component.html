@@ -41,7 +41,7 @@
     <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
   </div>
   <br />
-  <button type="submit" [disabled]="" class="btn btn-primary">Save</button>
+  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary">Save</button>
 
 
 </form>
