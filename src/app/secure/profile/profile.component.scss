@@ -6,6 +6,19 @@ div.col-6 {
   max-width: 100%;
 }
 
+div.center-flex{
+    display: flex;
+    justify-content: space-between;
+}
+
+button.btn {
+    margin: 1rem 0;
+}
+
+p.font-large{
+    font-size: xx-large;
+}
+
 .content-panel {
     display: none;
 }

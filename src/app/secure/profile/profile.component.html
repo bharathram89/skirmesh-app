@@ -161,18 +161,23 @@
             <div *ngIf="isField">
               <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
 
-              <button (click)="clearRfidPairField()" type="button" class="btn btn-sm btn-danger">Clear RFID</button>
-              <button (click)="checkRfidToPair()" type="button" class="btn btn-sm btn-primary">Check RFID</button>
+              <div class="center-flex">
 
-              <div class='row'>
+                  <button (click)="clearRfidPairField()" type="button" class="btn btn-md btn-danger left">Clear RFID</button>
+                  <button (click)="checkRfidToPair()" type="button" class="btn btn-md btn-primary right">Check RFID</button>
+
+              </div>
+              <div>
 
 
-                <p class="card card-block card-header mb-3">
-                    Scan RFID at Controller and Check for the RFID.
-                </p>
-                <br>
-                <p class="card card-block card-header mb-3">Scanned RFID: {{ rfidToPair }}</p>
-                <br>
+                <h3 class="title center-cust"> Scan RFID at Controller and Check for the RFID. </h3>
+
+                <div class="center-cust">
+
+                    <p> Scanned RFID: </p>
+                    <p class="card card-block card-header mb-3 font-large"> {{ rfidToPair }} </p>
+
+                </div>
 
                 <select class="form-control"
                     [(ngModel)]="playerSelected">
@@ -184,8 +189,9 @@
 
                 <!-- <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected.callSign" [typeahead]="playerList"
                   typeaheadOptionField="name" [adaptivePosition]="true" class="form-control"> -->
-
-                <button (click)="pairRfidToPlayer()" type="button" class="btn btn-success">Pair RFID</button>
+                  <div class="center-cust" *ngIf="rfidToPair">
+                    <button (click)="pairRfidToPlayer()" [disabled]="!playerSelected" type="button" class="btn btn-lg btn-success">Pair RFID</button>
+                 </div>
                 <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
                 <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
               </div>
@@ -270,9 +276,6 @@
           <div class="custom_skirmesh">
             <div class="row justify-content-md-center">
               <!-- <div class="col-8"> -->
-              <div class="login-screen">
-
-
 
                   <accordion>
 
@@ -337,11 +340,6 @@
                     </accordion-group>
 
                     </accordion>
-              </div>
-
-
-
-
 
             </div>
             <!-- </div> -->
