@@ -85,7 +85,7 @@ export class SignInComponent implements OnInit {
         // window.sessionStorage.setItem("token",JSON.stringify(data))
 
         this.tokenStorage.saveToken(respData['token'])
-        this.router.navigate(['/secure']);
+        this.router.navigate(['/secure/dashboard']);
 
         // this.authSvc.getUser(respData['token']).subscribe(
         //   userData=>{
@@ -113,7 +113,7 @@ export class SignInComponent implements OnInit {
         respData=>{
            
           this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure']);
+          this.router.navigate(['/secure/dashboard']);
    
         },
         err=>{
@@ -132,7 +132,7 @@ export class SignInComponent implements OnInit {
         respData=>{
            
           this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure']);
+          this.router.navigate(['/secure/dashboard']);
    
         },
         err=>{
