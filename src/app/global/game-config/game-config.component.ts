@@ -53,11 +53,17 @@ export class GameConfigComponent implements OnInit {
     }
 
     onDeleteMode(gameMode) {
-        this.deviceSvc.deleteGameConfig(this.userSvc.getToken(), gameMode.id).subscribe(data => {
-            this.gameModes = this.gameModes.filter(function (obj) {
-                return obj.id !== gameMode.id;
-            });
-        })
+
+        let safe = confirm("!! WARNING !!\n\nDeleting this Game Configuration will DELETE ALL GAMES and SCORES using this configuration.\n\nAre you sure you want to DELETE it?");
+
+        if (safe) {
+
+            this.deviceSvc.deleteGameConfig(this.userSvc.getToken(), gameMode.id).subscribe(data => {
+                this.gameModes = this.gameModes.filter(function (obj) {
+                    return obj.id !== gameMode.id;
+                });
+            })
+        }
     }
 
     onEditMode(gameMode) {
