@@ -3,3 +3,15 @@
     justify-content: center;
     text-align: center;
   }
+
+img.carousel-image {
+
+    object-fit: cover;
+    max-height: 400px;
+    width: 100%;
+
+}
+
+slide div p, slide div h3{
+    color: #808080;
+}
