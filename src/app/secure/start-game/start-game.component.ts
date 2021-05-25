@@ -136,11 +136,6 @@ export class StartGameComponent implements OnInit {
     }
 
 
-    getSelectedGameModeName() {
-        return this.selectedGameMode ? this.selectedGameMode.description : null
-    }
-
-
     setSelectedGameConfig(mode){
 
         this.selectedGameMode = mode;
@@ -177,13 +172,14 @@ export class StartGameComponent implements OnInit {
         let safe = confirm("Do you really want to end the game?");
 
         if (safe) {
-            
+
             this.tokenSvc.endGame();
 
             this.gameSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
                 data => {
                         this.gameInProgress = false;
                         this.gameBoardActive = false;
+                        this.gameData = null;
                     })
         }
     }
