@@ -253,15 +253,15 @@ export class DashboardComponent implements OnInit {
 
   setGameHistStats(userData) {
 
-      let time_options = {dateStyle: "medium",
-                          timeStyle: "short",
-                          // day    : "2-digit",
-                          // month  : "short",
-                          // year   : "2-digit",
-                          // hour   : "2-digit",
-                          // minute : "2-digit",
-                          // second : "2-digit",
-                          hour12 : false}
+    let time_options = {dateStyle: "medium",
+                      timeStyle: "short",
+                      // day    : "2-digit",
+                      // month  : "short",
+                      // year   : "2-digit",
+                      // hour   : "2-digit",
+                      // minute : "2-digit",
+                      // second : "2-digit",
+                      hour12 : false}
 
     let games;
     this.gameSvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
