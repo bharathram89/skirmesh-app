@@ -3,12 +3,11 @@
     <div class="col-lg-4">
       <div class="card card-profile">
         <div class="card-header"></div>
-        <div class="card-body text-center"><img style="max-width:100%; max-height:100%;" src="{{currentVals.imageData}}" class="card-profile-img">
+        <div class="card-body text-center"><img  src="{{currentVals.imageData}}" class="card-profile-img">
           <h3 *ngIf="isField" class="mb-3">{{currentVals.fieldName}}</h3>
           <p *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
           <h3 *ngIf="isPlayer" class="mb-3">{{currentVals.callSign}}</h3>
-          <p *ngIf="isPlayer" class="mb-4">{{currentVals.bio}}</p>
-          <button class="btn btn-outline-dark btn-sm"><span class="fa fa-twitter"></span> Follow</button>
+          <p *ngIf="isPlayer" class="mb-4">{{currentVals.bio}}</p> 
         </div>
       </div>
 
