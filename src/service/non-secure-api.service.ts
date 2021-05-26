@@ -31,11 +31,6 @@ export class NonSecureAPIService {
     GCFG = 'gameConfig'
     TEAM = 'team'
 
-    // setup additional query params
-    TOKN = '?token='
-    adID = '&id='
-
-
     constructor(
         private http: HttpClient
     ) {}
@@ -44,7 +39,6 @@ export class NonSecureAPIService {
     // █░░ █▀▀█ █▀▀▀ ░▀░ █▀▀▄ 　 █▀▀ █▀▀ █▀▀█ ▀█░█▀ ░▀░ █▀▀ █▀▀ █▀▀
     // █░░ █░░█ █░▀█ ▀█▀ █░░█ 　 ▀▀█ █▀▀ █▄▄▀ ░█▄█░ ▀█▀ █░░ █▀▀ ▀▀█
     // ▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀ ▀░░▀ 　 ▀▀▀ ▀▀▀ ▀░▀▀ ░░▀░░ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀
-
 
     createUser(data){
 
