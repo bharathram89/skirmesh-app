@@ -309,13 +309,12 @@ export class DashboardComponent implements OnInit {
                                {name:"Captures",      value:captures},
                                {name:"Assists",       value:assists},
                                {name:"Bombs Armed",   value:bombArm},
-                               {name:"Bombs Diffused",value:bombDis}]
-
+                               {name:"Bombs Diffused",value:bombDis}] 
                 this.gameHistData.push({
 
                     id       : game.id,
-                    start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
-                    end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
+                    start    : new Date(game.startTime).toLocaleString() ,
+                    end      : new Date(game.endTime).toLocaleString() ,
                     pieData  : pieData,
                     duration : new Date(duration).toUTCString().slice(17,25)
 
