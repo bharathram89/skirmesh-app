@@ -272,7 +272,6 @@ export class DashboardComponent implements OnInit {
 
             for (let game of games.sort((a, b) => b.id - a.id)) {
 
-                console.log(game.id, game.gameActions)
                 if (!game.gameActions.length || !game.endTime){
                     continue
                 }
@@ -343,7 +342,6 @@ export class DashboardComponent implements OnInit {
         }
     )
 
-    console.log(this.gameHistData)
   }
 
 
