@@ -253,6 +253,16 @@ export class DashboardComponent implements OnInit {
 
   setGameHistStats(userData) {
 
+      let time_options = {dateStyle: "medium",
+                          timeStyle: "short",
+                          // day    : "2-digit",
+                          // month  : "short",
+                          // year   : "2-digit",
+                          // hour   : "2-digit",
+                          // minute : "2-digit",
+                          // second : "2-digit",
+                          hour12 : false}
+
     let games;
     this.gameSvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
 
@@ -309,12 +319,12 @@ export class DashboardComponent implements OnInit {
                                {name:"Captures",      value:captures},
                                {name:"Assists",       value:assists},
                                {name:"Bombs Armed",   value:bombArm},
-                               {name:"Bombs Diffused",value:bombDis}] 
+                               {name:"Bombs Diffused",value:bombDis}]
                 this.gameHistData.push({
 
                     id       : game.id,
-                    start    : new Date(game.startTime).toLocaleString() ,
-                    end      : new Date(game.endTime).toLocaleString() ,
+                    start    : new Date(game.startTime).toLocaleString('en', time_options) ,
+                    end      : new Date(game.endTime).toLocaleString('en', time_options) ,
                     pieData  : pieData,
                     duration : new Date(duration).toUTCString().slice(17,25)
 
