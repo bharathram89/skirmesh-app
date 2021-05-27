@@ -2,11 +2,10 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { DeviceService } from 'src/service/device.service';
+
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
-import { UserServiceService } from 'src/service/user-service.service';
-import { NodeConfigService } from 'src/service/node-status.service';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 
 @Component({
     selector: 'app-mydevices',
@@ -36,27 +35,25 @@ export class MydevicesComponent implements OnInit {
     currentTab = 'map'
     tokenSvc : TokenStorageService;
     gameSvc  : GameService;
-    deviceSvc: DeviceService;
-    userSvc  : UserServiceService;
-    nodeSvc  : NodeConfigService;
+
+    nonSecAPIsvc : NonSecureAPIService;
 
     constructor(
-        tokenService: TokenStorageService,
-        gameService: GameService,
-        deviceService: DeviceService,
-        userService: UserServiceService,
-        nodeService: NodeConfigService) {
+        tokenService     : TokenStorageService,
+        gameService      : GameService,
+        nonSecAPIservice : NonSecureAPIService) {
 
         this.tokenSvc  = tokenService;
         this.gameSvc   = gameService;
-        this.deviceSvc = deviceService;
-        this.userSvc   = userService;
-        this.nodeSvc   = nodeService;
+
+        this.nonSecAPIsvc = nonSecAPIservice;
     }
 
     ngOnInit() {
 
-        combineLatest([this.gameSvc.getGames(), this.gameSvc.getLocations(), this.gameSvc.getActions()
+        combineLatest([this.nonSecAPIsvc.getGames(),
+                       this.nonSecAPIsvc.getLocations(),
+                       this.nonSecAPIsvc.getActions()
             ])
             .subscribe(
                 ([activeGames, location, actions]) => {
@@ -66,7 +63,7 @@ export class MydevicesComponent implements OnInit {
                     this.activeGames  = activeGames;
 
                     for (let game of this.activeGames){
-                        this.deviceSvc.getGameConfigsByID(game.gameConfigID).subscribe(
+                        this.nonSecAPIsvc.getGameConfigsByID(game.gameConfigID).subscribe(
                             data => {
                                 this.gameCardData.push({'description': data["description"],
                                                         'startTime'  : game.startTime,
@@ -113,9 +110,9 @@ export class MydevicesComponent implements OnInit {
         let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
 
         // Pull device data in from live devices - not config data
-        combineLatest([this.deviceSvc.getGameConfigsByID(gameConfigID),
-                       this.gameSvc.getGameStats(gameID.target.value),
-                       this.nodeSvc.getDevicesByGameID(gameID.target.value)]).subscribe(
+        combineLatest([this.nonSecAPIsvc.getGameConfigsByID(gameConfigID),
+                       this.nonSecAPIsvc.getGameStats(gameID.target.value),
+                       this.nonSecAPIsvc.getDevicesByGameID(gameID.target.value)]).subscribe(
                             ([gameConfig, stats, deviceData]) => {
 
                                 this.devices     = deviceData;
