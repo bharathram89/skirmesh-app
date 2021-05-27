@@ -20,7 +20,7 @@ const BOMB = 0xBB;
 export class MapComponent implements OnInit {
 
   @Input() mapID
-  @Input() deviceData 
+  @Input() deviceData
   tooltipContent = ' '
   socketOBJ;
   map;
@@ -53,9 +53,8 @@ export class MapComponent implements OnInit {
 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class. 
-    console.log('destroy')
-    this.socketOBJ.unsubscribe() 
+    //Add 'implements OnDestroy' to the class.
+    this.socketOBJ.unsubscribe()
   }
 
   ngAfterViewInit(): void {
