@@ -253,20 +253,20 @@ export class MydevicesComponent implements OnInit {
         // get updated when an action or player update is pushed over the socket
         for (let device of this.devices) {
 
-            if (!device["teamID"]) {continue}
+            if (device.teamID == null || device.config != 0x0A) {continue}
 
-            let actions = this.allActions.filter(action => action.location == this.findLocationFromDeviceID(device["id"]));
+            let actions = this.allActions.filter(action => action.location == this.findLocationFromDeviceID(device.id));
 
             if (actions.length) {
 
                 let lastCapComplete = actions.find(act => act.action == "CAPTURE COMPLETE");
 
-                if (lastCapComplete && device.config == 0x0A) {
+                if (lastCapComplete) {
 
                     let now = new Date().getTime();
-                    let add_score = Math.floor(((now - lastCapComplete.timestamp)/1000) / device["point_scale"]);
+                    let add_score = Math.floor(((now - lastCapComplete.timestamp)/1000) / device.point_scale);
 
-                    let dev_team = this.teams.find(team => team.teamID == device["teamID"]);
+                    let dev_team = this.teams.find(team => team.teamID == device.teamID);
                     dev_team.score += add_score;
 
                 }
