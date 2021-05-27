@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ɵConsole } from '@angular/core';
+import { Observable } from 'rxjs';
 import { GameService } from 'src/service/game.service';
 // import * as bootstrap from 'bootstrap';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -19,10 +20,9 @@ const BOMB = 0xBB;
 export class MapComponent implements OnInit {
 
   @Input() mapID
-  @Input() deviceData
-
+  @Input() deviceData 
   tooltipContent = ' '
-
+  socketOBJ;
   map;
   locationList;
   mapData;
@@ -43,7 +43,7 @@ export class MapComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.gameSvc.getDeviceUpdate().subscribe(socketData => {
+    this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
       // console.log("** DATA RECIEVED IN MAP COMPONENT *** mapid: ",this.mapID," deviceData: ",this.deviceData)
       console.log(socketData, " Device Update");
       this.updateLocationState(socketData);
@@ -51,6 +51,12 @@ export class MapComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class. 
+    console.log('destroy')
+    this.socketOBJ.unsubscribe() 
+  }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
