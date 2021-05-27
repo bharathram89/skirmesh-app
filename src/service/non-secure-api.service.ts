@@ -65,7 +65,7 @@ export class NonSecureAPIService {
 
     getGameConfigsByID(gameConfigID){
 
-        let route = this.BASE + this.GCFG
+        let route = this.BASE + this.RSRC + this.GCFG
 
         const options = { params  : new HttpParams().set("id", gameConfigID) }
 
