@@ -20,8 +20,10 @@ export class GamelistComponent implements OnInit {
     }
 
     ngOnInit(): void {}
-    
-    findMapName(e){
-        return this.userSvc.findMapName(e);
+
+    findMapName(mapID){
+
+        let map = this.userSvc.fieldPf.maps.find(map => map.id == mapID)
+        return map?.name
     }
 }
