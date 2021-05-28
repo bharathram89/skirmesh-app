@@ -72,7 +72,9 @@ export class MydevicesComponent implements OnInit {
                                                         'devices'    : game.devices});
                             })
                     }})
-
+        // Socket Data routes
+        // Single socket setup in app.component - these listen for different
+        // socket events to update specific areas
         this.gameSvc.getNewAction().subscribe(socketData=>{
             console.log(socketData," New Action");
 
