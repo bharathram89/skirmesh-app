@@ -257,9 +257,13 @@ export class MydevicesComponent implements OnInit {
 
             let actions = this.allActions.filter(action => action.location == this.findLocationFromDeviceID(device.id));
 
-            if (actions.length) {
+            console.log(actions)
+
+            if (actions.length && !actions[0].time_held) {
 
                 let lastCapComplete = actions.find(act => act.action == "CAPTURE COMPLETE");
+
+                console.log(lastCapComplete)
 
                 if (lastCapComplete) {
 
