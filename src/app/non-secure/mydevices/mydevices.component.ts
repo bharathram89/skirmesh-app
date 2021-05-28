@@ -256,14 +256,11 @@ export class MydevicesComponent implements OnInit {
             if (device.teamID == null || device.config != 0x0A) {continue}
 
             let actions = this.allActions.filter(action => action.location == this.findLocationFromDeviceID(device.id));
-
-            console.log(actions)
-
+            // If an action exists and the last action doesn't already cover the time
+            // held, then add on time since last CAPTURE
             if (actions.length && !actions[0].time_held) {
 
                 let lastCapComplete = actions.find(act => act.action == "CAPTURE COMPLETE");
-
-                console.log(lastCapComplete)
 
                 if (lastCapComplete) {
 
