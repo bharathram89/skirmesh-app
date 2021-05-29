@@ -79,21 +79,11 @@ export class DeviceListComponent implements OnInit {
 
                 }
               });
-              this.teamsAvaliable = teams//set teams
-            // }
+              this.teamsAvaliable = teams
+
           }
 
-          //  NODE CONFIGS -- if we don't have them, make them []
-        //   if (this.mode != 'create'){
-        //     //This can NEVER evaluate as true...
-        //   // if (modeConfig.nodeConfigs && modeConfig.nodeConfigs.length == 0 )
-        //         this.devices = makeDeviceModals(userData.fieldProfile.devices);
-        //   } else {
-             // modeConfig.nodeConfigs have already been made Device Modals
-                this.devices = modeConfig.nodeConfigs;
-        //   }
-
-          //  LOCATIONS CONFIGS  -needs to be after node configs above.
+          this.devices = modeConfig.nodeConfigs;
 
           if(modeConfig.mapID){
 
