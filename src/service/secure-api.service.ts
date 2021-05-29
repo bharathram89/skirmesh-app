@@ -44,7 +44,6 @@ export class SecureAPIService {
       return this.http.put(route, data, options);
   }
 
-  // token and data are swapped!!! correct in UI!!!
   saveGameConfigs(token, data) {
 
       let route = this.BASE + this.GCFG
@@ -54,7 +53,7 @@ export class SecureAPIService {
 
       return this.http.post(route, data, options)
   }
-  // token and data are swapped!!! correct in UI!!!
+
   modifyGameConfig(token, data) {
 
       let route = this.BASE + this.GCFG
@@ -64,7 +63,7 @@ export class SecureAPIService {
 
       return this.http.put(route, data, options)
   }
-  // token and data are swapped!!! correct in UI!!!
+
   deleteTeam(token, teamID) {
 
       let route = this.BASE + this.TEAM
