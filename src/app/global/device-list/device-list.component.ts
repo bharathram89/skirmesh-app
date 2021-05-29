@@ -26,7 +26,6 @@ export class DeviceListComponent implements OnInit {
 
     userSvc  : UserServiceService;
     tokenSvc : TokenStorageService;
-    secAPIsvc : SecureAPIService;
 
     @Input() config;
     @Output() nodeConfigs = new EventEmitter<string>();
@@ -44,12 +43,12 @@ export class DeviceListComponent implements OnInit {
     constructor(
         userService   : UserServiceService,
         tokenService  : TokenStorageService,
-        secAPIservice : SecureAPIService,
+
+        private secAPIsvc : SecureAPIService,
         private router : Router
     ) {
         this.userSvc   = userService;
         this.tokenSvc  = tokenService;
-        this.secAPIsvc = secAPIservice;
     }
 
 

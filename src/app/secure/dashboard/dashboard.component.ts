@@ -73,19 +73,11 @@ export class DashboardComponent implements OnInit {
 
   gameHistData = [];
 
-  userSvc: UserServiceService;
-  nonSecAPIsvc : NonSecureAPIService;
-  secAPIsvc : SecureAPIService;
-
   constructor(
-              userService: UserServiceService,
-              nonSecAPIservice : NonSecureAPIService,
-              secAPIservice : SecureAPIService
-            ) {
-    this.userSvc = userService;
-    this.nonSecAPIsvc = nonSecAPIservice;
-    this.secAPIsvc = secAPIservice;
-  }
+              private userSvc      : UserServiceService,
+              private nonSecAPIsvc : NonSecureAPIService,
+              private secAPIsvc    : SecureAPIService
+            ) {}
 
   ngOnInit(): void {
 

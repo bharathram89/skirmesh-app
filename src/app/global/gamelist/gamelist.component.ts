@@ -13,11 +13,9 @@ export class GamelistComponent implements OnInit {
     @Output() editMode   = new EventEmitter<any>();
     @Output() deleteMode = new EventEmitter<any>();
 
-    userSvc : UserServiceService
-
-    constructor(userService:UserServiceService) {
-        this.userSvc = userService;
-    }
+    constructor(
+      private userSvc : UserServiceService
+    ) {}
 
     ngOnInit(): void {}
 

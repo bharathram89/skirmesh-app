@@ -30,9 +30,6 @@ export class EditGameComponent implements OnInit {
     isMapSelected     : boolean = false;
     configSet         : boolean = false;
     deviceListConfigs : BehaviorSubject<any>;
-    userSvc           : UserServiceService;
-
-    secAPIsvc : SecureAPIService;
 
     devices;
     deviceConfigs;
@@ -48,13 +45,12 @@ export class EditGameComponent implements OnInit {
     };
 
     constructor(
-        private fb            : FormBuilder,
-        userService   : UserServiceService,
-        secAPIservice : SecureAPIService) {
+        private fb        : FormBuilder,
+        private userSvc   : UserServiceService,
+        private secAPIsvc : SecureAPIService
+      ) {
 
             this.deviceListConfigs = new BehaviorSubject({});
-            this.userSvc           = userService;
-            this.secAPIsvc         = secAPIservice;
 
             this.gameModeForm      = this.fb.group({
                 id        : new FormControl(this.gameModeFrm.id, [Validators.required]),

@@ -17,16 +17,11 @@ export class GameConfigComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;
 
     gameModes = [];
-    userSvc: UserServiceService;
-    secAPIsvc : SecureAPIService;
 
     constructor(
-        userSvc: UserServiceService,
-        secAPIservice : SecureAPIService
-    ) {
-        this.userSvc   = userSvc;
-        this.secAPIsvc = secAPIservice;
-    }
+        private userSvc   : UserServiceService,
+        private secAPIsvc : SecureAPIService
+    ) {}
 
     ngOnInit(): void {
 

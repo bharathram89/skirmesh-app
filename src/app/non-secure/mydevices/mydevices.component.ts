@@ -33,21 +33,12 @@ export class MydevicesComponent implements OnInit {
 
     description;
     currentTab = 'map'
-    tokenSvc : TokenStorageService;
-    gameSvc  : GameService;
-
-    nonSecAPIsvc : NonSecureAPIService;
 
     constructor(
-        tokenService     : TokenStorageService,
-        gameService      : GameService,
-        nonSecAPIservice : NonSecureAPIService) {
-
-        this.tokenSvc  = tokenService;
-        this.gameSvc   = gameService;
-
-        this.nonSecAPIsvc = nonSecAPIservice;
-    }
+        private tokenSvc     : TokenStorageService,
+        private gameSvc      : GameService,
+        private nonSecAPIsvc : NonSecureAPIService
+      ) {}
 
     ngOnInit() {
 

@@ -35,8 +35,6 @@ export class StartGameComponent implements OnInit {
     gameBoardActive     = false;
     gameInProgress      = false;
     gameModes;
-    userSvc             : UserServiceService;
-    tokenSvc            : TokenStorageService;
 
     selectedGameMode;
     activeDevices       : BehaviorSubject<any>;
@@ -50,18 +48,12 @@ export class StartGameComponent implements OnInit {
     gameID              = null;
     gameData            = null;
 
-    secAPIsvc : SecureAPIService;
-
     constructor(
-        userService     : UserServiceService,
-        tokenService    : TokenStorageService,
-        nonSecAPIservice : NonSecureAPIService,
-        secAPIservice : SecureAPIService
+        private userSvc      : UserServiceService,
+        private tokenSvc     : TokenStorageService,
+        private nonSecAPIsvc : NonSecureAPIService,
+        private secAPIsvc    : SecureAPIService
     ){
-        this.userSvc   = userService;
-        this.tokenSvc  = tokenService;
-        this.secAPIsvc = secAPIservice;
-
         this.activeDevices = new BehaviorSubject({})
     }
 

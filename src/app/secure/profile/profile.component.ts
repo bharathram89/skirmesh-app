@@ -68,22 +68,12 @@ export class ProfileComponent implements OnInit {
                   imageData:      ''
                 }
 
-
-  userSvc: UserServiceService;
-  nonSecAPIsvc : NonSecureAPIService;
-  secAPIsvc : SecureAPIService;
-
-
   constructor(
-      userService: UserServiceService,
-      nonSecAPIservice : NonSecureAPIService,
-      secAPIservice : SecureAPIService,
-      private router: Router
-  ) {
-    this.userSvc = userService;
-    this.nonSecAPIsvc = nonSecAPIservice;
-    this.secAPIsvc = secAPIservice;
-  }
+      private userSvc      : UserServiceService,
+      private nonSecAPIsvc : NonSecureAPIService,
+      private secAPIsvc    : SecureAPIService,
+      private router       : Router
+  ) {}
 
   ngOnInit(): void {
 
