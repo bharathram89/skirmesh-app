@@ -50,6 +50,12 @@ export class MapComponent implements OnInit {
     ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized.
     //Applies to components only.
+
+        // update Map state with a delay - this works... not sure why
+        setTimeout(() => {
+          this.updateMapState()
+        }, 200);
+
         this.updateMapState()
 
         this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
