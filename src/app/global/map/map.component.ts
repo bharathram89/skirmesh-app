@@ -5,11 +5,11 @@ import { GameService } from 'src/service/game.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 
 const REGISTER = 0x01;
-const QUERY = 0x02;
+const QUERY    = 0x02;
 const PAIR_UID = 0x03;
-const CAPTURE = 0x0A;
-const MEDIC = 0x0E;
-const BOMB = 0xBB;
+const CAPTURE  = 0x0A;
+const MEDIC    = 0x0E;
+const BOMB     = 0xBB;
 
 @Component({
     selector    : 'app-map',
