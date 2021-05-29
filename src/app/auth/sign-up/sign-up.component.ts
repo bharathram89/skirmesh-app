@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { SocialAuthService } from "angularx-social-login";
 import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
-import { AuthService } from 'src/service/auth.service';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+
 
 @Component({
   selector: 'app-sign-up',
@@ -14,14 +15,18 @@ export class SignUpComponent implements OnInit {
 
   addUser: FormGroup;
   socailPass: FormGroup;
-  fields = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
-  fbFields ={ pass:'',confirmPass:''}
-  fbPassword:boolean=false;
-  socialLogin:boolean=false;
-  socialData:Object;
+
+  fields   = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
+  fbFields = { pass:'', confirmPass:''}
+
+  fbPassword   : boolean=false;
+  socialLogin  : boolean=false;
+  socialData   : Object;
+
   constructor(
     private socialAuthService: SocialAuthService,
-    private authSvc: AuthService) { }
+    private nonSecAPIsvc : NonSecureAPIService
+  ) { }
 
   ngOnInit(): void {
     this.socailPass = new FormGroup({
@@ -169,7 +174,7 @@ export class SignUpComponent implements OnInit {
             }
         });;
     }
-    
+
   onSubmit() {
     let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
     let data = {
@@ -180,7 +185,7 @@ export class SignUpComponent implements OnInit {
       "email": this.addUser.value.email,
       "type": type
     }
-    this.authSvc.createUser(data).subscribe(data=>{
+    this.nonSecAPIsvc.createUser(data).subscribe(data=>{
       document.getElementById('userCreatedMessage').classList.toggle('d-none')
     },
     err=>{
@@ -191,7 +196,7 @@ export class SignUpComponent implements OnInit {
   onSocialSubmit(){
     this.socialData['password']=this.socailPass.value.pass;
     console.log(this.socialData, this.socailPass.value.pass)
-    this.authSvc.createUser(this.socialData).subscribe(data=>{
+    this.nonSecAPIsvc.createUser(this.socialData).subscribe(data=>{
       document.getElementById('FBuserCreatedMessage').classList.toggle('d-none')
       console.log(data,'fb user created')
     },
