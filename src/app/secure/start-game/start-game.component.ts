@@ -59,8 +59,8 @@ export class StartGameComponent implements OnInit {
         nonSecAPIservice : NonSecureAPIService,
         secAPIservice : SecureAPIService
     ){
-        this.userSvc       = userService;
-        this.tokenSvc      = tokenService;
+        this.userSvc   = userService;
+        this.tokenSvc  = tokenService;
         this.secAPIsvc = secAPIservice;
 
         this.activeDevices = new BehaviorSubject({})

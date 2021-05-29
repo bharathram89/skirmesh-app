@@ -4,8 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { combineLatest, of } from 'rxjs';
-
-import { NodeConfigService } from 'src/service/node-status.service';
+import { SecureAPIService } from 'src/service/secure-api.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 
 const TIME_INTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, // Every 10 secs >>  2min
@@ -27,7 +26,7 @@ export class DeviceListComponent implements OnInit {
 
     userSvc  : UserServiceService;
     tokenSvc : TokenStorageService;
-    nodeSvc  : NodeConfigService;
+    secAPIsvc : SecureAPIService;
 
     @Input() config;
     @Output() nodeConfigs = new EventEmitter<string>();
@@ -43,14 +42,14 @@ export class DeviceListComponent implements OnInit {
     previousSelected;
 
     constructor(
-        userService    : UserServiceService,
-        tokenService   : TokenStorageService,
-        nodeService    : NodeConfigService,
+        userService   : UserServiceService,
+        tokenService  : TokenStorageService,
+        secAPIservice : SecureAPIService,
         private router : Router
     ) {
-        this.userSvc  = userService;
-        this.tokenSvc = tokenService;
-        this.nodeSvc  = nodeService;
+        this.userSvc   = userService;
+        this.tokenSvc  = tokenService;
+        this.secAPIsvc = secAPIservice;
     }
 
 
@@ -112,7 +111,7 @@ export class DeviceListComponent implements OnInit {
 
         if (this.mode == 'active') {
             //update the database here
-            this.nodeSvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
+            this.secAPIsvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
                 data => {}
             );
         }
