@@ -5,7 +5,6 @@ import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService } from 'a
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
 import { AuthService } from 'src/service/auth.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
-import { UserServiceService } from 'src/service/user-service.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -20,10 +19,9 @@ export class SignInComponent implements OnInit {
   constructor(
     private authSvc: AuthService,
     private socialAuthService: SocialAuthService,
-    private userSvc: UserServiceService,
     private tokenStorage: TokenStorageService,
     private router: Router) {
-    
+
    }
 
   ngOnInit(): void {
@@ -44,7 +42,7 @@ export class SignInComponent implements OnInit {
     this.login.controls['fieldName'].disable();
   }
 
-  
+
   fieldSignIn() {
     let fieldSignUp = document.getElementById("fieldSignIn");
     let playerSignUp = document.getElementById("playerSignIn");
@@ -104,17 +102,17 @@ export class SignInComponent implements OnInit {
 //show error message
       }
     )
-  } 
+  }
 
   signInWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
       let data = { "googleID":googleData.id,'google': JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"})}
       this.authSvc.userLogin(data).subscribe(
         respData=>{
-           
+
           this.tokenStorage.saveToken(respData['token'])
           this.router.navigate(['/secure/dashboard']);
-   
+
         },
         err=>{
           document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
@@ -122,7 +120,7 @@ export class SignInComponent implements OnInit {
         }
       )
     });;
-  } 
+  }
 
 
   loginWithFacebook(): void {
@@ -130,10 +128,10 @@ export class SignInComponent implements OnInit {
       let data = {"facebookID":fbData.id ,'facebook': JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"})}
       this.authSvc.userLogin(data).subscribe(
         respData=>{
-           
+
           this.tokenStorage.saveToken(respData['token'])
           this.router.navigate(['/secure/dashboard']);
-   
+
         },
         err=>{
           document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
