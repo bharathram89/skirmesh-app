@@ -3,7 +3,6 @@ import { BrowserModule, Meta } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NodeConfigService } from '../service/node-status.service';
 import { GlobalModule } from './global/global.module';
 import { AuthService } from '../service/auth.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,9 +11,9 @@ import {
   GoogleLoginProvider,
   FacebookLoginProvider
 } from 'angularx-social-login';
-import { UserServiceService } from 'src/service/user-service.service'; 
+import { UserServiceService } from 'src/service/user-service.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
- 
+
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
@@ -34,7 +33,6 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
   providers: [
     Meta,
     UserServiceService,
-    NodeConfigService,
     AuthService,
     SocialAuthService,
     {
@@ -56,7 +54,7 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
           }
         ]
       } as SocialAuthServiceConfig,
-    }    
+    }
   ],
   bootstrap: [AppComponent]
 })
