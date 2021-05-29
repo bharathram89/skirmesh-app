@@ -71,10 +71,12 @@ export class NonSecureAPIService {
 
         return this.http.get(route, options)
     }
-    // This needs to get renamed to getActiveGames
-    getGames() {
+
+
+    getActiveGames() {
         return this.http.get(this.BASE + this.GAME + 'activeGames')
     }
+
 
     getPastGames() {
         return this.http.get(this.BASE + this.GAME + 'pastGames')
@@ -90,9 +92,11 @@ export class NonSecureAPIService {
         return this.http.get(route + 'game', options)
     }
 
+
     getLocations(){
         return this.http.get(this.BASE + this.RSRC + 'locations')
     }
+
 
     getMapData(mapID){
 
@@ -100,6 +104,7 @@ export class NonSecureAPIService {
 
         return this.http.get(this.BASE + this.RSRC + 'map', options)
     }
+
 
     getActions(){
         return this.http.get(this.BASE + this.RSRC + 'actions')
