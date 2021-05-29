@@ -166,6 +166,17 @@ export class DashboardComponent implements OnInit {
       }
     }
 
+    let stackedAreaData = [{"name"  :"Medic Events",
+                            "series":[]},
+                           {"name"  :"Captures",
+                            "series":[]},
+                           {"name"  :"Assists",
+                            "series":[]},
+                           {"name"  :"Bombs Armed",
+                            "series":[]},
+                           {"name"  :"Bombs Diffused",
+                            "series":[]}];
+
     games = games.sort((a,b) => b.id - a.id);
 
     for (let game of games) {
@@ -176,7 +187,7 @@ export class DashboardComponent implements OnInit {
         let bombArm  = 0;
         let bombDis  = 0;
 
-        for (let action of game.actions) {
+        for (let action of game.actions.sort((a,b) => b.id - a.id)) {
 
           let points = this.actionList.find(ele => ele.id == action.actionID).points;
 
@@ -223,12 +234,22 @@ export class DashboardComponent implements OnInit {
 
         })
 
+        let areaTime = new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
+
+        stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
+        stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
+        stackedAreaData[2].series.unshift({"value":assists,  "name":areaTime});
+        stackedAreaData[3].series.unshift({"value":bombArm,  "name":areaTime});
+        stackedAreaData[4].series.unshift({"value":bombDis,  "name":areaTime});
+
     }
     this.pieData = [{name:"Medics",         value:this.totalMedics},
                     {name:"Captures",       value:this.totalCaptures},
                     {name:"Assists",        value:this.totalAssists},
                     {name:"Bombs Armed",    value:this.totalBombArm},
                     {name:"Bombs Diffused", value:this.totalBombDis}]
+
+    this.areaData = stackedAreaData;
   }
 
 
@@ -351,8 +372,6 @@ export class DashboardComponent implements OnInit {
                             {name:"Bombs Diffused",value:this.totalBombDis}];
 
             this.areaData = stackedAreaData;
-            console.log(stackedAreaData)
-
         }
     )
 
