@@ -82,7 +82,7 @@ export class SecureAPIService {
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
-                                      .set("fieldPofileID", fieldPofileID) }
+                                      .set("fieldProfileID", fieldProfileID) }
 
       return this.http.get(route, options)
   }
@@ -187,7 +187,7 @@ export class SecureAPIService {
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
-                                      .set("fieldPofileID", fieldPofileID)}
+                                      .set("fieldProfileID", fieldProfileID)}
 
       return this.http.get(route + 'gamesBy', options)
   }
@@ -196,7 +196,7 @@ export class SecureAPIService {
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
-                                      .set("fieldPofileID", fieldPofileID)}
+                                      .set("fieldProfileID", fieldProfileID)}
 
       return this.http.get(this.BASE + 'games/activeGamesBy', options)
   }
@@ -240,7 +240,7 @@ export class SecureAPIService {
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
-                                      .set("id", fieldPofileID)}
+                                      .set("id", fieldProfileID)}
 
       return this.http.get(route, options)
   }

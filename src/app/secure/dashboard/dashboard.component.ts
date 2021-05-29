@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { combineLatest } from 'rxjs';
-import { AuthService } from 'src/service/auth.service';
-import { DeviceService } from 'src/service/device.service';
-import { GameService } from 'src/service/game.service';
+
 import { UserServiceService } from 'src/service/user-service.service';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+import { SecureAPIService } from 'src/service/secure-api.service';
+
 
 // actionIDs associated with specific actions
 const MEDIC    = 11;
@@ -72,19 +73,18 @@ export class DashboardComponent implements OnInit {
 
   gameHistData = [];
 
-  gameSvc: GameService;
-  authSvc: AuthService;
   userSvc: UserServiceService;
-  deviceSvc: DeviceService;
+  nonSecAPIsvc : NonSecureAPIService;
+  secAPIsvc : SecureAPIService;
 
-  constructor(gameService: GameService,
-              authService: AuthService,
+  constructor(
               userService: UserServiceService,
-              deviceService: DeviceService) {
-    this.gameSvc = gameService;
-    this.authSvc = authService;
+              nonSecAPIservice : NonSecureAPIService,
+              secAPIservice : SecureAPIService
+            ) {
     this.userSvc = userService;
-    this.deviceSvc = deviceService;
+    this.nonSecAPIsvc = nonSecAPIservice;
+    this.secAPIsvc = secAPIservice;
   }
 
   ngOnInit(): void {
@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit {
     this.isPlayer = this.userSvc.isPlayer;
     this.isField = this.userSvc.isField;
 
-    combineLatest([this.userSvc.getUserData(), this.gameSvc.getActions()]).subscribe(([userData, actions]) => {
+    combineLatest([this.userSvc.getUserData(), this.nonSecAPIsvc.getActions()]).subscribe(([userData, actions]) => {
 
       this.actionList = actions;
 
@@ -120,7 +120,7 @@ export class DashboardComponent implements OnInit {
 
       this.currentVals.userID = userData.id;
       if(this.currentVals.imageID){
-        this.authSvc.getImage(this.currentVals.imageID).subscribe(
+        this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
           imageData => {
             this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
           }
@@ -265,7 +265,7 @@ export class DashboardComponent implements OnInit {
                         hour12 : false};
 
     let games;
-    this.gameSvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
+    this.secAPIsvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
 
         data => {
 
