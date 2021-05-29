@@ -2,26 +2,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
-import { TokenStorageService } from './token-storage.service';
 
 @Injectable({
       providedIn: 'root'
 })
 export class GameService {
 
-    headers = new HttpHeaders({
-        'Content-Type': 'application/json'
-    });
-    options = { headers: this.headers };
-
-    BASE = 'https://api.skirmesh.net/'
-    GTK  = 'games/activeGames'
-    RGMS = 'resources/games?token='
+    // GameService is primarily used to provide socket updates
+    // during the live game view
 
     constructor(
-      private socket: Socket,
-        private http: HttpClient,
-        tokenSvc: TokenStorageService
+      private socket: Socket
     ) {}
 
 
@@ -52,13 +43,13 @@ export class GameService {
       });
     }
 
-    getGamesByFieldProfile(token, fieldProfileID) {
-        return this.http.get(this.BASE + 'resources/gamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
-    }
+    // getGamesByFieldProfile(token, fieldProfileID) {
+    //     return this.http.get(this.BASE + 'resources/gamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
+    // }
 
-    getActiveGamesByFieldProfile(token, fieldProfileID) {
-        return this.http.get(this.BASE + 'games/activeGamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
-    }
+    // getActiveGamesByFieldProfile(token, fieldProfileID) {
+    //     return this.http.get(this.BASE + 'games/activeGamesBy?token=' + token + "&fieldProfileID=" + fieldProfileID)
+    // }
 
     // getGames() {
     //     return this.http.get(this.BASE + this.GTK)
@@ -68,19 +59,19 @@ export class GameService {
     //     return this.http.get(this.BASE + '/games/pastGames')
     // }
 
-    pauseGame(token, data) {
-        return this.http.put(this.BASE + 'gameplay/pauseGame?token=' + token, data, this.options)
-    }
+    // pauseGame(token, data) {
+    //     return this.http.put(this.BASE + 'gameplay/pauseGame?token=' + token, data, this.options)
+    // }
 
-    startGame(token, gameConfigID){
-        let data = {"gameConfigID":gameConfigID}
-        return this.http.post(this.BASE+'games/startGame?token='+token,data,this.options )
-    }
+    // startGame(token, gameConfigID){
+    //     let data = {"gameConfigID":gameConfigID}
+    //     return this.http.post(this.BASE+'games/startGame?token='+token,data,this.options )
+    // }
 
-    endGame(token, gameID){
-        let data = {"id":gameID}
-        return this.http.put(this.BASE+'games/endGame?token='+token,data,this.options )
-    }
+    // endGame(token, gameID){
+    //     let data = {"id":gameID}
+    //     return this.http.put(this.BASE+'games/endGame?token='+token,data,this.options )
+    // }
 
 //     getGameStats(gameID){
 //         return this.http.get(this.BASE + 'statistics/game?id=' + gameID )
