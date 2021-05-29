@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DeviceService } from 'src/service/device.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { makeDeviceModals } from '../node.modal';
 import { TabsComponent } from '../tabs/tabs.component';
+import { SecureAPIService } from 'src/service/secure-api.service';
 
 @Component({
   selector: 'app-game-config',
@@ -17,12 +17,15 @@ export class GameConfigComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;
 
     gameModes = [];
-    userSvc: UserServiceService
-    deviceSvc: DeviceService
+    userSvc: UserServiceService;
+    secAPIsvc : SecureAPIService;
 
-    constructor(deviceSvc: DeviceService, userSvc: UserServiceService) {
-        this.deviceSvc = deviceSvc;
+    constructor(
+        userSvc: UserServiceService,
+        secAPIservice : SecureAPIService
+    ) {
         this.userSvc   = userSvc;
+        this.secAPIsvc = secAPIservice;
     }
 
     ngOnInit(): void {
@@ -30,7 +33,7 @@ export class GameConfigComponent implements OnInit {
         let fpID  = this.userSvc.getFieldProfileID();
         let token = this.userSvc.getToken();
 
-        this.deviceSvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
+        this.secAPIsvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
 
             this.gameConfigs = savedConfigs;
             this.gameConfigs.forEach(savedConfig => {
@@ -58,7 +61,7 @@ export class GameConfigComponent implements OnInit {
 
         if (safe) {
 
-            this.deviceSvc.deleteGameConfig(this.userSvc.getToken(), gameMode.id).subscribe(data => {
+            this.secAPIsvc.deleteGameConfig(this.userSvc.getToken(), gameMode.id).subscribe(data => {
                 this.gameModes = this.gameModes.filter(function (obj) {
                     return obj.id !== gameMode.id;
                 });
@@ -103,7 +106,7 @@ export class GameConfigComponent implements OnInit {
                 teams          : dataModel.teams
             }
 
-            this.deviceSvc.modifyGameConfig(apiData, this.userSvc.getToken()).subscribe(
+            this.secAPIsvc.modifyGameConfig(this.userSvc.getToken(), apiData).subscribe(
                 data => {})
             this.gameModes = this.gameModes.map(gameMode => {
 
@@ -128,7 +131,7 @@ export class GameConfigComponent implements OnInit {
             dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR?
 
             this.gameModes.push(dataModel);
-            this.deviceSvc.saveGameConfigs(apiData, this.userSvc.getToken()).subscribe(data => {
+            this.secAPIsvc.saveGameConfigs(this.userSvc.getToken(), apiData).subscribe(data => {
 
             })
         }
