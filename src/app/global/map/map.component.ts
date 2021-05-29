@@ -27,16 +27,10 @@ export class MapComponent implements OnInit {
     locationList;
     mapData;
 
-    gameSvc      : GameService;
-    nonSecAPIsvc : NonSecureAPIService;
-
     constructor(
-        gameService      : GameService,
-        nonSecAPIservice : NonSecureAPIService
-    ) {
-        this.gameSvc = gameService;
-        this.nonSecAPIsvc = nonSecAPIservice;
-    }
+        private gameSvc      : GameService,
+        private nonSecAPIsvc : NonSecureAPIService
+    ) {}
 
     ngOnInit(): void {
 
