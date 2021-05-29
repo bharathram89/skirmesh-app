@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { subscribeOn } from 'rxjs/operators';
-import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+import { SecureAPIService } from 'src/service/secure-api.service';
+
 
 @Component({
   selector: 'app-profile',
@@ -68,16 +70,19 @@ export class ProfileComponent implements OnInit {
 
 
   userSvc: UserServiceService;
-  authSvc: AuthService;
+  nonSecAPIsvc : NonSecureAPIService;
+  secAPIsvc : SecureAPIService;
 
 
   constructor(
-      private userService: UserServiceService,
-      private authService: AuthService,
+      userService: UserServiceService,
+      nonSecAPIservice : NonSecureAPIService,
+      secAPIservice : SecureAPIService,
       private router: Router
   ) {
-    this.authSvc = authService;
     this.userSvc = userService;
+    this.nonSecAPIsvc = nonSecAPIservice;
+    this.secAPIsvc = secAPIservice;
   }
 
   ngOnInit(): void {
@@ -161,7 +166,7 @@ export class ProfileComponent implements OnInit {
       }
     )
       if(this.currentVals.imageID){
-        this.authSvc.getImage(this.currentVals.imageID).subscribe(
+        this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
           imageData => {
             this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
           }
@@ -171,7 +176,7 @@ export class ProfileComponent implements OnInit {
 
     if (this.isField) {
 
-        this.userSvc.getUserListFromAPI(this.userSvc.getToken()).subscribe(
+        this.secAPIsvc.getUserListFromAPI(this.userSvc.getToken()).subscribe(
             data => this.playerList = data
         )
     }
@@ -184,7 +189,7 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteSkirmeshAccount(){
-    this.authSvc.deleteUser(this.userSvc.getToken()).subscribe(
+    this.secAPIsvc.deleteUser(this.userSvc.getToken()).subscribe(
       resp => {
         this.router.navigate(['/non-secure']);
       },
@@ -198,14 +203,14 @@ export class ProfileComponent implements OnInit {
 
       let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
 
-      this.userSvc.updateFieldProfile(this.userSvc.getToken(), data).subscribe(
+      this.secAPIsvc.updateFieldProfile(this.userSvc.getToken(), data).subscribe(
           resp => this.rfidToPair = resp["pair_uid"]
       )
   }
 
   checkRfidToPair() {
 
-      this.userSvc.getFieldProfileFromAPI(this.userSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
+      this.secAPIsvc.getFieldProfileFromAPI(this.userSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
           data => this.rfidToPair = data["pair_uid"]
       )
   }
@@ -215,7 +220,7 @@ export class ProfileComponent implements OnInit {
       let data = {userID : this.playerSelected.id,
                   fieldID: this.currentVals.fieldProfileID}
 
-      this.userSvc.pairUid(this.userSvc.getToken(), data).subscribe(
+      this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
           resp =>{
              this.rfidConnected = true;
              this.rfidToPair = null;
@@ -237,7 +242,7 @@ export class ProfileComponent implements OnInit {
 
   onPasswordReset(){
     let data = {'password':this.passReset.get('pass').value}
-    this.authSvc.updatePass(this.userSvc.getToken() ,data).subscribe(
+    this.secAPIsvc.updatePass(this.userSvc.getToken() ,data).subscribe(
       resp=>{ this.passResetFailed  = false;
               this.passResetPassed= true;
             },
@@ -316,7 +321,7 @@ export class ProfileComponent implements OnInit {
       data.player['id'] = this.currentVals.userID;
     }
 
-    this.authSvc.saveProfile(this.userSvc.getToken(), data).subscribe(
+    this.secAPIsvc.saveProfile(this.userSvc.getToken(), data).subscribe(
       resp => {
         // this.profileForm.reset();
         document.getElementById('userCreatedMessage').classList.remove('d-none')
@@ -372,7 +377,7 @@ export class ProfileComponent implements OnInit {
 
       let data = {uid:uid.toLowerCase(), userID:userID};
 
-      this.userSvc.pairUid(this.userSvc.getToken(), data).subscribe(
+      this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
           resp =>{},
           err =>{}
       )
@@ -407,7 +412,7 @@ export class ProfileComponent implements OnInit {
 
     // console.log(data)
 
-    this.authSvc.saveImage(this.userSvc.getToken(), data);
+    this.secAPIsvc.saveImage(this.userSvc.getToken(), data);
 
 
 

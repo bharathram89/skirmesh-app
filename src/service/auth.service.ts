@@ -33,51 +33,51 @@ export class AuthService {
     return this.http.get(this.BASE + 'resources/user?token='+token)
   }
 
-  updatePass(token,pass){
-    return this.http.put(this.BASE + 'resources/user?token='+token, pass, this.options)
-  }
+  // updatePass(token,pass){
+  //   return this.http.put(this.BASE + 'resources/user?token='+token, pass, this.options)
+  // }
 
-  saveProfile(token, data){
-
-    var user   = data.user;
-    var player = data.player;
-    var field  = data.field;
-
-    if (Object.keys(field).length) {
-      this.http.put(this.BASE + 'resources/fieldProfile', field, this.options).subscribe(
-        resp => { console.log(resp, "resp") },
-        err => { console.log(err, "err in update field profile") }
-      )
-    }
-    else if (Object.keys(player).length) {
-      this.http.put(this.BASE + 'resources/playerProfile', player, this.options).subscribe(
-        resp => { console.log(resp, "resp") },
-        err => { console.log(err, "err in update player profile") }
-      )
-    }
-
-    return this.http.put(this.BASE + 'resources/user?token='+token, user, this.options)
-  }
-
-
-  saveImage(token, data) {
-
-    this.http.put(this.BASE + 'resources/image?token=' + token, data).subscribe(
-      resp => { console.log(resp, "resp") },
-      err => { console.log(err, "err in update image") }
-    );
-
-  }
+  // saveProfile(token, data){
+  //
+  //   var user   = data.user;
+  //   var player = data.player;
+  //   var field  = data.field;
+  //
+  //   if (Object.keys(field).length) {
+  //     this.http.put(this.BASE + 'resources/fieldProfile', field, this.options).subscribe(
+  //       resp => { console.log(resp, "resp") },
+  //       err => { console.log(err, "err in update field profile") }
+  //     )
+  //   }
+  //   else if (Object.keys(player).length) {
+  //     this.http.put(this.BASE + 'resources/playerProfile', player, this.options).subscribe(
+  //       resp => { console.log(resp, "resp") },
+  //       err => { console.log(err, "err in update player profile") }
+  //     )
+  //   }
+  //
+  //   return this.http.put(this.BASE + 'resources/user?token='+token, user, this.options)
+  // }
 
 
-  deleteUser(token){
-    return this.http.delete(this.BASE + 'resources/user?token='+token );
-  }
+  // saveImage(token, data) {
+  //
+  //   this.http.put(this.BASE + 'resources/image?token=' + token, data).subscribe(
+  //     resp => { console.log(resp, "resp") },
+  //     err => { console.log(err, "err in update image") }
+  //   );
+  //
+  // }
 
 
-  getImage(imageID) {
-    return this.http.get(this.BASE + 'resources/serve_image/'+imageID)
-  }
+  // deleteUser(token){
+  //   return this.http.delete(this.BASE + 'resources/user?token='+token );
+  // }
+
+
+  // getImage(imageID) {
+  //   return this.http.get(this.BASE + 'resources/serve_image/'+imageID)
+  // }
 
 
 }
