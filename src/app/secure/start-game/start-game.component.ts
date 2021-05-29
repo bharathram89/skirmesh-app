@@ -11,7 +11,6 @@ import {
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
-import { AuthService } from 'src/service/auth.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { makeDeviceModal, makeDeviceModals} from '../node.modal';
 import { SecureAPIService } from 'src/service/secure-api.service';
@@ -50,7 +49,6 @@ export class EditGameComponent implements OnInit {
 
     constructor(
         private fb            : FormBuilder,
-        authSvc       : AuthService,
         userService   : UserServiceService,
         secAPIservice : SecureAPIService) {
 

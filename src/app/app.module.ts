@@ -4,7 +4,6 @@ import { BrowserModule, Meta } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GlobalModule } from './global/global.module';
-import { AuthService } from '../service/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SocialLoginModule, SocialAuthServiceConfig, SocialAuthService } from 'angularx-social-login';
 import {
@@ -33,7 +32,6 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
   providers: [
     Meta,
     UserServiceService,
-    AuthService,
     SocialAuthService,
     {
       provide: 'SocialAuthServiceConfig',

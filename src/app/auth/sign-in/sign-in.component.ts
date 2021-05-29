@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
-import { AuthService } from 'src/service/auth.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 
