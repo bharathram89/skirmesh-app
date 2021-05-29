@@ -22,7 +22,9 @@ const BOMB_DIF = 9;
 export class DashboardComponent implements OnInit {
 
   pieData: any[];
-  view: any[] = [700, 400];
+  areaData: any[];
+
+  // view: any[] = [700, 400];
 
   // options
   gradient: boolean = true;
@@ -55,7 +57,6 @@ export class DashboardComponent implements OnInit {
     imageData: ''
   }
   temp = [];
-  columns = [{ prop: 'name' }, { name: 'Gender' }, { name: 'Company' }];
 
   isPlayer;
   isField;
@@ -254,14 +255,14 @@ export class DashboardComponent implements OnInit {
   setGameHistStats(userData) {
 
     let time_options = {dateStyle: "medium",
-                      timeStyle: "short",
-                      // day    : "2-digit",
-                      // month  : "short",
-                      // year   : "2-digit",
-                      // hour   : "2-digit",
-                      // minute : "2-digit",
-                      // second : "2-digit",
-                      hour12 : false}
+                        timeStyle: "short",
+                        // day    : "2-digit",
+                        // month  : "short",
+                        // year   : "2-digit",
+                        // hour   : "2-digit",
+                        // minute : "2-digit",
+                        // second : "2-digit",
+                        hour12 : false};
 
     let games;
     this.gameSvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
@@ -269,6 +270,17 @@ export class DashboardComponent implements OnInit {
         data => {
 
             games = data;
+
+            let stackedAreaData = [{"name"  :"Medic Events",
+                                    "series":[]},
+                                   {"name"  :"Captures",
+                                    "series":[]},
+                                   {"name"  :"Assists",
+                                    "series":[]},
+                                   {"name"  :"Bombs Armed",
+                                    "series":[]},
+                                   {"name"  :"Bombs Diffused",
+                                    "series":[]}];
 
             for (let game of games.sort((a, b) => b.id - a.id)) {
 
@@ -312,13 +324,14 @@ export class DashboardComponent implements OnInit {
                     }
                 }
 
-                let duration = Date.parse(game.endTime) - Date.parse(game.startTime)
+                let duration = Date.parse(game.endTime) - Date.parse(game.startTime);
 
                 let pieData = [{name:"Medics",        value:medics},
                                {name:"Captures",      value:captures},
                                {name:"Assists",       value:assists},
                                {name:"Bombs Armed",   value:bombArm},
-                               {name:"Bombs Diffused",value:bombDis}]
+                               {name:"Bombs Diffused",value:bombDis}];
+
                 this.gameHistData.push({
 
                     id       : game.id,
@@ -329,7 +342,13 @@ export class DashboardComponent implements OnInit {
 
                 })
 
+                let areaTime = new Date(game.startTime);
 
+                stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
+                stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
+                stackedAreaData[2].series.unshift({"value":assists,  "name":areaTime});
+                stackedAreaData[3].series.unshift({"value":bombArm,  "name":areaTime});
+                stackedAreaData[4].series.unshift({"value":bombDis,  "name":areaTime});
             }
 
 
@@ -337,7 +356,10 @@ export class DashboardComponent implements OnInit {
                             {name:"Captures",      value:this.totalCaptures},
                             {name:"Assists",       value:this.totalAssists},
                             {name:"Bombs Armed",   value:this.totalBombArm},
-                            {name:"Bombs Diffused",value:this.totalBombDis}]
+                            {name:"Bombs Diffused",value:this.totalBombDis}];
+
+            this.areaData = stackedAreaData;
+            console.log(stackedAreaData)
 
         }
     )
