@@ -342,7 +342,7 @@ export class DashboardComponent implements OnInit {
 
                 })
 
-                let areaTime = new Date(game.startTime);
+                let areaTime = new Date(game.endTime);
 
                 stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
                 stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
