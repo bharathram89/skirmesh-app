@@ -5,6 +5,7 @@ import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService } from 'a
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
 import { AuthService } from 'src/service/auth.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -17,10 +18,11 @@ export class SignInComponent implements OnInit {
   fields = {  callSign: '', password: "", fieldName: "" }
 
   constructor(
-    private authSvc: AuthService,
     private socialAuthService: SocialAuthService,
     private tokenStorage: TokenStorageService,
-    private router: Router) {
+    private nonSecAPIsvc : NonSecureAPIService,
+    private router: Router
+  ) {
 
    }
 
@@ -76,26 +78,12 @@ export class SignInComponent implements OnInit {
       "callSign": type=='field'?this.login.value.fieldName:this.login.value.callSign,
       "password": this.login.value.password
     }
-    this.authSvc.userLogin(data).subscribe(
+    this.nonSecAPIsvc.userLogin(data).subscribe(
       respData=>{
-        // console.log("login response",respData)
-        // this.tokenStorage.
-        // window.sessionStorage.setItem("token",JSON.stringify(data))
 
         this.tokenStorage.saveToken(respData['token'])
         this.router.navigate(['/secure/dashboard']);
 
-        // this.authSvc.getUser(respData['token']).subscribe(
-        //   userData=>{
-        //     console.log(userData);
-        //   },
-        //   err=>{
-        //     document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
-        //     //show error message
-        //   }
-
-        // )
-        //store session and route user
       },
       err=>{
         document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
@@ -107,7 +95,7 @@ export class SignInComponent implements OnInit {
   signInWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
       let data = { "googleID":googleData.id,'google': JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"})}
-      this.authSvc.userLogin(data).subscribe(
+      this.nonSecAPIsvc.userLogin(data).subscribe(
         respData=>{
 
           this.tokenStorage.saveToken(respData['token'])
@@ -126,7 +114,7 @@ export class SignInComponent implements OnInit {
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
       let data = {"facebookID":fbData.id ,'facebook': JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"})}
-      this.authSvc.userLogin(data).subscribe(
+      this.nonSecAPIsvc.userLogin(data).subscribe(
         respData=>{
 
           this.tokenStorage.saveToken(respData['token'])
