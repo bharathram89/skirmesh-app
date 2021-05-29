@@ -46,7 +46,7 @@ export class SecureAPIService {
 
   saveGameConfigs(token, data) {
 
-      let route = this.BASE + this.GCFG
+      let route = this.BASE + this.RSRC + this.GCFG
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
@@ -56,7 +56,7 @@ export class SecureAPIService {
 
   modifyGameConfig(token, data) {
 
-      let route = this.BASE + this.GCFG
+      let route = this.BASE + this.RSRC + this.GCFG
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
@@ -66,7 +66,7 @@ export class SecureAPIService {
 
   deleteTeam(token, teamID) {
 
-      let route = this.BASE + this.TEAM
+      let route = this.BASE + this.RSRC + this.TEAM
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
@@ -77,7 +77,7 @@ export class SecureAPIService {
 
   getGameConfigs(token, fieldProfileID) {
 
-      let route = this.BASE + this.GCFG
+      let route = this.BASE + this.RSRC + this.GCFG
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
@@ -89,7 +89,7 @@ export class SecureAPIService {
 
   deleteGameConfig(token, gameConfigID) {
 
-      let route = this.BASE + this.GCFG
+      let route = this.BASE + this.RSRC + this.GCFG
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
