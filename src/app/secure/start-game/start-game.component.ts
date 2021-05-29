@@ -9,7 +9,6 @@ import {
   trigger
 } from '@angular/animations';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { DeviceService } from 'src/service/device.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 import { AuthService } from 'src/service/auth.service';
