@@ -3,8 +3,9 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/service/auth.service';
 import { UserServiceService } from 'src/service/user-service.service';
-import { DeviceService } from 'src/service/device.service';
 import { makeDeviceModal, makeDeviceModals} from '../node.modal';
+import { SecureAPIService } from 'src/service/secure-api.service';
+
 
 // export class ColorPalette {
 //     name       : string;
@@ -31,7 +32,8 @@ export class EditGameComponent implements OnInit {
     configSet         : boolean = false;
     deviceListConfigs : BehaviorSubject<any>;
     userSvc           : UserServiceService;
-    deviceSvc         : DeviceService;
+
+    secAPIsvc : SecureAPIService;
 
     devices;
     deviceConfigs;
@@ -48,13 +50,13 @@ export class EditGameComponent implements OnInit {
 
     constructor(
         private fb            : FormBuilder,
-        private authSvc       : AuthService,
-        private userService   : UserServiceService,
-        private deviceService : DeviceService) {
+        authSvc       : AuthService,
+        userService   : UserServiceService,
+        secAPIservice : SecureAPIService) {
 
             this.deviceListConfigs = new BehaviorSubject({});
             this.userSvc           = userService;
-            this.deviceSvc         = deviceService;
+            this.secAPIsvc         = secAPIservice;
 
             this.gameModeForm      = this.fb.group({
                 id        : new FormControl(this.gameModeFrm.id, [Validators.required]),
@@ -170,7 +172,7 @@ export class EditGameComponent implements OnInit {
         let team = this.teams.value[i];
 
         if (team.id) {
-            this.deviceSvc.deleteTeam(team.id, this.userSvc.getToken()).subscribe(
+            this.secAPIsvc.deleteTeam(this.userSvc.getToken(), team.id).subscribe(
                 data => {}
             );
         }
