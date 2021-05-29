@@ -13,8 +13,9 @@ import { DeviceService } from 'src/service/device.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 import { AuthService } from 'src/service/auth.service';
-import { GameService } from 'src/service/game.service';
-import { NodeConfigService } from 'src/service/node-status.service';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+import { SecureAPIService } from 'src/service/secure-api.service';
+
 
 const DEFAULT_DURATION = 300;
 @Component({
@@ -37,10 +38,8 @@ export class StartGameComponent implements OnInit {
     gameInProgress      = false;
     gameModes;
     userSvc             : UserServiceService;
-    deviceSvc           : DeviceService;
     tokenSvc            : TokenStorageService;
-    authSvc             : AuthService;
-    gameSvc             : GameService;
+
     selectedGameMode;
     activeDevices       : BehaviorSubject<any>;
     adminNodes          : BehaviorSubject<any>;
@@ -53,29 +52,24 @@ export class StartGameComponent implements OnInit {
     gameID              = null;
     gameData            = null;
 
-
-    nodeSvc  : NodeConfigService;
+    secAPIsvc : SecureAPIService;
 
     constructor(
         userService     : UserServiceService,
-        deviceService   : DeviceService,
         tokenService    : TokenStorageService,
-        authService     : AuthService,
-        gameService     : GameService,
-        nodeService     : NodeConfigService
+        nonSecAPIservice : NonSecureAPIService,
+        secAPIservice : SecureAPIService
     ){
-        this.authSvc       = authService;
         this.userSvc       = userService;
-        this.deviceSvc     = deviceService;
         this.tokenSvc      = tokenService;
-        this.gameSvc       = gameService;
-        this.nodeSvc       = nodeService;
+        this.secAPIsvc = secAPIservice;
+
         this.activeDevices = new BehaviorSubject({})
     }
 
     ngOnInit(): void {
 
-        this.gameSvc.getActiveGamesByFieldProfile(this.userSvc.getToken(), this.userSvc.getFieldProfileID()).subscribe(
+        this.secAPIsvc.getActiveGamesByFieldProfile(this.userSvc.getToken(), this.userSvc.getFieldProfileID()).subscribe(
 
             activeGameConfig=>{
 
@@ -101,7 +95,7 @@ export class StartGameComponent implements OnInit {
             }
          )
          // This sets the dropdown menu with available game configurations
-         this.deviceSvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
+         this.secAPIsvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
              savedConfigs => {
                  this.gameModes = savedConfigs;
              }
@@ -122,7 +116,7 @@ export class StartGameComponent implements OnInit {
         // device to baseline all configurations from saved configs
         let mode = this.selectedGameMode;
 
-        this.gameSvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
+        this.secAPIsvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
 
             data => {
                 this.gameData = data
@@ -161,7 +155,7 @@ export class StartGameComponent implements OnInit {
 
         let paused = !this.gameData.is_paused;
 
-        this.gameSvc.pauseGame(this.userSvc.getToken(), {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
+        this.secAPIsvc.pauseGame(this.userSvc.getToken(), {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
             data => this.gameData = data
         )
     }
@@ -173,9 +167,10 @@ export class StartGameComponent implements OnInit {
 
         if (safe) {
 
+            // TODO: Why do we use tokenSvc for game data?
             this.tokenSvc.endGame();
 
-            this.gameSvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
+            this.secAPIsvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
                 data => {
                         this.gameInProgress = false;
                         this.gameBoardActive = false;
