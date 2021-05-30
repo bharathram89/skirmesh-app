@@ -53,6 +53,7 @@ export class NonSecureAPIService {
         return this.http.post(this.BASE + this.LOGN, data, this.options)
     }
 
+
     getImage(imageID) {
 
         let route = this.BASE + this.RSRC + 'serve_image/' + imageID
@@ -127,12 +128,12 @@ export class NonSecureAPIService {
     }
 
 
-    getDevicesByGameID(gameID){
-
-        const options = { params  : new HttpParams().set("gameID", gameID) }
-
-        return this.http.get(this.BASE + this.RSRC + this.DEVC, options)
-    }
+    // getDevicesByGameID(gameID){
+    //
+    //     const options = { params  : new HttpParams().set("gameID", gameID) }
+    //
+    //     return this.http.get(this.BASE + this.RSRC + this.DEVC, options)
+    // }
 
 
 }
