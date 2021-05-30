@@ -17,6 +17,7 @@ export class NonSecureAPIService {
     BASE = 'https://api.skirmesh.net/'
 
     // setup source routes
+    NONS = 'nonSecure/'
     RSRC = 'resources/'
     GAME = 'games/'
     STAT = 'statistics/'
@@ -70,6 +71,16 @@ export class NonSecureAPIService {
         const options = { params  : new HttpParams().set("id", gameConfigID) }
 
         return this.http.get(route, options)
+    }
+
+
+    getExtendedGameData(gameID){
+
+        let route = this.BASE + this.NONS
+
+        const options = { params  : new HttpParams().set("id", gameID) }
+        // :: returns :: {configData: gameConfig, gameData: game}
+        return this.http.get(route + 'extendedGameData', options)
     }
 
 

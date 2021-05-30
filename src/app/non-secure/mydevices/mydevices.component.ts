@@ -105,17 +105,20 @@ export class MydevicesComponent implements OnInit {
         let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
 
         // Pull device data in from live devices - not config data
-        combineLatest([this.nonSecAPIsvc.getGameConfigsByID(gameConfigID),
-                       this.nonSecAPIsvc.getGameStats(gameID.target.value),
-                       this.nonSecAPIsvc.getDevicesByGameID(gameID.target.value)]).subscribe(
-                            ([gameConfig, stats, deviceData]) => {
+        combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID.target.value),
+                       this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
 
-                                this.devices     = deviceData;
+                            ([extendedGameData, stats]) => {
+
+                                let configData = extendedGameData["configData"];
+                                let gameData   = extendedGameData["gameData"];
+
+                                this.devices     = gameData.devices;
                                 this.activeGame  = true;
-                                this.map         = gameConfig['mapID'];
-                                this.description = gameConfig['description'];
+                                this.map         = configData.mapID;
+                                this.description = configData.description;
                                 this.gameStats   = stats;
-                                this.gameConfig  = gameConfig;
+                                this.gameConfig  = configData;
 
                                 this.calcScoreAndSetActions();
                             })
