@@ -61,6 +61,8 @@ export class MydevicesComponent implements OnInit {
                                                         'id'         : game.id,
                                                         'mapID'      : data["mapID"],
                                                         'devices'    : game.devices});
+
+                                this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
                             })
                     }})
         // Socket Data routes
