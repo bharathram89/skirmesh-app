@@ -44,7 +44,7 @@ export class NonSecureAPIService {
     createUser(data){
 
         let route = this.BASE + this.RSRC
-        return this.http.post(route + 'createUser',data,this.options)
+        return this.http.post(route + 'createUser', data, this.options)
     }
 
 
@@ -52,6 +52,7 @@ export class NonSecureAPIService {
 
         return this.http.post(this.BASE + this.LOGN, data, this.options)
     }
+
 
     getImage(imageID) {
 
@@ -109,7 +110,7 @@ export class NonSecureAPIService {
     }
 
 
-    getLocations(){
+    getLocationsList(){
         return this.http.get(this.BASE + this.RSRC + 'locations')
     }
 
@@ -122,17 +123,17 @@ export class NonSecureAPIService {
     }
 
 
-    getActions(){
+    getActionsList(){
         return this.http.get(this.BASE + this.RSRC + 'actions')
     }
 
 
-    getDevicesByGameID(gameID){
-
-        const options = { params  : new HttpParams().set("gameID", gameID) }
-
-        return this.http.get(this.BASE + this.RSRC + this.DEVC, options)
-    }
+    // getDevicesByGameID(gameID){
+    //
+    //     const options = { params  : new HttpParams().set("gameID", gameID) }
+    //
+    //     return this.http.get(this.BASE + this.RSRC + this.DEVC, options)
+    // }
 
 
 }

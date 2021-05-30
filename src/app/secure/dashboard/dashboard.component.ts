@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit {
     this.isPlayer = this.userSvc.isPlayer;
     this.isField = this.userSvc.isField;
 
-    combineLatest([this.userSvc.getUserData(), this.nonSecAPIsvc.getActions()]).subscribe(([userData, actions]) => {
+    combineLatest([this.userSvc.getUserData(), this.nonSecAPIsvc.getActionsList()]).subscribe(([userData, actions]) => {
 
       this.actionList = actions;
 
