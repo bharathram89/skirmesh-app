@@ -67,12 +67,13 @@ export class StartGameComponent implements OnInit {
                     // Active games route starts query with fieldProfileID and
                     // returns the gameConfig, which contains the game
                     // Look for the game that is not ended
-                    let game = activeGameConfig["games"].find(ele => ele.endTime == null)
+                    let game = activeGameConfig["games"].shift()
 
                     if (game) {
-                        this.gameData = game;
+
+                        this.gameData        = game;
                         this.gameBoardActive = true;
-                        this.gameInProgress = true;
+                        this.gameInProgress  = true;
 
                         activeGameConfig["deviceMap"] = game.devices;
 
@@ -93,9 +94,9 @@ export class StartGameComponent implements OnInit {
 
     }
 
-    changeGame(games){
+    changeGame(gameConfig){
         // When a dropdown menu selection is made - update the gameboard
-        let gameConfigID = games.target.value;
+        let gameConfigID = gameConfig.target.value;
         this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
 
         this.setSelectedGameConfig(this.selectedGameMode);
@@ -108,10 +109,8 @@ export class StartGameComponent implements OnInit {
 
         this.secAPIsvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
 
-            data => {
-                this.gameData = data
-            },
-            err=>{console.log(err)}
+            data => {this.gameData = data},
+            err => {console.log(err)}
         )
 
         this.setSelectedGameConfig(mode);

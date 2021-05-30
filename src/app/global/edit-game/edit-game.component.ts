@@ -6,13 +6,6 @@ import { makeDeviceModal, makeDeviceModals} from '../node.modal';
 import { SecureAPIService } from 'src/service/secure-api.service';
 
 
-// export class ColorPalette {
-//     name       : string;
-//     value      : string;
-//     foreground : string;
-//     id         : number;
-// }
-
 @Component({
     selector    : 'app-edit-game',
     templateUrl : './edit-game.component.html',
@@ -28,7 +21,6 @@ export class EditGameComponent implements OnInit {
     locations         : [];
 
     isMapSelected     : boolean = false;
-    configSet         : boolean = false;
     deviceListConfigs : BehaviorSubject<any>;
 
     devices;
@@ -127,11 +119,8 @@ export class EditGameComponent implements OnInit {
         return this.gameModeForm.get("teams") as FormArray
     }
 
-    // This listens to the output of nodeConfigs in device-list.component.ts
-    // due to the emitter --- for edit, the emitted device is spliced into configs
     nodeConfigs(device){
 
-        this.configSet = true; // Not sure what this does...
         device = JSON.parse(device);
 
         let isIndex = this.deviceConfigs.findIndex(dev => dev.id == device.id)
@@ -178,17 +167,12 @@ export class EditGameComponent implements OnInit {
         this.setNodes();
     }
 
-    changeMap(e){
+    changeMap(selectedMap){
 
-        this.gameModeForm.controls['map'].setValue(e.target.value)
+        let mapID = selectedMap.target.value
+        this.gameModeForm.controls['map'].setValue(mapID)
 
-        this.locations = this.maps.find(maps=>{
-
-            if(maps['id']==e.target.value){
-                return maps['locations'];
-            }
-
-        })['locations']
+        this.locations = this.maps.find(map => map["id"] == mapID)["locations"];
 
         this.setNodes()
         this.isMapSelected = true;
