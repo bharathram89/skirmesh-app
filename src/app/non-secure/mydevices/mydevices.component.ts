@@ -16,8 +16,10 @@ export class MydevicesComponent implements OnInit {
 
     devices;
     gameConfig;
-    activeGames;
     activeGame = false;
+
+    activeGamesByConfig;
+
     map;
 
     teams         = [];
@@ -42,29 +44,32 @@ export class MydevicesComponent implements OnInit {
 
     ngOnInit() {
 
-        combineLatest([this.nonSecAPIsvc.getActiveGames(),
+        combineLatest([this.nonSecAPIsvc.getActiveGamesByConfig(),
                        this.nonSecAPIsvc.getLocations(),
                        this.nonSecAPIsvc.getActions()
             ])
             .subscribe(
-                ([activeGames, location, actions]) => {
-                    // console.log(socketData," socketData")
-                    this.locationList = location;
-                    this.actionList   = actions;
-                    this.activeGames  = activeGames;
 
-                    for (let game of this.activeGames){
-                        this.nonSecAPIsvc.getGameConfigsByID(game.gameConfigID).subscribe(
-                            data => {
-                                this.gameCardData.push({'description': data["description"],
-                                                        'startTime'  : game.startTime,
-                                                        'id'         : game.id,
-                                                        'mapID'      : data["mapID"],
-                                                        'devices'    : game.devices});
+                ([activeGamesByConfig, location, actions]) => {
 
-                                this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
-                            })
-                    }})
+                    this.locationList        = location;
+                    this.actionList          = actions;
+                    this.activeGamesByConfig = activeGamesByConfig;
+
+                    for (let config of this.activeGamesByConfig) {
+                        // This works well, for now, because each game config
+                        // can only have a single active game with that config
+                        // That's why we always shift() the first index
+                        let game = config.games.shift()
+                        this.gameCardData.push({'description': config.description,
+                                                'startTime'  : game.startTime,
+                                                'id'         : game.id,
+                                                'mapID'      : config.mapID,
+                                                'devices'    : game.devices});
+
+                        this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
+                    }
+            })
         // Socket Data routes
         // Single socket setup in app.component - these listen for different
         // socket events to update specific areas
@@ -100,10 +105,6 @@ export class MydevicesComponent implements OnInit {
 
 
     selectActiveGame(gameID) {
-        //need to reset teams info.
-        // this.teams = [];
-        let gameConfigID = this.findGameConfigIDForGame(gameID.target.value).gameConfigID;
-
         // Pull device data in from live devices - not config data
         combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID.target.value),
                        this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
@@ -274,11 +275,6 @@ export class MydevicesComponent implements OnInit {
         }
         // Purge all the stuff without a player name to show the stuff that matters
         this.allActions = this.allActions.filter(act => act.name);
-    }
-
-
-    findGameConfigIDForGame(gameID) {
-        return this.activeGames.find(ele => ele.id == gameID)
     }
 
 

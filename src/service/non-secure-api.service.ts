@@ -84,9 +84,14 @@ export class NonSecureAPIService {
     }
 
 
-    getActiveGames() {
-        return this.http.get(this.BASE + this.GAME + 'activeGames')
+    getActiveGamesByConfig() {
+        return this.http.get(this.BASE + this.NONS + 'activeGamesByConfig')
     }
+
+
+    // getActiveGames() {
+    //     return this.http.get(this.BASE + this.GAME + 'activeGames')
+    // }
 
 
     getPastGames() {
