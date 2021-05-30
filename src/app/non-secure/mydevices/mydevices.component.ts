@@ -142,15 +142,15 @@ export class MydevicesComponent implements OnInit {
 
         this.calcScoreAndSetActions();
     }
-    // This function grabs player and team stats from the initial load and parses
-    // them out for ease of display within the UI
-    //
-    // stats are grouped by player and team actions --- each action is parsed
-    // and scores tallied in order to have total scores for each player and
-    // give a list of running game actions.  The lastAction and lastLocation are
-    // specifically isolated to show in the UI
-    calcScoreAndSetActions() {
 
+    calcScoreAndSetActions() {
+        // This function grabs player and team stats from the initial load and parses
+        // them out for ease of display within the UI
+
+        // stats are grouped by player and team actions --- each action is parsed
+        // and scores tallied in order to have total scores for each player and
+        // give a list of running game actions.  The lastAction and lastLocation are
+        // specifically isolated to show in the UI
         this.allActions = [];
         this.teams      = [];
         this.players    = [];
