@@ -45,8 +45,8 @@ export class MydevicesComponent implements OnInit {
     ngOnInit() {
 
         combineLatest([this.nonSecAPIsvc.getActiveGamesByConfig(),
-                       this.nonSecAPIsvc.getLocations(),
-                       this.nonSecAPIsvc.getActions()
+                       this.nonSecAPIsvc.getLocationsList(),
+                       this.nonSecAPIsvc.getActionsList()
             ])
             .subscribe(
 

@@ -44,7 +44,7 @@ export class NonSecureAPIService {
     createUser(data){
 
         let route = this.BASE + this.RSRC
-        return this.http.post(route + 'createUser',data,this.options)
+        return this.http.post(route + 'createUser', data, this.options)
     }
 
 
@@ -110,7 +110,7 @@ export class NonSecureAPIService {
     }
 
 
-    getLocations(){
+    getLocationsList(){
         return this.http.get(this.BASE + this.RSRC + 'locations')
     }
 
@@ -123,7 +123,7 @@ export class NonSecureAPIService {
     }
 
 
-    getActions(){
+    getActionsList(){
         return this.http.get(this.BASE + this.RSRC + 'actions')
     }
 
