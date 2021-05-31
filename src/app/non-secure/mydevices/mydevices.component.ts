@@ -55,6 +55,7 @@ export class MydevicesComponent implements OnInit {
                     if(window.location.href.includes('gameid')){
                         const urlParams = new URLSearchParams(window.location.search); 
                         const gameid = urlParams.get('gameid') 
+                        //Need to check if game is active else we get console error. 
                         this.selectActiveGame({target:{value:gameid}})
                     }
                     this.locationList        = location;
