@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   playerSelected; //this is the selected player from list
   rfidToPair;
   playerList;
+  connectedRfids;
   deleteAccount = false;
   passResetPassed = false;
   passResetFailed = false;
@@ -129,7 +130,7 @@ export class ProfileComponent implements OnInit {
     this.userSvc.getUserData().subscribe(
 
       userData => {
-
+console.log(userData,"rfid data?")
         if (this.isField) {
 
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
@@ -139,7 +140,7 @@ export class ProfileComponent implements OnInit {
         }
 
         else if (this.isPlayer) {
-
+          this.connectedRfids = userData.rfids;
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
           this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';

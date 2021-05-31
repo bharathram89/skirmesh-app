@@ -199,13 +199,30 @@
 
             <div *ngIf="isPlayer" class="login-screen">
 
+              <h4>Currently Connected to Profile:</h4>
+              <table style="width:100%">
+                <tr>
+                  <th>Uid</th>
+                  <th>Creation Date</th>
+                  <th>Deactivation Date</th>
+                </tr>
+                <tr *ngFor="let rfid of connectedRfids">
+                  <td>{{rfid.uid}}</td>
+                  <td>{{rfid.creationDate}}</td>
+                  <td>{{rfid.deactivated}}</td>
+                </tr> 
+              </table>
+              <hr>
+              <h4>Connect a new wristband to Profile:</h4>
               <form [formGroup]="uidEntry" autocomplete="off" method="POST">
-
                 <div class="col-6">
-                  <h3 class="center-cust">
+                  <h5 class="center-cust">Instructions:</h5>
+                  <h7 class="center-cust">
                       <p>Look for the RFID on the reverse of your band.</p>
                       <p>Type it in exactly as shown on the band to associate the band to your profile. </p>
-                  </h3>
+                      <p>Click "Pair RfID to your account" and wait for success message. </p>
+                      <p>Hit refresh to see new id in list above. </p>
+                  </h7>
                   <div class="form-group">
                     <input formControlName="uid" class="form-control" placeholder="RFID">
                   </div>
