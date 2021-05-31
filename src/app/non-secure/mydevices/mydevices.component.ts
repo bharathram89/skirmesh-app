@@ -31,8 +31,8 @@ export class MydevicesComponent implements OnInit {
     gameStats;
 
     locationList;
-    actionList;
-
+    actionList; 
+    fbShareUrl='https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fplay.skirmesh.net%2Fnon-secure%2Flive-games%3Fgameid%3DgameidFromUrl&amp;src=sdkpreparse'
     description;
     currentTab = 'map'
 
@@ -51,7 +51,12 @@ export class MydevicesComponent implements OnInit {
             .subscribe(
 
                 ([activeGamesByConfig, location, actions]) => {
-
+                    // console.log(window.location.href,"url",window.location.search)
+                    if(window.location.href.includes('gameid')){
+                        const urlParams = new URLSearchParams(window.location.search); 
+                        const gameid = urlParams.get('gameid') 
+                        this.selectActiveGame({target:{value:gameid}})
+                    }
                     this.locationList        = location;
                     this.actionList          = actions;
                     this.activeGamesByConfig = activeGamesByConfig;
@@ -110,7 +115,7 @@ export class MydevicesComponent implements OnInit {
                        this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
 
                             ([extendedGameData, stats]) => {
-
+                                this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl',gameID.target.value)
                                 let configData = extendedGameData["configData"];
                                 let gameData   = extendedGameData["gameData"];
 
