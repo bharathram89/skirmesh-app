@@ -234,7 +234,7 @@ export class DashboardComponent implements OnInit {
 
         })
 
-        let xVal = "Game #" + (index + 1) // "Game #" + game.id //new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
+        let xVal = "Game #" + (index + 1) + " - " + new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
         stackedAreaData[0].series.push({"value":medics,   "name":xVal});
         stackedAreaData[1].series.push({"value":captures, "name":xVal});
@@ -302,7 +302,7 @@ export class DashboardComponent implements OnInit {
 
             for (let [index, game] of games.sort((a, b) => a.id - b.id).entries()) {
 
-                if (!game.gameActions.length || !game.endTime){
+                if (!game?.gameActions?.length || !game?.endTime){
                     continue
                 }
 
@@ -360,7 +360,7 @@ export class DashboardComponent implements OnInit {
 
                 })
 
-                let xVal = "Game #" + (index + 1) // "Game #" + game.id //new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
+                let xVal = "Game #" + (index + 1) + " - " + new Date(game.gameActions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
                 stackedAreaData[0].series.push({"value":medics,   "name":xVal});
                 stackedAreaData[1].series.push({"value":captures, "name":xVal});
