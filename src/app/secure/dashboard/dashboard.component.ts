@@ -302,7 +302,7 @@ export class DashboardComponent implements OnInit {
 
             for (let [index, game] of games.sort((a, b) => a.id - b.id).entries()) {
 
-                if (!game?.gameActions?.length || !game?.endTime){
+                if (!game?.gameActions?.length){
                     continue
                 }
 
