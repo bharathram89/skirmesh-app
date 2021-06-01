@@ -43,7 +43,7 @@ export class NonSecureAPIService {
 
     createUser(data){
 
-        let route = this.BASE + this.RSRC
+        let route = this.BASE + this.NONS
         return this.http.post(route + 'createUser', data, this.options)
     }
 
@@ -56,7 +56,7 @@ export class NonSecureAPIService {
 
     getImage(imageID) {
 
-        let route = this.BASE + this.RSRC + 'serve_image/' + imageID
+        let route = this.BASE + this.NONS + 'serve_image/' + imageID
         return this.http.get(route)
     }
 
@@ -65,14 +65,14 @@ export class NonSecureAPIService {
     // █░▀█ █▄▄█ █░▀░█ █▀▀ 　 ▀█▀ █░░█ █▀▀ █░░█ █▄▄▀ █░▀░█ █▄▄█ ░░█░░ ▀█▀ █░░█ █░░█
     // ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀ 　 ▀▀▀ ▀░░▀ ▀░░ ▀▀▀▀ ▀░▀▀ ▀░░░▀ ▀░░▀ ░░▀░░ ▀▀▀ ▀▀▀▀ ▀░░▀
 
-    getGameConfigsByID(gameConfigID){
-
-        let route = this.BASE + this.RSRC + this.GCFG
-
-        const options = { params  : new HttpParams().set("id", gameConfigID) }
-
-        return this.http.get(route, options)
-    }
+    // getGameConfigsByID(gameConfigID){
+    //
+    //     let route = this.BASE + this.RSRC + this.GCFG
+    //
+    //     const options = { params  : new HttpParams().set("id", gameConfigID) }
+    //
+    //     return this.http.get(route, options)
+    // }
 
 
     getExtendedGameData(gameID){
@@ -95,8 +95,8 @@ export class NonSecureAPIService {
     // }
 
 
-    getPastGames() {
-        return this.http.get(this.BASE + this.GAME + 'pastGames')
+    getPastGamesByConfig() {
+        return this.http.get(this.BASE + this.NONS + 'pastGamesByConfig')
     }
 
 
@@ -111,7 +111,7 @@ export class NonSecureAPIService {
 
 
     getLocationsList(){
-        return this.http.get(this.BASE + this.RSRC + 'locations')
+        return this.http.get(this.BASE + this.NONS + 'locations')
     }
 
 
@@ -119,12 +119,12 @@ export class NonSecureAPIService {
 
         const options = { params  : new HttpParams().set("id", mapID) }
 
-        return this.http.get(this.BASE + this.RSRC + 'map', options)
+        return this.http.get(this.BASE + this.NONS + 'map', options)
     }
 
 
     getActionsList(){
-        return this.http.get(this.BASE + this.RSRC + 'actions')
+        return this.http.get(this.BASE + this.NONS + 'actions')
     }
 
 
