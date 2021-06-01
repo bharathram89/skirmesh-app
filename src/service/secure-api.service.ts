@@ -36,7 +36,7 @@ export class SecureAPIService {
 
   modifyNodeConfig(token, data) {
 
-      let route = this.BASE + this.RSRC + this.DEVC;
+      let route = this.BASE + this.RSRC + 'device';
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
