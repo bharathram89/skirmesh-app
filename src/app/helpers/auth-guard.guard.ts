@@ -17,30 +17,35 @@ export class AuthGuardGuard implements CanActivate {
     private secAPIsvc    : SecureAPIService,
     private router       : Router
   ){}
+
   canActivate(
+
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       //if session storage has valid key return true else false
       let token = this.tokenStorage.getToken();
-      if(token){
+
+      if (token) {
+
         return this.secAPIsvc.getUser(token).pipe(
+
           map(userdata=>{
-          console.log(userdata,"userdata")
-          if(userdata){
-            this.userSvc.setSignIn(true);
-            this.userSvc.setUserData(userdata);
-            return true;
-          }
+
+              if(userdata){
+                this.userSvc.setSignIn(true);
+                this.userSvc.setUserData(userdata);
+                return true;
+              }
         },
+
         err=>{
           console.log(err,"error in AUTH GUARD")
           return false;
         }))
-      }else{
+
+      } else {
         return false;
       }
   }
-
-
 
 }
