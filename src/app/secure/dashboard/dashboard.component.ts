@@ -177,9 +177,9 @@ export class DashboardComponent implements OnInit {
                            {"name"  :"Bombs Diffused",
                             "series":[]}];
 
-    games = games.sort((a,b) => b.id - a.id);
+    games = games.sort((a,b) => a.id - b.id);
 
-    for (let game of games) {
+    for (let [index, game] of games.entries()) {
 
         let medics   = 0;
         let captures = 0;
@@ -187,7 +187,7 @@ export class DashboardComponent implements OnInit {
         let bombArm  = 0;
         let bombDis  = 0;
 
-        for (let action of game.actions.sort((a,b) => b.id - a.id)) {
+        for (let action of game.actions) {
 
           let points = this.actionList.find(ele => ele.id == action.actionID).points;
 
@@ -234,13 +234,13 @@ export class DashboardComponent implements OnInit {
 
         })
 
-        let areaTime = "Game #" + game.id //new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
+        let xVal = "Game #" + (index + 1) // "Game #" + game.id //new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
 
-        stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
-        stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
-        stackedAreaData[2].series.unshift({"value":assists,  "name":areaTime});
-        stackedAreaData[3].series.unshift({"value":bombArm,  "name":areaTime});
-        stackedAreaData[4].series.unshift({"value":bombDis,  "name":areaTime});
+        stackedAreaData[0].series.push({"value":medics,   "name":xVal});
+        stackedAreaData[1].series.push({"value":captures, "name":xVal});
+        stackedAreaData[2].series.push({"value":assists,  "name":xVal});
+        stackedAreaData[3].series.push({"value":bombArm,  "name":xVal});
+        stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
 
     }
     this.pieData = [{name:"Medics",         value:this.totalMedics},
@@ -300,7 +300,7 @@ export class DashboardComponent implements OnInit {
                                    {"name"  :"Bombs Diffused",
                                     "series":[]}];
 
-            for (let game of games.sort((a, b) => b.id - a.id)) {
+            for (let [index, game] of games.sort((a, b) => a.id - b.id).entries()) {
 
                 if (!game.gameActions.length || !game.endTime){
                     continue
@@ -360,13 +360,13 @@ export class DashboardComponent implements OnInit {
 
                 })
 
-                let areaTime = "Game #" + game.id //new Date(game.endTime);
+                let xVal = "Game #" + (index + 1) // "Game #" + game.id //new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
 
-                stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
-                stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
-                stackedAreaData[2].series.unshift({"value":assists,  "name":areaTime});
-                stackedAreaData[3].series.unshift({"value":bombArm,  "name":areaTime});
-                stackedAreaData[4].series.unshift({"value":bombDis,  "name":areaTime});
+                stackedAreaData[0].series.push({"value":medics,   "name":xVal});
+                stackedAreaData[1].series.push({"value":captures, "name":xVal});
+                stackedAreaData[2].series.push({"value":assists,  "name":xVal});
+                stackedAreaData[3].series.push({"value":bombArm,  "name":xVal});
+                stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
             }
 
 
