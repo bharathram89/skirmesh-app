@@ -194,27 +194,27 @@ export class DashboardComponent implements OnInit {
           switch (action.actionID) {
 
             case MEDIC:
-              medics += points;
+              medics ++ // += points;
               this.totalMedics += points;
               break;
 
             case CAPTURE:
-              captures += points;
+              captures ++ // += points;
               this.totalCaptures += points;
               break;
 
             case ASSIST:
-              assists += points;
+              assists ++ // += points;
               this.totalAssists += points;
               break;
 
             case BOMB_ARM:
-              bombArm += points;
+              bombArm ++ // += points;
               this.totalBombArm += points;
               break;
 
             case BOMB_DIF:
-              bombDis += points;
+              bombDis ++ // += points;
               this.totalBombDis += points;
               break;
           }
@@ -234,7 +234,7 @@ export class DashboardComponent implements OnInit {
 
         })
 
-        let areaTime = new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
+        let areaTime = "Game #" + game.id //new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate)
 
         stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
         stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
@@ -252,18 +252,23 @@ export class DashboardComponent implements OnInit {
     this.areaData = stackedAreaData;
   }
 
+  formatXAxis(event) {
 
-    printTimeFromTotalMilli(milli) {
+    return Math.round(event)
 
-        let tot_secs = milli/1000;
+  }
 
-        let hrs = Math.floor(tot_secs / 3600);
-        tot_secs %= 3600;
-        let mins = Math.floor(tot_secs / 60);
-        let secs = tot_secs % 60;
+  printTimeFromTotalMilli(milli) {
 
-        return [hrs,mins,secs]
-    }
+    let tot_secs = milli/1000;
+
+    let hrs = Math.floor(tot_secs / 3600);
+    tot_secs %= 3600;
+    let mins = Math.floor(tot_secs / 60);
+    let secs = tot_secs % 60;
+
+    return [hrs,mins,secs]
+  }
 
   setGameHistStats(userData) {
 
@@ -355,7 +360,7 @@ export class DashboardComponent implements OnInit {
 
                 })
 
-                let areaTime = new Date(game.endTime);
+                let areaTime = "Game #" + game.id //new Date(game.endTime);
 
                 stackedAreaData[0].series.unshift({"value":medics,   "name":areaTime});
                 stackedAreaData[1].series.unshift({"value":captures, "name":areaTime});
@@ -372,6 +377,7 @@ export class DashboardComponent implements OnInit {
                             {name:"Bombs Diffused",value:this.totalBombDis}];
 
             this.areaData = stackedAreaData;
+
         }
     )
 
