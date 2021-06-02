@@ -96,7 +96,7 @@ export class SecureAPIService {
 
   deleteTeam(token, teamID) {
 
-      let route = this.BASE + this.RSRC + this.TEAM
+      let route = this.BASE + this.SEC + this.TEAM
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
