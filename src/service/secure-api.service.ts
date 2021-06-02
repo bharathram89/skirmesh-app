@@ -152,7 +152,7 @@ export class SecureAPIService {
 
   saveImage(token, data) {
 
-      let route = this.BASE + this.RSRC + this.IMAG;
+      let route = this.BASE + this.SEC + this.IMAG;
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
