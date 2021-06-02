@@ -110,7 +110,7 @@ export class DeviceListComponent implements OnInit {
 
         if (this.mode == 'active') {
             //update the database here
-            this.secAPIsvc.modifyNodeConfig(this.tokenSvc.getToken(), device).subscribe(
+            this.secAPIsvc.modifyDevice(this.tokenSvc.getToken(), device).subscribe(
                 data => {}
             );
         }

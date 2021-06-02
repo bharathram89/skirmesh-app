@@ -15,9 +15,10 @@ export class SecureAPIService {
 
   // setup source routes
   RSRC = 'resources/'
+  GMPL = 'gameplay/'
 
   // setup subroutes
-  DEVC = 'devices'
+  DEVC = 'device'
   USER = 'user'
   FPRO = 'fieldProfile'
   PPRO = 'playerProfile'
@@ -34,9 +35,9 @@ export class SecureAPIService {
   // █▀▀ █░░█ ▀█▀ ░░█░░ 　 █░▀█ █▄▄█ █░▀░█ █▀▀
   // ▀▀▀ ▀▀▀░ ▀▀▀ ░░▀░░ 　 ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀
 
-  modifyNodeConfig(token, data) {
+  modifyDevice(token, data) {
 
-      let route = this.BASE + this.RSRC + 'device';
+      let route = this.BASE + this.GMPL + this.DEVC;
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
