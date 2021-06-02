@@ -15,6 +15,7 @@ export class SecureAPIService {
 
   // setup source routes
   RSRC = 'resources/'
+  SEC  = 'secure/'
   GMPL = 'gameplay/'
 
   // setup subroutes
@@ -31,9 +32,10 @@ export class SecureAPIService {
       private http: HttpClient
   ) {}
 
-  // █▀▀ █▀▀▄ ░▀░ ▀▀█▀▀ 　 █▀▀▀ █▀▀█ █▀▄▀█ █▀▀
-  // █▀▀ █░░█ ▀█▀ ░░█░░ 　 █░▀█ █▄▄█ █░▀░█ █▀▀
-  // ▀▀▀ ▀▀▀░ ▀▀▀ ░░▀░░ 　 ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀
+
+  // █▀▀▀ █▀▀█ █▀▄▀█ █▀▀ █▀▀█ █░░ █▀▀█ █░░█
+  // █░▀█ █▄▄█ █░▀░█ █▀▀ █░░█ █░░ █▄▄█ █▄▄█
+  // ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ▄▄▄█
 
   modifyDevice(token, data) {
 
@@ -45,9 +47,25 @@ export class SecureAPIService {
       return this.http.put(route, data, options);
   }
 
+
+  // █▀▀ █▀▀▄ ░▀░ ▀▀█▀▀ 　 █▀▀▀ █▀▀█ █▀▄▀█ █▀▀
+  // █▀▀ █░░█ ▀█▀ ░░█░░ 　 █░▀█ █▄▄█ █░▀░█ █▀▀
+  // ▀▀▀ ▀▀▀░ ▀▀▀ ░░▀░░ 　 ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀
+
+  getGameConfigs(token, fieldProfileID) {
+
+      let route = this.BASE + this.SEC + this.GCFG
+
+      const options = { params  : new HttpParams()
+                                      .set("token", token)
+                                      .set("fieldProfileID", fieldProfileID) }
+
+      return this.http.get(route, options)
+  }
+
   saveGameConfigs(token, data) {
 
-      let route = this.BASE + this.RSRC + this.GCFG
+      let route = this.BASE + this.SEC + this.GCFG
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
@@ -57,12 +75,23 @@ export class SecureAPIService {
 
   modifyGameConfig(token, data) {
 
-      let route = this.BASE + this.RSRC + this.GCFG
+      let route = this.BASE + this.SEC + this.GCFG
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
 
       return this.http.put(route, data, options)
+  }
+
+  deleteGameConfig(token, gameConfigID) {
+
+      let route = this.BASE + this.SEC + this.GCFG
+
+      const options = { params  : new HttpParams()
+                                      .set("token", token)
+                                      .set("id", gameConfigID) }
+
+      return this.http.delete(route, options)
   }
 
   deleteTeam(token, teamID) {
@@ -72,29 +101,6 @@ export class SecureAPIService {
       const options = { params  : new HttpParams()
                                       .set("token", token)
                                       .set("id", teamID) }
-
-      return this.http.delete(route, options)
-  }
-
-  getGameConfigs(token, fieldProfileID) {
-
-      let route = this.BASE + this.RSRC + this.GCFG
-
-      const options = { params  : new HttpParams()
-                                      .set("token", token)
-                                      .set("fieldProfileID", fieldProfileID) }
-
-      return this.http.get(route, options)
-  }
-
-
-  deleteGameConfig(token, gameConfigID) {
-
-      let route = this.BASE + this.RSRC + this.GCFG
-
-      const options = { params  : new HttpParams()
-                                      .set("token", token)
-                                      .set("id", gameConfigID) }
 
       return this.http.delete(route, options)
   }
