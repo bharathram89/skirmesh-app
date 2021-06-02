@@ -217,22 +217,24 @@ export class SecureAPIService {
 
   startGame(token, gameConfigID){
 
-      let data = {"gameConfigID":gameConfigID}
+      let data  = {"gameConfigID":gameConfigID}
+      let route = this.BASE + this.SEC
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
 
-      return this.http.post(this.BASE + 'games/startGame', data, options)
+      return this.http.post(route + 'startGame', data, options)
   }
 
   endGame(token, gameID){
 
-      let data = {"id":gameID}
+      let data  = {"id":gameID}
+      let route = this.BASE + this.SEC
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
 
-      return this.http.put(this.BASE + 'games/endGame', data, options)
+      return this.http.put(route + 'endGame', data, options)
   }
 
 
