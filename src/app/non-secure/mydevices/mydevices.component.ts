@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -29,7 +29,8 @@ export class MydevicesComponent implements OnInit {
     gameConfigs   = [];
     gameCardData  = [];
     gameStats;
-
+    newAction;
+    playerUpdate;
     locationList;
     actionList; 
     fbShareUrl='https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fplay.skirmesh.net%2Fnon-secure%2Flive-games%3Fgameid%3DgameidFromUrl&amp;src=sdkpreparse'
@@ -80,7 +81,7 @@ export class MydevicesComponent implements OnInit {
         // Socket Data routes
         // Single socket setup in app.component - these listen for different
         // socket events to update specific areas
-        this.gameSvc.getNewAction().subscribe(socketData=>{
+        this.newAction = this.gameSvc.getNewAction().subscribe(socketData=>{
             console.log(socketData," New Action");
 
             if(this.activeGame){
@@ -88,7 +89,7 @@ export class MydevicesComponent implements OnInit {
             }
         })
 
-        this.gameSvc.getPlayerUpdate().subscribe(socketData=>{
+        this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(socketData=>{
             console.log(socketData," Player Update");
 
             if(this.activeGame){
@@ -96,6 +97,13 @@ export class MydevicesComponent implements OnInit {
             }
         })
 
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.playerUpdate.unsubscribe()
+        this.newAction.unsubscribe()
     }
 
 
