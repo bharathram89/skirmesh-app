@@ -20,37 +20,38 @@
 							<div class="form-group input-group">
 								<input  id="callSign" formControlName="callSign" type="text" class="form-control"
 									placeholder="Callsign">
-								<div *ngIf="callSign.invalid && (callSign.dirty || callSign.touched) "
+								
+							</div>
+							<div *ngIf="callSign.invalid && (callSign.dirty || callSign.touched) "
 									class="alert alert-danger ">
 									<div *ngIf="callSign.errors?.required ">
 										Callsign is required
 									</div>
 								</div>
-							</div>
 							<div  class="form-group input-group ">
 								<input  id="fieldName" style="display: none;" formControlName="fieldName" type="text"
 									class="form-control" placeholder="Field Name">
-								<div *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) "
+							</div>
+							<div *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) "
 									class="alert alert-danger ">
 									<div *ngIf="fieldName.errors?.required ">
 										Field Name is required
 									</div>
 								</div>
-							</div>
 							<div class="form-group input-group">
 								<input formControlName="password" type="password" class="form-control"
 									placeholder="Password">
-								<div *ngIf="password.invalid && (password.dirty || password.touched) "
-									class="alert alert-danger ">
-									<div *ngIf="password.errors?.required ">
-										Password is required
-									</div>
-									<div *ngIf="password.errors?.minlength ">
-										Password needs to be min of 6 characters
-									</div>
-								</div>
+								
 							</div>
-
+							<div *ngIf="password.invalid && (password.dirty || password.touched) "
+							class="alert alert-danger ">
+							<div *ngIf="password.errors?.required ">
+								Password is required
+							</div>
+							<div *ngIf="password.errors?.minlength ">
+								Password needs to be min of 6 characters
+							</div>
+						</div>
 							<div class="row">
 								<div class="col-6">
 									<button (click)="onSubmit()" type="button"
