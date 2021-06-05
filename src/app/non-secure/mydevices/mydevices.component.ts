@@ -52,12 +52,7 @@ export class MydevicesComponent implements OnInit {
 
                 ([activeGamesByConfig, location, actions]) => {
                     // console.log(window.location.href,"url",window.location.search)
-                    if(window.location.href.includes('gameid')){
-                        const urlParams = new URLSearchParams(window.location.search); 
-                        const gameid = urlParams.get('gameid') 
-                        //Need to check if game is active else we get console error. 
-                        this.selectActiveGame({target:{value:gameid}})
-                    }
+                    
                     this.locationList        = location;
                     this.actionList          = actions;
                     this.activeGamesByConfig = activeGamesByConfig;
@@ -74,6 +69,12 @@ export class MydevicesComponent implements OnInit {
                                                 'devices'    : game.devices});
 
                         this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
+                    }
+                    if(window.location.href.includes('gameid')){
+                        const urlParams = new URLSearchParams(window.location.search); 
+                        const gameid = urlParams.get('gameid') 
+                        //Need to check if game is active else we get console error. 
+                        this.selectActiveGame({target:{value:gameid}})
                     }
             })
         // Socket Data routes
@@ -126,7 +127,7 @@ export class MydevicesComponent implements OnInit {
                                 this.description = configData.description;
                                 this.gameStats   = stats;
                                 this.gameConfig  = configData;
-
+                                console.log("stats",stats,"extended",extendedGameData)
                                 this.calcScoreAndSetActions();
                             })
     }
@@ -289,11 +290,11 @@ export class MydevicesComponent implements OnInit {
         let device = this.devices.find(ele => ele.id == deviceID)
 
         let location;
-        if(device.location) {
+        if(device && device.location) {
 
             location = this.locationList.find(ele => ele.id == device.location);
         }
-        return location && location.name ? location.name : 'Interacted with an Objective'
+        return location && location.name ? location.name : ' '
     }
 
     //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
