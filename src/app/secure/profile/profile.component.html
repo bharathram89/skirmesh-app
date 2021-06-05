@@ -206,7 +206,7 @@
                   <th>Creation Date</th>
                   <th>Deactivation Date</th>
                 </tr>
-                <tr *ngFor="let rfid of connectedRfids">
+                <tr *ngFor="let rfid of connectedRfids ">
                   <td>{{rfid.uid}}</td>
                   <td>{{rfid.creationDate}}</td>
                   <td>{{rfid.deactivated}}</td>
@@ -272,7 +272,7 @@
               </form>
 
               <button [disabled]="uidEntry.invalid"  type="submit" (click)="onSubmitPairRfid()"
-                class="btn btn-primary cust_skir_signup"> Pair RFID to your account</button>
+                class="btn btn-primary cust_skir_signup"> Connect</button>
                 <div *ngIf="rfidConnected" class="alert alert-primary" role="alert">
                    Wristband registered to your profile
                 </div>

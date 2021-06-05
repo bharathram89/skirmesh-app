@@ -213,6 +213,7 @@ console.log(userData,"rfid data?")
 
       this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
           resp =>{
+           
              this.rfidConnected = true;
              this.rfidToPair = null;
             },
@@ -369,7 +370,10 @@ console.log(userData,"rfid data?")
       let data = {uid:uid.toLowerCase(), userID:userID};
 
       this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
-          resp =>{},
+          resp =>{
+            this.connectedRfids = resp;
+            console.log(resp,"response")
+          },
           err =>{}
       )
   }
