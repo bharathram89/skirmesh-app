@@ -13,6 +13,10 @@ export class AppComponent {
 
   ngOnInit() {
     this.metaService.addTag( { name:'google-site-verification',content:"Eau3tLmNdfqfQ9_oxjjmGa6QDfnPqRqQNppovPKIqNo"});
+    if (!location.host.includes('localhost') && location.protocol !== 'https:') {
+      location.replace(`https:${location.href.substring(location.protocol.length)}`);
+  }
+  // console.log(location,"location")
   }
 
 
