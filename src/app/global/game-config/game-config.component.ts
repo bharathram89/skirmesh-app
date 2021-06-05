@@ -123,7 +123,9 @@ export class GameConfigComponent implements OnInit {
                 teams          : dataModel.teams
             }
             // dataModel.map = this.userSvc.findMapID(dataModel.map)
-            dataModel.id  = Math.round(Math.random() * 100); // WHAT IS THIS FOR?
+            let maxModelId =   Math.max.apply(Math, this.gameModes.map(function(o) { return o.id; })) 
+
+            dataModel.id  = maxModelId + 1; // WHAT IS THIS FOR?
 
             this.gameModes.push(dataModel);
             this.secAPIsvc.saveGameConfigs(this.userSvc.getToken(), apiData).subscribe(data => {
