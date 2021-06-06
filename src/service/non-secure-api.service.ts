@@ -15,22 +15,13 @@ export class NonSecureAPIService {
 
 
     BASE = 'https://api.skirmesh.net/'
+    // BASE = 'http://lvh.me:5000/'
 
     // setup source routes
     NONS = 'nonSecure/'
-    RSRC = 'resources/'
-    GAME = 'games/'
     STAT = 'statistics/'
     LOGN = 'login'
 
-    // setup subroutes
-    DEVC = 'devices'
-    USER = 'user'
-    FPRO = 'fieldProfile'
-    PPRO = 'playerProfile'
-    IMAG = 'image'
-    GCFG = 'gameConfig'
-    TEAM = 'team'
 
     constructor(
         private http: HttpClient
@@ -65,16 +56,6 @@ export class NonSecureAPIService {
     // █░▀█ █▄▄█ █░▀░█ █▀▀ 　 ▀█▀ █░░█ █▀▀ █░░█ █▄▄▀ █░▀░█ █▄▄█ ░░█░░ ▀█▀ █░░█ █░░█
     // ▀▀▀▀ ▀░░▀ ▀░░░▀ ▀▀▀ 　 ▀▀▀ ▀░░▀ ▀░░ ▀▀▀▀ ▀░▀▀ ▀░░░▀ ▀░░▀ ░░▀░░ ▀▀▀ ▀▀▀▀ ▀░░▀
 
-    // getGameConfigsByID(gameConfigID){
-    //
-    //     let route = this.BASE + this.RSRC + this.GCFG
-    //
-    //     const options = { params  : new HttpParams().set("id", gameConfigID) }
-    //
-    //     return this.http.get(route, options)
-    // }
-
-
     getExtendedGameData(gameID){
 
         let route = this.BASE + this.NONS
@@ -88,11 +69,6 @@ export class NonSecureAPIService {
     getActiveGamesByConfig() {
         return this.http.get(this.BASE + this.NONS + 'activeGamesByConfig')
     }
-
-
-    // getActiveGames() {
-    //     return this.http.get(this.BASE + this.GAME + 'activeGames')
-    // }
 
 
     getPastGamesByConfig() {
@@ -126,14 +102,5 @@ export class NonSecureAPIService {
     getActionsList(){
         return this.http.get(this.BASE + this.NONS + 'actions')
     }
-
-
-    // getDevicesByGameID(gameID){
-    //
-    //     const options = { params  : new HttpParams().set("gameID", gameID) }
-    //
-    //     return this.http.get(this.BASE + this.RSRC + this.DEVC, options)
-    // }
-
 
 }

@@ -12,6 +12,7 @@ export class SecureAPIService {
 
 
   BASE = 'https://api.skirmesh.net/'
+  // BASE = 'http://lvh.me:5000/'
 
   // setup source routes
   RSRC = 'resources/'
@@ -126,7 +127,7 @@ export class SecureAPIService {
       let player = data.player;
       let field  = data.field;
 
-      let route = this.BASE + this.RSRC;
+      let route = this.BASE + this.RSRC + this.USER;
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
@@ -147,7 +148,7 @@ export class SecureAPIService {
           )
       }
 
-      return this.http.put(route + this.USER, user, options);
+      return this.http.put(route, user, options);
   }
 
   saveImage(token, data) {
