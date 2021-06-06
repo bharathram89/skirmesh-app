@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit {
     this.userSvc.getUserData().subscribe(
 
       userData => {
-console.log(userData,"rfid data?")
+          
         if (this.isField) {
 
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
@@ -201,7 +201,7 @@ console.log(userData,"rfid data?")
 
   checkRfidToPair() {
 
-      this.secAPIsvc.getFieldProfileFromAPI(this.userSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
+      this.secAPIsvc.getMinimalFieldProfileFromAPI(this.userSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
           data => this.rfidToPair = data["pair_uid"]
       )
   }
@@ -213,7 +213,7 @@ console.log(userData,"rfid data?")
 
       this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
           resp =>{
-           
+
              this.rfidConnected = true;
              this.rfidToPair = null;
             },

@@ -133,7 +133,7 @@ export class SecureAPIService {
 
       if (Object.keys(field).length) {
 
-          this.http.put(route + this.FPRO, field, options).subscribe(
+          this.updateFieldProfile(token, field).subscribe(
               resp => {},
               err => {}
           )
@@ -141,7 +141,7 @@ export class SecureAPIService {
 
       else if (Object.keys(player).length) {
 
-          this.http.put(route + this.PPRO, player, options).subscribe(
+          this.updatePlayerProfile(token, player).subscribe(
               resp => {},
               err => {}
           )
@@ -189,7 +189,7 @@ export class SecureAPIService {
 
   getGamesByFieldProfile(token, fieldProfileID) {
 
-      let route = this.BASE + this.RSRC;
+      let route = this.BASE + this.SEC;
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
@@ -200,19 +200,23 @@ export class SecureAPIService {
 
   getActiveGamesByFieldProfile(token, fieldProfileID) {
 
+      let route = this.BASE + this.SEC;
+
       const options = { params  : new HttpParams()
                                       .set("token", token)
                                       .set("fieldProfileID", fieldProfileID)}
 
-      return this.http.get(this.BASE + 'games/activeGamesBy', options)
+      return this.http.get(route + 'activeGamesBy', options)
   }
 
   pauseGame(token, data) {
 
+      let route = this.BASE + this.GMPL;
+
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
 
-      return this.http.put(this.BASE + 'gameplay/pauseGame', data, options)
+      return this.http.put(route + 'pauseGame', data, options)
   }
 
   startGame(token, gameConfigID){
@@ -242,9 +246,9 @@ export class SecureAPIService {
   // █▀▀ ▀█▀ █▀▀ █░░ █░░█ 　 █▄▄█ █░░█ █░▀░█ ▀█▀ █░░█
   // ▀░░ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀░ 　 ▀░░▀ ▀▀▀░ ▀░░░▀ ▀▀▀ ▀░░▀
 
-  getFieldProfileFromAPI(token, fieldProfileID) {
+  getMinimalFieldProfileFromAPI(token, fieldProfileID) {
 
-      let route = this.BASE + this.RSRC + this.FPRO;
+      let route = this.BASE + this.SEC + this.FPRO;
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
@@ -255,7 +259,7 @@ export class SecureAPIService {
 
   getUserListFromAPI(token) {
 
-      let route = this.BASE + this.RSRC;
+      let route = this.BASE + this.SEC;
 
       const options = { params  : new HttpParams().set("token", token)}
 
@@ -264,7 +268,7 @@ export class SecureAPIService {
 
   pairUid(token, data) {
 
-      let route = this.BASE + this.RSRC;
+      let route = this.BASE + this.SEC;
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
@@ -274,7 +278,17 @@ export class SecureAPIService {
 
   updateFieldProfile(token, data) {
       // Requires fieldPofileID as id in data
-      let route = this.BASE + this.RSRC + this.FPRO;
+      let route = this.BASE + this.SEC + this.FPRO;
+
+      const options = { params  : new HttpParams().set("token", token),
+                        headers : this.headers }
+
+      return this.http.put(route, data, options)
+  }
+
+  updatePlayerProfile(token, data) {
+      // Requires fieldPofileID as id in data
+      let route = this.BASE + this.SEC + this.PPRO;
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
