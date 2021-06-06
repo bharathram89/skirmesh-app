@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
+import { NgxFeedbackModule } from 'ngx-feedback';
 const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
 
 @NgModule({
@@ -27,6 +28,7 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
     GlobalModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxFeedbackModule,
     SocketIoModule.forRoot(config)
   ],
   providers: [
