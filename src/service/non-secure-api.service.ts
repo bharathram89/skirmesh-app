@@ -103,4 +103,11 @@ export class NonSecureAPIService {
         return this.http.get(this.BASE + this.NONS + 'actions')
     }
 
+
+    sendFeedback(data){
+
+        let route = this.BASE
+        return this.http.put(route + 'feedback', data, this.options)
+    }
+
 }

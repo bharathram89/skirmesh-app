@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { NgxFeedbackService, FeedbackData } from 'ngx-feedback';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 
 @Component({
   selector: 'app-root',
@@ -9,17 +10,29 @@ import { NgxFeedbackService, FeedbackData } from 'ngx-feedback';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'skirmesh-ui';
-  constructor(private metaService: Meta, private readonly feedbackService: NgxFeedbackService) { }
+
+  constructor(
+      private metaService: Meta,
+      private readonly feedbackService: NgxFeedbackService,
+      private nonSecAPIsvc : NonSecureAPIService) { }
 
   ngOnInit() {
-    this.metaService.addTag({ name: 'google-site-verification', content: "Eau3tLmNdfqfQ9_oxjjmGa6QDfnPqRqQNppovPKIqNo" });
+
+    this.metaService.addTag({ name: 'google-site-verification',
+                              content: "Eau3tLmNdfqfQ9_oxjjmGa6QDfnPqRqQNppovPKIqNo" });
+
     if (!location.host.includes('localhost') && location.protocol !== 'https:') {
-      location.replace(`https:${location.href.substring(location.protocol.length)}`);
+        location.replace(`https:${location.href.substring(location.protocol.length)}`);
     }
+
     this.feedbackService.listenForFeedbacks().subscribe((data: FeedbackData) => {
       // Use the data coming from the feedback here
-      console.log(data, 'feedbackdata')
+        this.nonSecAPIsvc.sendFeedback(data).subscribe(
+            resp => {},
+            err  => {}
+        )
     });
     // console.log(location,"location")
   }
