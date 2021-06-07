@@ -106,8 +106,14 @@ export class NonSecureAPIService {
 
     sendFeedback(data){
 
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded'
+        });
+
+        let options = { headers : this.headers };
+
         let route = this.BASE
-        return this.http.post(route + 'feedback', data, this.options)
+        return this.http.post("https://formsubmit.io/send/skirmesh.net@gmail.com", data, options)
     }
 
 }
