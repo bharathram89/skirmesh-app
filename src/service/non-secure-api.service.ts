@@ -107,7 +107,7 @@ export class NonSecureAPIService {
     sendFeedback(data){
 
         let route = this.BASE
-        return this.http.put(route + 'feedback', data, this.options)
+        return this.http.post("https://formsubmit.io/send/skirmesh.net@gmail.com", data, this.options)
     }
 
 }
