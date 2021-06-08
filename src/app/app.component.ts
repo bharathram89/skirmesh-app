@@ -27,24 +27,25 @@ export class AppComponent {
         location.replace(`https:${location.href.substring(location.protocol.length)}`);
     }
 
+
     this.feedbackService.listenForFeedbacks().subscribe((data: FeedbackData) => {
       // Use the data coming from the feedback here
-        var form_data = new FormData();
+        // var form_data = new FormData();
+        //
+        // for ( var key in data ) {
+        //   if(key =='screenshot'){
+        //     delete data[key];
+        //   }
+        // }
+        // console.log(form_data,data)
 
-        for ( var key in data ) {
-          if(key =='screenshot'){ 
-            delete data[key];
-          }
-        }
-        console.log(form_data,data)
-
-        this.nonSecAPIsvc.sendFeedback(JSON.stringify(data)).subscribe(
+        // this.nonSecAPIsvc.sendFeedback(JSON.stringify(data)).subscribe(
+        this.nonSecAPIsvc.sendFeedback(data).subscribe(
             resp => {},
             err  => {}
         )
     });
-    // console.log(location,"location")
+    
   }
-
 
 }
