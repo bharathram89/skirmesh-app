@@ -28,7 +28,7 @@ export class DeviceListComponent implements OnInit {
     tokenSvc : TokenStorageService;
 
     @Input() config;
-    @Output() nodeConfigs = new EventEmitter<string>();
+    @Output() nodeConfigs = new EventEmitter<any>();
 
     mode  : String;
     mapid : String;
@@ -108,6 +108,10 @@ export class DeviceListComponent implements OnInit {
 
     saveNodeConfigs(device) {
 
+        // Emit to Parent (Start Game) to modify device with
+        // gameID as necessary
+        this.nodeConfigs.emit(device)
+
         if (this.mode == 'active') {
             //update the database here
             this.secAPIsvc.modifyDevice(this.tokenSvc.getToken(), device).subscribe(
@@ -115,9 +119,6 @@ export class DeviceListComponent implements OnInit {
             );
         }
         else {}
-
-        this.nodeConfigs.emit(JSON.stringify(device))
-
     }
 
     locationSelected(event, device) {

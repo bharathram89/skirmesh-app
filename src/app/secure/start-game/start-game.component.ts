@@ -45,7 +45,6 @@ export class StartGameComponent implements OnInit {
     // adminNodesList;
     teams               = [];
     mapID;
-    gameID              = null;
     gameData            = null;
 
     constructor(
@@ -136,7 +135,19 @@ export class StartGameComponent implements OnInit {
     }
 
 
-    nodeConfigs(event){
+    // Device is passed in from device-list.component
+    // I use this method to check for active game and assign
+    // a gameID to the device - this will allow an "inactive"
+    // device to become "active"
+    nodeConfigs(device){
+
+      console.log(this.gameInProgress, this.gameData.id)
+      if (this.gameInProgress && this.gameData.id) {
+
+        device.gameID = this.gameData.id
+        console.log(device)
+
+      }
     }
 
 

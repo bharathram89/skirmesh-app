@@ -135,7 +135,7 @@ export class MydevicesComponent implements OnInit {
                                 this.description = configData.description;
                                 this.gameStats   = stats;
                                 this.gameConfig  = configData;
-                                console.log("stats",stats,"extended",extendedGameData)
+
                                 this.calcScoreAndSetActions();
                             })
     }
