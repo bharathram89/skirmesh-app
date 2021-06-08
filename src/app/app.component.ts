@@ -29,7 +29,16 @@ export class AppComponent {
 
     this.feedbackService.listenForFeedbacks().subscribe((data: FeedbackData) => {
       // Use the data coming from the feedback here
-        this.nonSecAPIsvc.sendFeedback(data).subscribe(
+        var form_data = new FormData();
+
+        for ( var key in data ) {
+          if(key =='screenshot'){ 
+            delete data[key];
+          }
+        }
+        console.log(form_data,data)
+
+        this.nonSecAPIsvc.sendFeedback(JSON.stringify(data)).subscribe(
             resp => {},
             err  => {}
         )

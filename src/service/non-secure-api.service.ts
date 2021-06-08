@@ -106,14 +106,17 @@ export class NonSecureAPIService {
 
     sendFeedback(data){
 
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded'
-        });
-
-        let options = { headers : this.headers };
+        // let headers = new HttpHeaders({
+        //     'Content-Type': 'application/x-www-form-urlencoded'
+        // });
+        let msg =  {
+            name: "FormSubmit",
+            message: data
+        }
+        let options = { headers :this.headers};
 
         let route = this.BASE
-        return this.http.post("https://formsubmit.io/send/106e9d48-2f5c-44a3-8c4d-fc6391c56d20", data, options)
+        return this.http.post("https://formsubmit.co/ajax/skirmesh.net@gmail.com", msg,options)
     }
 
 }
