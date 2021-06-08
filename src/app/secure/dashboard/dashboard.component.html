@@ -41,30 +41,36 @@
 
                 <h2 class="center-cust">Combined Game Stats</h2>
 
-
-            <ngx-charts-advanced-pie-chart [scheme]="colorScheme" [results]="pieData"
-              (select)="onSelect($event)" (activate)="onActivate($event)"
-              (deactivate)="onDeactivate($event)">
-            </ngx-charts-advanced-pie-chart>
-
+                <!-- <div style="max-height: 50vh; max-width: 98vh"> -->
+                  <!-- <div style="max-height: 500px; max-width: 500px;"> -->
+                  <ngx-charts-advanced-pie-chart 
+                    [scheme]="colorScheme" 
+                    [results]="pieData"
+                    (select)="onSelect($event)" 
+                    (activate)="onActivate($event)"
+                    [view]="chartView"
+                    (deactivate)="onDeactivate($event)">
+                  </ngx-charts-advanced-pie-chart>
+                <!-- </div> -->
           </div>
 
           <div class="row">
 
             <h2 class="center-cust">Historical Game Stats</h2>
-
-            <ngx-charts-area-chart-stacked
-              [scheme]="colorScheme"
-              [legend]="true"
-              [showXAxisLabel]="false"
-              [showYAxisLabel]="false"
-              [xAxis]="false"
-              [yAxis]="true"
-              [timeline]="true"
-              [results]="areaData"
-              (select)="onSelect($event)">
-            </ngx-charts-area-chart-stacked>
-
+            <!-- <div style="max-height: 100vh"> -->
+              <ngx-charts-area-chart-stacked
+                [scheme]="colorScheme"
+                [legend]="true"
+                [showXAxisLabel]="false"
+                [showYAxisLabel]="false"
+                [xAxis]="false"
+                [yAxis]="true"
+                [timeline]="true"
+                [view]="chartView"
+                [results]="areaData"
+                (select)="onSelect($event)">
+              </ngx-charts-area-chart-stacked>
+            <!-- </div> -->
           </div>
 
         </div>

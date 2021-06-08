@@ -5,7 +5,7 @@ import { combineLatest } from 'rxjs';
 import { UserServiceService } from 'src/service/user-service.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
-
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 // actionIDs associated with specific actions
 const MEDIC    = 11;
@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   areaData: any[];
 
   // view: any[] = [700, 400];
-
+  chartView = [500, 300]
   // options
   gradient: boolean = true;
   showLegend: boolean = true;
@@ -76,7 +76,8 @@ export class DashboardComponent implements OnInit {
   constructor(
               private userSvc      : UserServiceService,
               private nonSecAPIsvc : NonSecureAPIService,
-              private secAPIsvc    : SecureAPIService
+              private secAPIsvc    : SecureAPIService,
+              private breakpointObserver : BreakpointObserver
             ) {}
 
   ngOnInit(): void {
@@ -87,7 +88,16 @@ export class DashboardComponent implements OnInit {
     combineLatest([this.userSvc.getUserData(), this.nonSecAPIsvc.getActionsList()]).subscribe(([userData, actions]) => {
 
       this.actionList = actions;
-
+      this.breakpointObserver.observe([
+        '(max-width: 768px)'
+          ]).subscribe(result => {
+            if (result.matches) {
+              this.chartView =[300,300]
+            } else {
+              // if necessary:
+              this.chartView =[500,300]
+            }
+          });
       if (this.isField) {
 
         this.setGameHistStats(userData);
