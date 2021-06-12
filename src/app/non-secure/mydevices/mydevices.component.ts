@@ -143,7 +143,7 @@ export class MydevicesComponent implements OnInit {
 
     updatePlayerData(player) {
         let index = this.gameStats["player_stats"].findIndex(ele => ele.rfidID == player.rfidID);
-        if (index) {this.gameStats["player_stats"][index].is_alive = player.is_alive;}
+        if (index != -1) {this.gameStats["player_stats"][index].is_alive = player.is_alive;}
         this.calcScoreAndSetActions();
     }
 
