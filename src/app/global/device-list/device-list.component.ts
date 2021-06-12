@@ -12,7 +12,13 @@ const TIME_INTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, // Every 10 secs >>  2
                    36, 42, 48, 54, 60, 66, 72, 78, 84, 90,// Every 60 secs >> 15min
                    120, 150, 180, 210, 240];              // Every  5 mins >> 40min
 
+const MED_INTS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, // Every 10 secs >>  2min
+                  15, 18, 21, 24, 27, 30,                   // Every 30 secs >>  5min
+                  36, 42, 48, 54, 60, 66, 72, 78, 84, 90,   // Every 60 secs >> 15min
+                  120, 150, 180, 210, 240];                 // Every  5 mins >> 40min
+
 const PERC_INTS = [0x64, 0x32, 0x19, 0x14, 0x0a, 0x05, 0x04, 0x02, 0x01];
+
 const POINT_SCL = [0x0f, 0x14, 0x1e, 0x28, 0x30, 0x3c, 0x4b,
                    0x50, 0x64, 0x78, 0x96, 0xf0].reverse();
 
@@ -263,6 +269,10 @@ export class DeviceListComponent implements OnInit {
         return TIME_INTS.indexOf(value)
     }
 
+    getMedIndex(value) {
+        return MED_INTS.indexOf(value)
+    }
+
     getPercIndex(value) {
         return PERC_INTS.indexOf(value)
     }
@@ -275,7 +285,7 @@ export class DeviceListComponent implements OnInit {
 
     medicTime(device, value, updateConfigs=false) {
 
-        device.medic.medTime = TIME_INTS[value];
+        device.medic.medTime = MED_INTS[value];
 
         if (updateConfigs) {
             if (this.mode == 'active') {

@@ -93,7 +93,7 @@
                                                 <div class="form-group">
                                                     <label for="medicTime">Time to Medic</label>
                                                     <input class="form-control-range" type="range" min="0"
-                                                    max="17" [value]="getTimeIndex(device.medic.medTime)" step="1"
+                                                    max="17" [value]="getMedIndex(device.medic.medTime)" step="1"
                                                     (change)="medicTime(device,$event.target.value, true)"
                                                     (input)="medicTime(device, $event.target.value)">
                                                     {{convertTime(device.medic.medTime)}}
@@ -206,7 +206,7 @@
                                                         <div class="form-group">
                                                             <label for="capmedicTime">Time to Medic</label>
                                                             <input class="form-control-range" type="range" min="0"
-                                                            max="17" [value]="getTimeIndex(device.medic.medTime)" step="1"
+                                                            max="17" [value]="getMedIndex(device.medic.medTime)" step="1"
                                                             (change)="medicTime(device,$event.target.value, true)"
                                                             (input)="medicTime(device,$event.target.value)">
                                                             {{convertTime(device.medic.medTime)}}
