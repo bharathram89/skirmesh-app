@@ -19,11 +19,8 @@ path.location.owned {
 }
 
 .map {
-    height:100%; width:auto;
-    @media only screen and (max-width: 600px) {
-        height: 100%;
-        width: 100%;
-    }
+    height: 100%;
+    width: 100%;
 }
 
 // .blinking{
