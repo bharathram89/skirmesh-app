@@ -8,6 +8,7 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 // actionIDs associated with specific actions
+const RESPAWN  = 13;
 const MEDIC    = 11;
 const CAPTURE  = 2;
 const ASSIST   = 3;
@@ -204,6 +205,7 @@ export class DashboardComponent implements OnInit {
           switch (action.actionID) {
 
             case MEDIC:
+            case RESPAWN:
               medics ++ // += points;
               this.totalMedics += points;
               break;
@@ -226,6 +228,9 @@ export class DashboardComponent implements OnInit {
             case BOMB_DIF:
               bombDis ++ // += points;
               this.totalBombDis += points;
+              break;
+
+            default:
               break;
           }
         }
@@ -323,9 +328,11 @@ export class DashboardComponent implements OnInit {
                 let bombDis  = 0;
 
                 for (let action of game.gameActions){
+
                     switch (action.actionID) {
 
                       case MEDIC:
+                      case RESPAWN:
                         medics ++;
                         this.totalMedics ++;
                         break;
@@ -348,6 +355,9 @@ export class DashboardComponent implements OnInit {
                       case BOMB_DIF:
                         bombDis ++;
                         this.totalBombDis ++;
+                        break;
+
+                      default:
                         break;
                     }
                 }
