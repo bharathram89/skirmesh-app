@@ -28,6 +28,7 @@ export class MydevicesComponent implements OnInit {
     deviceActions = [];
     gameConfigs   = [];
     gameCardData  = [];
+    gameID;
     gameStats;
     newAction;
     playerUpdate;
@@ -104,8 +105,15 @@ export class MydevicesComponent implements OnInit {
             () => {
                 console.log("SOCKET CONNECTED")
 
-                if (this.activeGame) {
-                    this.calcScoreAndSetActions();
+                if (this.activeGame && this.gameID) {
+                    // We need to update all the data for the tables when the
+                    // socket reconnects
+                    this.nonSecAPIsvc.getGameStats(this.gameID).subscribe(
+                        stats => {
+                            this.gameStats = stats;
+                            this.calcScoreAndSetActions();
+                        }
+                    )
                 }
             }
         )
@@ -143,6 +151,7 @@ export class MydevicesComponent implements OnInit {
                                 let configData = extendedGameData["configData"];
                                 let gameData   = extendedGameData["gameData"];
 
+                                this.gameID      = gameID.target.value;
                                 this.devices     = gameData.devices;
                                 this.activeGame  = true;
                                 this.map         = configData.mapID;
