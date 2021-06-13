@@ -28,11 +28,13 @@ export class MydevicesComponent implements OnInit {
     deviceActions = [];
     gameConfigs   = [];
     gameCardData  = [];
+    gameID;
     gameStats;
     newAction;
     playerUpdate;
+    checkSocketConnect;
     locationList;
-    actionList; 
+    actionList;
     fbShareUrl='https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fplay.skirmesh.net%2Fnon-secure%2Flive-games%3Fgameid%3DgameidFromUrl&amp;src=sdkpreparse'
     description;
     currentTab = 'map'
@@ -53,7 +55,7 @@ export class MydevicesComponent implements OnInit {
 
                 ([activeGamesByConfig, location, actions]) => {
                     // console.log(window.location.href,"url",window.location.search)
-                    
+
                     this.locationList        = location;
                     this.actionList          = actions;
                     this.activeGamesByConfig = activeGamesByConfig;
@@ -72,30 +74,49 @@ export class MydevicesComponent implements OnInit {
                         this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
                     }
                     if(window.location.href.includes('gameid')){
-                        const urlParams = new URLSearchParams(window.location.search); 
-                        const gameid = urlParams.get('gameid') 
-                        //Need to check if game is active else we get console error. 
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const gameid = urlParams.get('gameid')
+                        //Need to check if game is active else we get console error.
                         this.selectActiveGame({target:{value:gameid}})
                     }
             })
         // Socket Data routes
         // Single socket setup in app.component - these listen for different
         // socket events to update specific areas
-        this.newAction = this.gameSvc.getNewAction().subscribe(socketData=>{
-            console.log(socketData," New Action");
+        this.newAction = this.gameSvc.getNewAction().subscribe(
+            socketData=>{
+                console.log(socketData," New Action");
 
-            if(this.activeGame){
-                this.updateActionAndCalcScore(socketData);
-            }
+                if(this.activeGame){
+                    this.updateActionAndCalcScore(socketData);
+                }
         })
 
-        this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(socketData=>{
-            console.log(socketData," Player Update");
+        this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
+            socketData => {
+                console.log(socketData," Player Update");
 
-            if(this.activeGame){
-                this.updatePlayerData(socketData);
-            }
+                if(this.activeGame){
+                    this.updatePlayerData(socketData);
+                }
         })
+
+        this.checkSocketConnect = this.gameSvc.checkSocketConnect().subscribe(
+            () => {
+                console.log("SOCKET CONNECTED")
+
+                if (this.activeGame && this.gameID) {
+                    // We need to update all the data for the tables when the
+                    // socket reconnects
+                    this.nonSecAPIsvc.getGameStats(this.gameID).subscribe(
+                        stats => {
+                            this.gameStats = stats;
+                            this.calcScoreAndSetActions();
+                        }
+                    )
+                }
+            }
+        )
 
     }
 
@@ -104,6 +125,7 @@ export class MydevicesComponent implements OnInit {
         //Add 'implements OnDestroy' to the class.
         this.playerUpdate.unsubscribe()
         this.newAction.unsubscribe()
+        this.checkSocketConnect.unsubscribe()
     }
 
 
@@ -129,6 +151,7 @@ export class MydevicesComponent implements OnInit {
                                 let configData = extendedGameData["configData"];
                                 let gameData   = extendedGameData["gameData"];
 
+                                this.gameID      = gameID.target.value;
                                 this.devices     = gameData.devices;
                                 this.activeGame  = true;
                                 this.map         = configData.mapID;

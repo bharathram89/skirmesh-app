@@ -14,32 +14,20 @@ export class GameService {
       private socket: Socket
     ) {}
 
+    public checkSocketConnect() {
+      return this.socket.fromEvent('connect')
+    }
 
     public getDeviceUpdate() {
-      return new Observable((observer) => {
-              this.socket.on('deviceUpdate', (message) => {
-                // console.log(message,"message from socket")
-                  observer.next(message);
-              });
-      });
+      return this.socket.fromEvent('deviceUpdate')
     }
 
     public getNewAction() {
-      return new Observable((observer) => {
-              this.socket.on('newAction', (message) => {
-                // console.log(message,"message from socket")
-                  observer.next(message);
-              });
-      });
+      return this.socket.fromEvent('newAction')
     }
 
     public getPlayerUpdate() {
-      return new Observable((observer) => {
-              this.socket.on('playerUpdate', (message) => {
-                // console.log(message,"message from socket")
-                  observer.next(message);
-              });
-      });
+      return this.socket.fromEvent('playerUpdate')
     }
 
 }
