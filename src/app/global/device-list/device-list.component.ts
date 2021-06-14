@@ -251,7 +251,9 @@ export class DeviceListComponent implements OnInit {
 
         if (this.mode == 'active') {
             let partial = device.toJSON()
-            this.saveNodeConfigs({'id':partial.id, 'config':partial.config});
+            this.saveNodeConfigs({'id':partial.id,
+                                  'config':partial.config,
+                                  'bomb_status':null});
         }
         else{
             this.saveNodeConfigs(device);
