@@ -1,10 +1,11 @@
 <ng-template #popContent> {{tooltipContent}} </ng-template>
 
 <div *ngIf="mapID == 2">
-   <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
-      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
-      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="map"
-      viewBox="0 0 210 292" version="1.1" id="map2">
+   <svg
+      viewBox="0 0 210 292"
+      version="1.1"
+      class="map"
+      id="map2">
     <defs/>
       <g>
          <image xlink:href="../../../assets/images/salina_gambit.png" y="-0.29215574" x="1.9073366"
@@ -85,12 +86,10 @@
 </div>
 
 <div *ngIf="mapID==4">
-   <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
-      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
-      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-      xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" class="map" viewBox="0 0 243.40157 363.59055" sodipodi:docname="ballahack.svg"
-      inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
+   <svg
+      version="1.1"
+      viewBox="0 0 243.40157 363.59055"
+      class="map"
       id="map4">
       <metadata>
       </metadata>
@@ -198,12 +197,6 @@
 
 <div *ngIf="mapID==5">
    <svg
-       xmlns:dc="http://purl.org/dc/elements/1.1/"
-       xmlns:cc="http://creativecommons.org/ns#"
-       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-       xmlns:svg="http://www.w3.org/2000/svg"
-       xmlns="http://www.w3.org/2000/svg"
-       xmlns:xlink="http://www.w3.org/1999/xlink"
        version="1.1"
        viewBox="0 0 847 626"
        class="map"
