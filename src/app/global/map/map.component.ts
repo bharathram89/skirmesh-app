@@ -26,6 +26,7 @@ export class MapComponent implements OnInit {
     @Input() deviceData
 
     tooltipContent = ' '
+    deviceContent = ' '
     socketOBJ;
     map;
     locationList;
@@ -69,24 +70,86 @@ export class MapComponent implements OnInit {
                 this.mapData = mapData;
                 this.locationList = this.mapData.locations;
 
-                let paths = document.getElementsByClassName("location");
-
-                for (let i = 0; i < paths.length; i++) {
-
-                    paths[i].addEventListener("mouseenter", event => {
-
-                        let target = event.target as HTMLTextAreaElement;
-
-                        let loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
-                        this.tooltipContent = loc ? loc.name : "Mystery Zone";
-
-                    });
-                }
-
+                this.updateToolTipListener();
             }
         )
 
 
+    }
+
+    updateToolTipListener() {
+
+        let paths = document.getElementsByClassName("location");
+
+        for (let i = 0; i < paths.length; i++) {
+
+            paths[i].addEventListener("mouseenter", event => {
+
+                let target = event.target as HTMLTextAreaElement;
+
+                let loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+                let dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+
+                let str = `${loc ? loc.name : "Mystery Zone"}`
+                let dev_str = ``
+
+                if (dev) {
+                    dev_str = `${this.translateConfig(dev)}`
+                }
+
+                this.tooltipContent = `${str}`
+                this.deviceContent = `${dev_str}`
+
+                console.log(this.tooltipContent, this.deviceContent)
+
+            });
+        }
+    }
+
+
+    translateConfig(device) {
+
+        switch (device.config) {
+
+            case CAPTURE:
+                return "Capture Objective"
+                break;
+
+            case MEDIC:
+                let str = "Medic Station"
+                var time
+                if (device.med_time) {
+                    time = this.convertTime(device.med_time*10)
+                }
+                else {
+                    time = "Respawn"
+                }
+                return `${str} \n (${time})`
+                break;
+
+            case BOMB:
+                return "Bomb / IED"
+                break;
+
+            case REGISTER:
+                return "Team Registration"
+                break;
+
+            default:
+                return ""
+                break;
+        }
+
+    }
+
+    convertTime(value) {
+
+        if (value < 12) {
+            return  value * 10 + " sec"
+        }
+        else {
+            return  value * 10 / 60 + " min"
+        }
     }
 
 
