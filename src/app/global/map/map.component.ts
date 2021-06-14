@@ -26,7 +26,6 @@ export class MapComponent implements OnInit {
     @Input() deviceData
 
     tooltipContent = ' '
-    deviceContent = ' '
     socketOBJ;
     map;
     locationList;
@@ -91,17 +90,13 @@ export class MapComponent implements OnInit {
                 let dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
 
                 let str = `${loc ? loc.name : "Mystery Zone"}`
-                let dev_str = ``
 
                 if (dev) {
-                    dev_str = `${this.translateConfig(dev)}`
+                    str += "<br/>"
+                    str += `${this.translateConfig(dev)}`
                 }
 
                 this.tooltipContent = `${str}`
-                this.deviceContent = `${dev_str}`
-
-                console.log(this.tooltipContent, this.deviceContent)
-
             });
         }
     }
