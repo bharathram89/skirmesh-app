@@ -11,6 +11,10 @@ const CAPTURE  = 0x0A;
 const MEDIC    = 0x0E;
 const BOMB     = 0xBB;
 
+const BOMB_ARMED    = 0xBA;
+const BOMB_DISARMED = 0xBD;
+const BOMB_DETONATE = 0xDD;
+
 @Component({
     selector    : 'app-map',
     templateUrl : './map.component.svg',
@@ -97,39 +101,58 @@ export class MapComponent implements OnInit {
         let stable = device.stable;
         let color = '#' + device.team;
 
+        // this.updateToolTipListener();
+
         let element = document.getElementById("loc" + locID);
         // If the device corresponds to a location and the configuration
         // is of CAPTURE or REGISTER ... maybe later ... MEDIC, update
         // to beacon or fill the color as appropriate
+        if (element) {
+            // This resets the class list to a proper baseline
+            element.classList.forEach(
+                cls => {
+                    element.classList.remove(cls)
+            })
+            element.classList.add("location")
+            element.setAttribute("fill", null);
+        }
+
         if (element && (device.config == CAPTURE || device.config == REGISTER)) {
 
             if (!stable && device.team) {
 
-                element.classList.remove("owned");
                 element.classList.add("beacon");
                 element.setAttribute("fill", color);
 
             }
             else if (stable && device.team) {
 
-                element.classList.remove("beacon");
                 element.classList.add("owned");
                 element.setAttribute("fill", color);
             }
-            else {
 
-                element.classList.remove("owned");
-                element.classList.remove("beacon");
-                element.setAttribute("fill", null);
-            }
         }
-        // If we found an element, but the device is not one of the above,
-        // then give it standard styling.
-        else if (element) {
 
-            element.classList.remove("owned");
-            element.classList.remove("beacon");
-            element.setAttribute("fill", null);
+        else if (element && device.config == BOMB) {
+
+            switch (device.bomb_status) {
+
+                case BOMB_ARMED:
+                    element.classList.add("armed");
+                    break;
+
+                case BOMB_DISARMED:
+                    element.classList.add("disarmed");
+                    break;
+
+                case BOMB_DETONATE:
+                    element.classList.add("demo");
+                    break;
+
+                default:
+                    break;
+            }
+
         }
 
     }
