@@ -70,7 +70,7 @@ path.location.disarmed {
     from {transform: scale(0.6);
         opacity: 0.5;
     }
-    to {transform: scale(0.4);
+    to {transform: scale(0.2);
           opacity: 0;
     }
 }
@@ -100,4 +100,8 @@ path.demo {
       stroke-dashoffset: 20;
       opacity: 0.25;
   }
+}
+
+.tooltipContainer {
+    white-space: pre-line;
 }
