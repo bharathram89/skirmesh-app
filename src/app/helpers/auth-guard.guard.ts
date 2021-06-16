@@ -28,6 +28,7 @@ export class AuthGuardGuard implements CanActivate {
       if(!token && window.location.href.includes('token')){
         const urlParams = new URLSearchParams(window.location.search);
         token = urlParams.get('token'); 
+        this.tokenStorage.saveToken(token);
       }
       if (token) {
 
