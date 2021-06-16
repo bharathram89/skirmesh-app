@@ -36,8 +36,15 @@ export class PassResetComponent implements OnInit {
         console.log(this.resetPass.value.email)
         let data = {'email':this.resetPass.value.email}
         this.nonSecAPIsvc.requestPasswordReset(data).subscribe(
-            resp => {console.log(resp)},
-            err => {},
+            resp => {
+                document.getElementById('passResetEmailSent').classList.remove("d-none");
+                document.getElementById('passResetEmailFailed').classList.add("d-none");
+                console.log(resp)
+            },
+            err => {
+                document.getElementById('passResetEmailSent').classList.add("d-none");
+                document.getElementById('passResetEmailFailed').classList.remove("d-none");
+            },
         )
   }
 
