@@ -57,7 +57,7 @@
 
                 <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
                     aria-labelledby="v-pills-home-tab">
-                    
+
                     <div class="btn-primary btn fb_share" data-href="https://play.skirmesh.net/non-secure/live-games" data-layout="button_count" data-size="small"><a target="_blank" href="{{fbShareUrl}}" class="fb-xfbml-parse-ignore">Share To Facebook!</a></div>
 
                     <app-map [mapID]="map" [deviceData]="devices"></app-map>
@@ -112,8 +112,11 @@
                 </div>
                 <div *ngIf="currentTab == 'EventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
                     aria-labelledby="v-pills-settings-tab">
-                    <h3 class="center-cust"> Event List</h3>
-                    <table class="table table-striped">
+                    <h3 class="center-cust"> Event History</h3>
+
+                    <ngx-datatable [rows]="allActions" [columns]="allActionsColumns"> </ngx-datatable>
+
+                    <!-- <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Team</th>
@@ -146,7 +149,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> -->
 
                 </div>
             </div>

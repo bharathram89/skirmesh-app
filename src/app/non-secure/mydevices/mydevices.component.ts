@@ -25,6 +25,14 @@ export class MydevicesComponent implements OnInit {
     teams         = [];
     players       = [];
     allActions    = [];
+
+    allActionsColumns = [{name:'Team',     prop:'team'},
+                         {name:'Callsign', prop:'name'},
+                         {name:'Action',   prop:'action'},
+                         {name:'Location', prop:'location'},
+                         {name:'Points',   prop:'points'},
+                         {name:'Time',     prop:'timestamp'}];
+
     deviceActions = [];
     gameConfigs   = [];
     gameCardData  = [];
@@ -168,7 +176,10 @@ export class MydevicesComponent implements OnInit {
 
     updatePlayerData(player) {
         let index = this.gameStats["player_stats"].findIndex(ele => ele.rfidID == player.rfidID);
-        if (index != -1) {this.gameStats["player_stats"][index].is_alive = player.is_alive;}
+        if (index != -1) {
+            this.gameStats["player_stats"][index].is_alive = player.is_alive;
+            this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
+        }
         this.calcScoreAndSetActions();
     }
 
@@ -178,12 +189,18 @@ export class MydevicesComponent implements OnInit {
         if (action.teamID && !action.rfidID){
 
             let team = this.gameStats["team_stats"].find(ele => ele.id == action.teamID);
-            if (team) {team.data.push(action);}
+            if (team) {
+                team.data.push(action);
+                this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
+            }
         }
         else if (action.rfidID) {
 
             let player = this.gameStats["player_stats"].find(ele => ele.rfidID == action.rfidID);
-            if (player) {player.data.push(action)}
+            if (player) {
+                player.data.push(action);
+                this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
+            }
         }
 
         this.calcScoreAndSetActions();
@@ -285,7 +302,7 @@ export class MydevicesComponent implements OnInit {
             }
         }
         // Sort actions descending
-        this.allActions = this.allActions.sort((a, b) => b.id - a.id);
+        this.allActions.sort((a, b) => b.id - a.id);
         // Figure out if last action was capture and calculate time held since CAPTURE
         // add those points to the total for each team to show current points status
         // THIS WILL NOT continue to stack points - a refresh is required - or it will

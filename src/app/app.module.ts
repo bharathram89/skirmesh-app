@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, Meta } from '@angular/platform-browser';
-
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GlobalModule } from './global/global.module';
@@ -28,6 +28,7 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
     GlobalModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxDatatableModule,
     NgxFeedbackModule,
     SocketIoModule.forRoot(config)
   ],
