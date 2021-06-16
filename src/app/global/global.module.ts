@@ -18,6 +18,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MapComponent } from './map/map.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { TeamRosterComponent } from './team-roster/team-roster.component';
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, GameConfigComponent, TabsComponent, TabComponent,
     TabsComponent,
@@ -26,7 +27,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     GamelistComponent,
     EditGameComponent,
     DeviceListComponent,
-    MapComponent,],
+    MapComponent,
+    TeamRosterComponent,],
   imports: [
     RouterModule,
     CommonModule,
