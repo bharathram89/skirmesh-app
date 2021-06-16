@@ -2,14 +2,25 @@
 
     <div class="col-6">
 
-        <h4> Enter your email to reset your password. </h4>
+        <h4> Enter your email, hit submit, then check your email. </h4>
 
-        <div class="form-group">
-            <input formControlName="email" type="text" class="form-control" placeholder="Email">
-        </div>
+        <form [formGroup]="resetPass" autocomplete="off" method="POST">
 
-        <button type="submit" (click)="onSubmit()" class="btn btn-primary cust_skir_signup"> Submit </button>
+            <div class="form-group">
+                <input formControlName="email"
+                       type="text"
+                       class="form-control"
+                       placeholder="Email"/>
+            </div>
+
+        </form>
+
+        <button
+            type="submit"
+            (click)="onSubmit()"
+            class="btn btn-primary cust_skir_signup"
+            [disabled]="resetPass.invalid"> Submit </button>
 
     </div>
-    
+
 </div>

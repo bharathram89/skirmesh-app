@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 
 @Component({
   selector: 'app-pass-reset',
@@ -7,14 +8,37 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./pass-reset.component.scss']
 })
 export class PassResetComponent implements OnInit {
- 
-  constructor() { }
 
-  ngOnInit(): void {
- 
+    resetPass: FormGroup;
+    fields = {  email: '' }
+
+    constructor(
+        private nonSecAPIsvc : NonSecureAPIService
+    ) { }
+
+    ngOnInit(): void {
+
+        this.resetPass = new FormGroup({
+
+            "email": new FormControl(this.fields.email, [
+                Validators.required,
+                Validators.email
+            ]),
+
+        })
+
+    }
+
+    get email() { return this.resetPass.get('email'); }
+
+    onSubmit(){
+
+        console.log(this.resetPass.value.email)
+        let data = {'email':this.resetPass.value.email}
+        this.nonSecAPIsvc.requestPasswordReset(data).subscribe(
+            resp => {console.log(resp)},
+            err => {},
+        )
   }
- 
-  onSubmit(){
-    
-  }
+
 }

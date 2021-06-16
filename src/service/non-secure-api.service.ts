@@ -110,4 +110,12 @@ export class NonSecureAPIService {
         return this.http.post(route + "feedback", data, this.options)
     }
 
+
+    requestPasswordReset(data){
+
+        let route = this.BASE + this.LOGN
+
+        return this.http.post(route + "/passwordReset", data, this.options)
+    }
+
 }

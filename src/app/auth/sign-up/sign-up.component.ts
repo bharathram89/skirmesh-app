@@ -73,16 +73,16 @@ export class SignUpComponent implements OnInit {
   }
   checkPasswords(group: FormGroup){
     const password = group.get('password').value;
-  const confirmPassword = group.get('confirmPassword').value;
+    const confirmPassword = group.get('confirmPassword').value;
 
-  return password === confirmPassword ? null : group.controls['confirmPassword'].setErrors({ notSame: true });
+    return password === confirmPassword ? null : group.controls['confirmPassword'].setErrors({ notSame: true });
 
   }
   checkFBPasswords(group: FormGroup){
     const password = group.get('pass').value;
-  const confirmPassword = group.get('confirmPass').value;
+    const confirmPassword = group.get('confirmPass').value;
 
-  return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
+    return password === confirmPassword ? null : group.controls['confirmPass'].setErrors({ notSame: true });
 
   }
 
