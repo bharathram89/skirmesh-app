@@ -107,27 +107,26 @@ export class MapComponent implements OnInit {
         switch (device.config) {
 
             case CAPTURE:
-                return "Capture Objective"
+                let worth = this.convertPointScale(device.point_scale);
+                return `Objective (${worth})`
                 break;
 
             case MEDIC:
-                let str = "Medic Station"
-                var time
-                if (device.med_time) {
-                    time = this.convertTime(device.med_time*10)
-                }
-                else {
-                    time = "Respawn"
-                }
-                return `${str} \n (${time})`
+                let str = "Medic Station";
+                let time = device.med_time ? this.convertTime(device.med_time) : "Respawn";
+
+                return `${str} <br/> (${time})`
                 break;
 
             case BOMB:
-                return "Bomb / IED"
+                let arm  = this.convertTime(device.arm_time);
+                let diff = this.convertTime(device.diff_time);
+                let fuse = this.convertTime(device.bomb_time);
+                return `Bomb / IED <br/> ( arm | fuse | diff ) <br/> ${arm} | ${fuse} | ${diff}`
                 break;
 
             case REGISTER:
-                return "Team Registration"
+                return "Team Registration";
                 break;
 
             default:
@@ -140,11 +139,15 @@ export class MapComponent implements OnInit {
     convertTime(value) {
 
         if (value < 12) {
-            return  value * 10 + " sec"
+            return  value * 10 + "sec"
         }
         else {
-            return  value * 10 / 60 + " min"
+            return  value * 10 / 60 + "min"
         }
+    }
+
+    convertPointScale(value) {
+        return 60 / value + "x"
     }
 
 
