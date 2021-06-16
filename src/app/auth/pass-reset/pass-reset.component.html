@@ -13,15 +13,13 @@
                        placeholder="Email"/>
             </div>
             <div class="row">
-                <div id="passResetEmailSent" class="alert alert-danger d-none center-cust">
-                    Please check your email from Skirmesh to login and reset your password.<br>
-                    If no email recieved please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from
-                        our contact us page</a>
+                <div id="passResetEmailSent" class="alert alert-success d-none center-cust">
+                    Check your email for directions on how to login and reset your password.<br>
+                    If you didn't receive an email, <a [routerLink]="['/non-secure/contact-us']">contact us.</a>
                 </div>
                 <div id="passResetEmailFailed" class="alert alert-danger d-none center-cust">
-                    We are sorry we were not able to send you ea email to reset your password. <br>
-                    Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from
-                        our contact us page</a>
+                    We are unable to locate an account with the email provided. <br>
+                    Verify the email and try again or <a [routerLink]="['/non-secure/contact-us']">contact us.</a>
                 </div>
             </div>
         </form>
