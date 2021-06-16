@@ -4,54 +4,42 @@
 			<div class="card-group mb-0">
 				<div class="card p-4 cust">
 					<div class="card-body">
+
 						<h1>Login</h1>
-						<p class="text-muted">Sign In to your account</p>
-						<a class="nav-link">Select one: </a>
-						<ul class="nav nav-pills nav-fill">
-							<li class="nav-item">
-								<a id="fieldSignIn" class="nav-link" (click)="fieldSignIn()">Field Sign-In</a>
-							</li>
-							<li class="nav-item">
-								<a id="playerSignIn" class="nav-link active" (click)="playerSignIn()">Player Sign-In</a>
-							</li>
-						</ul>
-						<br>
+
 						<form [formGroup]="login" autocomplete="off" method="POST">
+
 							<div class="form-group input-group">
 								<input  id="callSign" formControlName="callSign" type="text" class="form-control"
-									placeholder="Callsign">
-								
+									placeholder="Callsign or Field Name">
+
 							</div>
+
 							<div *ngIf="callSign.invalid && (callSign.dirty || callSign.touched) "
 									class="alert alert-danger ">
 									<div *ngIf="callSign.errors?.required ">
-										Callsign is required
+										Callsign or Field Name is required
 									</div>
-								</div>
-							<div  class="form-group input-group ">
-								<input  id="fieldName" style="display: none;" formControlName="fieldName" type="text"
-									class="form-control" placeholder="Field Name">
 							</div>
-							<div *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) "
-									class="alert alert-danger ">
-									<div *ngIf="fieldName.errors?.required ">
-										Field Name is required
-									</div>
-								</div>
+
 							<div class="form-group input-group">
 								<input formControlName="password" type="password" class="form-control"
 									placeholder="Password">
-								
+
 							</div>
+
 							<div *ngIf="password.invalid && (password.dirty || password.touched) "
 							class="alert alert-danger ">
-							<div *ngIf="password.errors?.required ">
-								Password is required
+
+								<div *ngIf="password.errors?.required ">
+									Password is required
+								</div>
+								<div *ngIf="password.errors?.minlength ">
+									Password needs to be min of 6 characters
+								</div>
+
 							</div>
-							<div *ngIf="password.errors?.minlength ">
-								Password needs to be min of 6 characters
-							</div>
-						</div>
+
 							<div class="row">
 								<div class="col-6">
 									<button (click)="onSubmit()" type="button"
@@ -82,6 +70,7 @@
 											<i class="fa fa-facebook-official"> </i>
 										</a>
 									</div>
+
 									<div (click)="signInWithGoogle()" class="col-xs-4">
 										<a class="btn btn-lg btn-block social_icon">
 											<i class="fa fa-google-plus"> </i>
@@ -96,8 +85,9 @@
 					<div class="card-body text-center">
 						<div>
 							<h2>Sign up</h2>
-							<p>Are you a field and want to get started? Reach out to us <a
-									[routerLink]="['/non-secure/field-info']">here</a>.</p>
+							<p>Are you a field and want to get started?<br/> Reach out to us
+								<a [routerLink]="['/non-secure/field-info']">here</a>.
+							</p>
 							<p> Are you a player? <a [routerLink]="['/auth/sign-up']">Register
 									here</a>!</p>
 						</div>

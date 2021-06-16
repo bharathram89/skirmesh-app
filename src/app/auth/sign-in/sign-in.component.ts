@@ -14,7 +14,7 @@ import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 export class SignInComponent implements OnInit {
 
   login: FormGroup;
-  fields = {  callSign: '', password: "", fieldName: "" }
+  fields = {  callSign: '', password: "" }
 
   constructor(
     private socialAuthService: SocialAuthService,
@@ -31,62 +31,35 @@ export class SignInComponent implements OnInit {
       "callSign": new FormControl(this.fields.callSign, [
         Validators.required
       ]),
+
       "password": new FormControl(this.fields.password, [
         Validators.required,
         Validators.minLength(6)
       ]),
-      "fieldName": new FormControl(this.fields.fieldName, [
-        Validators.required
-      ]),
+
     })
 
-    this.login.controls['fieldName'].disable();
   }
 
-
-  fieldSignIn() {
-    let fieldSignUp = document.getElementById("fieldSignIn");
-    let playerSignUp = document.getElementById("playerSignIn");
-    let callSign = document.getElementById("callSign");
-    let fieldName = document.getElementById("fieldName")
-    callSign.style.display = 'none'
-    fieldName.style.display = 'block'
-    this.login.controls['callSign'].disable();
-    this.login.controls['fieldName'].enable();
-    playerSignUp.classList.remove("active");
-    fieldSignUp.classList.add("active");
-  }
-  playerSignIn() {
-    let fieldSignUp = document.getElementById("fieldSignIn");
-    let playerSignUp = document.getElementById("playerSignIn");
-    let callSign = document.getElementById("callSign");
-    let fieldName = document.getElementById("fieldName")
-    callSign.style.display = 'block'
-    fieldName.style.display = 'none'
-    this.login.controls['callSign'].enable();
-    this.login.controls['fieldName'].disable();
-    fieldSignUp.classList.remove("active");
-    playerSignUp.classList.add("active");
-  }
-  get fieldName() { return this.login.get('fieldName'); }
   get password() { return this.login.get('password'); }
   get callSign() { return this.login.get('callSign'); }
+
   onSubmit(){
-    let type = document.getElementById('fieldSignIn').classList.contains('active') ? 'field' : 'player';
+
     let data = {
-      "callSign": type=='field'?this.login.value.fieldName:this.login.value.callSign,
+      "callSign": this.login.value.callSign,
       "password": this.login.value.password
     }
+
     this.nonSecAPIsvc.userLogin(data).subscribe(
+
       respData=>{
 
         this.tokenStorage.saveToken(respData['token'])
         this.router.navigate(['/secure/dashboard']);
-
       },
       err=>{
         document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
-//show error message
       }
     )
   }
@@ -99,6 +72,7 @@ export class SignInComponent implements OnInit {
                    "email"    : googleData.email}
 
       this.nonSecAPIsvc.userLogin(data).subscribe(
+
         respData=>{
 
           this.tokenStorage.saveToken(respData['token'])
@@ -107,7 +81,6 @@ export class SignInComponent implements OnInit {
         },
         err=>{
           document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
-  //show error message
         }
       )
     });;
@@ -116,12 +89,13 @@ export class SignInComponent implements OnInit {
 
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
-    
+
       let data = {"facebookID" : fbData.id ,
                   'facebook'   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
                   "email"      : fbData.email}
 
       this.nonSecAPIsvc.userLogin(data).subscribe(
+
         respData=>{
 
           this.tokenStorage.saveToken(respData['token'])
@@ -130,7 +104,6 @@ export class SignInComponent implements OnInit {
         },
         err=>{
           document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
-  //show error message
         }
       )
     });
