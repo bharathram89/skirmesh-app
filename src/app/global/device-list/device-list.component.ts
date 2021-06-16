@@ -88,6 +88,7 @@ export class DeviceListComponent implements OnInit {
           }
 
           this.devices = modeConfig.nodeConfigs;
+          this.devices?.sort((a, b) => a.id - b.id);
 
           if(modeConfig.mapID){
 
