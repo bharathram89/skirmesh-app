@@ -80,6 +80,9 @@ export class MydevicesComponent implements OnInit {
                         this.selectActiveGame({target:{value:gameid}})
                     }
             })
+    }
+
+    ngAfterViewInit() {
         // Socket Data routes
         // Single socket setup in app.component - these listen for different
         // socket events to update specific areas
@@ -117,7 +120,6 @@ export class MydevicesComponent implements OnInit {
                 }
             }
         )
-
     }
 
     ngOnDestroy(): void {
@@ -328,10 +330,6 @@ export class MydevicesComponent implements OnInit {
         return location && location.name ? location.name : ' '
     }
 
-    //TODO: WE NEED TO STORE THIS SVG IN DB AND PULL IT DOWN TO SET.
-    ngAfterViewInit() {
-
-    }
 
     goBackToMainMenu() {
         this.activeGame = false;
