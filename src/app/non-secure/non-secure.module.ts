@@ -15,6 +15,7 @@ import { FieldInfoComponent } from './field-info/field-info.component';
 import { MydevicesComponent } from './mydevices/mydevices.component'
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { HowToUseComponent } from './how-to-use/how-to-use.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 @NgModule({
   declarations: [HowToUseComponent,NonSecureComponent, FeaturesListComponent, HomeComponent, ContactUsComponent, PrivacyPolicyComponent, FaqComponent, PlayerInfoComponent, FieldInfoComponent,MydevicesComponent],
   imports: [
@@ -22,7 +23,8 @@ import { HowToUseComponent } from './how-to-use/how-to-use.component';
     NonSecureRoutingModule,
     AuthRoutingModule,
     GlobalModule, 
-    CarouselModule
+    CarouselModule,
+    NgxDatatableModule
   ]
 })
 export class NonSecureModule { }
