@@ -332,6 +332,7 @@ export class MydevicesComponent implements OnInit {
         }
         // Purge all the stuff without a player name to show the stuff that matters
         this.allActions = this.allActions.filter(act => act.name);
+        console.log(this.allActions,"actions")
     }
 
 
