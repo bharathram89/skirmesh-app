@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit {
     this.userSvc.getUserData().subscribe(
 
       userData => {
-          
+
         if (this.isField) {
 
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
@@ -400,9 +400,7 @@ export class ProfileComponent implements OnInit {
 
   saveImage() {
 
-    let data  = {'user' :{'id':            this.currentVals.userID,
-                          'imageID':       this.currentVals.imageID,
-                          'fieldProfileID':this.currentVals.fieldProfileID},
+    let data  = {'user' :{'id':this.currentVals.userID},
                  'image':{'data':this.base64toUpload}};
 
     // console.log(data)
