@@ -33,6 +33,11 @@ export class MydevicesComponent implements OnInit {
                          {name:'Points',   prop:'points'},
                          {name:'Time',     prop:'timestamp', sortable:true}];
 
+    teamScoreColumns = [{name:'Callsign',      prop:'name', sortable:true},
+                        {name:'Last Action',   prop:'lastAction', sortable:true},
+                        {name:'Last Location', prop:'lastLocation', sortable:true},
+                        {name:'Total Points',  prop:'totalPoints', sortable:true}];
+
     deviceActions = [];
     gameConfigs   = [];
     gameCardData  = [];
@@ -243,6 +248,7 @@ export class MydevicesComponent implements OnInit {
                     name      : player.name,
                     action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                     points    : this.actionList.find(ele => ele.id == act.actionID).points,
+                    time_held : act.time_held,
                     location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
                     timestamp : date.toLocaleString('en-US', {hour12:false})
                 }
@@ -256,12 +262,16 @@ export class MydevicesComponent implements OnInit {
             let team_players = this.players.filter(player => player.teamID == team.id);
             let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
 
+            let team_score = team.data.reduce((accu, ele) => accu + ele.points, 0);
+
             let teamObj = {
-                teamID  : team.id,
-                name    : team.name,
-                color   : '#' + team.color,
-                score   : team.data.reduce((prev, next) => prev + next.points, 0) + plyr_points,
-                players : team_players
+                teamID         : team.id,
+                name           : team.name,
+                color          : '#' + team.color,
+                score          : team_score,
+                player_score   : plyr_points,
+                comb_score     : team_score + plyr_points,
+                players        : team_players
             }
 
             this.teams.push(teamObj);
@@ -275,6 +285,7 @@ export class MydevicesComponent implements OnInit {
                     name      : null,
                     action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                     points    : act.points,
+                    time_held : act.time_held,
                     location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
                     timestamp : date.toLocaleString('en-US', {hour12:false})
                 }
@@ -292,13 +303,15 @@ export class MydevicesComponent implements OnInit {
             if (index === -1) {
 
                 let team_players = this.players.filter(player => player.teamID == team.id);
-                let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
+                // let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
                 this.teams.push({
-                                 teamID  : team.id,
-                                 name    : team.name,
-                                 color   : '#' + team.color,
-                                 score   : 0 + plyr_points,
-                                 players : team_players,
+                                 teamID       : team.id,
+                                 name         : team.name,
+                                 color        : '#' + team.color,
+                                 score        : 0,
+                                 player_score : 0,
+                                 comb_score   : 0,
+                                 players      : team_players,
                                 })
             }
         }
@@ -322,10 +335,14 @@ export class MydevicesComponent implements OnInit {
                 if (lastCapComplete) {
 
                     let now = new Date().getTime();
-                    let add_score = Math.floor(((now - lastCapComplete.timestamp)/1000) / device.point_scale);
+                    let lastActionTime = new Date(lastCapComplete.timestamp).getTime()
+
+                    let add_score = Math.floor(((now - lastActionTime)/1000) / device.point_scale);
 
                     let dev_team = this.teams.find(team => team.teamID == device.teamID);
-                    dev_team.score += add_score;
+
+                    dev_team.score      += add_score;
+                    dev_team.comb_score += add_score;
 
                 }
             }

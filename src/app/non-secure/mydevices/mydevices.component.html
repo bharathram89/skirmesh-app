@@ -64,62 +64,41 @@
 
 
                 </div>
-                <div *ngIf="currentTab == 'teamScore'" class="card-group content-panel" id="v-pills-profile" role="tabpanel"
+                <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
 
 
                     <div *ngFor="let team of teams" class="team-section">
 
-                        <div class=" card-outline-success m-x-auto m-b-2">
                             <div class="cust_text text-xs-center p-y-1" [style.background-color]="team.color">
-                                <h3>{{team.name}} | {{team.score}} pts</h3>
 
+                                <h3> {{team.name}} | Team: {{team.score}}pts
+                                                   | Total: {{team.comb_score}}pts </h3>
                             </div>
 
+                            <ngx-datatable
+                                class="material striped"
+                                [rows]="team.players"
+                                [columns]="teamScoreColumns"
+                                [columnMode]="'force'"
+                                [rowHeight]="'auto'" >
+                            </ngx-datatable>
 
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">RFID</th>
-                                        <th scope="col">Last Action</th>
-                                        <th scope="col">Last Location</th>
-                                        <th scope="col">Total Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let player of team.players">
-                                        <th scope="row">
-                                            <div class="text">
-                                                <a *ngIf=player.is_alive style="color: #00A000;">{{player.name}}</a>
-                                                <a *ngIf=!player.is_alive style="color: #A00000;">{{player.name}}</a>
-                                            </div>
-                                        </th>
-                                        <td>
-                                            <ngb-highlight>{{player.lastAction}}
-                                            </ngb-highlight>
-                                        </td>
-                                        <td>
-                                            <ngb-highlight>{{player.lastLocation}}</ngb-highlight>
-                                        </td>
-                                        <td>
-                                            <ngb-highlight>{{player.totalPoints}}</ngb-highlight>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
+
                 </div>
+
+
                 <div *ngIf="currentTab == 'EventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
                     aria-labelledby="v-pills-settings-tab">
 
                     <h3 class="center-cust"> Event History</h3>
 
                     <ngx-datatable
-                        class="material"
+                        class="material striped"
                         [rows]="allActions"
                         [columns]="allActionsColumns"
-                        [columnMode]="'standard'"
+                        [columnMode]="'force'"
                         [rowHeight]="'auto'" >
                     </ngx-datatable>
 
