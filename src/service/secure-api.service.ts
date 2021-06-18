@@ -132,23 +132,9 @@ export class SecureAPIService {
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
 
-      if (Object.keys(field).length) {
+      let for_update = {"user":user, "player":player, "field":field}
 
-          this.updateFieldProfile(token, field).subscribe(
-              resp => {},
-              err => {}
-          )
-      }
-
-      else if (Object.keys(player).length) {
-
-          this.updatePlayerProfile(token, player).subscribe(
-              resp => {},
-              err => {}
-          )
-      }
-
-      return this.http.put(route, user, options);
+      return this.http.put(route, for_update, options);
   }
 
   saveImage(token, data) {
@@ -280,16 +266,6 @@ export class SecureAPIService {
   updateFieldProfile(token, data) {
       // Requires fieldPofileID as id in data
       let route = this.BASE + this.SEC + this.FPRO;
-
-      const options = { params  : new HttpParams().set("token", token),
-                        headers : this.headers }
-
-      return this.http.put(route, data, options)
-  }
-
-  updatePlayerProfile(token, data) {
-      // Requires fieldPofileID as id in data
-      let route = this.BASE + this.SEC + this.PPRO;
 
       const options = { params  : new HttpParams().set("token", token),
                         headers : this.headers }
