@@ -23,7 +23,6 @@ export class SecureAPIService {
   DEVC = 'device'
   USER = 'user'
   FPRO = 'fieldProfile'
-  PPRO = 'playerProfile'
   IMAG = 'image'
   GCFG = 'gameConfig'
   TEAM = 'team'
