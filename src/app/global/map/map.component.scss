@@ -62,16 +62,19 @@ path.location.armed {
 path.location.disarmed {
     opacity: 0.5;
     fill: #00A000;
-    animation: disarmed 2s infinite;
+    animation: disarmed 2.5s infinite;
     transform-origin : center;
     transform-box    : fill-box;
 }
 @keyframes disarmed {
-    from {transform: scale(0.6);
-        opacity: 0.5;
+    0% {transform: scale(0.6);
+        opacity: 0;
     }
-    to {transform: scale(0.2);
-          opacity: 0;
+    10% {transform: scale(0.6);
+        opacity: 0.1;
+    }
+    100% {transform: scale(0.2);
+        opacity: 0.6;
     }
 }
 

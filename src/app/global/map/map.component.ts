@@ -177,12 +177,11 @@ export class MapComponent implements OnInit {
         // to beacon or fill the color as appropriate
         if (element) {
             // This resets the class list to a proper baseline
-            element.classList.forEach(
-                cls => {
-                    element.classList.remove(cls)
-            })
+            while (element.classList.length) {
+
+                element.classList.remove(element.classList.item(0));
+            }
             element.classList.add("location")
-            element.setAttribute("fill", null);
         }
 
         if (element && (device.config == CAPTURE || device.config == REGISTER)) {
