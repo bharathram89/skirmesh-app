@@ -322,8 +322,8 @@ export class MydevicesComponent implements OnInit {
         // THIS WILL NOT continue to stack points - a refresh is required - or it will
         // get updated when an action or player update is pushed over the socket
         for (let device of this.devices) {
-
-            if (device.teamID == null || device.config != 0x0A) {continue}
+            // If the device is not in capture or unstable, skip it.
+            if (device.teamID == null || device.config != 0x0A || !device.stable) {continue}
 
             let actions = this.allActions.filter(action => action.location == this.findLocationFromDeviceID(device.id));
             // If an action exists and the last action doesn't already cover the time

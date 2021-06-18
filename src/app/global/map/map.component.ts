@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ɵConsole } from '@angular/core';
+import { Component, Input, OnInit, ɵConsole, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GameService } from 'src/service/game.service';
 // import * as bootstrap from 'bootstrap';
@@ -24,6 +24,7 @@ export class MapComponent implements OnInit {
 
     @Input() mapID
     @Input() deviceData
+    @Output() deviceChange = new EventEmitter<any>();
 
     tooltipContent = ' '
     socketOBJ;
@@ -158,11 +159,17 @@ export class MapComponent implements OnInit {
 
     updateLocationState(device) {
 
+        // Update device data as well since this is the only time
+        // socketdata for the device is handled.
+        let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
+        if (to_update != -1) {
+            this.deviceData[to_update] = device
+            this.deviceChange.emit(this.deviceData);
+        };
+
         let locID = device.location;
         let stable = device.stable;
         let color = '#' + device.team;
-
-        // this.updateToolTipListener();
 
         let element = document.getElementById("loc" + locID);
         // If the device corresponds to a location and the configuration
