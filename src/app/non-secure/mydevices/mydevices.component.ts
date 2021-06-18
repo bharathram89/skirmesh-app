@@ -369,4 +369,9 @@ export class MydevicesComponent implements OnInit {
     goBackToMainMenu() {
         this.activeGame = false;
     }
+
+
+    getRowClass(player) {
+        return {"is_dead": !player.is_alive};
+    }
 }
