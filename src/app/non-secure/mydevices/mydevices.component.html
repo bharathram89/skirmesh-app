@@ -112,83 +112,16 @@
                 </div>
                 <div *ngIf="currentTab == 'EventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
                     aria-labelledby="v-pills-settings-tab">
+
                     <h3 class="center-cust"> Event History</h3>
 
-                    <!-- <ngx-datatable [rows]="allActions" [columns]="allActionsColumns"> </ngx-datatable> -->
-                    <ngx-datatable class="material" [rows]="allActions" [columnMode]="'standard'" [headerHeight]="50" [footerHeight]="50"
-                    [rowHeight]="50" [scrollbarV]="true"  >
-                  
-                    <ngx-datatable-column name="Team">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{row.team}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                  
-                    <ngx-datatable-column name="Name">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{row.name}}
-                      </ng-template>
-                    </ngx-datatable-column>
-                  
-                    <ngx-datatable-column name="Action">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            {{row.action}}
-                          </ng-template>
-                    </ngx-datatable-column>
-                    
-                    <ngx-datatable-column name="Location">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            {{row.location}}
-                          </ng-template>
-                    </ngx-datatable-column>
-                    
-                    <ngx-datatable-column name="Points">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            {{row.points}}
-                          </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Time">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            {{row.timestamp}}
-                          </ng-template>
-                    </ngx-datatable-column>
-                  
-                  </ngx-datatable>
-                    <!-- <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Team</th>
-                                <th scope="col">Player</th>
-                                <th scope="col">Action</th>
-                                <th scope="col">Location</th>
-                                <th scope="col">Points</th>
-                                <th scope="col">Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let action of allActions">
-                                <th scope="row">
-                                    <ngb-highlight>{{action.team}}</ngb-highlight>
-                                </th>
-                                <td>
-                                    <ngb-highlight>{{action.name}}</ngb-highlight>
-                                </td>
-                                <td>
-                                    <ngb-highlight>{{action.action}}</ngb-highlight>
-                                </td>
-                                <td>
-                                    <ngb-highlight>{{action.location}}</ngb-highlight>
-                                </td>
-                                <td>
-                                    <ngb-highlight>{{action.points}}</ngb-highlight>
-                                </td>
-                                <td >
-                                    <ngb-highlight>{{action.timestamp.toLocaleString('en-US', {hourCycle:"h24"})}}</ngb-highlight>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table> -->
+                    <ngx-datatable
+                        class="material"
+                        [rows]="allActions"
+                        [columns]="allActionsColumns"
+                        [columnMode]="'standard'"
+                        [rowHeight]="'auto'" >
+                    </ngx-datatable>
 
                 </div>
             </div>

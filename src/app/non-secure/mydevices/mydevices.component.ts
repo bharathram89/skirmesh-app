@@ -26,12 +26,12 @@ export class MydevicesComponent implements OnInit {
     players       = [];
     allActions    = [];
 
-    allActionsColumns = [{name:'Team',     prop:'team'},
-                         {name:'Callsign', prop:'name'},
-                         {name:'Action',   prop:'action'},
-                         {name:'Location', prop:'location'},
+    allActionsColumns = [{name:'Team',     prop:'team', sortable:true},
+                         {name:'Callsign', prop:'name', sortable:true},
+                         {name:'Action',   prop:'action', sortable:true},
+                         {name:'Location', prop:'location', sortable:true},
                          {name:'Points',   prop:'points'},
-                         {name:'Time',     prop:'timestamp'}];
+                         {name:'Time',     prop:'timestamp', sortable:true}];
 
     deviceActions = [];
     gameConfigs   = [];
@@ -243,7 +243,7 @@ export class MydevicesComponent implements OnInit {
                     action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                     points    : this.actionList.find(ele => ele.id == act.actionID).points,
                     location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
-                    timestamp : date
+                    timestamp : date.toLocaleString('en-US', {hour12:false})
                 }
                 this.allActions.push(historyObj);
             }
@@ -275,7 +275,7 @@ export class MydevicesComponent implements OnInit {
                     action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                     points    : act.points,
                     location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
-                    timestamp : date
+                    timestamp : date.toLocaleString('en-US', {hour12:false})
                 }
 
                 this.allActions.push(historyObj);
@@ -332,7 +332,6 @@ export class MydevicesComponent implements OnInit {
         }
         // Purge all the stuff without a player name to show the stuff that matters
         this.allActions = this.allActions.filter(act => act.name);
-        console.log(this.allActions,"actions")
     }
 
 
