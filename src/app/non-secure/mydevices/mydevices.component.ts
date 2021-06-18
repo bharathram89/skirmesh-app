@@ -73,8 +73,9 @@ export class MydevicesComponent implements OnInit {
                         // can only have a single active game with that config
                         // That's why we always shift() the first index
                         let game = config.games.shift()
+                        let start = new Date(game.startTime)
                         this.gameCardData.push({'description': config.description,
-                                                'startTime'  : game.startTime,
+                                                'startTime'  : start.toLocaleString('en-US', {hour12:false}),
                                                 'id'         : game.id,
                                                 'mapID'      : config.mapID,
                                                 'devices'    : game.devices});
