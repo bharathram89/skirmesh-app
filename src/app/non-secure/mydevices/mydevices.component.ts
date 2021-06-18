@@ -265,12 +265,11 @@ export class MydevicesComponent implements OnInit {
             }
         });
 
-
         // Assemble TEAM stats from API data
         this.gameStats["team_stats"].forEach(team => {
 
             let team_players = this.players.filter(player => player.teamID == team.id);
-            let plyr_points  = team_players.reduce((prev, next) => prev + next.totalPoints, 0);
+            let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
 
             let team_score = team.data.reduce((accu, ele) => accu + ele.points, 0);
 
@@ -319,14 +318,16 @@ export class MydevicesComponent implements OnInit {
             if (index === -1) {
 
                 let team_players = this.players.filter(player => player.teamID == team.id);
-                // let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+                console.log(team_players)
+                let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+
                 this.teams.push({
                                  teamID       : team.id,
                                  name         : team.name,
                                  color        : '#' + team.color,
                                  score        : 0,
-                                 player_score : 0,
-                                 comb_score   : 0,
+                                 player_score : plyr_points,
+                                 comb_score   : 0 + plyr_points,
                                  players      : team_players,
                                 })
             }
