@@ -60,7 +60,6 @@ export class DashboardComponent implements OnInit {
   }
   temp = [];
 
-  isPlayer;
   isField;
 
   actionList;
@@ -106,7 +105,7 @@ export class DashboardComponent implements OnInit {
         this.currentVals.fieldProfileID = userData.fieldProfile.id;
         this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
       }
-      else if (this.isPlayer) {
+      else {
 
         this.setGameScoreStats(userData);
 

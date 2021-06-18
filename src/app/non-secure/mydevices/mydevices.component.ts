@@ -3,6 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
@@ -41,6 +42,11 @@ export class MydevicesComponent implements OnInit {
     deviceActions = [];
     gameConfigs   = [];
     gameCardData  = [];
+
+    barChartColors = [];
+    barChartData = [];
+
+
     gameID;
     gameStats;
     newAction;
@@ -223,6 +229,9 @@ export class MydevicesComponent implements OnInit {
         this.allActions = [];
         this.teams      = [];
         this.players    = [];
+        // Build barChartData
+        this.barChartData = [];
+        this.barChartColors = [];
 
         // Assemble PLAYER stats from API data
         this.gameStats["player_stats"].forEach(player => {
@@ -255,6 +264,7 @@ export class MydevicesComponent implements OnInit {
                 this.allActions.push(historyObj);
             }
         });
+
 
         // Assemble TEAM stats from API data
         this.gameStats["team_stats"].forEach(team => {
@@ -292,6 +302,12 @@ export class MydevicesComponent implements OnInit {
 
                 this.allActions.push(historyObj);
             }
+
+
+            this.barChartData.push({"name":teamObj.name, "series":[
+                    {"Objective Control":teamObj.score},{"Player Action":teamObj.player_score}
+            ]});
+            this.barChartColors.push(teamObj.color)
 
         });
         // Check to see if teams were built from actions - if not, initialize them
@@ -349,7 +365,10 @@ export class MydevicesComponent implements OnInit {
 
         }
         // Purge all the stuff without a player name to show the stuff that matters
+        this.teams = [...this.teams]
         this.allActions = this.allActions.filter(act => act.name);
+
+        console.log(this.barChartColors, this.barChartData)
     }
 
 

@@ -6,8 +6,8 @@
         <div class="card-body text-center"><img  src="{{currentVals.imageData}}" class="card-profile-img">
           <h3 *ngIf="isField" class="mb-3">{{currentVals.fieldName}}</h3>
           <p *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
-          <h3 *ngIf="isPlayer" class="mb-3">{{currentVals.callSign}}</h3>
-          <p *ngIf="isPlayer" class="mb-4">{{currentVals.bio}}</p>
+          <h3 *ngIf="!isField" class="mb-3">{{currentVals.callSign}}</h3>
+          <p *ngIf="!isField" class="mb-4">{{currentVals.bio}}</p>
         </div>
       </div>
 
@@ -25,7 +25,7 @@
           <div class="form-group">
             <label class="form-label">Phone: {{currentVals.phone}} </label>
           </div>
-          <div *ngIf="isPlayer" class="form-group">
+          <div *ngIf="!isField" class="form-group">
             <label class="form-label">Clan: {{currentVals.clanTag}} </label>
           </div>
         </div>
@@ -43,10 +43,10 @@
 
                 <!-- <div style="max-height: 50vh; max-width: 98vh"> -->
                   <!-- <div style="max-height: 500px; max-width: 500px;"> -->
-                  <ngx-charts-advanced-pie-chart 
-                    [scheme]="colorScheme" 
+                  <ngx-charts-advanced-pie-chart
+                    [scheme]="colorScheme"
                     [results]="pieData"
-                    (select)="onSelect($event)" 
+                    (select)="onSelect($event)"
                     (activate)="onActivate($event)"
                     [view]="chartView"
                     (deactivate)="onDeactivate($event)">

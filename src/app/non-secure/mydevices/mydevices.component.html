@@ -67,6 +67,16 @@
                 <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
 
+                    <ngx-charts-bar-horizontal-stacked
+                        [scheme]="barChartColors"
+                        [results]="barChartData"
+                        [xAxis]="true"
+                        [yAxis]="true"
+                        [legend]="true"
+                        [showYAxisLabel]="showYAxisLabel"
+                        [yAxisLabel]="yAxisLabel">
+                    </ngx-charts-bar-horizontal-stacked>
+
 
                     <div *ngFor="let team of teams" class="team-section">
 
