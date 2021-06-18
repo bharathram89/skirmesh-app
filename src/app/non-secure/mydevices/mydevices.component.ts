@@ -2,8 +2,7 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+ 
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
@@ -304,10 +303,10 @@ export class MydevicesComponent implements OnInit {
 
 
             this.barChartData.push({"name":teamObj.name, "series":[
-                    {"Objective Control":teamObj.score},{"Player Action":teamObj.player_score}
+                    {name:"Objective Control",value:teamObj.score},{name:"Player Action",value:teamObj.player_score}
             ]});
             this.barChartColors.push(teamObj.color)
-
+            console.log('barChartData',this.barChartData)
         });
         // Check to see if teams were built from actions - if not, initialize them
         // with empty data for display

@@ -16,6 +16,7 @@ import { MydevicesComponent } from './mydevices/mydevices.component'
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { HowToUseComponent } from './how-to-use/how-to-use.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 @NgModule({
   declarations: [HowToUseComponent,NonSecureComponent, FeaturesListComponent, HomeComponent, ContactUsComponent, PrivacyPolicyComponent, FaqComponent, PlayerInfoComponent, FieldInfoComponent,MydevicesComponent],
   imports: [
@@ -24,7 +25,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     AuthRoutingModule,
     GlobalModule, 
     CarouselModule,
-    NgxDatatableModule
+    NgxDatatableModule, 
+    NgxChartsModule
   ]
 })
 export class NonSecureModule { }
