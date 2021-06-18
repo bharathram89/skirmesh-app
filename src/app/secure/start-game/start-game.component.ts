@@ -141,11 +141,9 @@ export class StartGameComponent implements OnInit {
     // device to become "active"
     nodeConfigs(device){
 
-      console.log(this.gameInProgress, this.gameData.id)
       if (this.gameInProgress && this.gameData.id) {
 
         device.gameID = this.gameData.id
-        console.log(device)
 
       }
     }
