@@ -21,7 +21,7 @@ export class GamelistComponent implements OnInit {
 
     findMapName(mapID){
 
-        let map = this.userSvc.fieldPf.maps.find(map => map.id == mapID)
+        let map = this.userSvc.fieldProfile.maps.find(map => map.id == mapID)
         return map?.name
     }
 }

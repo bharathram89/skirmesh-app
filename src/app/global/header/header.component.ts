@@ -14,8 +14,8 @@ declare const particlesJS: any;
 export class HeaderComponent implements OnInit {
   isSideNavOpen: boolean = false;
   isSecure:boolean = true;
-  isPlayer = false;
-  isField=false;
+
+  isField  =false;
   userSvc:UserServiceService;
   tokenSvc:TokenStorageService;
 
@@ -40,12 +40,7 @@ export class HeaderComponent implements OnInit {
       this.isSecure = isSignedIn;
     })
 
-    let userType = this.userSvc.getUserTye()
-      if(userType=='field'){
-        this.isField=true;
-      }else if(userType =='player'){
-        this.isPlayer=true;
-      } 
+    this.isField = this.userSvc.isField;
 
     // particlesJS( "particles-js", {
     //   "particles": {

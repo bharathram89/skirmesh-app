@@ -83,7 +83,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.isPlayer = this.userSvc.isPlayer;
     this.isField = this.userSvc.isField;
 
     combineLatest([this.userSvc.getUserData(), this.nonSecAPIsvc.getActionsList()]).subscribe(([userData, actions]) => {

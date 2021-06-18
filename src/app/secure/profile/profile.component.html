@@ -46,21 +46,21 @@
                     placeholder="{{currentVals.lastName}}">
                 </div>
               </div>
-              <div *ngIf="isPlayer" class="form-group">
+              <div *ngIf="!isField" class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">Clan Tag</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
                   <input formControlName="clanTag" type="text" class="form-control"
                     placeholder="{{currentVals.clanTag}}">
                 </div>
               </div>
-              <div *ngIf="isPlayer" class="form-group">
+              <div *ngIf="!isField" class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">Call Sign</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
                   <input formControlName="callSign" type="text" class="form-control"
                     placeholder="{{currentVals.callSign}}">
                 </div>
               </div>
-              <div *ngIf="isPlayer" class="form-group">
+              <div *ngIf="!isField" class="form-group">
                 <label class="col-md-2 col-sm-3 col-xs-12 control-label">Bio</label>
                 <div class="col-md-10 col-sm-9 col-xs-12">
                   <input formControlName="bio" type="text" class="form-control" placeholder="{{currentVals.bio}}">
@@ -197,7 +197,7 @@
               </div>
             </div>
 
-            <div *ngIf="isPlayer" class="login-screen">
+            <div *ngIf="!isField" class="login-screen">
 
               <h4>Currently Connected to Profile:</h4>
               <table style="width:100%">

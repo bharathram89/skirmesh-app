@@ -92,7 +92,7 @@ export class DeviceListComponent implements OnInit {
 
           if(modeConfig.mapID){
 
-            this.locationsToSet = this.userSvc.fieldPf.maps.find(m => m.id == modeConfig.mapID)?.locations;
+            this.locationsToSet = this.userSvc.fieldProfile.maps.find(m => m.id == modeConfig.mapID)?.locations;
 
               let arr=[];
 
