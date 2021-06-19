@@ -43,6 +43,7 @@ export class MydevicesComponent implements OnInit {
     gameCardData  = [];
 
     barChartData = [];
+    barChartColors = {domain: ['#A00000', '#008000']};
 
     gameID;
     gameStats;
@@ -70,7 +71,6 @@ export class MydevicesComponent implements OnInit {
             .subscribe(
 
                 ([activeGamesByConfig, location, actions]) => {
-                    // console.log(window.location.href,"url",window.location.search)
 
                     this.locationList        = location;
                     this.actionList          = actions;
@@ -195,21 +195,39 @@ export class MydevicesComponent implements OnInit {
 
     updateActionAndCalcScore(action){
 
-        if (action.teamID && !action.rfidID){
+        if (action.gameID == this.gameID && action.teamID && !action.rfidID){
 
             let team = this.gameStats["team_stats"].find(ele => ele.id == action.teamID);
             if (team) {
                 team.data.push(action);
-                this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
             }
+            else if (this.gameConfig.teams.find(ele => ele.teamID == action.teamID)) {
+                this.gameStats["team_stats"].push({
+                    "id"   : action.teamID,
+                    "name" : this.gameConfig.teams.find(ele => ele.teamID == action.teamID).name,
+                    "color": this.gameConfig.teams.find(ele => ele.teamID == action.teamID).color,
+                    "data" : [action]
+                })
+            }
+            this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
         }
-        else if (action.rfidID) {
+
+        else if (action.gameID == this.gameID && action.rfidID) {
 
             let player = this.gameStats["player_stats"].find(ele => ele.rfidID == action.rfidID);
             if (player) {
                 player.data.push(action);
-                this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
             }
+            else {
+                this.gameStats["player_stats"].push({
+                    "rfidID"   : action.rfidID,
+                    "teamID"   : action.teamID,
+                    "name"     : "Refresh for Callsign",
+                    "is_alive" : true,
+                    "data"     : [action]
+                })
+            }
+            this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
         }
 
         this.calcScoreAndSetActions();
@@ -259,6 +277,7 @@ export class MydevicesComponent implements OnInit {
                 }
                 this.allActions.push(historyObj);
             }
+
         });
 
         // Assemble TEAM stats from API data
@@ -298,18 +317,18 @@ export class MydevicesComponent implements OnInit {
                 this.allActions.push(historyObj);
             }
 
-
             this.barChartData.push({"name":teamObj.name, "series":[
                     {name:"Objective Control",value:teamObj.score},{name:"Player Action",value:teamObj.player_score}
             ]});
+
         });
         // Check to see if teams were built from actions - if not, initialize them
         // with empty data for display
         for (let team of this.gameConfig['teams']) {
 
-            var index = this.teams.map(function(t) { return t.teamID }).indexOf(team.id);
+            var is_team = this.teams.find(ele => ele.teamID == team.id);
             // this shouldn't execute after teams have action
-            if (index === -1) {
+            if (!is_team) {
 
                 let team_players = this.players.filter(player => player.teamID == team.id);
                 let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
@@ -359,7 +378,8 @@ export class MydevicesComponent implements OnInit {
 
                     dev_team.score      += add_score;
                     dev_team.comb_score += add_score;
-                    bar_data.series[0].value += add_score;
+
+                    if (bar_data) {bar_data.series[0].value += add_score;}
                 }
             }
 
@@ -367,8 +387,6 @@ export class MydevicesComponent implements OnInit {
         // Purge all the stuff without a player name to show the stuff that matters
         this.teams = [...this.teams]
         this.allActions = this.allActions.filter(act => act.name);
-
-        console.log(this.barChartData)
     }
 
 
