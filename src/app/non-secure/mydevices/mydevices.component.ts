@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
- 
+
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
@@ -42,9 +42,7 @@ export class MydevicesComponent implements OnInit {
     gameConfigs   = [];
     gameCardData  = [];
 
-    barChartColors = [];
     barChartData = [];
-
 
     gameID;
     gameStats;
@@ -230,7 +228,6 @@ export class MydevicesComponent implements OnInit {
         this.players    = [];
         // Build barChartData
         this.barChartData = [];
-        this.barChartColors = [];
 
         // Assemble PLAYER stats from API data
         this.gameStats["player_stats"].forEach(player => {
@@ -305,8 +302,6 @@ export class MydevicesComponent implements OnInit {
             this.barChartData.push({"name":teamObj.name, "series":[
                     {name:"Objective Control",value:teamObj.score},{name:"Player Action",value:teamObj.player_score}
             ]});
-            this.barChartColors.push(teamObj.color)
-            console.log('barChartData',this.barChartData)
         });
         // Check to see if teams were built from actions - if not, initialize them
         // with empty data for display
@@ -317,7 +312,6 @@ export class MydevicesComponent implements OnInit {
             if (index === -1) {
 
                 let team_players = this.players.filter(player => player.teamID == team.id);
-                console.log(team_players)
                 let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
 
                 this.teams.push({
@@ -329,7 +323,12 @@ export class MydevicesComponent implements OnInit {
                                  comb_score   : 0 + plyr_points,
                                  players      : team_players,
                                 })
+
+                this.barChartData.push({"name":team.name, "teamID":team.id, "series":[
+                        {name:"Objective Control",value: 0},{name:"Player Action",value:plyr_points}
+                ]});
             }
+
         }
         // Sort actions descending
         this.allActions.sort((a, b) => b.id - a.id);
@@ -356,10 +355,11 @@ export class MydevicesComponent implements OnInit {
                     let add_score = Math.floor(((now - lastActionTime)/1000) / device.point_scale);
 
                     let dev_team = this.teams.find(team => team.teamID == device.teamID);
+                    let bar_data = this.barChartData.find(team => team.teamID == device.teamID);
 
                     dev_team.score      += add_score;
                     dev_team.comb_score += add_score;
-
+                    bar_data.series[0].value += add_score;
                 }
             }
 
@@ -368,7 +368,7 @@ export class MydevicesComponent implements OnInit {
         this.teams = [...this.teams]
         this.allActions = this.allActions.filter(act => act.name);
 
-        console.log(this.barChartColors, this.barChartData)
+        console.log(this.barChartData)
     }
 
 
