@@ -60,7 +60,6 @@ export class DashboardComponent implements OnInit {
   }
   temp = [];
 
-  isPlayer;
   isField;
 
   actionList;
@@ -83,7 +82,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.isPlayer = this.userSvc.isPlayer;
     this.isField = this.userSvc.isField;
 
     combineLatest([this.userSvc.getUserData(), this.nonSecAPIsvc.getActionsList()]).subscribe(([userData, actions]) => {
@@ -107,7 +105,7 @@ export class DashboardComponent implements OnInit {
         this.currentVals.fieldProfileID = userData.fieldProfile.id;
         this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
       }
-      else if (this.isPlayer) {
+      else {
 
         this.setGameScoreStats(userData);
 

@@ -13,74 +13,62 @@ export class UserServiceService {
   userData: BehaviorSubject<any>;
   tokenSvc:TokenStorageService;
   isField:boolean=false;
-  isPlayer:boolean=false;
   token;
   fieldProfileID;
   fieldProfile;
-  fieldPf;
 
   constructor(
     tokenService: TokenStorageService
   ) {
-    this.tokenSvc= tokenService;
-    this.signedIn = new BehaviorSubject(false);
-    this.userData = new BehaviorSubject({});
+    this.tokenSvc     = tokenService;
+    this.signedIn     = new BehaviorSubject(false);
+    this.userData     = new BehaviorSubject({});
     this.fieldProfile = new BehaviorSubject({});
   }
 
 
-  setUserData(userData){
+    setUserData(userData){
 
-    if(userData.user.type=='field'){
+        if(userData.user.fieldProfile){
 
-      this.isField = true;
-      this.isPlayer = false;
-      this.fieldProfileID = userData.user.fieldProfile.id;
-      this.fieldPf = userData.user.fieldProfile;
-      this.fieldProfile = userData.user.fieldProfile;
+            this.isField = true;
+
+            this.fieldProfileID = userData.user.fieldProfile.id;
+            this.fieldProfile = userData.user.fieldProfile;
+        }
+
+        this.token = userData.token;
+
+        this.userData.next(userData.user)
+        this.tokenSvc.saveToken(userData.token)
     }
-    else if (userData.user.type =='player'){
 
-      this.isPlayer = true;
-      this.isField = false;
+    getFieldProfileID(){
+        return this.fieldProfileID;
     }
 
-    this.token= userData.token;
-    this.userType = userData.user.type;
-    this.userData.next(userData.user)
-    this.tokenSvc.saveToken(userData.token)
-  }
+    getFieldProfile(){
+        return this.fieldProfile;
+    }
 
-  getFieldProfileID(){
-    return this.fieldProfileID;
-  }
+    setSignIn(val: boolean) {
+        this.signedIn.next(val);
+    }
 
-  getFieldProfile(){
-    return this.fieldProfile;
-  }
+    isSignedIn() {
+        return this.signedIn;
+    }
 
-  setSignIn(val: boolean) {
-    this.signedIn.next(val);
-  }
+    getUserData(){
+        return this.userData;
+    }
 
-  isSignedIn() {
-    return this.signedIn;
-  }
+    getToken(){
+        return this.token;
+    }
 
-  getUserTye(){
-    return this.userType;
-  }
-
-  getUserData(){
-    return this.userData;
-  }
-
-  getToken(){
-    return this.token;
-  }
-  // fieldPf
-  getGameModes(){
-    return this.fieldPf.gameConfigs;
-  }
+    getGameModes(){
+        return this.fieldProfile.gameConfigs;
+    }
 
 }

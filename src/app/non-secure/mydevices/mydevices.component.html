@@ -60,20 +60,32 @@
 
                     <div class="btn-primary btn fb_share" data-href="https://play.skirmesh.net/non-secure/live-games" data-layout="button_count" data-size="small"><a target="_blank" href="{{fbShareUrl}}" class="fb-xfbml-parse-ignore">Share To Facebook!</a></div>
 
-                    <app-map [mapID]="map" [deviceData]="devices"></app-map>
+                    <app-map [mapID]="map" [(deviceData)]="devices"></app-map>
 
 
                 </div>
                 <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
+                <div class="row">
 
+                    <ngx-charts-bar-horizontal-stacked
+                        [results]="barChartData"
+                        [xAxis]="true"
+                        [yAxis]="true"
+                        [legend]="true"
+                        [showYAxisLabel]="showYAxisLabel"
+                        [yAxisLabel]="yAxisLabel">
+                    </ngx-charts-bar-horizontal-stacked>
+
+                </div>
 
                     <div *ngFor="let team of teams" class="team-section">
 
                             <div class="cust_text text-xs-center p-y-1" [style.background-color]="team.color">
 
-                                <h3> {{team.name}} | Team: {{team.score}}pts
-                                                   | Total: {{team.comb_score}}pts </h3>
+                                <h3> {{team.name}} <div style="float:right;">Total: {{team.comb_score}}pts</div>
+                                    <br/> Objective Control: {{team.score}}pts | Team Members: {{team.player_score}}pts
+                                </h3>
                             </div>
 
                             <ngx-datatable
@@ -100,8 +112,9 @@
                         class="material striped"
                         [rows]="allActions"
                         [columns]="allActionsColumns"
-                        [columnMode]="'force'"
-                        [rowHeight]="'auto'" >
+                        [columnMode]="'standard'"
+                        [rowHeight]="'auto'"
+                        [scrollbarH]="true">
                     </ngx-datatable>
 
                 </div>

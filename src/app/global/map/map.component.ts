@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ɵConsole } from '@angular/core';
+import { Component, Input, OnInit, ɵConsole, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GameService } from 'src/service/game.service';
 // import * as bootstrap from 'bootstrap';
@@ -24,6 +24,7 @@ export class MapComponent implements OnInit {
 
     @Input() mapID
     @Input() deviceData
+    @Output() deviceChange = new EventEmitter<any>();
 
     tooltipContent = ' '
     socketOBJ;
@@ -158,11 +159,17 @@ export class MapComponent implements OnInit {
 
     updateLocationState(device) {
 
+        // Update device data as well since this is the only time
+        // socketdata for the device is handled.
+        let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
+        if (to_update != -1) {
+            this.deviceData[to_update] = device
+            this.deviceChange.emit(this.deviceData);
+        };
+
         let locID = device.location;
         let stable = device.stable;
         let color = '#' + device.team;
-
-        // this.updateToolTipListener();
 
         let element = document.getElementById("loc" + locID);
         // If the device corresponds to a location and the configuration
@@ -170,12 +177,11 @@ export class MapComponent implements OnInit {
         // to beacon or fill the color as appropriate
         if (element) {
             // This resets the class list to a proper baseline
-            element.classList.forEach(
-                cls => {
-                    element.classList.remove(cls)
-            })
+            while (element.classList.length) {
+
+                element.classList.remove(element.classList.item(0));
+            }
             element.classList.add("location")
-            element.setAttribute("fill", null);
         }
 
         if (element && (device.config == CAPTURE || device.config == REGISTER)) {

@@ -50,8 +50,7 @@ export class ProfileComponent implements OnInit {
             profileImage: ''
            }
 
-  isField: boolean;
-  isPlayer: boolean;
+  isField: boolean=false;
 
   currentVals = {
                   firstName:      '',
@@ -87,8 +86,6 @@ export class ProfileComponent implements OnInit {
 
     this.pfSection.style.display = 'block';
 
-    this.isPlayer        = this.userSvc.isPlayer;
-    this.isField         = this.userSvc.isField;
 
     this.passReset = new FormGroup({
       "pass": new FormControl(this.resetPass.pass, [
@@ -100,6 +97,7 @@ export class ProfileComponent implements OnInit {
       ])
     },{ validators: this.checkPasswords.bind(this) })
 
+
     this.uidEntry = new FormGroup({
       "uid": new FormControl(this.enterUID.uid, [
         Validators.required,
@@ -110,6 +108,7 @@ export class ProfileComponent implements OnInit {
         Validators.required
       ])
     },{ validators: this.checkRFIDs.bind(this) })
+
 
     this.profileForm = new FormGroup({
 
@@ -131,7 +130,9 @@ export class ProfileComponent implements OnInit {
 
       userData => {
 
-        if (this.isField) {
+        if (userData.fieldProfile) {
+
+          this.isField = true;
 
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
@@ -139,7 +140,7 @@ export class ProfileComponent implements OnInit {
           this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : null;
         }
 
-        else if (this.isPlayer) {
+        else {
           this.connectedRfids = userData.rfids;
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
@@ -305,7 +306,7 @@ export class ProfileComponent implements OnInit {
       // Need to include fieldProfile.id
       data.field['id'] = this.currentVals.fieldProfileID;
 
-    } else if (this.isPlayer) {
+    } else {
       this.profileForm.value.callSign ? data.user['callSign'] = this.profileForm.value.callSign:null;
       this.profileForm.value.bio ? data.player['outfit'] = this.profileForm.value.bio : null;
       this.profileForm.value.clanTag ? data.player['clanTag'] = this.profileForm.value.clanTag : null;
