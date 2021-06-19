@@ -406,7 +406,14 @@ export class ProfileComponent implements OnInit {
 
     // console.log(data)
 
-    this.secAPIsvc.saveImage(this.userSvc.getToken(), data);
+    this.secAPIsvc.saveImage(this.userSvc.getToken(), data).subscribe(
+        resp => {
+            document.getElementById('imageUpdateMessage').classList.remove('d-none')
+        },
+        err => {
+            document.getElementById('imageUpdateFailedMessage').classList.remove('d-none')
+        }
+    );;
 
 
 

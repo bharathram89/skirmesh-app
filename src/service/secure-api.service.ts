@@ -141,13 +141,9 @@ export class SecureAPIService {
       let route = this.BASE + this.SEC + this.IMAG;
 
       const options = { params  : new HttpParams().set("token", token),
-                        headers : this.headers }
+                        headers : this.headers}
 
-      this.http.put(route, data, options).subscribe(
-          resp => {},
-          err => {}
-      );
-
+      return this.http.put(route, data, options);
   }
 
   getUser(token) {
