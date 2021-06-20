@@ -80,28 +80,30 @@ path.location.disarmed {
 
 
 path.demo {
-  animation: explode 1.5s infinite linear;
+  animation: explode 2s infinite linear;
   transform-origin : center;
   transform-box    : fill-box;
+  transform        : scale(0.8);
   stroke-width: 2px;
   stroke-dasharray: 10;
   stroke: #FF0000;
   fill: #CC5500;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 0.5rem #FAA) drop-shadow( 0 0 0.5rem #C50);
 }
 @keyframes explode {
   0% {
       stroke-dashoffset: 0;
-      opacity: 0.25;
   }
   50% {
       stroke-dashoffset: 10;
       fill: #FF0000;
       opacity: 0.75;
-      transform: scale(0.9);
+      transform: scale(0.85);
+      filter: drop-shadow(0 0 0.5rem #FAA) drop-shadow(0 0 .5rem #C50) drop-shadow(0 0 .25rem #FAA);
   }
   100% {
       stroke-dashoffset: 20;
-      opacity: 0.25;
   }
 }
 
