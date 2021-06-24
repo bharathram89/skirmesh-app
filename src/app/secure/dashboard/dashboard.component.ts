@@ -175,11 +175,11 @@ export class DashboardComponent implements OnInit {
       }
     }
 
-    let stackedAreaData = [{"name"  :"Medic Events",
-                            "series":[]},
-                           {"name"  :"Captures",
+    let stackedAreaData = [{"name"  :"Captures",
                             "series":[]},
                            {"name"  :"Assists",
+                            "series":[]},
+                           {"name"  :"Medic Events",
                             "series":[]},
                            {"name"  :"Bombs Armed",
                             "series":[]},
@@ -238,9 +238,9 @@ export class DashboardComponent implements OnInit {
             id       : game.id,
             // start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
             // end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
-            pieData  : [{name:"Medics",         value:medics},
-                        {name:"Captures",       value:captures},
+            pieData  : [{name:"Captures",       value:captures},
                         {name:"Assists",        value:assists},
+                        {name:"Medics",         value:medics},
                         {name:"Bombs Armed",    value:bombArm},
                         {name:"Bombs Diffused", value:bombDis}]
             // duration : new Date(duration).toUTCString().slice(17,25)
@@ -256,9 +256,9 @@ export class DashboardComponent implements OnInit {
         stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
 
     }
-    this.pieData = [{name:"Medics",         value:this.totalMedics},
-                    {name:"Captures",       value:this.totalCaptures},
+    this.pieData = [{name:"Captures",       value:this.totalCaptures},
                     {name:"Assists",        value:this.totalAssists},
+                    {name:"Medics",         value:this.totalMedics},
                     {name:"Bombs Armed",    value:this.totalBombArm},
                     {name:"Bombs Diffused", value:this.totalBombDis}]
 
@@ -302,11 +302,11 @@ export class DashboardComponent implements OnInit {
 
             games = data;
 
-            let stackedAreaData = [{"name"  :"Medic Events",
-                                    "series":[]},
-                                   {"name"  :"Captures",
+            let stackedAreaData = [{"name"  :"Captures",
                                     "series":[]},
                                    {"name"  :"Assists",
+                                    "series":[]},
+                                   {"name"  :"Medic Events",
                                     "series":[]},
                                    {"name"  :"Bombs Armed",
                                     "series":[]},
@@ -362,9 +362,9 @@ export class DashboardComponent implements OnInit {
 
                 let duration = Date.parse(game.endTime) - Date.parse(game.startTime);
 
-                let pieData = [{name:"Medics",        value:medics},
-                               {name:"Captures",      value:captures},
+                let pieData = [{name:"Captures",      value:captures},
                                {name:"Assists",       value:assists},
+                               {name:"Medics",        value:medics},
                                {name:"Bombs Armed",   value:bombArm},
                                {name:"Bombs Diffused",value:bombDis}];
 
@@ -388,9 +388,9 @@ export class DashboardComponent implements OnInit {
             }
 
 
-            this.pieData = [{name:"Medics",        value:this.totalMedics},
-                            {name:"Captures",      value:this.totalCaptures},
+            this.pieData = [{name:"Captures",      value:this.totalCaptures},
                             {name:"Assists",       value:this.totalAssists},
+                            {name:"Medics",        value:this.totalMedics},
                             {name:"Bombs Armed",   value:this.totalBombArm},
                             {name:"Bombs Diffused",value:this.totalBombDis}];
 
