@@ -306,65 +306,75 @@
 <div *ngIf="mapID==6">
     <svg
        version="1.1"
-       viewBox="0 0 562 764"
+       viewBox="0 0 764 562"
        class="map"
        id="map6">
       <metadata/>
       <defs/>
-      <g>
+      <g transform="rotate(90,382.1584,382.46191)">
         <image
            xlink:href="../../../assets/images/KDK_Airsoft.png"
            preserveAspectRatio="none"
            height="764"
            width="562" />
-        <path
-           d="M 189.35142,294.86067 H 6.594328 L 6.5394408,5.2315526 221.36007,5.5585247 189.97075,36.94784 Z"
-           id="loc56"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
-        <path
-           d="m 221.36007,5.5585247 90.77827,0.5220923 33.44339,50.671808 v 94.249565 l 12.22112,26.4061 v 29.86669 l 1.19467,32.85335 0.59733,54.35736 -170.24343,0.37518 0.61933,-257.91283 z"
-           id="loc57"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
-        <path
-           d="m 359.59485,294.48549 195.32811,0.59733 0.59733,-290.3041508 -243.38195,1.3019478 33.44339,50.671808 v 94.249565 l 12.22112,26.4061 v 30.46402 l 1.19467,31.65868 z"
-           id="loc58"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
-        <path
-           d="M 6.594328,294.86067 H 189.35142 l -2.38599,61.15018 -16.12801,12.54401 13.73868,19.71201 0.59733,83.62671 -178.6027599,-0.59733 z"
-           id="loc59"
-           [tooltip]="tooltipTemplate"
-            container="tooltipContainer"
-           class="location" />
-        <path
-           d="m 189.35142,294.86067 170.24343,-0.37518 2.38934,33.45068 16.12801,27.47735 14.93334,13.14134 -12.54401,17.32268 v 86.01604 h -195.3281 l -0.59733,-83.62671 -13.73868,-19.71201 16.12801,-12.54401 z"
-           id="loc60"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
-        <path
-           d="m 359.59485,294.48549 195.32811,0.59733 0.59733,176.81076 H 380.50153 v -86.01604 l 12.54401,-17.32268 -14.93334,-13.14134 -16.12801,-27.47735 z"
-           id="loc61"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
-        <path
-           d="m 6.5706701,471.29625 178.6027599,0.59733 h 33.45068 v 65.7067 l -13.73867,31.06135 -1.19467,188.75743 H 5.9733365 Z"
-           id="loc62"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
-        <path
-           d="m 218.62411,471.89358 v 65.7067 l -13.73867,31.06135 -1.19467,188.75743 H 424.70422 V 695.8937 l 14.33601,-20.30935 7.76534,-24.49068 -0.59734,-136.19207 h 108.71473 l 0.59733,-43.00802 H 380.50153 Z"
-           id="loc63"
-           [tooltip]="tooltipTemplate"
-           container="tooltipContainer"
-           class="location" />
+           <path
+              d="M 189.35142,294.86067 H 6.594328 L 6.5394408,5.2315526 221.36007,5.5585247 189.97075,36.94784 Z"
+              id="loc56"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 221.36007,5.5585247 0.0612,24.2003463 90.72694,-0.500894 -0.01,-23.17736 33.44339,50.671808 v 94.249565 l 12.22112,26.4061 v 29.86669 l 1.19467,32.85335 0.59733,54.35736 -170.24343,0.37518 0.61933,-257.91283 z"
+              id="loc57"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 359.59485,294.48549 195.32811,0.59733 0.59733,-290.3041508 -243.38195,1.3019478 33.44339,50.671808 v 94.249565 l 12.22112,26.4061 v 30.46402 l 1.19467,31.65868 z"
+              id="loc58"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="M 6.594328,294.86067 H 189.35142 l -2.38599,61.15018 -16.12801,12.54401 13.73868,19.71201 0.59733,83.62671 -178.6027599,-0.59733 z"
+              id="loc59"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 189.35142,294.86067 170.24343,-0.37518 2.38934,33.45068 16.12801,27.47735 14.93334,13.14134 -12.54401,17.32268 v 86.01604 h -195.3281 l -0.59733,-83.62671 -13.73868,-19.71201 16.12801,-12.54401 z"
+              id="loc60"
+              class="location" />
+           <path
+              d="m 359.59485,294.48549 195.32811,0.59733 0.59733,176.81076 H 380.50153 v -86.01604 l 12.54401,-17.32268 -14.93334,-13.14134 -16.12801,-27.47735 z"
+              id="loc61"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 6.5706701,471.29625 178.6027599,0.59733 h 33.45068 v 65.7067 l -13.73867,31.06135 -0.95367,150.6802 -0.241,38.07723 H 5.9733365 Z"
+              id="loc62"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 218.62411,471.89358 v 65.7067 l -13.73867,31.06135 -0.27085,148.1093 115.44423,-0.52047 0.20357,39.32096 H 424.70422 V 695.8937 l 14.33601,-20.30935 7.76534,-24.49068 -0.59734,-136.19207 h 108.71473 l 0.59733,-43.00802 H 380.50153 Z"
+              id="loc63"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 204.61459,716.77093 -0.92382,40.64813 116.57162,-1.84764 -0.20357,-39.32096 z"
+              id="loc64"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
+           <path
+              d="m 221.36007,5.55852 0.0612,24.20035 90.72694,-0.50089 -0.01,-23.17736 z"
+              id="loc65"
+              class="location"
+              [tooltip]="tooltipTemplate"
+              container="tooltipContainer" />
       </g>
     </svg>
 </div>
