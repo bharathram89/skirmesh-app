@@ -184,7 +184,11 @@ export class MydevicesComponent implements OnInit {
 
 
     updatePlayerData(player) {
+        // The update needs to be for a player on a team in this configuration
+        if (!this.gameConfig.teams.find(ele => ele.id == player.teamID)) {return}
+
         let index = this.gameStats["player_stats"].findIndex(ele => ele.rfidID == player.rfidID);
+
         if (index != -1) {
             this.gameStats["player_stats"][index].is_alive = player.is_alive;
             this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
@@ -194,14 +198,18 @@ export class MydevicesComponent implements OnInit {
 
 
     updateActionAndCalcScore(action){
-
-        if (action.gameID == this.gameID && action.teamID && !action.rfidID){
+        // The action needs to be for a team in this game
+        if (action.gameID != this.gameID) {return}
+        // The action must be associated with a team in this configuration
+        if (!this.gameConfig.teams.find(ele => ele.id == action.teamID)) {return}
+        // If no RFID associated, push to team_stats
+        if (!action.rfidID){
 
             let team = this.gameStats["team_stats"].find(ele => ele.id == action.teamID);
             if (team) {
                 team.data.push(action);
             }
-            else if (this.gameConfig.teams.find(ele => ele.teamID == action.teamID)) {
+            else {
                 this.gameStats["team_stats"].push({
                     "id"   : action.teamID,
                     "name" : this.gameConfig.teams.find(ele => ele.teamID == action.teamID).name,
@@ -211,8 +219,8 @@ export class MydevicesComponent implements OnInit {
             }
             this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
         }
-
-        else if (action.gameID == this.gameID && action.rfidID) {
+        // If RFID associated, push to player_stats
+        else {
 
             let player = this.gameStats["player_stats"].find(ele => ele.rfidID == action.rfidID);
             if (player) {
