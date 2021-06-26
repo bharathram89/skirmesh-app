@@ -19,10 +19,6 @@ export class SignUpComponent implements OnInit {
   fields   = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
   fbFields = { pass:'', confirmPass:''}
 
-  fbPassword   : boolean=false;
-  socialLogin  : boolean=false;
-  socialData   : Object;
-
   constructor(
     private socialAuthService: SocialAuthService,
     private nonSecAPIsvc : NonSecureAPIService
@@ -133,47 +129,52 @@ export class SignUpComponent implements OnInit {
 
     loginWithFacebook(): void {
 
-        this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
-
-            this.socialLogin = true;
-            console.log(fbData,"fb data");
+        this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData => {
 
             let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
-            // fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to
-            // that and then transform the data to what we need and store it in back end
-            // TODO later : The hashed facebook column to stores all that data in a protected way -
-            // we can unhash it to get the picture url if necessary and store it with their Profile.
-            this.socialData = {
+
+            let socialData = {
                 "facebookID" : fbData.id,
-                "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
+                // "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
                 "callSign"   : fbData.name,
                 "firstName"  : fbData.firstName,
                 "lastName"   : fbData.lastName,
-                "password"   : '',
+                "password"   : fbData.name + this.getRandomInt(),
                 "email"      : fbData.email,
                 "type"       : type
             }
+
+            this.submitSocial(socialData);
         });
     }
 
     signInWithGoogle(): void {
-        this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
-            this.socialLogin = true;
-            console.log(googleData,"google Data");
-            // let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
-            // //fb.Data.response.picture.data.url has url for image of user in fb so we can make a get call to that and then transform the data to what we need and store it in back end
-            this.socialData = {
+
+        this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData => {
+
+            let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
+
+            let socialData = {
                 "googleID"  : googleData.id,
-                "google"    : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
+                // "google"    : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
                 "callSign"  : googleData.name,
                 "firstName" : googleData.firstName,
                 "lastName"  : googleData.lastName,
-                "password"  : '',
+                "password"  : googleData.name + this.getRandomInt(),
                 "email"     : googleData.email,
-                "type"      : 'player'
+                "type"      : type
             }
-        });;
+
+            this.submitSocial(socialData);
+        });
     }
+
+
+  getRandomInt() {
+
+      return Math.floor(Math.random() * 100000)
+  }
+
 
   onSubmit() {
     let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
@@ -189,24 +190,22 @@ export class SignUpComponent implements OnInit {
       document.getElementById('userCreatedMessage').classList.toggle('d-none')
     },
     err=>{
-      document.getElementById('userCreatFaileddMessage').classList.toggle('d-none')
+      document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
       console.log(err,"resp")
     })
   }
-  onSocialSubmit(){
-    this.socialData['password']=this.socailPass.value.pass;
-    console.log(this.socialData, this.socailPass.value.pass)
-    this.nonSecAPIsvc.createUser(this.socialData).subscribe(data=>{
-      document.getElementById('FBuserCreatedMessage').classList.toggle('d-none')
-      console.log(data,'fb user created')
+
+
+  submitSocial(socialData){
+
+    this.nonSecAPIsvc.createUser(socialData).subscribe(data => {
+      document.getElementById('userCreatedMessage').classList.toggle('d-none')
+      console.log(data,'social user created')
     },
-    err=>{
-      document.getElementById('FBuserCreatFaileddMessage').classList.toggle('d-none')
+    err => {
+      document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
       console.log(err,"resp")
     })
   }
-
-
-
 
 }
