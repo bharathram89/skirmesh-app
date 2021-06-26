@@ -64,39 +64,14 @@ export class MydevicesComponent implements OnInit {
 
     ngOnInit() {
 
-        combineLatest([this.nonSecAPIsvc.getActiveGamesByConfig(),
-                       this.nonSecAPIsvc.getLocationsList(),
-                       this.nonSecAPIsvc.getActionsList()
-            ])
-            .subscribe(
+        this.setGameData();
 
-                ([activeGamesByConfig, location, actions]) => {
-
-                    this.locationList        = location;
-                    this.actionList          = actions;
-                    this.activeGamesByConfig = activeGamesByConfig;
-
-                    for (let config of this.activeGamesByConfig) {
-                        // This works well, for now, because each game config
-                        // can only have a single active game with that config
-                        // That's why we always shift() the first index
-                        let game = config.games.shift()
-                        let start = new Date(game.startTime)
-                        this.gameCardData.push({'description': config.description,
-                                                'startTime'  : start.toLocaleString('en-US', {hour12:false}),
-                                                'id'         : game.id,
-                                                'mapID'      : config.mapID,
-                                                'devices'    : game.devices});
-
-                        this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
-                    }
-                    if(window.location.href.includes('gameid')){
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const gameid = urlParams.get('gameid')
-                        //Need to check if game is active else we get console error.
-                        this.selectActiveGame({target:{value:gameid}})
-                    }
-            })
+        if(window.location.href.includes('gameid')){
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameid = urlParams.get('gameid')
+            //Need to check if game is active else we get console error.
+            this.selectActiveGame({target:{value:gameid}})
+        }
     }
 
     ngAfterViewInit() {
@@ -135,9 +110,46 @@ export class MydevicesComponent implements OnInit {
                         }
                     )
                 }
+
+                this.setGameData();
             }
         )
     }
+
+
+    setGameData() {
+
+        combineLatest([this.nonSecAPIsvc.getActiveGamesByConfig(),
+                       this.nonSecAPIsvc.getLocationsList(),
+                       this.nonSecAPIsvc.getActionsList()
+            ])
+            .subscribe(
+
+                ([activeGamesByConfig, location, actions]) => {
+
+                    this.gameCardData = [];
+
+                    this.locationList        = location;
+                    this.actionList          = actions;
+                    this.activeGamesByConfig = activeGamesByConfig;
+
+                    for (let config of this.activeGamesByConfig) {
+                        // This works well, for now, because each game config
+                        // can only have a single active game with that config
+                        // That's why we always shift() the first index
+                        let game = config.games.shift()
+                        let start = new Date(game.startTime)
+                        this.gameCardData.push({'description': config.description,
+                                                'startTime'  : start.toLocaleString('en-US', {hour12:false}),
+                                                'id'         : game.id,
+                                                'mapID'      : config.mapID,
+                                                'devices'    : game.devices});
+
+                        this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
+                    }
+            })
+    }
+
 
     ngOnDestroy(): void {
         //Called once, before the instance is destroyed.
