@@ -21,7 +21,6 @@ export class ProfileComponent implements OnInit {
   connectedRfids;
 
   deleteAccount = false;
-  deleteUserFailed = false;
 
   pfNav           : HTMLElement;
   securityNav     : HTMLElement;
@@ -186,7 +185,7 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/non-secure']);
       },
       err => {
-        this.deleteUserFailed = true;
+        document.getElementById('deleteUserFailed').classList.remove('d-none');
       }
   )
   }
