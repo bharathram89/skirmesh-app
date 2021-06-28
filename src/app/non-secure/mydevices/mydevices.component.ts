@@ -337,7 +337,7 @@ export class MydevicesComponent implements OnInit {
                 this.allActions.push(historyObj);
             }
 
-            this.barChartData.push({"name":teamObj.name, "series":[
+            this.barChartData.push({"name":teamObj.name, "teamID":team.id, "series":[
                     {name:"Objective Control",value:teamObj.score},{name:"Player Action",value:teamObj.player_score}
             ]});
 
