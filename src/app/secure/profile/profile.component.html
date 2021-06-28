@@ -345,11 +345,11 @@
                         </div>
                       </form>
                       <div>
-                        <div *ngIf="passResetPassed" class="alert alert-primary d-none center-cust">
+                        <div id="passResetPassed" class="alert alert-primary d-none center-cust">
                           Your password is changed<br>
                           <a [routerLink]="['/auth/login']">LOGIN</a>.
                         </div>
-                        <div *ngIf="passResetFailed" class="alert alert-danger d-none center-cust">
+                        <div id="passResetFailed" class="alert alert-danger d-none center-cust">
                           We are sorry we were not able to change your password at this time <br>
                           Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
                             contact us page</a>
@@ -365,10 +365,9 @@
                           ONLY CHECK THE CHECK BOX IF YOU WOULD LIKE TO DELETE YOUR ACCOUNT AND REMOVE ALL YOUR DATA FROM SKIRMESH
                         </label>
                         <button (click)="deleteSkirmeshAccount()" class="btn btn-danger" [disabled]="!deleteAccount" > DELETE ACCOUNT!</button>
-                        <div *ngIf="deleteUserFailed" class="alert alert-danger d-none center-cust">
-                          We are sorry we were not able to delete your account at this time <br>
-                          Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
-                            contact us page</a>
+                        <div id="deleteUserFailed" class="alert alert-danger d-none center-cust">
+                          We were not able to delete your account at this time. <br/>
+                          Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us</a>.
                         </div>
                       </div>
                     </accordion-group>

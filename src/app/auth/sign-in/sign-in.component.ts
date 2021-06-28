@@ -68,7 +68,7 @@ export class SignInComponent implements OnInit {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData=>{
 
       let data = { "googleID" : googleData.id,
-                   "google"   : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
+                   // "google"   : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
                    "email"    : googleData.email}
 
       this.nonSecAPIsvc.userLogin(data).subscribe(
@@ -91,7 +91,7 @@ export class SignInComponent implements OnInit {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData=>{
 
       let data = {"facebookID" : fbData.id ,
-                  'facebook'   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
+                  // 'facebook'   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
                   "email"      : fbData.email}
 
       this.nonSecAPIsvc.userLogin(data).subscribe(

@@ -1,231 +1,173 @@
-<div *ngIf="!socialLogin" class="custom_skirmesh">
-	<form action="#">
-		<div class="row justify-content-md-center">
-			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-				<div class="login-screen">
-					<div class="login-box">
-						<h3 class="center-cust">Sign Up</h3>
-						<a class="login-logo d-flex justify-content-center">
-							<img src="../../../assets/images/logo.png" alt="SkirMesh">
-						</a>
-						<a class="nav-link selectOne center-cust">Select one:</a>
-						<ul class="nav nav-pills nav-fill">
-							<li class="nav-item">
-								<a id="fieldSignUp" class="nav-link" (click)="fieldSignUp()">Field Sign Up</a>
-							</li>
-							<li class="nav-item">
-								<a id="playerSignUp" class="nav-link active" (click)="playerSignUp()">Player Sign Up</a>
-							</li>
-						</ul>
-						<br>
-						<form [formGroup]="addUser" autocomplete="off" method="POST">
-							<div class="row gutters">
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="fname" type="text" class="form-control"
-											placeholder="First Name">
-									</div>
-									<div *ngIf="fname.invalid && (fname.dirty || fname.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="fname.errors?.required ">
-											First name is required
-										</div>
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="lname" type="text" class="form-control"
-											placeholder="Last Name">
-									</div>
-									<div *ngIf="lname.invalid && (lname.dirty || lname.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="lname.errors?.required ">
-											Last name is required
-										</div>
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="email" type="text" class="form-control"
-											placeholder="Email ID">
-									</div>
-									<div *ngIf="email.invalid && (email.dirty || email.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="email.errors?.required ">
-											Email is required
-										</div>
-										<div *ngIf="email.errors?.email ">
-											Need Valid Email
-										</div>
-									</div>
-								</div>
-								<div id="callSign" class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="callSign" type="text" class="form-control"
-											placeholder="Callsign">
-									</div>
-									<div *ngIf="callSign.invalid && (callSign.dirty || callSign.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="callSign.errors?.required ">
-											Call Sign is required
-										</div>
-									</div>
-								</div>
-
-								<div id="fieldName" style="display: none;"
-									class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="fieldName" type="text"
-											class="form-control" placeholder="Field Name">
-									</div>
-									<div *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="fieldName.errors?.required ">
-											Field Name is required
-										</div>
-									</div>
-								</div>
-
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="password" type="password" class="form-control"
-											placeholder="Password">
-									</div>
-									<div *ngIf="password.invalid && (password.dirty || password.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="password.errors?.required ">
-											Password is required
-										</div>
-										<div *ngIf="password.errors?.minlength ">
-											Password needs to be min of 5 characters
-										</div>
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<input formControlName="confirmPassword" type="password" class="form-control"
-											placeholder="Confirm Password">
-									</div>
-									<div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) "
-										class="alert alert-danger ">
-										<div *ngIf="confirmPassword.errors?.required ">
-											Confirm password is required
-										</div>
-										<div *ngIf="confirmPassword.errors?.notSame">
-											Passwords needs to match
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="actions clearfix">
-
-								<button [disabled]="addUser.invalid" (click)="onSubmit()" type="submit"
-									class="btn cust_skir_signup">
-									Signup
-									<i class="fa fa-arrow-right cust_skirmesh_arrow" aria-hidden="true"></i>
-								</button>
-							</div>
-							<div class="row">
-								<div id="userCreatedMessage" class="alert alert-primary d-none center-cust">
-									Your user is created!<br>
-									<a [routerLink]="['/auth/login']">LOGIN</a>.
-								</div>
-								<div id="userCreatFaileddMessage" class="alert alert-danger d-none center-cust">
-									We are sorry we were not able to create your account at this time <br>
-									Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
-										contact us page</a>
-								</div>
-							</div>
-						</form>
-
-						<div id="or" class="or">
-							<span>or signup using</span>
-						</div>
-						<div id="social_media" class="row social_icon">
-							<!-- <div class="top-50 start-50"> -->
-							<div class="col-xs-4">
-								<a (click)="loginWithFacebook()" class="btn btn-lg btn-block social_icon">
-									<i class="fa fa-facebook-official"></i>
-								</a>
-							</div>
-							<div (click)="signInWithGoogle()" class="col-xs-4">
-								<a  class="btn btn-lg btn-block social_icon">
-									<i class="fa fa-google-plus"></i>
-								</a>
-							</div>
-							<!-- <div class="col-xs-4">
-								<a href="#" class="btn btn-lg btn-block social_icon">
-									<i class="fa fa-twitter"></i>
-								</a>
-							</div> -->
-						</div>
-						<a [routerLink]="['/auth/login']" class="additional-link">Have an Account?
-							<span>LOGIN</span></a>
-
-						<div class="center-cust row">
-							By signing up, you agree to our&nbsp;<a [routerLink]="['/non-secure/privacy-policy']"> privacy policy </a>.
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-	</form>
-</div>
-
-
-<div *ngIf="socialLogin" class="custom_skirmesh">
+<form action="#">
 	<div class="row justify-content-md-center">
-		<!-- <div class="col-8"> -->
+		<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
 			<div class="login-screen">
-				<form [formGroup]="socailPass" autocomplete="off" method="POST">
-					<div class="col-6">
-						<h3 class="center-cust">Please Enter a password for Skirmesh</h3>
-						<div class="form-group">
-							<input formControlName="pass" type="password" class="form-control"
-								placeholder="Password">
-						</div>
-						<div *ngIf="pass.invalid && (pass.dirty || pass.touched) "
-							class="alert alert-danger ">
-							<div *ngIf="pass.errors?.required ">
-								Password is required
+				<div class="login-box">
+					<h3 class="center-cust">Sign Up</h3>
+					<a class="login-logo d-flex justify-content-center">
+						<img src="../../../assets/images/logo.png" alt="SkirMesh">
+					</a>
+					<a class="nav-link selectOne center-cust">Select one:</a>
+					<ul class="nav nav-pills nav-fill">
+						<li class="nav-item">
+							<a id="fieldSignUp" class="nav-link" (click)="fieldSignUp()">Field Sign Up</a>
+						</li>
+						<li class="nav-item">
+							<a id="playerSignUp" class="nav-link active" (click)="playerSignUp()">Player Sign Up</a>
+						</li>
+					</ul>
+					<br>
+					<form [formGroup]="addUser" autocomplete="off" method="POST">
+						<div class="row gutters">
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="fname" type="text" class="form-control"
+										placeholder="First Name">
+								</div>
+								<div *ngIf="fname.invalid && (fname.dirty || fname.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="fname.errors?.required ">
+										First name is required
+									</div>
+								</div>
 							</div>
-							<div *ngIf="pass.errors?.minlength ">
-								Password needs to be min of 5 characters
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="lname" type="text" class="form-control"
+										placeholder="Last Name">
+								</div>
+								<div *ngIf="lname.invalid && (lname.dirty || lname.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="lname.errors?.required ">
+										Last name is required
+									</div>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="email" type="text" class="form-control"
+										placeholder="Email ID">
+								</div>
+								<div *ngIf="email.invalid && (email.dirty || email.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="email.errors?.required ">
+										Email is required
+									</div>
+									<div *ngIf="email.errors?.email ">
+										Need Valid Email
+									</div>
+								</div>
+							</div>
+							<div id="callSign" class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="callSign" type="text" class="form-control"
+										placeholder="Callsign">
+								</div>
+								<div *ngIf="callSign.invalid && (callSign.dirty || callSign.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="callSign.errors?.required ">
+										Call Sign is required
+									</div>
+								</div>
+							</div>
+
+							<div id="fieldName" style="display: none;"
+								class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="fieldName" type="text"
+										class="form-control" placeholder="Field Name">
+								</div>
+								<div *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="fieldName.errors?.required ">
+										Field Name is required
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="password" type="password" class="form-control"
+										placeholder="Password">
+								</div>
+								<div *ngIf="password.invalid && (password.dirty || password.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="password.errors?.required ">
+										Password is required
+									</div>
+									<div *ngIf="password.errors?.minlength ">
+										Password needs to be min of 5 characters
+									</div>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<input formControlName="confirmPassword" type="password" class="form-control"
+										placeholder="Confirm Password">
+								</div>
+								<div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) "
+									class="alert alert-danger ">
+									<div *ngIf="confirmPassword.errors?.required ">
+										Confirmation password is required
+									</div>
+									<div *ngIf="confirmPassword.errors?.notSame">
+										Passwords need to match
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-6">
-						<div class="form-group">
-							<input formControlName="confirmPass" type="password" class="form-control"
-								placeholder="Confirm Password">
+
+						<div class="actions clearfix">
+
+							<button [disabled]="addUser.invalid" (click)="onSubmit()" type="submit"
+								class="btn btn-social cust_skir_signup">
+								Signup
+								<i class="fa fa-arrow-right" aria-hidden="true"></i>
+							</button>
 						</div>
-						<div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
-							class="alert alert-danger ">
-							<div *ngIf="confirmPass.errors?.required ">
-								Confirm password is required
+						<div >
+							<div id="userCreatedMessage" class="alert alert-primary d-none center-cust">
+								Account Created!<br/>
+								<a [routerLink]="['/auth/login']">LOGIN</a>.
 							</div>
-							<div *ngIf="confirmPass.errors?.notSame">
-								Passwords needs to match
+							<div id="userCreateFailedMessage" class="alert alert-danger d-none center-cust">
+								We are not able to create your account at this time.<br/>
+								Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us</a>.
 							</div>
 						</div>
+					</form>
+
+					<div id="or" class="or">
+						<span>or signup using</span>
 					</div>
-				</form>
-				<div>
-					<div id="FBuserCreatedMessage" class="alert alert-primary d-none center-cust">
-						Your user is created!<br>
-						<a [routerLink]="['/auth/login']">LOGIN</a>.
+
+					<div id="social_media" class="social_icon">
+						<!-- <div class="top-50 start-50"> -->
+						<div class="social-button-container">
+							<!-- <div class="top-50 start-50"> -->
+
+							<a (click)="loginWithFacebook()" class="btn btn-md btn-social btn-facebook">
+								<i class="fa fa-facebook fa-fw"> </i> Sign in with Facebook
+							</a>
+							<br/>
+							<a (click)="signInWithGoogle()" class="btn btn-md btn-social btn-google">
+								<img src="https://img.icons8.com/color/64/000000/google-logo.png"> Sign in with Google</a>
+						</div>
+						<!-- <div class="col-xs-4">
+							<a href="#" class="btn btn-lg btn-block social_icon">
+								<i class="fa fa-twitter"></i>
+							</a>
+						</div> -->
 					</div>
-					<div id="FBuserCreatFaileddMessage" class="alert alert-danger d-none center-cust">
-						We are sorry we were not able to create your account at this time <br>
-						Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
-							contact us page</a>
+					<a [routerLink]="['/auth/login']" class="additional-link">Have an Account?
+						<span>LOGIN</span></a>
+
+					<div class="center-cust row">
+						By signing up, you agree to our&nbsp;<a [routerLink]="['/non-secure/privacy-policy']"> privacy policy </a>.
 					</div>
+
 				</div>
-				<button [disabled]="socailPass.invalid" (click)="onSocialSubmit()" type="submit"
-				class="btn cust_skir_signup"> Sign Up!</button>
 			</div>
 		</div>
-	<!-- </div> -->
-</div>
+	</div>
+</form>

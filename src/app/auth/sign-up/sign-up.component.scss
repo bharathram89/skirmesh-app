@@ -1,5 +1,55 @@
 
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
+
+.social-button-container {
+    width: 100%;
+    text-align: center;
+}
+
+.btn {
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.btn-facebook {
+    color: #ffffff !important;
+    background-color: #3b5998;
+    border-color: rgba(0,0,0,0.2);
+}
+
+.btn-social {
+    position: relative;
+    padding-left: 44px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-social:hover {
+    color: #eee;
+}
+
+.btn-social :first-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    padding: 7px;
+    font-size: 1.6em;
+    text-align: center;
+    border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+.btn-google {
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 1px #ddd
+}
+
+
+
 .selectOne{
   font-weight: bold;
 }
@@ -9,14 +59,9 @@
 }
 .cust_skir_signup{
   background: #223b04;//#786546-223b04-182b02
-  color: #ffffff; 
+  color: #ffffff;
 }
-.cust_skirmesh_arrow{
-  margin-left: 250px;
-  // margin: 1px;
-  /*I just added this to make them inline */
-  display: inline-block;
-}
+
 .social_icon{
   justify-content: center;
 }
@@ -45,7 +90,7 @@
 
 .login-screen .login-logo > img {
     margin: 0;
-    max-height: 50px;
+    max-height: 100px;
 }
 
 .login-screen .login-box {
@@ -119,10 +164,10 @@
     background-color: #e3d1b3;
     padding: 0 10px;
     z-index: 10; }
-    
+
     /*************** 17 C. Buttons ***************/
 .btn {
-  
+
 max-width: 75%;
 justify-content: center;
   -webkit-border-radius: 2px;

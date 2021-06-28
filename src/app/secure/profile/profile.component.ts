@@ -19,10 +19,9 @@ export class ProfileComponent implements OnInit {
   rfidToPair;
   playerList;
   connectedRfids;
+
   deleteAccount = false;
-  passResetPassed = false;
-  passResetFailed = false;
-  deleteUserFailed = false;
+
   pfNav           : HTMLElement;
   securityNav     : HTMLElement;
   settingsNav     : HTMLElement;
@@ -186,7 +185,7 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/non-secure']);
       },
       err => {
-        this.deleteUserFailed = true;
+        document.getElementById('deleteUserFailed').classList.remove('d-none');
       }
   )
   }
@@ -233,14 +232,14 @@ export class ProfileComponent implements OnInit {
   get uid() { return this.uidEntry.get('uid'); }
   get confirmUid() { return this.uidEntry.get('confirmUid'); }
 
+
   onPasswordReset(){
-    let data = {'password':this.passReset.get('pass').value}
+    let data = {"user":{"password":this.passReset.get('pass').value}}
     this.secAPIsvc.updatePass(this.userSvc.getToken() ,data).subscribe(
-      resp=>{ this.passResetFailed  = false;
-              this.passResetPassed= true;
+      resp => {
+             document.getElementById('passResetPassed').classList.remove('d-none');
             },
-      err=>{ this.passResetFailed  = true;
-             this.passResetPassed= false;
+      err => { document.getElementById('passResetFailed').classList.remove('d-none');
              console.log('password Reset failed',err)}
     )
   }
