@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ContactUsComponent } from './contact-us/contact-us.component';
-import { FaqComponent } from './faq/faq.component';
+import { ContactUsComponent } from './contact-us/contact-us.component'; 
 import { FeaturesListComponent } from './features-list/features-list.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { HomeComponent } from './home/home.component';
-import { NonSecureComponent } from './non-secure.component';
-import { PlayerInfoComponent } from './player-info/player-info.component';
+import { NonSecureComponent } from './non-secure.component'; 
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 import { MydevicesComponent } from './mydevices/mydevices.component'
@@ -25,11 +23,7 @@ const routes: Routes = [
     {
       path: 'feature-list',
       component: FeaturesListComponent,
-    },
-    {
-      path: 'faq',
-      component: FaqComponent,
-    },
+    }, 
     {
       path: 'contact-us',
       component: ContactUsComponent,
@@ -41,11 +35,7 @@ const routes: Routes = [
     {
       path: 'field-info',
       component: FieldInfoComponent,
-    },
-    {
-      path: 'player-info',
-      component: PlayerInfoComponent,
-    },
+    }, 
     {
       path: 'live-games',
       component: MydevicesComponent,
