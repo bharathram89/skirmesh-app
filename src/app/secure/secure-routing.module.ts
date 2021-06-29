@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
+import { MydevicesComponent } from '../non-secure/mydevices/mydevices.component';
 import { DashboardComponent } from './dashboard/dashboard.component'; 
 import { ManageGameComponent } from './manage-game/manage-game.component'; 
 import { ProfileComponent } from './profile/profile.component';
@@ -23,6 +24,11 @@ const routes: Routes = [
         path: 'dashboard',
         component: DashboardComponent
       },
+
+  {
+    path: 'live-games',
+    component: MydevicesComponent,
+  },
       {
         path: 'startGame',
         component: StartGameComponent
