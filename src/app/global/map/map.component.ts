@@ -42,7 +42,7 @@ export class MapComponent implements OnInit {
             this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
                 console.log(socketData, "Device Update");
                 this.updateLocationState(socketData);
-            }) 
+            })
         }
 
     }
@@ -65,19 +65,18 @@ export class MapComponent implements OnInit {
             }, 200);
 
             this.updateMapState()
+        }
 
-            this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
+        this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
 
-                mapData => {
+            mapData => {
 
-                    this.mapData = mapData;
-                    this.locationList = this.mapData.locations;
+                this.mapData = mapData;
+                this.locationList = this.mapData.locations;
 
-                    this.updateToolTipListener();
-                }
-            )
-        } 
-
+                this.updateToolTipListener();
+            }
+        )
     }
 
     updateToolTipListener() {
@@ -89,9 +88,13 @@ export class MapComponent implements OnInit {
             paths[i].addEventListener("mouseenter", event => {
 
                 let target = event.target as HTMLTextAreaElement;
+                let loc, dev;
 
-                let loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
-                let dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+                loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+
+                if (this.deviceData) {
+                    dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+                }
 
                 let str = `${loc ? loc.name : "Mystery Zone"}`
 

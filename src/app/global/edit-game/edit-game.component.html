@@ -16,39 +16,43 @@
   </div>
 
 
-<div class='row'>
+<div class="row">
 
-  <table class="table table-bordered col-6" formArrayName="teams">
+      <table class="col-6" formArrayName="teams">
 
-    <tr>
-      <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
-          Add More</button></th>
-      <!-- <th width="150px"></th> -->
-    </tr>
-    <div style="max-width:80%">
-      <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
-        <td>
-          Name :
-          <input (change)="onChangeOfTeamList()" type="text" formControlName="name" class="form-control">
-        </td>
-        <td>
-          Color:
-          <br>
-          <input type="color" formControlName="color">
+        <tr>
+          <th colspan="2">Assemble Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
+              Add More</button></th>
+        </tr>
 
-        </td>
-        <td *ngIf="teams.length > 2">
-          <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
-        </td>
-      </tr>
-    </div>
+        <div class="table">
 
-  </table>
-  <div class='col-6'>
-    <app-map [mapID]="gameModeForm.get('map').value"></app-map>
-  </div>
+          <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
+
+            <td>
+              <input (change)="onChangeOfTeamList()" type="text" formControlName="name" class="form-control" placeholder="Team Name">
+            </td>
+
+            <td>
+              <input type="color" formControlName="color">
+            </td>
+
+            <td *ngIf="teams.length > 2">
+              <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
+            </td>
+
+          </tr>
+
+        </div>
+
+      </table>
+
+      <div class="map-container col-5">
+        <app-map [mapID]="gameModeForm.get('map').value"></app-map>
+      </div>
+
 </div>
- 
+
 
   <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save</button>
   <br/><br/>
