@@ -189,7 +189,7 @@ export class MapComponent implements OnInit {
             element.classList.add("location")
         }
 
-        if (element && (device.config == CAPTURE || device.config == REGISTER)) {
+        if (element && (device.config == CAPTURE)) {
 
             if (!stable && device.team) {
 
@@ -200,6 +200,16 @@ export class MapComponent implements OnInit {
             else if (stable && device.team) {
 
                 element.classList.add("owned");
+                element.setAttribute("fill", color);
+            }
+
+        }
+
+        if (element && (device.config == REGISTER)) {
+
+            if (device.team) {
+
+                element.classList.add("register");
                 element.setAttribute("fill", color);
             }
 

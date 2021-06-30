@@ -18,6 +18,26 @@ path.location.owned {
     opacity: 0.5;
 }
 
+path.location.register {
+    opacity: 0.25;
+    animation: registration infinite linear 4s;
+    stroke           : black;
+    stroke-width     : 0.5px;
+    transform-origin : center;
+    transform-box    : fill-box;
+}
+@keyframes registration {
+  0% {}
+  50% {
+      transform: scale(0.9);
+  }
+  100% {}
+}
+
+.tooltipContainer {
+    white-space: pre-line;
+}
+
 .map {
     height: 100%;
     width: 100%;
