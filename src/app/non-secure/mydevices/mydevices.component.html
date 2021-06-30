@@ -64,20 +64,22 @@
 
 
                 </div>
+
                 <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
-                <div class="row">
 
-                    <ngx-charts-bar-horizontal-stacked
-                        [results]="barChartData"
-                        [xAxis]="true"
-                        [yAxis]="true"
-                        [legend]="true"
-                        [showYAxisLabel]="showYAxisLabel"
-                        [yAxisLabel]="yAxisLabel">
-                    </ngx-charts-bar-horizontal-stacked>
+                    <div class="row">
 
-                </div>
+                        <ngx-charts-bar-horizontal-stacked
+                            [results]="barChartData"
+                            [xAxis]="true"
+                            [yAxis]="true"
+                            [legend]="true"
+                            [showYAxisLabel]="showYAxisLabel"
+                            [yAxisLabel]="yAxisLabel">
+                        </ngx-charts-bar-horizontal-stacked>
+
+                    </div>
 
                     <div *ngFor="let team of teams" class="team-section">
 
