@@ -75,7 +75,7 @@ export class MapComponent implements OnInit {
         )
     }
 
-    updateToolTipListener() {
+    updateToolTipListener(device = null) {
 
         let paths = document.getElementsByClassName("location");
 
@@ -90,6 +90,9 @@ export class MapComponent implements OnInit {
 
                 if (this.deviceData) {
                     dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+                }
+                else if (device && target.id.replace('loc','') == device.location) {
+                    dev = device
                 }
 
                 let str = `${loc ? loc.name : "Mystery Zone"}`
@@ -171,6 +174,8 @@ export class MapComponent implements OnInit {
                 this.deviceChange.emit(this.deviceData);
             }
         }
+
+        this.updateToolTipListener(device);
 
         let locID = device.location;
         let stable = device.stable;
