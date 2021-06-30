@@ -81,10 +81,17 @@
 
                     <div *ngFor="let team of teams" class="team-section">
 
-                            <div class="cust_text text-xs-center p-y-1" [style.background-color]="team.color">
+                            <div class="font_white text-xs-center" [style.background-color]="team.color">
 
-                                <h3> {{team.name}} <div style="float:right;">Total: {{team.comb_score}}pts</div>
-                                    <br/> Objective Control: {{team.score}}pts | Team Members: {{team.player_score}}pts
+                                <h3>
+                                    <div class="team_row row padding-xs-x">
+                                        <div class="col"> {{team.name}}</div>
+                                        <div class="col keepRight">TOTAL: {{team.comb_score}}pts </div>
+                                    </div>
+                                    <div class="team_row row padding-xs-x">
+                                        <div class="col"> Objective Control: {{team.score}}pts </div>
+                                        <div class="col"> Team Members: {{team.player_score}}pts </div>
+                                    </div>
                                 </h3>
                             </div>
 
