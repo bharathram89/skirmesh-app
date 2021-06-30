@@ -24,6 +24,7 @@ export class MapComponent implements OnInit {
 
     @Input() mapID
     @Input() deviceData
+    @Input() gameID
     @Output() deviceChange = new EventEmitter<any>();
 
     tooltipContent = ' '
@@ -41,27 +42,29 @@ export class MapComponent implements OnInit {
 
         this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
             console.log(socketData, "Device Update");
-            this.updateLocationState(socketData);
+            if (socketData["gameID"] == this.gameID) {
+                this.updateLocationState(socketData)
+            };
         })
-
     }
 
     ngOnDestroy(): void {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
+
         this.socketOBJ.unsubscribe()
+
     }
 
     ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized.
     //Applies to components only.
-
-        // update Map state with a delay - this works... not sure why
-        setTimeout(() => {
-          this.updateMapState()
-        }, 200);
-
-        this.updateMapState()
+        if(this.deviceData){
+            // update Map state with a delay - this works... not sure why
+            setTimeout(() => {
+                this.updateMapState()
+            }, 200);
+        }
 
         this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
 
@@ -73,11 +76,9 @@ export class MapComponent implements OnInit {
                 this.updateToolTipListener();
             }
         )
-
-
     }
 
-    updateToolTipListener() {
+    updateToolTipListener(device = null) {
 
         let paths = document.getElementsByClassName("location");
 
@@ -86,9 +87,16 @@ export class MapComponent implements OnInit {
             paths[i].addEventListener("mouseenter", event => {
 
                 let target = event.target as HTMLTextAreaElement;
+                let loc, dev;
 
-                let loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
-                let dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+                loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+
+                if (this.deviceData) {
+                    dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+                }
+                else if (device && target.id.replace('loc','') == device.location) {
+                    dev = device
+                }
 
                 let str = `${loc ? loc.name : "Mystery Zone"}`
 
@@ -161,11 +169,16 @@ export class MapComponent implements OnInit {
 
         // Update device data as well since this is the only time
         // socketdata for the device is handled.
-        let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
-        if (to_update != -1) {
-            this.deviceData[to_update] = device
-            this.deviceChange.emit(this.deviceData);
-        };
+
+        if (this.deviceData) {
+            let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
+            if (to_update != -1) {
+                this.deviceData[to_update] = device
+                this.deviceChange.emit(this.deviceData);
+            }
+        }
+
+        this.updateToolTipListener(device);
 
         let locID = device.location;
         let stable = device.stable;
@@ -184,7 +197,7 @@ export class MapComponent implements OnInit {
             element.classList.add("location")
         }
 
-        if (element && (device.config == CAPTURE || device.config == REGISTER)) {
+        if (element && (device.config == CAPTURE)) {
 
             if (!stable && device.team) {
 
@@ -195,6 +208,16 @@ export class MapComponent implements OnInit {
             else if (stable && device.team) {
 
                 element.classList.add("owned");
+                element.setAttribute("fill", color);
+            }
+
+        }
+
+        if (element && (device.config == REGISTER)) {
+
+            if (device.team) {
+
+                element.classList.add("register");
                 element.setAttribute("fill", color);
             }
 

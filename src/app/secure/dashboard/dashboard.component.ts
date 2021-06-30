@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
   isDoughnut: boolean = false;
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#CC5500', '#AAAAAA']
+    domain: ['#A10A28', '#C7B42C', '#5AA454', '#CC5500', '#AAAAAA']
   };
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit {
   totalBombArm = 0;
   totalBombDis = 0;
 
-  gameHistData = [];
+  // gameHistData = [];
 
   constructor(
               private userSvc      : UserServiceService,
@@ -233,25 +233,25 @@ export class DashboardComponent implements OnInit {
           }
         }
 
-        this.gameHistData.push({
-
-            id       : game.id,
-            // start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
-            // end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
-            pieData  : [{name:"Captures",       value:captures},
-                        {name:"Assists",        value:assists},
-                        {name:"Medics",         value:medics},
-                        {name:"Bombs Armed",    value:bombArm},
-                        {name:"Bombs Diffused", value:bombDis}]
-            // duration : new Date(duration).toUTCString().slice(17,25)
-
-        })
+        // this.gameHistData.push({
+        //
+        //     id       : game.id,
+        //     // start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
+        //     // end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
+        //     pieData  : [{name:"Captures",       value:captures},
+        //                 {name:"Assists",        value:assists},
+        //                 {name:"Medics",         value:medics},
+        //                 {name:"Bombs Armed",    value:bombArm},
+        //                 {name:"Bombs Diffused", value:bombDis}]
+        //     // duration : new Date(duration).toUTCString().slice(17,25)
+        //
+        // })
 
         let xVal = "Game #" + (index + 1) + " - " + new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
-        stackedAreaData[0].series.push({"value":medics,   "name":xVal});
-        stackedAreaData[1].series.push({"value":captures, "name":xVal});
-        stackedAreaData[2].series.push({"value":assists,  "name":xVal});
+        stackedAreaData[0].series.push({"value":captures, "name":xVal});
+        stackedAreaData[1].series.push({"value":assists,  "name":xVal});
+        stackedAreaData[2].series.push({"value":medics,   "name":xVal});
         stackedAreaData[3].series.push({"value":bombArm,  "name":xVal});
         stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
 
@@ -368,21 +368,21 @@ export class DashboardComponent implements OnInit {
                                {name:"Bombs Armed",   value:bombArm},
                                {name:"Bombs Diffused",value:bombDis}];
 
-                this.gameHistData.push({
-
-                    id       : game.id,
-                    start    : new Date(game.startTime).toLocaleString('en', time_options) ,
-                    end      : new Date(game.endTime).toLocaleString('en', time_options) ,
-                    pieData  : pieData,
-                    duration : new Date(duration).toUTCString().slice(17,25)
-
-                })
+                // this.gameHistData.push({
+                //
+                //     id       : game.id,
+                //     start    : new Date(game.startTime).toLocaleString('en', time_options) ,
+                //     end      : new Date(game.endTime).toLocaleString('en', time_options) ,
+                //     pieData  : pieData,
+                //     duration : new Date(duration).toUTCString().slice(17,25)
+                //
+                // })
 
                 let xVal = "Game #" + (index + 1) + " - " + new Date(game.gameActions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
-                stackedAreaData[0].series.push({"value":medics,   "name":xVal});
-                stackedAreaData[1].series.push({"value":captures, "name":xVal});
-                stackedAreaData[2].series.push({"value":assists,  "name":xVal});
+                stackedAreaData[0].series.push({"value":captures, "name":xVal});
+                stackedAreaData[1].series.push({"value":assists,  "name":xVal});
+                stackedAreaData[2].series.push({"value":medics,   "name":xVal});
                 stackedAreaData[3].series.push({"value":bombArm,  "name":xVal});
                 stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
             }

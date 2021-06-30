@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { UserServiceService } from 'src/service/user-service.service';
 import { makeDeviceModal, makeDeviceModals} from '../node.modal';
 import { SecureAPIService } from 'src/service/secure-api.service';
+ 
 
 
 @Component({
@@ -22,7 +23,7 @@ export class EditGameComponent implements OnInit {
 
     isMapSelected     : boolean = false;
     deviceListConfigs : BehaviorSubject<any>;
-
+    selectedMapID;
     devices;
     deviceConfigs;
     gameConfigs;
@@ -171,7 +172,7 @@ export class EditGameComponent implements OnInit {
 
         let mapID = selectedMap.target.value
         this.gameModeForm.controls['map'].setValue(mapID)
-
+        this.selectedMapID = mapID;
         this.locations = this.maps.find(map => map["id"] == mapID)["locations"];
 
         this.setNodes()

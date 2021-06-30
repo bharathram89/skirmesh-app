@@ -26,3 +26,7 @@ h1.text-center.pt-3 {
     margin: 0;
     padding: 1rem 0;
 }
+
+*, ::after, ::before {
+    box-sizing: content-box;
+}

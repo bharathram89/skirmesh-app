@@ -16,10 +16,7 @@
 
                 <div class="card-header">
 
-                    <div class="btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> VIEW </div>
-
-                    <h5> {{gameData.description}} </h5>
-                    <!-- <p> Game# {{gameData.id}} </p> -->
+                    <h5 class="col btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> {{gameData.description}} </h5>
 
                 </div>
 
@@ -30,7 +27,7 @@
                     </p>
 
                     <div>
-                        <app-map [mapID]="gameData.mapID" [deviceData]="gameData.devices"></app-map>
+                        <app-map [mapID]="gameData.mapID" [deviceData]="gameData.devices" [gameID]="gameData.id"></app-map>
                     </div>
 
                 </div>
@@ -58,34 +55,48 @@
                 <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
                     aria-labelledby="v-pills-home-tab">
 
-                    <div class="btn-primary btn fb_share" data-href="https://play.skirmesh.net/non-secure/live-games" data-layout="button_count" data-size="small"><a target="_blank" href="{{fbShareUrl}}" class="fb-xfbml-parse-ignore">Share To Facebook!</a></div>
+                    <a data-href="https://play.skirmesh.net/non-secure/live-games"
+                       data-layout="button_count"
+                       data-size="small"
+                       target="_blank"
+                       href="{{fbShareUrl}}"
+                       class="btn btn-md btn-social btn-facebook">
+                        <i class="fa fa-facebook fa-fw"> </i> Share!
+                    </a>
 
                     <app-map [mapID]="map" [(deviceData)]="devices"></app-map>
 
 
                 </div>
+
                 <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
-                <div class="row">
 
-                    <ngx-charts-bar-horizontal-stacked
-                        [results]="barChartData"
-                        [xAxis]="true"
-                        [yAxis]="true"
-                        [legend]="true"
-                        [showYAxisLabel]="showYAxisLabel"
-                        [yAxisLabel]="yAxisLabel">
-                    </ngx-charts-bar-horizontal-stacked>
+                    <div class="row">
 
-                </div>
+                        <ngx-charts-bar-horizontal-stacked
+                            [results]="barChartData"
+                            [xAxis]="true"
+                            [yAxis]="true"
+                            [legend]="true">
+                        </ngx-charts-bar-horizontal-stacked>
+
+                    </div>
 
                     <div *ngFor="let team of teams" class="team-section">
 
-                            <div class="cust_text text-xs-center p-y-1" [style.background-color]="team.color">
+                            <div class="font_white text-xs-center" [style.background-color]="team.color">
 
-                                <h3> {{team.name}} <div style="float:right;">Total: {{team.comb_score}}pts</div>
-                                    <br/> Objective Control: {{team.score}}pts | Team Members: {{team.player_score}}pts
-                                </h3>
+                                <h5>
+                                    <div class="team_row font-weight-bold row padding-xs-x">
+                                        <div class="col "> {{team.name}} ({{team.players.length}})</div>
+                                        <div class="col keepRight">TOTAL: {{team.comb_score}}pts </div>
+                                    </div>
+                                    <div class="team_row row padding-xs-x">
+                                        <div class="col"> Objective Control: {{team.score}}pts </div>
+                                        <div class="col"> Team Members: {{team.player_score}}pts </div>
+                                    </div>
+                                </h5>
                             </div>
 
                             <ngx-datatable

@@ -24,10 +24,10 @@ export class AuthGuardGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       //if session storage has valid key return true else false
       let token = this.tokenStorage.getToken();
-      console.log(window.location,"urls stuff");
+      
       if(!token && window.location.href.includes('token')){
         const urlParams = new URLSearchParams(window.location.search);
-        token = urlParams.get('token'); 
+        token = urlParams.get('token');
         this.tokenStorage.saveToken(token);
       }
       if (token) {

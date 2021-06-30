@@ -16,6 +16,8 @@
             </div>
         </div>
 
+
+
         <div class="row collapsible" [@collapse]="!gameBoardActive" id="gameManagementBoard">
             <div class="col-lg-12"><h1 class="text-center pt-3"><span *ngIf="gameData">Game #{{gameData?.id}}: </span> {{selectedGameMode?.description}}</h1></div>
 
@@ -43,9 +45,18 @@
 
                     </div>
 
-                    <div>
-                        <app-device-list [config]="activeDevices" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+                    <div class="row justify-content-center">
+
+                        <div *ngIf="gameBoardActive" class="col-xs">
+                          <app-map [mapID]="selectedGameMode.mapID" [deviceData]="gameData?.devices" [gameID]="gameData?.id"></app-map>
+                        </div>
+
+                        <div class="col-lg">
+                            <app-device-list [config]="activeDevices" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+                        </div>
+
                     </div>
+
                 </div>
             </div>
 

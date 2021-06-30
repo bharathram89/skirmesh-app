@@ -16,42 +16,52 @@
   </div>
 
 
+<div class="row">
 
-  <table class="table table-bordered" formArrayName="teams">
+      <table class="col-lg-6" formArrayName="teams">
 
-    <tr>
-      <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
-          Add More</button></th>
-      <!-- <th width="150px"></th> -->
-    </tr>
-    <div style="max-width:80%">
-      <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
-        <td>
-          Name :
-          <input (change)="onChangeOfTeamList()" type="text" formControlName="name" class="form-control">
-        </td>
-        <td>
-          Color:
-          <br>
-          <input type="color" formControlName="color">
+        <tr>
+          <th colspan="2">Assemble Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
+              Add More</button></th>
+        </tr>
 
-        </td>
-        <td *ngIf="teams.length > 2">
-          <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
-        </td>
-      </tr>
-    </div>
+        <div class="table">
 
-  </table>
+          <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
 
-  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save</button>
+            <td>
+              <input (change)="onChangeOfTeamList()" type="text" formControlName="name" class="form-control" placeholder="Team Name">
+            </td>
+
+            <td>
+              <input type="color" formControlName="color">
+            </td>
+
+            <td *ngIf="teams.length > 2">
+              <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
+            </td>
+
+          </tr>
+
+        </div>
+
+      </table>
+
+      <div class="map-container col">
+        <app-map [mapID]="gameModeForm.get('map').value"></app-map>
+      </div>
+
+</div>
+
+
+  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save Configuration</button>
   <br/><br/>
 
   <div *ngIf="isMapSelected">
     <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
   </div>
   <br />
-  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save</button>
+  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save Configuration</button>
 
 
 </form>

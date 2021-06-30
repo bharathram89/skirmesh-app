@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 
-import { RouterModule } from '@angular/router';
-import { SecureFooterComponent } from './secure-footer/secure-footer.component';
+import { RouterModule } from '@angular/router'; 
 import { UserServiceService } from 'src/service/user-service.service';
 import { GameConfigComponent } from './game-config/game-config.component';
 import { TabsComponent } from './tabs/tabs.component';
