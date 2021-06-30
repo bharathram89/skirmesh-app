@@ -16,8 +16,9 @@
   </div>
 
 
+<div class='row'>
 
-  <table class="table table-bordered" formArrayName="teams">
+  <table class="table table-bordered col-6" formArrayName="teams">
 
     <tr>
       <th colspan="2">Assemble the Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
@@ -43,6 +44,11 @@
     </div>
 
   </table>
+  <div class='col-6'>
+    <app-map [mapID]="gameModeForm.get('map').value"></app-map>
+  </div>
+</div>
+ 
 
   <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save</button>
   <br/><br/>

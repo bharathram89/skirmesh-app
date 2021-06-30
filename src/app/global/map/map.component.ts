@@ -38,42 +38,45 @@ export class MapComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-
-        this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
-            console.log(socketData, "Device Update");
-            this.updateLocationState(socketData);
-        })
+        if(this.deviceData){
+            this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
+                console.log(socketData, "Device Update");
+                this.updateLocationState(socketData);
+            }) 
+        }
 
     }
 
     ngOnDestroy(): void {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
-        this.socketOBJ.unsubscribe()
+        if(this.deviceData){
+            this.socketOBJ.unsubscribe()
+        }
     }
 
     ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized.
     //Applies to components only.
+        if(this.deviceData){
+            // update Map state with a delay - this works... not sure why
+            setTimeout(() => {
+                this.updateMapState()
+            }, 200);
 
-        // update Map state with a delay - this works... not sure why
-        setTimeout(() => {
-          this.updateMapState()
-        }, 200);
+            this.updateMapState()
 
-        this.updateMapState()
+            this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
 
-        this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
+                mapData => {
 
-            mapData => {
+                    this.mapData = mapData;
+                    this.locationList = this.mapData.locations;
 
-                this.mapData = mapData;
-                this.locationList = this.mapData.locations;
-
-                this.updateToolTipListener();
-            }
-        )
-
+                    this.updateToolTipListener();
+                }
+            )
+        } 
 
     }
 
