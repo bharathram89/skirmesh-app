@@ -275,8 +275,8 @@ export class MydevicesComponent implements OnInit {
                 rfidID       : player.rfidID,
                 name         : player.name,
                 is_alive     : player.is_alive,
-                lastAction   : this.actionList.find(ele => ele.id == player.data.sort((a, b) => b.id - a.id)[0].actionID).action,
-                lastLocation : this.findLocationFromDeviceID(player.data.sort((a, b) => b.id - a.id)[0].deviceID),
+                lastAction   : this.actionList.find(ele => ele.id == player.data.sort((a, b) => b.id - a.id)[0]?.actionID)?.action || " ",
+                lastLocation : this.findLocationFromDeviceID(player.data.sort((a, b) => b.id - a.id)[0]?.deviceID) || " ",
                 totalPoints  : player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
             }
             this.players.push(playerObj)
