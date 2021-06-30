@@ -24,6 +24,7 @@ export class MapComponent implements OnInit {
 
     @Input() mapID
     @Input() deviceData
+    @Input() gameID
     @Output() deviceChange = new EventEmitter<any>();
 
     tooltipContent = ' '
@@ -41,7 +42,9 @@ export class MapComponent implements OnInit {
 
         this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
             console.log(socketData, "Device Update");
-            this.updateLocationState(socketData);
+            if (socketData["gameID"] == this.gameID) {
+                this.updateLocationState(socketData)
+            };
         })
     }
 
