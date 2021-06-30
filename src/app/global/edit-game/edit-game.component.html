@@ -54,14 +54,14 @@
 </div>
 
 
-  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save</button>
+  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save Configuration</button>
   <br/><br/>
 
   <div *ngIf="isMapSelected">
     <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
   </div>
   <br />
-  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save</button>
+  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg">Save Configuration</button>
 
 
 </form>
