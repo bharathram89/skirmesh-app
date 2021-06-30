@@ -16,10 +16,7 @@
 
                 <div class="card-header">
 
-                    <div class="btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> VIEW </div>
-
-                    <h5> {{gameData.description}} </h5>
-                    <!-- <p> Game# {{gameData.id}} </p> -->
+                    <h5 class="col btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> {{gameData.description}} </h5>
 
                 </div>
 
@@ -58,7 +55,14 @@
                 <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
                     aria-labelledby="v-pills-home-tab">
 
-                    <div class="btn-primary btn fb_share" data-href="https://play.skirmesh.net/non-secure/live-games" data-layout="button_count" data-size="small"><a target="_blank" href="{{fbShareUrl}}" class="fb-xfbml-parse-ignore">Share To Facebook!</a></div>
+                    <a data-href="https://play.skirmesh.net/non-secure/live-games"
+                       data-layout="button_count"
+                       data-size="small"
+                       target="_blank"
+                       href="{{fbShareUrl}}"
+                       class="btn btn-md btn-social btn-facebook">
+                        <i class="fa fa-facebook fa-fw"> </i> Share!
+                    </a>
 
                     <app-map [mapID]="map" [(deviceData)]="devices"></app-map>
 
