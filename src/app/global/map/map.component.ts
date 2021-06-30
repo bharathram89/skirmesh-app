@@ -38,21 +38,19 @@ export class MapComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        if(this.deviceData){
-            this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
-                console.log(socketData, "Device Update");
-                this.updateLocationState(socketData);
-            })
-        }
 
+        this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
+            console.log(socketData, "Device Update");
+            this.updateLocationState(socketData);
+        })
     }
 
     ngOnDestroy(): void {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
-        if(this.deviceData){
-            this.socketOBJ.unsubscribe()
-        }
+
+        this.socketOBJ.unsubscribe()
+
     }
 
     ngAfterViewInit(): void {
@@ -63,8 +61,6 @@ export class MapComponent implements OnInit {
             setTimeout(() => {
                 this.updateMapState()
             }, 200);
-
-            this.updateMapState()
         }
 
         this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
@@ -167,11 +163,14 @@ export class MapComponent implements OnInit {
 
         // Update device data as well since this is the only time
         // socketdata for the device is handled.
-        let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
-        if (to_update != -1) {
-            this.deviceData[to_update] = device
-            this.deviceChange.emit(this.deviceData);
-        };
+
+        if (this.deviceData) {
+            let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
+            if (to_update != -1) {
+                this.deviceData[to_update] = device
+                this.deviceChange.emit(this.deviceData);
+            }
+        }
 
         let locID = device.location;
         let stable = device.stable;

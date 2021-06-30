@@ -48,7 +48,7 @@
                     <div class="row justify-content-center">
 
                         <div *ngIf="gameBoardActive" class="col-xs">
-                          <app-map [mapID]="selectedGameMode.mapID" [deviceData]="gameData.devices"></app-map>
+                          <app-map [mapID]="selectedGameMode.mapID" [deviceData]="gameData?.devices"></app-map>
                         </div>
 
                         <div class="col-lg">

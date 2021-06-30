@@ -45,7 +45,7 @@ export class StartGameComponent implements OnInit {
     // adminNodesList;
     teams               = [];
     mapID;
-    gameData            = null;
+    gameData            = <any>[];
 
     constructor(
         private userSvc      : UserServiceService,
@@ -77,6 +77,7 @@ export class StartGameComponent implements OnInit {
                         activeGameConfig["deviceMap"] = game.devices;
 
                         this.setSelectedGameConfig(activeGameConfig);
+
                     }
                 }
             },
