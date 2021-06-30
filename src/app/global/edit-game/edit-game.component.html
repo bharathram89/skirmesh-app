@@ -18,7 +18,7 @@
 
 <div class="row">
 
-      <table class="col-6" formArrayName="teams">
+      <table class="col-lg-6" formArrayName="teams">
 
         <tr>
           <th colspan="2">Assemble Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
@@ -47,7 +47,7 @@
 
       </table>
 
-      <div class="map-container col-5">
+      <div class="map-container col">
         <app-map [mapID]="gameModeForm.get('map').value"></app-map>
       </div>
 
