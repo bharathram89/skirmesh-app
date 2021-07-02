@@ -13,6 +13,7 @@ import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
+import { GameService } from 'src/service/game.service';
 
 
 const DEFAULT_DURATION = 300;
@@ -51,13 +52,15 @@ export class StartGameComponent implements OnInit {
     countUpTimer;
     pausedTimer = 0;
 
+    playerUpdate;
     teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
 
     constructor(
         private userSvc      : UserServiceService,
         private tokenSvc     : TokenStorageService,
         private nonSecAPIsvc : NonSecureAPIService,
-        private secAPIsvc    : SecureAPIService
+        private secAPIsvc    : SecureAPIService,
+        private gameSvc      : GameService,
     ){
         this.activeDevices = new BehaviorSubject({})
     }
@@ -98,10 +101,27 @@ export class StartGameComponent implements OnInit {
                  this.gameModes = savedConfigs;
              }
          )
-
-
-
     }
+
+
+    ngAfterViewInit() {
+        // Socket Data routes
+        // Single socket setup in app.component - these listen for different
+        // socket events to update specific areas
+        this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
+            socketData => {
+                console.log(socketData," Player Update");
+                this.updatePlayerData(socketData);
+        })
+    }
+
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.playerUpdate.unsubscribe()
+    }
+
 
     changeGame(gameConfig){
         // When a dropdown menu selection is made - update the gameboard
@@ -110,6 +130,7 @@ export class StartGameComponent implements OnInit {
 
         this.setSelectedGameConfig(this.selectedGameMode);
     }
+
 
     startGame(){
         // On start game, push all device configuration data to each
@@ -222,6 +243,35 @@ export class StartGameComponent implements OnInit {
         this.countUpTime += ("0" + secs).slice(-2)
 
         this.countUpTimer = setTimeout(() => this.countUpFromTime(), 1000);
+    }
+
+
+    updatePlayerData(teamPlayer) {
+
+        if (!teamPlayer.teamID) {return}
+
+        let team = this.teams.find(ele => ele.id == teamPlayer.teamID);
+
+        if (!team) {return}
+
+        // This removes the player from other teams
+        for (let other_team of this.teams) {
+            if (other_team.teamID == teamPlayer.teamID) {continue}
+            const plr_idx = other_team.teamPlayers.findIndex(ele => ele.id == teamPlayer.id);
+            if (plr_idx != -1) {
+                other_team.teamPlayers.splice(plr_idx, 1)
+            }
+        }
+
+        let player = team.teamPlayers.find(ele => ele.id == teamPlayer.id);
+
+        if (player) {
+            player = teamPlayer;
+        }
+        else {
+            team.teamPlayers.push(teamPlayer)
+        }
+
     }
 
 }
