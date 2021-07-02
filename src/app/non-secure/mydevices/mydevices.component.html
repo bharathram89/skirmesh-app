@@ -16,15 +16,17 @@
 
                 <div class="card-header">
 
-                    <h5 class="col btn-primary btn view-btn" [value]="gameData.id" (click)="selectActiveGame($event)"> {{gameData.description}} </h5>
+                    <div class="col btn view-btn"
+                         [value]="gameData.id"
+                         (click)="selectActiveGame($event)"
+                         [innerHtml]="gameData.description">
+                     </div>
 
                 </div>
 
                 <div class="card-body">
 
-                    <p>
-                        Start: {{gameData.startTime}}
-                    </p>
+                    <p [innerHtml]="gameData.startTime"></p>
 
                     <div>
                         <app-map [mapID]="gameData.mapID" [deviceData]="gameData.devices" [gameID]="gameData.id"></app-map>
