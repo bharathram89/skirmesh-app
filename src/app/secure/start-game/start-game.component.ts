@@ -51,6 +51,8 @@ export class StartGameComponent implements OnInit {
     countUpTimer;
     pausedTimer = 0;
 
+    teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
+
     constructor(
         private userSvc      : UserServiceService,
         private tokenSvc     : TokenStorageService,
@@ -136,6 +138,9 @@ export class StartGameComponent implements OnInit {
         this.teams            = mode.teams;
         this.mapID            = mode.mapID;
 
+        for (let team of this.teams) {
+            team.color = "#" + team.color;
+        }
         this.activeDevices.next({
             mode        : "active",
             mapID       : this.mapID,

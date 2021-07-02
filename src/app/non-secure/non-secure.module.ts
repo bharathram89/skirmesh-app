@@ -8,7 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { GlobalModule } from '../global/global.module';
 import { AuthRoutingModule } from '../auth/auth-routing.module';
 import { ContactUsComponent } from './contact-us/contact-us.component';
-import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component'; 
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
 import { MydevicesComponent } from './mydevices/mydevices.component'
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -16,14 +16,21 @@ import { HowToUseComponent } from './how-to-use/how-to-use.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 @NgModule({
-  declarations: [HowToUseComponent,NonSecureComponent, FeaturesListComponent, HomeComponent, ContactUsComponent, PrivacyPolicyComponent,  FieldInfoComponent,MydevicesComponent],
+  declarations: [HowToUseComponent,
+                 NonSecureComponent,
+                 FeaturesListComponent,
+                 HomeComponent,
+                 ContactUsComponent,
+                 PrivacyPolicyComponent,
+                 FieldInfoComponent,
+                 MydevicesComponent],
   imports: [
     CommonModule,
     NonSecureRoutingModule,
     AuthRoutingModule,
-    GlobalModule, 
+    GlobalModule,
     CarouselModule,
-    NgxDatatableModule, 
+    NgxDatatableModule,
     NgxChartsModule
   ]
 })

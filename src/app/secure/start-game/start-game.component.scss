@@ -44,3 +44,36 @@ h1.text-center.pt-3 {
     text-align: center;
     border-left: 1px solid black;
 }
+
+.padding-sm {
+    padding: 0.5em;
+}
+
+.padding-xs-x {
+    padding: 0 0.25em;
+}
+
+.font_white{
+    color: white;
+}
+
+.team_row {
+    opacity: 0.9;
+}
+
+.h5 {
+    margin: 0;
+}
+
+ngx-datatable {
+    margin: 0;
+}
+
+.team_header {
+    margin: 0;
+    padding: 1rem 0;
+}
+
+.team-section {
+    margin: 1rem 0;
+}
