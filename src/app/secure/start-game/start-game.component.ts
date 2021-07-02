@@ -47,6 +47,10 @@ export class StartGameComponent implements OnInit {
     mapID;
     gameData            = <any>[];
 
+    countUpTime;
+    countUpTimer;
+    pausedTimer = 0;
+
     constructor(
         private userSvc      : UserServiceService,
         private tokenSvc     : TokenStorageService,
@@ -77,6 +81,7 @@ export class StartGameComponent implements OnInit {
                         activeGameConfig["deviceMap"] = game.devices;
 
                         this.setSelectedGameConfig(activeGameConfig);
+                        this.countUpFromTime();
 
                     }
                 }
@@ -91,6 +96,8 @@ export class StartGameComponent implements OnInit {
                  this.gameModes = savedConfigs;
              }
          )
+
+
 
     }
 
@@ -109,11 +116,15 @@ export class StartGameComponent implements OnInit {
 
         this.secAPIsvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
 
-            data => {this.gameData = data},
+            data => {
+                this.gameData = data
+                this.countUpFromTime();
+            },
             err => {console.log(err)}
         )
 
         this.setSelectedGameConfig(mode);
+
         // gameInProgress is used to show or hide game buttons (pause/end)
         this.gameInProgress = true;
     }
@@ -176,5 +187,36 @@ export class StartGameComponent implements OnInit {
                         this.gameData = null;
                     })
         }
+
+        clearInterval(this.countUpTimer);
     }
+
+
+    countUpFromTime() {
+
+        var secsInAHour, hours, secsInAMin, mins, secs, now, then, timeDiff;
+
+        now = new Date();
+        then = new Date(this.gameData.startTime);
+
+        if (this.gameData.is_paused) {
+            this.pausedTimer += 1000;
+        }
+
+        timeDiff = now - then - this.pausedTimer;
+
+        secsInAHour = 60 * 60 * 1000;
+        secsInAMin = 60 * 1000;
+
+        hours = Math.floor(timeDiff / secsInAHour);
+        mins  = Math.floor((timeDiff % secsInAHour) / secsInAMin);
+        secs  = Math.floor(((timeDiff % secsInAHour) % secsInAMin) / 1000);
+
+        this.countUpTime  = ("0" + hours).slice(-2) + ":"
+        this.countUpTime += ("0" + mins).slice(-2) + ":"
+        this.countUpTime += ("0" + secs).slice(-2)
+
+        this.countUpTimer = setTimeout(() => this.countUpFromTime(), 1000);
+    }
+
 }

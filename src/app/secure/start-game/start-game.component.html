@@ -34,11 +34,13 @@
                         <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
                         <h4> WARNING: Changes impact live gameplay. </h4>
 
-                        <button *ngIf="!gameData?.is_paused" type="button" class="btn btn-warning"
-                            (click)="pauseGame()">PAUSE</button>
+                        <button *ngIf="!gameData?.is_paused" type="button" class="btn btn-warning btn-timer"
+                            (click)="pauseGame()">PAUSE
+                            <div class="timer" [innerHTML]="countUpTime"></div></button>
 
-                        <button *ngIf="gameData?.is_paused" type="button" class="btn btn-info"
-                            (click)="pauseGame()">RESUME</button>
+                        <button *ngIf="gameData?.is_paused" type="button" class="btn btn-info btn-timer"
+                            (click)="pauseGame()">RESUME
+                            <div class="timer" [innerHTML]="countUpTime"></div></button>
 
                         <button type="button" class="btn btn-danger"
                             (click)="endGame()">END GAME</button>
