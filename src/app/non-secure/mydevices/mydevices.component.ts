@@ -6,6 +6,7 @@ import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+import { ScoreService } from 'src/service/score.service';
 
 @Component({
     selector: 'app-mydevices',
@@ -59,7 +60,8 @@ export class MydevicesComponent implements OnInit {
     constructor(
         private tokenSvc     : TokenStorageService,
         private gameSvc      : GameService,
-        private nonSecAPIsvc : NonSecureAPIService
+        private nonSecAPIsvc : NonSecureAPIService,
+        private scoreSvc : ScoreService
       ) {}
 
     ngOnInit() {
