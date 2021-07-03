@@ -13,6 +13,7 @@ import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from 'src/app/global/node.modal';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
+import { GameService } from 'src/service/game.service';
 
 
 const DEFAULT_DURATION = 300;
@@ -47,11 +48,19 @@ export class StartGameComponent implements OnInit {
     mapID;
     gameData            = <any>[];
 
+    countUpTime;
+    countUpTimer;
+    pausedTimer = 0;
+
+    playerUpdate;
+    teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
+
     constructor(
         private userSvc      : UserServiceService,
         private tokenSvc     : TokenStorageService,
         private nonSecAPIsvc : NonSecureAPIService,
-        private secAPIsvc    : SecureAPIService
+        private secAPIsvc    : SecureAPIService,
+        private gameSvc      : GameService,
     ){
         this.activeDevices = new BehaviorSubject({})
     }
@@ -77,6 +86,7 @@ export class StartGameComponent implements OnInit {
                         activeGameConfig["deviceMap"] = game.devices;
 
                         this.setSelectedGameConfig(activeGameConfig);
+                        this.countUpFromTime();
 
                     }
                 }
@@ -91,8 +101,27 @@ export class StartGameComponent implements OnInit {
                  this.gameModes = savedConfigs;
              }
          )
-
     }
+
+
+    ngAfterViewInit() {
+        // Socket Data routes
+        // Single socket setup in app.component - these listen for different
+        // socket events to update specific areas
+        this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
+            socketData => {
+                console.log(socketData," Player Update");
+                this.updatePlayerData(socketData);
+        })
+    }
+
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.playerUpdate.unsubscribe()
+    }
+
 
     changeGame(gameConfig){
         // When a dropdown menu selection is made - update the gameboard
@@ -102,6 +131,7 @@ export class StartGameComponent implements OnInit {
         this.setSelectedGameConfig(this.selectedGameMode);
     }
 
+
     startGame(){
         // On start game, push all device configuration data to each
         // device to baseline all configurations from saved configs
@@ -109,11 +139,15 @@ export class StartGameComponent implements OnInit {
 
         this.secAPIsvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
 
-            data => {this.gameData = data},
+            data => {
+                this.gameData = data
+                this.countUpFromTime();
+            },
             err => {console.log(err)}
         )
 
         this.setSelectedGameConfig(mode);
+
         // gameInProgress is used to show or hide game buttons (pause/end)
         this.gameInProgress = true;
     }
@@ -125,6 +159,9 @@ export class StartGameComponent implements OnInit {
         this.teams            = mode.teams;
         this.mapID            = mode.mapID;
 
+        for (let team of this.teams) {
+            team.color = "#" + team.color;
+        }
         this.activeDevices.next({
             mode        : "active",
             mapID       : this.mapID,
@@ -176,5 +213,65 @@ export class StartGameComponent implements OnInit {
                         this.gameData = null;
                     })
         }
+
+        clearInterval(this.countUpTimer);
     }
+
+
+    countUpFromTime() {
+
+        var secsInAHour, hours, secsInAMin, mins, secs, now, then, timeDiff;
+
+        now = new Date();
+        then = new Date(this.gameData.startTime);
+
+        if (this.gameData.is_paused) {
+            this.pausedTimer += 1000;
+        }
+
+        timeDiff = now - then - this.pausedTimer;
+
+        secsInAHour = 60 * 60 * 1000;
+        secsInAMin = 60 * 1000;
+
+        hours = Math.floor(timeDiff / secsInAHour);
+        mins  = Math.floor((timeDiff % secsInAHour) / secsInAMin);
+        secs  = Math.floor(((timeDiff % secsInAHour) % secsInAMin) / 1000);
+
+        this.countUpTime  = ("0" + hours).slice(-2) + ":"
+        this.countUpTime += ("0" + mins).slice(-2) + ":"
+        this.countUpTime += ("0" + secs).slice(-2)
+
+        this.countUpTimer = setTimeout(() => this.countUpFromTime(), 1000);
+    }
+
+
+    updatePlayerData(teamPlayer) {
+
+        if (!teamPlayer.teamID) {return}
+
+        let team = this.teams.find(ele => ele.id == teamPlayer.teamID);
+
+        if (!team) {return}
+
+        // This removes the player from other teams
+        for (let other_team of this.teams) {
+            if (other_team.teamID == teamPlayer.teamID) {continue}
+            const plr_idx = other_team.teamPlayers.findIndex(ele => ele.id == teamPlayer.id);
+            if (plr_idx != -1) {
+                other_team.teamPlayers.splice(plr_idx, 1)
+            }
+        }
+
+        let player = team.teamPlayers.find(ele => ele.id == teamPlayer.id);
+
+        if (player) {
+            player = teamPlayer;
+        }
+        else {
+            team.teamPlayers.push(teamPlayer)
+        }
+
+    }
+
 }

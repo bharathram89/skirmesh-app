@@ -7,10 +7,10 @@ div.main_title {
 }
 
 .btn {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1rem;
     font-weight: bolder;
-    margin: 5px 5px;
-    min-width: 140px;
+    margin: 0.5rem 0.25rem;
+    min-width: 11rem;
 }
 
 .btn:active {
@@ -29,4 +29,51 @@ h1.text-center.pt-3 {
 
 *, ::after, ::before {
     box-sizing: content-box;
+}
+
+
+.btn-timer {
+    padding: 0 1rem;
+    line-height: 3.5rem;
+}
+.btn-timer :first-child {
+    display: inline-block;
+    padding: 0 0 0 1rem;
+    margin: 0 0 0 1rem;
+    font-weight: normal;
+    text-align: center;
+    border-left: 1px solid black;
+}
+
+.padding-sm {
+    padding: 0.5em;
+}
+
+.padding-xs-x {
+    padding: 0 0.25em;
+}
+
+.font_white{
+    color: white;
+}
+
+.team_row {
+    opacity: 0.9;
+}
+
+.h5 {
+    margin: 0;
+}
+
+ngx-datatable {
+    margin: 0;
+}
+
+.team_header {
+    margin: 0;
+    padding: 1rem 0;
+}
+
+.team-section {
+    margin: 1rem 0;
 }

@@ -17,10 +17,6 @@
     color: white;
 }
 
-.team_header {
-    opacity: 0.5;
-}
-
 .team_row {
     opacity: 0.9;
 }
@@ -40,8 +36,10 @@
      margin: 10px;
  }
 
-div.view-btn {
-    float: right;
+.view-btn {
+    color: white;
+    background: #802020;
+    border: none;
 }
 
  .center-cust{
