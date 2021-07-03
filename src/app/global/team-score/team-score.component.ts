@@ -11,19 +11,20 @@ export class TeamScoreComponent implements OnInit {
   @Input() barChartData;
 
 
-  teamScoreColumns = [{name:'Callsign',      prop:'name', sortable:true},
-  {name:'Last Action',   prop:'lastAction', sortable:true},
-  {name:'Last Location', prop:'lastLocation', sortable:true},
-  {name:'Total Points',  prop:'totalPoints', sortable:true}];
+  teamScoreColumns = [
+          {name:'Callsign',      prop:'name',         sortable:true},
+          {name:'Last Action',   prop:'lastAction',   sortable:true},
+          {name:'Last Location', prop:'lastLocation', sortable:true},
+          {name:'Total Points',  prop:'totalPoints',  sortable:true}
+        ];
 
-  
+
   constructor() { }
 
-  ngOnInit(): void {
-    console.log(this.teams,this.barChartData)
-  }
+  ngOnInit(): void {}
 
   getRowClass(player) {
     return {"is_dead": !player.is_alive};
-}
+  }
+  
 }
