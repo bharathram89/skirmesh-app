@@ -18,6 +18,9 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { MapComponent } from './map/map.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TeamRosterComponent } from './team-roster/team-roster.component';
+import { TeamScoreComponent } from './team-score/team-score.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, GameConfigComponent, TabsComponent, TabComponent,
     TabsComponent,
@@ -27,18 +30,21 @@ import { TeamRosterComponent } from './team-roster/team-roster.component';
     EditGameComponent,
     DeviceListComponent,
     MapComponent,
-    TeamRosterComponent,],
+    TeamRosterComponent,
+    TeamScoreComponent,],
   imports: [
     RouterModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NgxPaginationModule,
+    NgxDatatableModule, 
     ColorPickerModule,
+    NgxChartsModule,
     TooltipModule.forRoot()
 
   ],
-  exports: [FooterComponent, HeaderComponent,GameConfigComponent,DeviceListComponent,MapComponent]
+  exports: [FooterComponent, HeaderComponent,GameConfigComponent,DeviceListComponent,MapComponent,TeamScoreComponent]
 })
 export class GlobalModule { }
 //AuthService

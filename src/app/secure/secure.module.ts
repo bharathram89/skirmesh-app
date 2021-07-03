@@ -13,8 +13,10 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { GameHistoryComponent } from './game-history/game-history.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 @NgModule({
-    declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent],
+    declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent, GameHistoryComponent],
     imports: [
         CommonModule,
         SecureRoutingModule,
@@ -24,6 +26,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
         TypeaheadModule.forRoot(),
         NgxDatatableModule, 
         NgxChartsModule,
+        TabsModule.forRoot(),
         AccordionModule
     ]
 })

@@ -72,7 +72,8 @@
                 <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
                     aria-labelledby="v-pills-profile-tab">
 
-                    <div class="row">
+                    <app-team-score [teams]="teams" [barChartData]="barChartData"></app-team-score>
+                    <!-- <div class="row">
 
                         <ngx-charts-bar-horizontal-stacked
                             [results]="barChartData"
@@ -109,7 +110,7 @@
                                 [rowClass]="getRowClass">
                             </ngx-datatable>
 
-                    </div>
+                    </div> -->
 
                 </div>
 

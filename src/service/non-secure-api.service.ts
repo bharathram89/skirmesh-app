@@ -20,8 +20,7 @@ export class NonSecureAPIService {
     // setup source routes
     NONS = 'nonSecure/'
     STAT = 'statistics/'
-    LOGN = 'login'
-
+    LOGN = 'login' 
 
     constructor(
         private http: HttpClient
@@ -116,6 +115,14 @@ export class NonSecureAPIService {
         let route = this.BASE + this.LOGN
 
         return this.http.post(route + "/passwordReset", data, this.options)
+    }
+
+
+    getPastGames(){
+
+        let route = this.BASE + 'games/pastGames'
+
+        return this.http.get(route)
     }
 
 }
