@@ -1,6 +1,8 @@
 import { newArray } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+import { SecureAPIService } from 'src/service/secure-api.service';
+import { UserServiceService } from 'src/service/user-service.service';
 import { ScoreService } from 'src/service/score.service';
 import { combineLatest } from 'rxjs';
 
@@ -25,14 +27,17 @@ export class GameHistoryComponent implements OnInit {
   gameModes;
   selectedMode;
   selectedGame;
-  gameCardData;
+  fieldCardData = [];
+  fields;
   gameData;
 
   pastGamesByConfig;
 
   constructor(
+    private userSvc      : UserServiceService,
     private nonSecAPIsvc : NonSecureAPIService,
-    private scoreSvc : ScoreService) { }
+    private secAPIsvc    : SecureAPIService,
+    private scoreSvc     : ScoreService) { }
 
   ngOnInit(): void {
 
@@ -79,13 +84,12 @@ export class GameHistoryComponent implements OnInit {
       // Need to clarify this is "ByConfig"
       combineLatest([this.nonSecAPIsvc.getPastGames(),
                      this.nonSecAPIsvc.getLocationsList(),
-                     this.nonSecAPIsvc.getActionsList()
+                     this.nonSecAPIsvc.getActionsList(),
+                     this.secAPIsvc.getFieldListFromAPI(this.userSvc.getToken()),
           ])
           .subscribe(
 
-              ([pastGamesByConfig, locations, actions]) => {
-
-                  this.gameCardData = [];
+              ([pastGamesByConfig, locations, actions, fields]) => {
 
                   this.scoreSvc.setGlobalData(location, actions);
 
@@ -93,7 +97,9 @@ export class GameHistoryComponent implements OnInit {
 
                   //TODO: Cleanup this assignment - use card data or similar
                   this.gameModes = pastGamesByConfig;
+                  this.fields = fields;
 
+                  let new_field, field, game, start
                   for (let config of this.pastGamesByConfig) {
                       // This works well, for now, because each game config
                       // can only have a single active game with that config
@@ -103,15 +109,23 @@ export class GameHistoryComponent implements OnInit {
 
                       // TODO: This is a holdover, but can get used to set
                       // better data for the UI
-                      let game = config.games.shift()
-                      let start = new Date(game.startTime)
-                      this.gameCardData.push({'description': config.description,
-                                              'startTime'  : start.toLocaleString('en-US', {hour12:false}),
-                                              'id'         : game.id,
-                                              'mapID'      : config.mapID,
-                                              'devices'    : game.devices});
+                      game = config.games.shift()
+                      start = new Date(game.startTime)
+
+                      field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)
+                      if (field) {
+                        field.configs.push(config)
+                      }
+                      else {
+                        new_field = this.fields.find(ele => ele.fieldProfile.id == config.fieldProfileID);
+                        this.fieldCardData.push({'id'          : new_field.fieldProfile.id,
+                                                 'name'        : new_field.callSign,
+                                                 'description' : new_field.fieldProfile.profile,
+                                                 'imageID'     : new_field.fieldProfile.imageID,
+                                                 'configs'     : [config]});
+                      }
                   }
-                  this.gameCardData.sort((a,b) => b.id - a.id);
+                  this.fieldCardData.sort((a,b) => b.id - a.id);
           })
   }
 

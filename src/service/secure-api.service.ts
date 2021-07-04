@@ -248,6 +248,15 @@ export class SecureAPIService {
       return this.http.get(route + 'user_list', options)
   }
 
+  getFieldListFromAPI(token) {
+
+      let route = this.BASE + this.SEC;
+
+      const options = { params  : new HttpParams().set("token", token)}
+
+      return this.http.get(route + 'fieldProfile_list', options)
+  }
+
   pairUid(token, data) {
 
       let route = this.BASE + this.SEC;
