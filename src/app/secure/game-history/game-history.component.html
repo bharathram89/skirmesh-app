@@ -1,29 +1,29 @@
 <div class="row">
     <select class="cust-center col-6 form-control" (change)="changeGameMode($event)">
+        <option value="" disabled selected> -- Select Game Mode -- </option>
         <option [value]=gameMode.id *ngFor="let gameMode of gameModes">
             {{gameMode.description}}</option>
     </select>
 </div>
-<div *ngIf="selectedMode" class="card"> 
+<div *ngIf="selectedMode" class="card">
     <div class="card-header">
         This Game Config is run at:
-    </div> 
+    </div>
 </div>
-<div class="row">  
-    <div *ngIf="selectedMode" class="btn-group-vertical"> 
-        <h6>Select Game</h6>
-            <button type="button"class="btn btn-outline-secondary custSpacing" *ngFor="let tabz of selectedMode.games; let i = index" value="{{tabz.id}}"
-            (click)="changeGame($event)"> {{tabz.creationDate}}</button>
- 
-    </div> 
-    
-    <div class="card cust-center" >
-        <div class="card-body">
-            {{selectedGame?.creationDate}} 
 
-            <app-map *ngIf="selectedGame && selectedMode" [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
-            <app-team-score *ngIf="selectedGame && selectedMode" [teams]="selectedGame?.games" [barChartData]="" ></app-team-score>
+  <div *ngIf="selectedMode">
+  <select class="cust-center col form-control" (change)="changeGame($event)">
+      <option value="" disabled selected> -- Select Game -- </option>
+      <option *ngFor="let game of selectedMode.games" [value]=game.id>
+          {{game.creationDate.toLocaleString()}} </option>
+  </select>
+  </div>
 
-        </div>
-    </div> 
-</div>
+  <div class="row">
+    <div class="col">
+      <app-map *ngIf="selectedGame && selectedMode" [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
+    </div>
+    <div class="col">
+      <app-team-score *ngIf="selectedGame && selectedMode" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
+    </div>
+  </div>
