@@ -25,6 +25,7 @@ export class GameHistoryComponent implements OnInit {
 
 
   gameModes;
+  selectedField;
   selectedMode;
   selectedGame;
   fieldCardData = [];
@@ -45,17 +46,15 @@ export class GameHistoryComponent implements OnInit {
 
   }
 
-  changeGameMode(e){
-    // console.log(e)
-    let newMode = this.gameModes.find(ele=> ele.id == e.target.value)
+  changeGameMode(event){
+    let newMode = this.gameModes.find(ele=> ele.id == event.target.value)
     this.selectedMode = newMode;
-    // this.selectedGame = newMode.games[0]
     this.selectedGame = null;
   }
 
-  changeGame(e){
+  changeGame(event){
 
-    let game = this.selectedMode.games.find(ele=> ele.id == e.target.value);
+    let game = this.selectedMode.games.find(ele=> ele.id == event.target.value);
 
     if (!game) {return}
 
@@ -117,17 +116,35 @@ export class GameHistoryComponent implements OnInit {
                         field.configs.push(config)
                       }
                       else {
+
                         new_field = this.fields.find(ele => ele.fieldProfile.id == config.fieldProfileID);
-                        this.fieldCardData.push({'id'          : new_field.fieldProfile.id,
-                                                 'name'        : new_field.callSign,
-                                                 'description' : new_field.fieldProfile.profile,
-                                                 'imageID'     : new_field.fieldProfile.imageID,
-                                                 'configs'     : [config]});
+                        let cardData = {'id'          : new_field.fieldProfile.id,
+                                        'name'        : new_field.callSign,
+                                        'description' : new_field.fieldProfile.profile,
+                                        'imageData'   : null,
+                                        'configs'     : [config]}
+
+                        if(new_field.fieldProfile.imageID){
+                          this.nonSecAPIsvc.getImage(new_field.fieldProfile.imageID).subscribe(
+                            imageData => {
+                              cardData.imageData = imageData['image'] ? imageData['image'] : null;
+                            }
+                          )
+                        }
+
+                        this.fieldCardData.push(cardData);
                       }
                   }
                   this.fieldCardData.sort((a,b) => b.id - a.id);
           })
   }
 
+  selectField(fieldID) {
+    this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
+  }
+
+  deSelectField() {
+    this.selectedField = null;
+  }
 
 }
