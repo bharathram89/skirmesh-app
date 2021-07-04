@@ -1,6 +1,8 @@
 
 <button *ngIf="selectedField" (click)="deSelectField()" class="btn btn-primary">Go Back</button>
 <div class="container-fluid">
+
+  <div class="col">
   <div *ngFor="let field of fieldCardData;">
 
         <div *ngIf="!selectedField || selectedField.id == field.id"
@@ -25,10 +27,12 @@
 
        </div>
   </div>
+  </div>
 
+  <div class="col-xs-2">
 
   <div *ngIf="selectedField" class="row">
-      <select class="cust-center col-6 form-control" (change)="changeGameMode($event)">
+      <select class="form-control" (change)="changeGameMode($event)">
           <option disabled selected> -- Select Game Mode -- </option>
           <option [value]=config.id *ngFor="let config of selectedField.configs">
               {{config.description}}</option>
@@ -36,8 +40,8 @@
   </div>
 
 
-  <div *ngIf="selectedMode">
-    <select class="cust-center col form-control" (change)="changeGame($event)">
+  <div *ngIf="selectedMode && selectedField" class="row">
+    <select size="5" class="form-control" (change)="changeGame($event)">
         <option disabled selected> -- Select Game -- </option>
         <option [value]=game.id *ngFor="let game of selectedMode.games">
             {{game.creationDate.toLocaleString()}} </option>
@@ -45,15 +49,16 @@
   </div>
 
 </div>
+</div>
 
-<div class="row">
+<div *ngIf="selectedField && selectedGame && selectedMode" class="row">
 
   <div class="col">
-    <app-map *ngIf="selectedGame && selectedMode" [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
+    <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
   </div>
 
   <div class="col">
-    <app-team-score *ngIf="selectedGame && selectedMode" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
+    <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
   </div>
 
 </div>
