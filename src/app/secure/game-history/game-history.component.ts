@@ -46,7 +46,6 @@ export class GameHistoryComponent implements OnInit {
     this.selectedMode = newMode;
     // this.selectedGame = newMode.games[0]
     this.selectedGame = null;
-
   }
 
   changeGame(e){
@@ -111,9 +110,8 @@ export class GameHistoryComponent implements OnInit {
                                               'id'         : game.id,
                                               'mapID'      : config.mapID,
                                               'devices'    : game.devices});
-
-                      this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
                   }
+                  this.gameCardData.sort((a,b) => b.id - a.id);
           })
   }
 

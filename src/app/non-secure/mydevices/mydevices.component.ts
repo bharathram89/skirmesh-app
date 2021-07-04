@@ -117,6 +117,8 @@ export class MydevicesComponent implements OnInit {
                         // can only have a single active game with that config
                         // That's why we always shift() the first index
                         let game = config.games.shift()
+                        if (!game) {continue}
+
                         let start = new Date(game.startTime)
                         this.gameCardData.push({'description': config.description,
                                                 'startTime'  : start.toLocaleString('en-US', {hour12:false}),
@@ -124,8 +126,9 @@ export class MydevicesComponent implements OnInit {
                                                 'mapID'      : config.mapID,
                                                 'devices'    : game.devices});
 
-                        this.gameCardData = this.gameCardData.sort((a,b) => b.id - a.id);
+
                     }
+                    this.gameCardData.sort((a,b) => b.id - a.id);
             })
     }
 
@@ -160,7 +163,7 @@ export class MydevicesComponent implements OnInit {
                        this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
 
                             ([extendedGameData, stats]) => {
-                              
+
                                 this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl',gameID.target.value)
                                 let configData = extendedGameData["configData"];
                                 let gameData   = extendedGameData["gameData"];

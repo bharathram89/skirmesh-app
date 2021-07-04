@@ -58,24 +58,30 @@ export class ScoreService {
     // Assemble PLAYER stats from API data
     this.gameStats["player_stats"].forEach(player => {
 
+        player.data.sort((a, b) => b.id - a.id);
+
         let playerObj = {
-            teamID       : player.teamID,
+            teamID       : player.teamID || player.data[0]?.teamID, // If past game use last action
             rfidID       : player.rfidID,
             name         : player.name,
             is_alive     : player.is_alive,
-            lastAction   : this.actionList.find(ele => ele.id == player.data.sort((a, b) => b.id - a.id)[0]?.actionID)?.action || " ",
-            lastLocation : this.findLocationFromDeviceID(player.data.sort((a, b) => b.id - a.id)[0]?.deviceID) || " ",
+            lastAction   : this.actionList.find(ele => ele.id == player.data[0]?.actionID)?.action || " ",
+            lastLocation : this.findLocationFromDeviceID(player.data[0]?.deviceID) || " ",
             totalPoints  : player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
         }
         this.players.push(playerObj)
 
         // Stuff it in ALL ACTIONS history also
-        for (let act of player.data.sort((a, b) => b.id - a.id)) {
+        for (let act of player.data) {
 
             let date = new Date(act.creationDate);
+
+            let team = this.gameConfig["teams"].find(ele => ele.id == act.teamID)
+            if (!team) {continue}
+
             let historyObj = {
                 id        : act.id,
-                team      : this.gameConfig["teams"].find(ele => ele.id == player.teamID).name,
+                team      : team.name,
                 name      : player.name,
                 action    : this.actionList.find(ele =>ele.id == act.actionID).action,
                 points    : this.actionList.find(ele => ele.id == act.actionID).points,
@@ -136,26 +142,24 @@ export class ScoreService {
 
         var is_team = this.teams.find(ele => ele.teamID == team.id);
         // this shouldn't execute after teams have action
-        if (!is_team) {
+        if (is_team) {continue}
 
-            let team_players = this.players.filter(player => player.teamID == team.id);
-            let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+        let team_players = this.players.filter(player => player.teamID == team.id);
+        let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
 
-            this.teams.push({
-                             teamID       : team.id,
-                             name         : team.name,
-                             color        : '#' + team.color,
-                             score        : 0,
-                             player_score : plyr_points,
-                             comb_score   : 0 + plyr_points,
-                             players      : team_players,
-                            })
+        this.teams.push({
+                         teamID       : team.id,
+                         name         : team.name,
+                         color        : '#' + team.color,
+                         score        : 0,
+                         player_score : plyr_points,
+                         comb_score   : 0 + plyr_points,
+                         players      : team_players,
+                        })
 
-            this.barChartData.push({"name":team.name, "teamID":team.id, "series":[
-                    {name:"Objective Control",value: 0},{name:"Player Action",value:plyr_points}
-            ]});
-        }
-
+        this.barChartData.push({"name":team.name, "teamID":team.id, "series":[
+                {name:"Objective Control",value: 0},{name:"Player Action",value:plyr_points}
+        ]});
     }
     // Sort actions descending
     this.allActions.sort((a, b) => b.id - a.id);

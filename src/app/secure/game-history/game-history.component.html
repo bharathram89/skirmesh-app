@@ -1,29 +1,33 @@
 <div class="row">
     <select class="cust-center col-6 form-control" (change)="changeGameMode($event)">
-        <option value="" disabled selected> -- Select Game Mode -- </option>
+        <option disabled selected> -- Select Game Mode -- </option>
         <option [value]=gameMode.id *ngFor="let gameMode of gameModes">
             {{gameMode.description}}</option>
     </select>
 </div>
+
 <div *ngIf="selectedMode" class="card">
     <div class="card-header">
         This Game Config is run at:
     </div>
 </div>
 
-  <div *ngIf="selectedMode">
+<div *ngIf="selectedMode">
   <select class="cust-center col form-control" (change)="changeGame($event)">
-      <option value="" disabled selected> -- Select Game -- </option>
-      <option *ngFor="let game of selectedMode.games" [value]=game.id>
+      <option disabled selected> -- Select Game -- </option>
+      <option [value]=game.id *ngFor="let game of selectedMode.games">
           {{game.creationDate.toLocaleString()}} </option>
   </select>
+</div>
+
+<div class="row">
+
+  <div class="col">
+    <app-map *ngIf="selectedGame && selectedMode" [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <app-map *ngIf="selectedGame && selectedMode" [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
-    </div>
-    <div class="col">
-      <app-team-score *ngIf="selectedGame && selectedMode" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
-    </div>
+  <div class="col">
+    <app-team-score *ngIf="selectedGame && selectedMode" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
   </div>
+
+</div>
