@@ -1,36 +1,47 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
+
 export class ScoreService {
-  
+
+  gameID;
   gameStats;
-  teams;
-  players;
-  barChartData;
-  allActions;
-
-
-
   devices;
-  actionList;
   gameConfig;
-  locationList;
 
-  constructor( 
-  ) {  
+  actionList    = [];
+  locationList  = [];
+
+  teams         = [];
+  players       = [];
+  allActions    = [];
+
+  barChartData = [];
+
+  allActionsColumns = [{name:'Team',     prop:'team', sortable:true},
+                       {name:'Callsign', prop:'name', sortable:true},
+                       {name:'Action',   prop:'action', sortable:true},
+                       {name:'Location', prop:'location', sortable:true},
+                       {name:'Points',   prop:'points'},
+                       {name:'Time',     prop:'timestamp', sortable:true}];
+
+  teamScoreColumns = [{name:'Callsign',      prop:'name', sortable:true},
+                      {name:'Last Action',   prop:'lastAction', sortable:true},
+                      {name:'Last Location', prop:'lastLocation', sortable:true},
+                      {name:'Total Points',  prop:'totalPoints', sortable:true}];
+
+  constructor () {}
+
+  setGlobalData(locations, actions) {
+
+      this.locationList = locations;
+      this.actionList   = actions;
   }
 
-  calcScoreAndSetActions(  devices,
-    actionList,
-    gameConfig,
-    locationList
-  ) { 
-    this.devices = devices;
-    this.actionList =actionList;
-    this.gameConfig = gameConfig;
-    this.locationList = locationList
+  calcScoreAndSetActions (
+  ) {
     // This function grabs player and team stats from the initial load and parses
     // them out for ease of display within the UI
 
@@ -184,19 +195,77 @@ export class ScoreService {
     // Purge all the stuff without a player name to show the stuff that matters
     this.teams = [...this.teams]
     this.allActions = this.allActions.filter(act => act.name);
-}
-
-findLocationFromDeviceID(deviceID) {
-
-  let device = this.devices.find(ele => ele.id == deviceID)
-
-  let location;
-  if(device && device.location) {
-
-      location = this.locationList.find(ele => ele.id == device.location);
   }
-  return location && location.name ? location.name : ' '
-}
 
+  updatePlayerData(player) {
+      // The update needs to be for a player on a team in this configuration
+      if (!this.gameConfig.teams.find(ele => ele.id == player.teamID)) {return}
+
+      let index = this.gameStats["player_stats"].findIndex(ele => ele.rfidID == player.rfidID);
+
+      if (index != -1) {
+          this.gameStats["player_stats"][index].is_alive = player.is_alive;
+          this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
+      }
+      this.calcScoreAndSetActions();
+  }
+
+
+  updateActionAndCalcScore(action){
+      // The action needs to be for a team in this game
+      if (action.gameID != this.gameID) {return}
+      // The action must be associated with a team in this configuration
+      if (!this.gameConfig.teams.find(ele => ele.id == action.teamID)) {return}
+      // If no RFID associated, push to team_stats
+      if (!action.rfidID){
+
+          let team = this.gameStats["team_stats"].find(ele => ele.id == action.teamID);
+          if (team) {
+              team.data.push(action);
+          }
+          else {
+              this.gameStats["team_stats"].push({
+                  "id"   : action.teamID,
+                  "name" : this.gameConfig.teams.find(ele => ele.teamID == action.teamID).name,
+                  "color": this.gameConfig.teams.find(ele => ele.teamID == action.teamID).color,
+                  "data" : [action]
+              })
+          }
+          this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
+      }
+      // If RFID associated, push to player_stats
+      else {
+
+          let player = this.gameStats["player_stats"].find(ele => ele.rfidID == action.rfidID);
+          if (player) {
+              player.data.push(action);
+          }
+          else {
+              this.gameStats["player_stats"].push({
+                  "rfidID"   : action.rfidID,
+                  "teamID"   : action.teamID,
+                  "name"     : "Refresh for Callsign",
+                  "is_alive" : true,
+                  "data"     : [action]
+              })
+          }
+          this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
+      }
+
+      this.calcScoreAndSetActions();
+  }
+
+
+  findLocationFromDeviceID(deviceID) {
+
+    let device = this.devices.find(ele => ele.id == deviceID)
+
+    let location;
+    if(device && device.location && this.locationList.length) {
+
+        location = this.locationList.find(ele => ele.id == device.location);
+    }
+    return location && location.name ? location.name : ' '
+  }
 
 }
