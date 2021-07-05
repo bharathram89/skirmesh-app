@@ -1,26 +1,12 @@
 
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
 
-.center-cust{
-    justify-content: center;
-    text-align: center;
-    float: center;
-}
-.custSpacing{
-    padding: 10px;
-    margin: 10px;
+.row {
+  display: inline-block;
 }
 
 .card{
 
-    // @media  (max-width: 500px) {
-    //     width: 90%;
-    // }
-    // @media  (max-width: 800px) {
-    //     width: 45%;
-    // }
-
-    width: 30%;
     margin: 1rem 0.5rem;
     display: inline-block;
     vertical-align: top;

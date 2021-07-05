@@ -1,64 +1,62 @@
 
-<button *ngIf="selectedField" (click)="deSelectField()" class="btn btn-primary">Go Back</button>
-<div class="container-fluid">
+<button *ngIf="selectedField"
+        (click)="deSelectField()"
+        class="btn btn-primary">Go Back
+</button>
+<br/>
 
-  <div class="col">
+<div class="row">
+
   <div *ngFor="let field of fieldCardData;">
 
-        <div *ngIf="!selectedField || selectedField.id == field.id"
-             class="card user-card">
+    <div *ngIf="!selectedField || selectedField.id == field.id"
+       class="card col-sm-3">
 
-          <div class="card-header" [innerHtml]="field.name"></div>
+      <div class="card-header"
+           [value]="field.id"
+           (click)="selectField(field.id)">
+        <h5> {{field.name}} ({{field.configs.length}})</h5>
+      </div>
 
-          <div class="card-body"
-               [value]="field.id"
-               (click)="selectField(field.id)">
+      <div class="card-body"
+           [value]="field.id"
+           (click)="selectField(field.id)">
 
-               <div class="col-xs">
-                   <img
-                      class="img img-fluid img-thumbnail"
-                      src="{{field.imageData}}"
-                      onerror="this.onerror=null"
-                      alt=""/>
-               </div>
+         <img
+            class="img img-thumbnail"
+            src="{{field.imageData}}"
+            onerror="this.onerror=null"
+            alt=""/>
 
-               <div class="col" [innerHtml]="field.description"></div>
-         </div>
+         <div class="card-title" [innerHtml]="field.description"></div>
 
-       </div>
-  </div>
-  </div>
+      </div>
 
-  <div class="col-xs-2">
-
-  <div *ngIf="selectedField" class="row">
-      <select class="form-control" (change)="changeGameMode($event)">
-          <option disabled selected> -- Select Game Mode -- </option>
-          <option [value]=config.id *ngFor="let config of selectedField.configs">
-              {{config.description}}</option>
-      </select>
+    </div>
   </div>
 
+  <div class="col-sm">
+    <select *ngIf="selectedField" class="form-control" (change)="changeGameMode($event)">
+        <option disabled selected> -- Select Game Mode -- </option>
+        <option [value]=config.id *ngFor="let config of selectedField.configs">
+            {{config.description}} ({{config.games.length}})</option>
+    </select>
 
-  <div *ngIf="selectedMode && selectedField" class="row">
-    <select size="5" class="form-control" (change)="changeGame($event)">
+
+    <select *ngIf="selectedMode && selectedField" size="5" class="form-control" (change)="changeGame($event)">
         <option disabled selected> -- Select Game -- </option>
         <option [value]=game.id *ngFor="let game of selectedMode.games">
             {{game.creationDate.toLocaleString()}} </option>
     </select>
   </div>
 
-</div>
-</div>
 
-<div *ngIf="selectedField && selectedGame && selectedMode" class="row">
+<div *ngIf="selectedField && selectedGame && selectedMode" class="col-md">
 
-  <div class="col">
-    <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
-  </div>
-
-  <div class="col">
     <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
-  </div>
+
+    <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
+
+</div>
 
 </div>
