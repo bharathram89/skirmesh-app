@@ -1,17 +1,16 @@
 <div class="container-fluid">
-    <div>
 
         <div *ngIf="activeGame">
             <div class="btn-primary btn" (click)="goBackToMainMenu()"> Go Back </div>
         </div>
 
-        <div *ngIf="!activeGame">
+        <div *ngIf="!activeGame" class="row">
 
             <h3 *ngIf="!gameCardData.length"> Whaaaa!?..There are no active games? </h3>
             <h5 *ngIf="!gameCardData.length"> Check back later. Games pop up all the time! </h5>
             <div
                 *ngFor="let gameData of gameCardData;"
-                class="card user-card"
+                class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1"
                 >
 
                 <div class="card-header">
@@ -35,10 +34,8 @@
                 </div>
 
             </div>
+
         </div>
-
-    </div>
-
 
 
     <div *ngIf="activeGame" class="view-account" id="activeGame">
