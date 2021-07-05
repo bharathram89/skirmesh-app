@@ -5,12 +5,10 @@
 </button>
 <br/>
 
-<div class="row">
+<div *ngIf="!selectedField" class="row">
 
   <div *ngFor="let field of fieldCardData;"
        class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1">
-
-    <div *ngIf="!selectedField || selectedField.id == field.id">
 
       <div class="card-header"
            [value]="field.id"
@@ -32,18 +30,44 @@
 
       </div>
 
-    </div>
   </div>
 
-  <div class="col-sm-2 px-1 py-1 gx-1 gy-1">
+</div>
 
-    <select *ngIf="selectedField" class="form-control" (change)="changeGameMode($event)">
+<div *ngIf="selectedField" class="row">
+
+  <div class="card user-card col-3 d-flex px-1 py-1 gx-1 gy-1">
+
+    <div *ngIf="selectedField">
+
+      <div class="card-header">
+        <h5> {{selectedField.name}} ({{selectedField.configs.length}})</h5>
+      </div>
+
+      <div class="card-body">
+
+         <img
+            class="img img-thumbnail"
+            src="{{selectedField.imageData}}"
+            onerror="this.onerror=null"
+            alt=""/>
+
+         <div class="card-title" [innerHtml]="selectedField.description"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-3 px-1 py-1 gx-1 gy-1">
+
+    <select class="form-control" (change)="changeGameMode($event)">
         <option disabled selected> -- Select Game Mode -- </option>
         <option [value]=config.id *ngFor="let config of selectedField.configs">
             {{config.description}} ({{config.games.length}})</option>
     </select>
-
-    <select *ngIf="selectedMode && selectedField" size="5" class="form-control" (change)="changeGame($event)">
+    <br/>
+    <select *ngIf="selectedMode" size="5" class="form-control" (change)="changeGame($event)">
         <option disabled selected> -- Select Game -- </option>
         <option [value]=game.id *ngFor="let game of selectedMode.games">
             {{game.creationDate.toLocaleString()}} </option>
@@ -52,14 +76,14 @@
   </div>
 
 
-</div>
+<div *ngIf="selectedGame && selectedMode" class="row">
 
-<div *ngIf="selectedField && selectedGame && selectedMode" class="row">
-
-    <div class="col-md px-5 py-5 gx-5 gy-5">
+    <div class="col d-flex px-5 py-5 gx-5 gy-5">
     <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
     </div>
-    <div class="col-sm px-5 py-5 gx-5 gy-5">
+    <div class="col px-5 py-5 gx-5 gy-5">
     <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID" [deviceData]="selectedMode?.deviceMap"></app-map>
     </div>
+</div>
+
 </div>
