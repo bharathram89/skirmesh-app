@@ -65,10 +65,9 @@ export class GameHistoryComponent implements OnInit {
                         ([extendedGameData, stats]) => {
 
                             let configData = extendedGameData["configData"];
-                            let gameData   = extendedGameData["gameData"];
 
                             this.scoreSvc.gameID     = game.id;
-                            this.scoreSvc.devices    = gameData.devices;
+                            this.scoreSvc.devices    = JSON.parse(configData.deviceMap);
                             this.scoreSvc.gameStats  = stats
                             this.scoreSvc.gameConfig = configData
 
@@ -129,7 +128,7 @@ export class GameHistoryComponent implements OnInit {
 
   selectField(fieldID) {
     this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
-    
+
   }
 
   deSelectField() {
