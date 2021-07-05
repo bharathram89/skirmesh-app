@@ -7,10 +7,10 @@
 
 <div class="row">
 
-  <div *ngFor="let field of fieldCardData;">
+  <div *ngFor="let field of fieldCardData;"
+       class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1">
 
-    <div *ngIf="!selectedField || selectedField.id == field.id"
-       class="card col-sm-3">
+    <div *ngIf="!selectedField || selectedField.id == field.id">
 
       <div class="card-header"
            [value]="field.id"
@@ -35,28 +35,31 @@
     </div>
   </div>
 
-  <div class="col-sm">
+  <div class="col-sm-2 px-1 py-1 gx-1 gy-1">
+
     <select *ngIf="selectedField" class="form-control" (change)="changeGameMode($event)">
         <option disabled selected> -- Select Game Mode -- </option>
         <option [value]=config.id *ngFor="let config of selectedField.configs">
             {{config.description}} ({{config.games.length}})</option>
     </select>
 
-
     <select *ngIf="selectedMode && selectedField" size="5" class="form-control" (change)="changeGame($event)">
         <option disabled selected> -- Select Game -- </option>
         <option [value]=game.id *ngFor="let game of selectedMode.games">
             {{game.creationDate.toLocaleString()}} </option>
     </select>
+
   </div>
 
 
-<div *ngIf="selectedField && selectedGame && selectedMode" class="col-md">
-
-    <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
-
-    <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID"></app-map>
-
 </div>
 
+<div *ngIf="selectedField && selectedGame && selectedMode" class="row">
+
+    <div class="col-md px-5 py-5 gx-5 gy-5">
+    <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
+    </div>
+    <div class="col-sm px-5 py-5 gx-5 gy-5">
+    <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID" [deviceData]="selectedMode?.deviceMap"></app-map>
+    </div>
 </div>

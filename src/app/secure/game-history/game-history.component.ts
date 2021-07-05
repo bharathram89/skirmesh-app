@@ -47,6 +47,7 @@ export class GameHistoryComponent implements OnInit {
   changeGameMode(event){
     let newConfig = this.pastGamesByConfig.find(ele=> ele.id == event.target.value)
     this.selectedMode = newConfig;
+    this.selectedMode.deviceMap = JSON.parse(this.selectedMode.deviceMap);
     this.selectedGame = null;
   }
 
