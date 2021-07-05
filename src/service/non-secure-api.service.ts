@@ -98,8 +98,13 @@ export class NonSecureAPIService {
     }
 
 
-    getActionsList(){
-        return this.http.get(this.BASE + this.NONS + 'actions')
+    getActionsList(viewForUser?){
+        if(viewForUser){ 
+            const options = { params  : new HttpParams().set("callSign", viewForUser) } 
+            return this.http.get(this.BASE + this.NONS + 'actions',options)
+        }else{
+            return this.http.get(this.BASE + this.NONS + 'actions')
+        } 
     }
 
 

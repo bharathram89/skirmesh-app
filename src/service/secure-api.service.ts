@@ -154,7 +154,7 @@ export class SecureAPIService {
                                         .set("token", token)
                                         .set("callSign", callSign)}
 
-      return this.http.get(route, options);
+    return this.http.get(route, options);
   }
 
   deleteUser(token) {
