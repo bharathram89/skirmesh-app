@@ -81,7 +81,7 @@ export class GameHistoryComponent implements OnInit {
   setGameHistoryData() {
 
       // Need to clarify this is "ByConfig"
-      combineLatest([this.nonSecAPIsvc.getPastGames(),
+      combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
                      this.nonSecAPIsvc.getLocationsList(),
                      this.nonSecAPIsvc.getActionsList(),
                      this.secAPIsvc.getFieldListFromAPI(this.userSvc.getToken()),
@@ -92,6 +92,8 @@ export class GameHistoryComponent implements OnInit {
 
                   this.scoreSvc.setGlobalData(location, actions);
 
+                  console.log(pastGamesByConfig)
+
                   this.pastGamesByConfig = pastGamesByConfig;
 
                   //TODO: Cleanup this assignment - use card data or similar
@@ -100,16 +102,8 @@ export class GameHistoryComponent implements OnInit {
 
                   let new_field, field, game, start
                   for (let config of this.pastGamesByConfig) {
-                      // This works well, for now, because each game config
-                      // can only have a single active game with that config
-                      // That's why we always shift() the first index
-
+                    
                       config.games.sort((a, b) => b.id - a.id);
-
-                      // TODO: This is a holdover, but can get used to set
-                      // better data for the UI
-                      game = config.games.shift()
-                      start = new Date(game.startTime)
 
                       field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)
                       if (field) {
