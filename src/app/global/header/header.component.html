@@ -44,9 +44,9 @@
                     <a class="nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Live Games</a>
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">LIVE Games</a>
                 </li>
-            </ul>  
+            </ul>
             <!-- SECURE LINKS BELOW -->
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure">
                 <li class="nav-item">
@@ -54,16 +54,16 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
-                </li> 
-                <li *ngIf=" isField" class="nav-item">
-                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Start and Manage Games</a>
                 </li>
                 <li *ngIf=" isField" class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Game Modes</a>
+                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Manage Games</a>
+                </li>
+                <li *ngIf=" isField" class="nav-item">
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/live-games']">Live Games</a>
-                </li> 
+                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/live-games']">LIVE Games</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_pastgame" [routerLink]="['/secure/past-games']">Past Games</a>
                 </li>
