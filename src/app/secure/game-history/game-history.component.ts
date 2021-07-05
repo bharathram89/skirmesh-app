@@ -129,10 +129,13 @@ export class GameHistoryComponent implements OnInit {
 
   selectField(fieldID) {
     this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
+    
   }
 
   deSelectField() {
     this.selectedField = null;
+    this.selectedMode = null;
+    this.selectedGame = null;
   }
 
 }
