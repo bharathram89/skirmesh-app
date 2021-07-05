@@ -1,7 +1,20 @@
 
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
 
+.row {
+  padding: 1rem;
+}
 
 .card{
     margin: 1rem 0.5rem;
+    // padding: 1rem;
+}
+
+.card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 1rem #A00000;
+}
+
+.card:active {
+    transform: scale(0.95);
 }
