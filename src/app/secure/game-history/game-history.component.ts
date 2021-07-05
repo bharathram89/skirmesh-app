@@ -23,8 +23,6 @@ interface ITab {
 })
 export class GameHistoryComponent implements OnInit {
 
-
-  gameModes;
   selectedField;
   selectedMode;
   selectedGame;
@@ -47,8 +45,8 @@ export class GameHistoryComponent implements OnInit {
   }
 
   changeGameMode(event){
-    let newMode = this.gameModes.find(ele=> ele.id == event.target.value)
-    this.selectedMode = newMode;
+    let newConfig = this.pastGamesByConfig.find(ele=> ele.id == event.target.value)
+    this.selectedMode = newConfig;
     this.selectedGame = null;
   }
 
@@ -92,17 +90,12 @@ export class GameHistoryComponent implements OnInit {
 
                   this.scoreSvc.setGlobalData(location, actions);
 
-                  console.log(pastGamesByConfig)
-
                   this.pastGamesByConfig = pastGamesByConfig;
-
-                  //TODO: Cleanup this assignment - use card data or similar
-                  this.gameModes = pastGamesByConfig;
                   this.fields = fields;
 
                   let new_field, field, game, start
                   for (let config of this.pastGamesByConfig) {
-                    
+
                       config.games.sort((a, b) => b.id - a.id);
 
                       field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)
