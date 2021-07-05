@@ -19,10 +19,10 @@
           <div class="form-group">
             <label class="form-label">Name: {{currentVals.firstName}} {{currentVals.lastName}}</label>
           </div>
-          <div class="form-group">
+          <div *ngIf="!viewForUser" class="form-group">
             <label class="form-label">Email: {{currentVals.email}}</label>
           </div>
-          <div class="form-group">
+          <div *ngIf="!viewForUser" class="form-group">
             <label class="form-label">Phone: {{currentVals.phone}} </label>
           </div>
           <div *ngIf="!isField" class="form-group">

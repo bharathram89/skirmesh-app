@@ -146,13 +146,17 @@ export class SecureAPIService {
       return this.http.put(route, data, options);
   }
 
-  getUser(token) {
+  getUser(token,viewForUser?) {
 
-      let route = this.BASE + this.RSRC + this.USER;
+    let route = this.BASE + this.RSRC + this.USER;
+    let options;
+    if(viewForUser){ 
+        options = { params  : new HttpParams().set("token", token) .set("CallSign", viewForUser)}
+    }else{ 
+        options = { params  : new HttpParams().set("token", token)}
+    }
 
-      const options = { params  : new HttpParams().set("token", token)}
-
-      return this.http.get(route, options);
+    return this.http.get(route, options);
   }
 
   deleteUser(token) {
