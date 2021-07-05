@@ -159,12 +159,12 @@ export class MydevicesComponent implements OnInit {
 
 
 
-        combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID.target.value),
-                       this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
+        combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
+                       this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(
 
                             ([extendedGameData, stats]) => {
 
-                                this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl',gameID.target.value)
+                                this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl',gameID)
                                 let configData = extendedGameData["configData"];
                                 let gameData   = extendedGameData["gameData"];
 
@@ -172,7 +172,7 @@ export class MydevicesComponent implements OnInit {
                                 this.map         = configData.mapID;
                                 this.description = configData.description;
 
-                                this.scoreSvc.gameID     = gameID.target.value;
+                                this.scoreSvc.gameID     = gameID;
                                 this.scoreSvc.devices    = gameData.devices;
                                 this.scoreSvc.gameStats  = stats
                                 this.scoreSvc.gameConfig = configData
