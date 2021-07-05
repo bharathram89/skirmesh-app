@@ -13,17 +13,16 @@
                 class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1"
                 >
 
-                <div class="card-header">
-
-                    <div class="col btn view-btn"
-                         [value]="gameData.id"
-                         (click)="selectActiveGame($event)"
-                         [innerHtml]="gameData.description">
-                     </div>
-
+                <div class="card-header"
+                     [value]="gameData.id"
+                     (click)="selectActiveGame(gameData.id)"
+                     >
+                     <h5 [innerHtml]="gameData.description"></h5>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body"
+                     [value]="gameData.id"
+                     (click)="selectActiveGame(gameData.id)">
 
                     <p [innerHtml]="gameData.startTime"></p>
 
