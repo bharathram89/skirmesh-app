@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserServiceService } from 'src/service/user-service.service';
 
 @Component({
   selector: 'app-team-score',
@@ -21,15 +22,21 @@ export class TeamScoreComponent implements OnInit {
 
 
   constructor(
-    private router: Router) { }
+    private router: Router,
+    private userSvc: UserServiceService) { }
 
   ngOnInit(): void {}
 
   getRowClass(player) {
     return {"is_dead": !player.is_alive};
   }
-  viewCourseTrainings(valObj: any){
+  viewPlayerProfile(valObj: any){
+    if(this.userSvc.isSignedIn()){
+      this.router.navigate(['/secure/dashboard'],{ queryParams: { viewForUser:valObj } }) 
+    }else{  
+      let safe = confirm("Sign In to see players profile!"); 
+    }
     console.log('clicked',valObj)
-    this.router.navigate(['/secure/dashboard'],{ queryParams: { viewForUser:valObj } }) 
+    
   }
 }
