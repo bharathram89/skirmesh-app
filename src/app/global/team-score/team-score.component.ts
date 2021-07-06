@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team-score',
@@ -19,7 +20,8 @@ export class TeamScoreComponent implements OnInit {
         ];
 
 
-  constructor() { }
+  constructor(
+    private router: Router) { }
 
   ngOnInit(): void {}
 
@@ -28,6 +30,6 @@ export class TeamScoreComponent implements OnInit {
   }
   viewCourseTrainings(valObj: any){
     console.log('clicked',valObj)
-    // this.router.navigate(['/home-page/mentor-trainings/'+ valObj.id])
+    this.router.navigate(['/secure/dashboard'],{ queryParams: { viewForUser:valObj } }) 
   }
 }

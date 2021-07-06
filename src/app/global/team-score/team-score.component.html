@@ -36,30 +36,30 @@
             [rowClass]="getRowClass">
             <ngx-datatable-column prop="callSign">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                  <a  class="nav-link edit" (click)="viewCourseTrainings(value)">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true">{{row.name}}</i>
-                  </a>
+                  
+                    <i class="hover" aria-hidden="true" (click)="viewCourseTrainings(row.name)">{{row.name}}</i>
+                  
                 </ng-template>
             </ngx-datatable-column> 
             <ngx-datatable-column prop="lastAction">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                  <a  class="nav-link edit" (click)="viewCourseTrainings(value)">
+                  
                     <i class="fa fa-pencil-square-o" aria-hidden="true">{{row.lastAction}}</i>
-                  </a>
+                  
                 </ng-template>
             </ngx-datatable-column> 
             <ngx-datatable-column *ngIf="showLastLocation" prop="lastLocation">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                  <a  class="nav-link edit" (click)="viewCourseTrainings(value)">
+                  
                     <i class="fa fa-pencil-square-o" aria-hidden="true">{{row.lastLocation}}</i>
-                  </a>
+                  
                 </ng-template>
             </ngx-datatable-column> 
             <ngx-datatable-column prop="totalPoints">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                  <a  class="nav-link edit" (click)="viewCourseTrainings(value)">
+                 
                     <i class="fa fa-pencil-square-o" aria-hidden="true">{{row.totalPoints}}</i>
-                  </a>
+                  
                 </ng-template>
             </ngx-datatable-column> 
             
