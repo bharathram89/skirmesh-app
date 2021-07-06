@@ -6,7 +6,7 @@ import { UserServiceService } from 'src/service/user-service.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-
+import { Router } from '@angular/router';
 // actionIDs associated with specific actions
 const RESPAWN  = 13;
 const MEDIC    = 11;
@@ -77,7 +77,8 @@ export class DashboardComponent implements OnInit {
               private userSvc      : UserServiceService,
               private nonSecAPIsvc : NonSecureAPIService,
               private secAPIsvc    : SecureAPIService,
-              private breakpointObserver : BreakpointObserver
+              private breakpointObserver : BreakpointObserver,
+              private router: Router
             ) {}
 
   ngOnInit(): void {
@@ -409,6 +410,12 @@ export class DashboardComponent implements OnInit {
     )
 
   }
-
+  backToSelf(){
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/secure/dashboard']);
+  }
 
 }
