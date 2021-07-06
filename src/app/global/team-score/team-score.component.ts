@@ -10,7 +10,7 @@ export class TeamScoreComponent implements OnInit {
   @Input() teams;
   @Input() barChartData;
 
-
+  @Input() showLastLocation;
   teamScoreColumns = [
           {name:'Callsign',      prop:'name',         sortable:true},
           {name:'Last Action',   prop:'lastAction',   sortable:true},
@@ -26,5 +26,8 @@ export class TeamScoreComponent implements OnInit {
   getRowClass(player) {
     return {"is_dead": !player.is_alive};
   }
-  
+  viewCourseTrainings(valObj: any){
+    console.log('clicked',valObj)
+    // this.router.navigate(['/home-page/mentor-trainings/'+ valObj.id])
+  }
 }

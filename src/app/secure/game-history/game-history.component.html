@@ -80,7 +80,7 @@
 
 
             <div *ngIf="selectedGame && selectedMode" class="col">
-              <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
+              <app-team-score [showLastLocation]="false" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
             </div>
 
 
