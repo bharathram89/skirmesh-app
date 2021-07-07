@@ -6,7 +6,7 @@ import { UserServiceService } from 'src/service/user-service.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-
+import { Router } from '@angular/router';
 // actionIDs associated with specific actions
 const RESPAWN  = 13;
 const MEDIC    = 11;
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   showLegend: boolean = true;
   showLabels: boolean = true;
   isDoughnut: boolean = false;
-
+  pageLvlError: boolean =false;
   colorScheme = {
     domain: ['#A10A28', '#C7B42C', '#5AA454', '#CC5500', '#AAAAAA']
   };
@@ -77,7 +77,8 @@ export class DashboardComponent implements OnInit {
               private userSvc      : UserServiceService,
               private nonSecAPIsvc : NonSecureAPIService,
               private secAPIsvc    : SecureAPIService,
-              private breakpointObserver : BreakpointObserver
+              private breakpointObserver : BreakpointObserver,
+              private router: Router
             ) {}
 
   ngOnInit(): void {
@@ -91,51 +92,56 @@ export class DashboardComponent implements OnInit {
     combineLatest([this.secAPIsvc.getUser(this.userSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
       let userData; 
       userData = userDataIn['user']
-
-      if(this.viewForUser){
-        this.isField = userData.fieldProfile ? true :false;
-      } 
-      this.actionList = actions;
-      this.breakpointObserver.observe([
-        '(max-width: 768px)'
-          ]).subscribe(result => {
-            if (result.matches) {
-              this.chartView =[300,300]
-            } else {
-              // if necessary:
-              this.chartView =[500,300]
+      if(!userData){
+        this.pageLvlError = true;
+        //show error message.
+      }else{
+        if(this.viewForUser){
+          this.isField = userData.fieldProfile ? true :false;
+        } 
+        this.actionList = actions;
+        this.breakpointObserver.observe([
+          '(max-width: 768px)'
+            ]).subscribe(result => {
+              if (result.matches) {
+                this.chartView =[300,300]
+              } else {
+                // if necessary:
+                this.chartView =[500,300]
+              }
+            });
+        if (this.isField) {
+  
+          this.setGameHistStats(userData);
+          this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
+          this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
+          this.currentVals.fieldProfileID = userData.fieldProfile.id;
+          this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
+        }
+        else {
+  
+          this.setGameScoreStats(userData);
+  
+          this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
+          this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
+          this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
+          this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
+        }
+        this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
+        this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
+        this.currentVals.email = userData.email ? userData.email : 'E-mail';
+        this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
+  
+        this.currentVals.userID = userData.id;
+        if(this.currentVals.imageID){
+          this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
+            imageData => {
+              this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
             }
-          });
-      if (this.isField) {
-
-        this.setGameHistStats(userData);
-        this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
-        this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
-        this.currentVals.fieldProfileID = userData.fieldProfile.id;
-        this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
+          )
+        }
       }
-      else {
-
-        this.setGameScoreStats(userData);
-
-        this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
-        this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-        this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
-        this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
-      }
-      this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
-      this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
-      this.currentVals.email = userData.email ? userData.email : 'E-mail';
-      this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
-
-      this.currentVals.userID = userData.id;
-      if(this.currentVals.imageID){
-        this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
-          imageData => {
-            this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
-          }
-        )
-      }
+      
 
     })
   }
@@ -409,6 +415,12 @@ export class DashboardComponent implements OnInit {
     )
 
   }
-
+  backToSelf(){
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/secure/dashboard']);
+  }
 
 }

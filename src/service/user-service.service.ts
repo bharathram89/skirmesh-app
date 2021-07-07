@@ -8,7 +8,7 @@ import { TokenStorageService } from './token-storage.service';
 })
 export class UserServiceService {
 
-  signedIn: BehaviorSubject<boolean>;
+  signedIn:boolean =false;
   userType;
   userData: BehaviorSubject<any>;
   tokenSvc:TokenStorageService;
@@ -21,7 +21,7 @@ export class UserServiceService {
     tokenService: TokenStorageService
   ) {
     this.tokenSvc     = tokenService;
-    this.signedIn     = new BehaviorSubject(false);
+    // this.signedIn     = new BehaviorSubject(false);
     this.userData     = new BehaviorSubject({});
     this.fieldProfile = new BehaviorSubject({});
   }
@@ -52,7 +52,7 @@ export class UserServiceService {
     }
 
     setSignIn(val: boolean) {
-        this.signedIn.next(val);
+        this.signedIn=val;
     }
 
     isSignedIn() {

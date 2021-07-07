@@ -1,7 +1,8 @@
 <div class="container">
-  <div class="row">
+  <button (click)="backToSelf()" *ngIf="viewForUser" type="button" class="btn btn-primary">Back to Self</button>
+  <div *ngIf="!pageLvlError" class="row">
     <div class="col-lg-4">
-      <button *ngIf="viewForUser" type="button" class="btn btn-primary">Back to Self</button>
+      
       <div class="card card-profile">
         <div class="card-header"></div>
         <div class="card-body text-center"><img  src="{{currentVals.imageData}}" class="card-profile-img">
@@ -104,6 +105,15 @@
         </accordion>
       </div> -->
 
+    </div>
+  </div>
+  <div *ngIf="pageLvlError">
+    <div class="">
+      <div class="alert alert-danger center-cust">
+        We are sorry something went wrong in showing the page. <br>
+        Please go back and try again or <a [routerLink]="['/non-secure/contact-us']">contact us from
+          our contact us page</a>
+      </div>
     </div>
   </div>
 </div>

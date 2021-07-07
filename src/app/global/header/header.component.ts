@@ -36,9 +36,7 @@ export class HeaderComponent implements OnInit {
     // window.location.href.includes('home')? $("#nav_home").addClass('active'):null;
     // window.location.href.includes('newGame')? $("#nav_newGame").addClass('active'):null;
     // window.location.href.includes('pastGames')? $("#nav_pastGames").addClass('active'):null;
-    this.userSvc.isSignedIn().subscribe(isSignedIn=>{
-      this.isSecure = isSignedIn;
-    })
+    this.isSecure = this.userSvc.isSignedIn() 
 
     this.isField = this.userSvc.isField;
 
