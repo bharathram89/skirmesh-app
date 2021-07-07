@@ -7,6 +7,7 @@ import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { ScoreService } from 'src/service/score.service';
+import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 
 @Component({
     selector: 'app-mydevices',
@@ -38,7 +39,8 @@ export class MydevicesComponent implements OnInit {
         private tokenSvc     : TokenStorageService,
         private gameSvc      : GameService,
         private nonSecAPIsvc : NonSecureAPIService,
-        private scoreSvc : ScoreService
+        private scoreSvc : ScoreService,
+        private analyticSvc : GoogleAnalyticsService
       ) {}
 
     ngOnInit() {
@@ -157,7 +159,7 @@ export class MydevicesComponent implements OnInit {
     selectActiveGame(gameID) {
         // Pull device data in from live devices - not config data
 
-
+        this.analyticSvc.viewLiveGame('view_live_game','engagement','view game '+gameID)
 
         combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
                        this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(
