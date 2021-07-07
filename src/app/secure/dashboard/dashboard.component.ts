@@ -421,12 +421,5 @@ export class DashboardComponent implements OnInit {
     )
 
   }
-  backToSelf(){
-    this.router.routeReuseStrategy.shouldReuseRoute = function () {
-      return false;
-    };
-    this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['/secure/dashboard']);
-  }
 
 }

@@ -38,16 +38,11 @@ export class TeamScoreComponent implements OnInit {
 
   viewPlayerProfile(valObj: any){
 
+    if (!this.userSvc.isSignedIn()) {return}
+    
     let name = valObj.selected.pop().name
 
-    if(this.userSvc.isSignedIn()){
-      this.router.navigate(['/secure/dashboard'],{ queryParams: {viewForUser : name } })
-    }
-    else{
-      let safe = confirm("Sign In to see players profile!");
-    }
-
-    console.log('clicked',)
+    this.router.navigate(['/secure/dashboard'],{ queryParams: {viewForUser : name } })
 
   }
 }

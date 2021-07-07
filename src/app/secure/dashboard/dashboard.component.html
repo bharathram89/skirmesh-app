@@ -1,25 +1,25 @@
 <div class="container">
-  <button (click)="backToSelf()" *ngIf="viewForUser" type="button" class="btn btn-primary">Back to Self</button>
+
   <div *ngIf="!pageLvlError" class="row">
-    <div class="col-lg-4">
 
-      <div class="card card-profile">
-        <div class="card-header"></div>
-        <div class="card-body text-center"><img  src="{{currentVals.imageData}}" class="card-profile-img">
-          <h3 *ngIf="isField" class="mb-3">{{currentVals.fieldName}}</h3>
-          <p *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
-          <h3 *ngIf="!isField" class="mb-3">{{currentVals.callSign}}</h3>
-          <p *ngIf="!isField" class="mb-4">{{currentVals.bio}}</p>
-        </div>
-      </div>
+    <div class="col">
 
-      <form class="card">
+      <div class="card">
+
         <div class="card-header">
-          <h3 class="card-title">My Profile</h3>
+          <h3 *ngIf="isField" class="mb-3">{{currentVals.fieldName}}</h3>
+          <h3 *ngIf="!isField" class="mb-3">{{currentVals.callSign}}</h3>
         </div>
-        <div class="card-body">
+
+        <div class="card-body text-left">
+          <img  src="{{currentVals.imageData}}" class="card-profile-img">
+
+          <p *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
+
+          <p *ngIf="!isField" class="mb-4">{{currentVals.bio}}</p>
+
           <div class="form-group">
-            <label class="form-label">Name: {{currentVals.firstName}} {{currentVals.lastName}}</label>
+            <label class="form-label">{{currentVals.firstName}} {{currentVals.lastName}}</label>
           </div>
           <div *ngIf="!viewForUser" class="form-group">
             <label class="form-label">Email: {{currentVals.email}}</label>
@@ -33,13 +33,13 @@
         </div>
         <div class="card-footer text-right">
         </div>
-      </form>
+      </div>
     </div>
-    <div class="col-lg-8">
-      <form class="card">
-        <div class="card-body">
 
-          <div class="row">
+    <div class="col">
+
+      <div class="card">
+        <div class="card-body">
 
                 <h2 class="center-cust">Combined Game Stats</h2>
 
@@ -54,9 +54,6 @@
                     (deactivate)="onDeactivate($event)">
                   </ngx-charts-advanced-pie-chart>
                 <!-- </div> -->
-          </div>
-
-          <div class="row">
 
             <h2 class="center-cust">Historical Game Stats</h2>
             <!-- <div style="max-height: 100vh"> -->
@@ -77,14 +74,10 @@
 
         </div>
 
-        <div class="card-footer text-right">
-          Facebook Share
-        </div>
+      </div>
 
-      </form>
-
-    </div>
   </div>
+
   <div *ngIf="pageLvlError">
     <div class="">
       <div class="alert alert-danger center-cust">
