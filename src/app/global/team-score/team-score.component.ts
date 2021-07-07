@@ -12,7 +12,8 @@ export class TeamScoreComponent implements OnInit {
   @Input() teams;
   @Input() barChartData;
 
-  @Input() showLastLocation;
+  selected = [];
+
   teamScoreColumns = [
           {name:'Callsign',      prop:'name',         sortable:true},
           {name:'Last Action',   prop:'lastAction',   sortable:true},
@@ -23,20 +24,30 @@ export class TeamScoreComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userSvc: UserServiceService) { }
+    private userSvc: UserServiceService) {
+  }
+
 
   ngOnInit(): void {}
+
 
   getRowClass(player) {
     return {"is_dead": !player.is_alive};
   }
+
+
   viewPlayerProfile(valObj: any){
+
+    let name = valObj.selected.pop().name
+
     if(this.userSvc.isSignedIn()){
-      this.router.navigate(['/secure/dashboard'],{ queryParams: { viewForUser:valObj } }) 
-    }else{  
-      let safe = confirm("Sign In to see players profile!"); 
+      this.router.navigate(['/secure/dashboard'],{ queryParams: {viewForUser : name } })
     }
-    console.log('clicked',valObj)
-    
+    else{
+      let safe = confirm("Sign In to see players profile!");
+    }
+
+    console.log('clicked',)
+
   }
 }
