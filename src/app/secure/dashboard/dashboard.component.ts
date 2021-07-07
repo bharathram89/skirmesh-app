@@ -84,34 +84,40 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     this.isField = this.userSvc.isField;
-     
+
     if(window.location.href.includes('viewForUser')){
       const urlParams = new URLSearchParams(window.location.search);
-      this.viewForUser = urlParams.get('viewForUser'); 
+      this.viewForUser = urlParams.get('viewForUser');
     }
+
+    this.breakpointObserver.observe([
+      '(max-width: 768px)'
+        ]).subscribe(result => {
+
+          if (result.matches) {
+            this.chartView =[300,300]
+          }
+          else {
+            // if necessary:
+            this.chartView =[500,300]
+          }
+        });
+
     combineLatest([this.secAPIsvc.getUser(this.userSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
-      let userData; 
-      userData = userDataIn['user']
-      if(!userData){
-        this.pageLvlError = true;
-        //show error message.
-      }else{
-        if(this.viewForUser){
-          this.isField = userData.fieldProfile ? true :false;
-        } 
+
+        let userData;
+        userData = userDataIn['user']
+
+        this.pageLvlError = userData ? false : true
+
+        if (!userData) {return}
+
+        this.isField = userData.fieldProfile ? true : false;
+
         this.actionList = actions;
-        this.breakpointObserver.observe([
-          '(max-width: 768px)'
-            ]).subscribe(result => {
-              if (result.matches) {
-                this.chartView =[300,300]
-              } else {
-                // if necessary:
-                this.chartView =[500,300]
-              }
-            });
+
         if (this.isField) {
-  
+
           this.setGameHistStats(userData);
           this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
           this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
@@ -119,9 +125,9 @@ export class DashboardComponent implements OnInit {
           this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
         }
         else {
-  
+
           this.setGameScoreStats(userData);
-  
+
           this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
           this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
           this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
@@ -131,7 +137,7 @@ export class DashboardComponent implements OnInit {
         this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
         this.currentVals.email = userData.email ? userData.email : 'E-mail';
         this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
-  
+
         this.currentVals.userID = userData.id;
         if(this.currentVals.imageID){
           this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
@@ -140,8 +146,8 @@ export class DashboardComponent implements OnInit {
             }
           )
         }
-      }
-      
+
+
 
     })
   }
