@@ -31,6 +31,8 @@ export class MydevicesComponent implements OnInit {
     playerUpdate;
     checkSocketConnect;
 
+    temp;
+
     fbShareUrl='https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fplay.skirmesh.net%2Fnon-secure%2Flive-games%3Fgameid%3DgameidFromUrl&amp;src=sdkpreparse'
     description;
     currentTab = 'map'
@@ -180,6 +182,7 @@ export class MydevicesComponent implements OnInit {
                                 this.scoreSvc.gameConfig = configData
 
                                 this.scoreSvc.calcScoreAndSetActions();
+                                this.temp = [...this.scoreSvc.allActions];
                             })
     }
 
@@ -192,4 +195,18 @@ export class MydevicesComponent implements OnInit {
     getRowClass(player) {
         return {"is_dead": !player.is_alive};
     }
+
+    updateFilter(event) {
+
+        const val = event.target.value.toLowerCase();
+
+        // filter our data
+        const temp = this.temp.filter( action => {
+          return action.name.toLowerCase().indexOf(val) !== -1 || !val;
+        });
+
+        // update the rows
+        this.scoreSvc.allActions = temp;
+    }
+
 }

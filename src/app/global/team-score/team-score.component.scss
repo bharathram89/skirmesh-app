@@ -20,3 +20,7 @@
 .padding-xs-x {
     padding: 0 0.25em;
 }
+
+::ng-deep .datatable-body-row:hover {
+    cursor: pointer;
+}
