@@ -151,7 +151,7 @@ export class DashboardComponent implements OnInit {
 
     })
   }
-
+ 
   onSelect(data): void {
     // console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }

@@ -42,7 +42,8 @@ export class MydevicesComponent implements OnInit {
         private gameSvc      : GameService,
         private nonSecAPIsvc : NonSecureAPIService,
         private scoreSvc : ScoreService,
-        private analyticSvc : GoogleAnalyticsService
+        private analyticSvc : GoogleAnalyticsService,
+        private router: Router
       ) {}
 
     ngOnInit() {
@@ -149,7 +150,12 @@ export class MydevicesComponent implements OnInit {
     changeGameTab(tabToChangeTo) {
 
         this.currentTab = tabToChangeTo;
-
+        // this.router.navigate([], {
+        //     queryParams: {
+        //         currentTab: tabToChangeTo
+        //     },
+        //     queryParamsHandling: 'merge',
+        //   });
         document.getElementById("map").classList.remove('active');
         document.getElementById("teamScore").classList.remove('active');
         document.getElementById("EventsTracker").classList.remove('active');
@@ -160,7 +166,11 @@ export class MydevicesComponent implements OnInit {
 
     selectActiveGame(gameID) {
         // Pull device data in from live devices - not config data
-
+        this.router.navigate([], {
+            queryParams: {
+                gameid: gameID
+            }
+          });
         this.analyticSvc.viewLiveGame('view_live_game','engagement','view game '+gameID)
 
         combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
@@ -188,6 +198,7 @@ export class MydevicesComponent implements OnInit {
 
 
     goBackToMainMenu() {
+        this.router.navigate([]);
         this.activeGame = false;
     }
 
