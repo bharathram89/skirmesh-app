@@ -1,8 +1,8 @@
-<div class="container">
+<div *ngIf="!pageLvlError" class="container">
 
-  <div *ngIf="!pageLvlError" class="row">
+  <div class="row">
 
-    <div class="col">
+    <div class="col-sm-6 d-flex">
 
       <div class="card">
 
@@ -12,71 +12,73 @@
         </div>
 
         <div class="card-body text-left">
-          <img  src="{{currentVals.imageData}}" class="card-profile-img">
+          <img  src="{{currentVals.imageData}}" class="img-fluid img-thumbnail">
 
           <p *ngIf="isField" class="mb-4">{{currentVals.profile}}</p>
 
           <p *ngIf="!isField" class="mb-4">{{currentVals.bio}}</p>
 
-          <div class="form-group">
-            <label class="form-label">{{currentVals.firstName}} {{currentVals.lastName}}</label>
-          </div>
-          <div *ngIf="!viewForUser" class="form-group">
-            <label class="form-label">Email: {{currentVals.email}}</label>
-          </div>
-          <div *ngIf="!viewForUser" class="form-group">
-            <label class="form-label">Phone: {{currentVals.phone}} </label>
-          </div>
-          <div *ngIf="!isField" class="form-group">
-            <label class="form-label">Clan: {{currentVals.clanTag}} </label>
-          </div>
+
+          <label class="form-label">{{currentVals.firstName}} {{currentVals.lastName}}</label>
+          <br/>
+          <label *ngIf="!viewForUser" class="form-label">Email: {{currentVals.email}}</label>
+          <br/>
+          <label *ngIf="!viewForUser" class="form-label">Phone: {{currentVals.phone}} </label>
+          <br/>
+          <label *ngIf="!isField" class="form-label">Clan: {{currentVals.clanTag}} </label>
+
         </div>
-        <div class="card-footer text-right">
-        </div>
+
       </div>
+
     </div>
 
-    <div class="col">
+    <div class="col-sm-6">
 
-      <div class="card">
-        <div class="card-body">
+          <div class="card">
 
-                <h2 class="center-cust">Combined Game Stats</h2>
+                <div class="card-header">
+                <h2>Combined Game Stats</h2>
+                </div>
 
-                <!-- <div style="max-height: 50vh; max-width: 98vh"> -->
-                  <!-- <div style="max-height: 500px; max-width: 500px;"> -->
+                <div class="card-body">
                   <ngx-charts-advanced-pie-chart
                     [scheme]="colorScheme"
                     [results]="pieData"
                     (select)="onSelect($event)"
                     (activate)="onActivate($event)"
-                    [view]="chartView"
                     (deactivate)="onDeactivate($event)">
                   </ngx-charts-advanced-pie-chart>
-                <!-- </div> -->
+                </div>
 
-            <h2 class="center-cust">Historical Game Stats</h2>
-            <!-- <div style="max-height: 100vh"> -->
-              <ngx-charts-area-chart-stacked
-                [scheme]="colorScheme"
-                [legend]="true"
-                [showXAxisLabel]="false"
-                [showYAxisLabel]="false"
-                [xAxis]="false"
-                [yAxis]="true"
-                [timeline]="true"
-                [view]="chartView"
-                [results]="areaData"
-                (select)="onSelect($event)">
-              </ngx-charts-area-chart-stacked>
-            <!-- </div> -->
+
+          <div class="card">
+
+                <div class="card-header">
+                <h2>Historical Game Stats</h2>
+                </div>
+
+                <div class="card-body">
+                  <ngx-charts-area-chart-stacked
+                    [scheme]="colorScheme"
+                    [legend]="true"
+                    [showXAxisLabel]="false"
+                    [showYAxisLabel]="false"
+                    [xAxis]="false"
+                    [yAxis]="true"
+                    [timeline]="true"
+                    [results]="areaData"
+                    (select)="onSelect($event)">
+                  </ngx-charts-area-chart-stacked>
+                </div>
+
           </div>
 
-        </div>
-
-      </div>
+    </div>
 
   </div>
+
+</div>
 
   <div *ngIf="pageLvlError">
     <div class="">
@@ -86,4 +88,3 @@
       </div>
     </div>
   </div>
-</div>

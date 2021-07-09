@@ -1,9 +1,10 @@
 
-<button *ngIf="selectedField"
-        (click)="deSelectField()"
-        class="btn btn-primary">Go Back
-</button>
-<br/>
+<div class="container">
+<div *ngIf="selectedField"
+      class="btn btn-secondary btn-block"
+      (click)="deSelectField()">Go Back
+</div>
+<div class="container">
 
 <div *ngIf="!selectedField" class="row">
 
