@@ -32,14 +32,14 @@ export class TeamScoreComponent implements OnInit {
 
 
   getRowClass(player) {
-    return {"is_dead": !player.is_alive};
+    return player.is_alive ? "" : "is_dead"
   }
 
 
   viewPlayerProfile(valObj: any){
 
     if (!this.userSvc.isSignedIn()) {return}
-    
+
     let name = valObj.selected.pop().name
 
     this.router.navigate(['/secure/dashboard'],{ queryParams: {viewForUser : name } })

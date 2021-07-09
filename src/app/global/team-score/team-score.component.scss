@@ -9,7 +9,7 @@
     opacity: 0.9;
 }
 
-.is_dead {
+::ng-deep .is_dead {
     color: #A00000;
 }
 
