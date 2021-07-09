@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 
 import { GameService } from 'src/service/game.service';
@@ -22,8 +22,8 @@ export class MydevicesComponent implements OnInit {
 
     map;
 
-    gameConfigs   = [];
-    gameCardData  = [];
+    gameConfigs = [];
+    gameCardData = [];
 
     gameID;
 
@@ -33,29 +33,36 @@ export class MydevicesComponent implements OnInit {
 
     temp;
 
-    fbShareUrl='https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fplay.skirmesh.net%2Fnon-secure%2Flive-games%3Fgameid%3DgameidFromUrl&amp;src=sdkpreparse'
+    fbShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fplay.skirmesh.net%2Fnon-secure%2Flive-games%3Fgameid%3DgameidFromUrl&amp;src=sdkpreparse'
     description;
     currentTab = 'map'
 
     constructor(
-        private tokenSvc     : TokenStorageService,
-        private gameSvc      : GameService,
-        private nonSecAPIsvc : NonSecureAPIService,
-        private scoreSvc : ScoreService,
-        private analyticSvc : GoogleAnalyticsService,
-        private router: Router
-      ) {}
+        private tokenSvc: TokenStorageService,
+        private gameSvc: GameService,
+        private nonSecAPIsvc: NonSecureAPIService,
+        private scoreSvc: ScoreService,
+        private analyticSvc: GoogleAnalyticsService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
+    ) { }
 
     ngOnInit() {
 
         this.setGameData();
 
-        if(window.location.href.includes('gameid')){
-            const urlParams = new URLSearchParams(window.location.search);
-            const gameid = urlParams.get('gameid')
-            //Need to check if game is active else we get console error.
-            this.selectActiveGame({target:{value:gameid}})
-        }
+        this.activatedRoute.queryParams.subscribe(
+            data => {
+                if(data.gameid) {
+                    const gameid = data.gameid
+                    //Need to check if game is active else we get console error.
+                    this.selectActiveGame({ target: { value: gameid } })
+                } else {
+                    this.goBackToMainMenu();
+                }
+               
+            }
+        )
     }
 
     ngAfterViewInit() {
@@ -63,22 +70,22 @@ export class MydevicesComponent implements OnInit {
         // Single socket setup in app.component - these listen for different
         // socket events to update specific areas
         this.newAction = this.gameSvc.getNewAction().subscribe(
-            socketData=>{
-                console.log(socketData," New Action");
+            socketData => {
+                console.log(socketData, " New Action");
 
-                if(this.activeGame){
+                if (this.activeGame) {
                     this.scoreSvc.updateActionAndCalcScore(socketData);
                 }
-        })
+            })
 
         this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
             socketData => {
-                console.log(socketData," Player Update");
+                console.log(socketData, " Player Update");
 
-                if(this.activeGame){
+                if (this.activeGame) {
                     this.scoreSvc.updatePlayerData(socketData);
                 }
-        })
+            })
 
         this.checkSocketConnect = this.gameSvc.checkSocketConnect().subscribe(
             () => {
@@ -104,9 +111,9 @@ export class MydevicesComponent implements OnInit {
     setGameData() {
 
         combineLatest([this.nonSecAPIsvc.getActiveGamesByConfig(),
-                       this.nonSecAPIsvc.getLocationsList(),
-                       this.nonSecAPIsvc.getActionsList()
-            ])
+        this.nonSecAPIsvc.getLocationsList(),
+        this.nonSecAPIsvc.getActionsList()
+        ])
             .subscribe(
 
                 ([activeGamesByConfig, locations, actions]) => {
@@ -122,19 +129,21 @@ export class MydevicesComponent implements OnInit {
                         // can only have a single active game with that config
                         // That's why we always shift() the first index
                         let game = config.games.shift()
-                        if (!game) {continue}
+                        if (!game) { continue }
 
                         let start = new Date(game.startTime)
-                        this.gameCardData.push({'description': config.description,
-                                                'startTime'  : start.toLocaleString('en-US', {hour12:false}),
-                                                'id'         : game.id,
-                                                'mapID'      : config.mapID,
-                                                'devices'    : game.devices});
+                        this.gameCardData.push({
+                            'description': config.description,
+                            'startTime': start.toLocaleString('en-US', { hour12: false }),
+                            'id': game.id,
+                            'mapID': config.mapID,
+                            'devices': game.devices
+                        });
 
 
                     }
-                    this.gameCardData.sort((a,b) => b.id - a.id);
-            })
+                    this.gameCardData.sort((a, b) => b.id - a.id);
+                })
     }
 
 
@@ -165,35 +174,68 @@ export class MydevicesComponent implements OnInit {
 
 
     selectActiveGame(gameID) {
-        // Pull device data in from live devices - not config data
-        this.router.navigate([], {
-            queryParams: {
-                gameid: gameID
-            }
-          });
-        this.analyticSvc.viewLiveGame('view_live_game','engagement','view game '+gameID)
+        if (gameID.target) {
+            // Pull device data in from live devices - not config data
+            this.router.navigate([], {
+                queryParams: {
+                    gameid: gameID.target.value
+                }
+            });
+            this.analyticSvc.viewLiveGame('view_live_game', 'engagement', 'view game ' + gameID.target.value)
 
-        combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
-                       this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(
+            combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID.target.value),
+            this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
 
-                            ([extendedGameData, stats]) => {
+                ([extendedGameData, stats]) => {
 
-                                this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl',gameID)
-                                let configData = extendedGameData["configData"];
-                                let gameData   = extendedGameData["gameData"];
+                    this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl', gameID.target.value)
+                    let configData = extendedGameData["configData"];
+                    let gameData = extendedGameData["gameData"];
 
-                                this.activeGame  = true;
-                                this.map         = configData.mapID;
-                                this.description = configData.description;
+                    this.activeGame = true;
+                    this.map = configData.mapID;
+                    this.description = configData.description;
 
-                                this.scoreSvc.gameID     = gameID;
-                                this.scoreSvc.devices    = gameData.devices;
-                                this.scoreSvc.gameStats  = stats
-                                this.scoreSvc.gameConfig = configData
+                    this.scoreSvc.gameID = gameID.target.value;
+                    this.scoreSvc.devices = gameData.devices;
+                    this.scoreSvc.gameStats = stats
+                    this.scoreSvc.gameConfig = configData
 
-                                this.scoreSvc.calcScoreAndSetActions();
-                                this.temp = [...this.scoreSvc.allActions];
-                            })
+                    this.scoreSvc.calcScoreAndSetActions();
+                    this.temp = [...this.scoreSvc.allActions];
+                })
+        } else {
+            // Pull device data in from live devices - not config data
+            this.router.navigate([], {
+                queryParams: {
+                    gameid: gameID
+                }
+            });
+            this.analyticSvc.viewLiveGame('view_live_game', 'engagement', 'view game ' + gameID)
+
+            combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
+            this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(
+
+                ([extendedGameData, stats]) => {
+
+                    this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl', gameID)
+                    let configData = extendedGameData["configData"];
+                    let gameData = extendedGameData["gameData"];
+
+                    this.activeGame = true;
+                    this.map = configData.mapID;
+                    this.description = configData.description;
+
+                    this.scoreSvc.gameID = gameID;
+                    this.scoreSvc.devices = gameData.devices;
+                    this.scoreSvc.gameStats = stats
+                    this.scoreSvc.gameConfig = configData
+
+                    this.scoreSvc.calcScoreAndSetActions();
+                    this.temp = [...this.scoreSvc.allActions];
+                })
+        }
+
     }
 
 
@@ -204,7 +246,7 @@ export class MydevicesComponent implements OnInit {
 
 
     getRowClass(player) {
-        return {"is_dead": !player.is_alive};
+        return { "is_dead": !player.is_alive };
     }
 
     updateFilter(event) {
@@ -212,8 +254,8 @@ export class MydevicesComponent implements OnInit {
         const val = event.target.value.toLowerCase();
 
         // filter our data
-        const temp = this.temp.filter( action => {
-          return action.name.toLowerCase().indexOf(val) !== -1 || !val;
+        const temp = this.temp.filter(action => {
+            return action.name.toLowerCase().indexOf(val) !== -1 || !val;
         });
 
         // update the rows
