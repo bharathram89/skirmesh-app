@@ -279,4 +279,15 @@ export class SecureAPIService {
       return this.http.put(route, data, options)
   }
 
+  deleteGame(token, id) {
+
+      let route = this.BASE + this.SEC;
+
+      const options = { params  : new HttpParams()
+                                      .set("token", token)
+                                      .set("id", id)}
+
+      return this.http.delete(route + 'deleteGame', options)
+  }
+
 }

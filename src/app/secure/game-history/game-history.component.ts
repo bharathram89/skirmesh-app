@@ -137,4 +137,18 @@ export class GameHistoryComponent implements OnInit {
     this.selectedGame = null;
   }
 
+  deleteGame() {
+
+    if (!this.selectedGame?.id) {return}
+
+    this.secAPIsvc.deleteGame(this.userSvc.getToken(), this.selectedGame.id ).subscribe(
+      resp => {
+        const indx = this.selectedMode.games.findIndex(ele => ele.id == this.selectedGame.id);
+        this.selectedMode.games.splice(indx, 1);
+        this.selectedGame = null;
+      },
+      err => {}
+    )
+  }
+
 }

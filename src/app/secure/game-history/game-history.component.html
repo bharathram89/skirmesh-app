@@ -4,9 +4,11 @@
       class="btn btn-secondary btn-block"
       (click)="deSelectField()">Go Back
 </div>
+
 <div class="container">
 
 <div *ngIf="!selectedField" class="row">
+
 
   <div *ngFor="let field of fieldCardData;"
        class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1">
@@ -36,6 +38,11 @@
 </div>
 
 <div *ngIf="selectedField" class="row">
+
+  <button *ngIf="userSvc.fieldProfile.id == selectedMode?.fieldProfileID"
+       class="btn btn-danger btn-block"
+       [disabled]="!selectedGame?.id"
+       (click)="deleteGame()"> DELETE </button>
 
         <div class="container">
 
