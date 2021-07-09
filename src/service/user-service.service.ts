@@ -36,11 +36,7 @@ export class UserServiceService {
             this.fieldProfileID = userData.user.fieldProfile.id;
             this.fieldProfile = userData.user.fieldProfile;
         }
-
-        this.token = userData.token;
-
         this.userData.next(userData.user)
-        this.tokenSvc.saveToken(userData.token)
     }
 
     getFieldProfileID(){
@@ -61,10 +57,6 @@ export class UserServiceService {
 
     getUserData(){
         return this.userData;
-    }
-
-    getToken(){
-        return this.token;
     }
 
     getGameModes(){

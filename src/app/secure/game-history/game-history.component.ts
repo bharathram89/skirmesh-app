@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import { UserServiceService } from 'src/service/user-service.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 import { ScoreService } from 'src/service/score.service';
 import { combineLatest } from 'rxjs';
 
@@ -34,6 +35,7 @@ export class GameHistoryComponent implements OnInit {
 
   constructor(
     private userSvc      : UserServiceService,
+    private tokenSvc     : TokenStorageService,
     private nonSecAPIsvc : NonSecureAPIService,
     private secAPIsvc    : SecureAPIService,
     private scoreSvc     : ScoreService) { }
@@ -82,7 +84,7 @@ export class GameHistoryComponent implements OnInit {
       combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
                      this.nonSecAPIsvc.getLocationsList(),
                      this.nonSecAPIsvc.getActionsList(),
-                     this.secAPIsvc.getFieldListFromAPI(this.userSvc.getToken()),
+                     this.secAPIsvc.getFieldListFromAPI(this.tokenSvc.getToken()),
           ])
           .subscribe(
 
@@ -144,7 +146,7 @@ export class GameHistoryComponent implements OnInit {
     let safe = confirm("!! WARNING !!\n\nDeleting this Game will DELETE ALL SCORES earned from this game.\n\nAre you sure you want to DELETE it?");
     if (!safe) {return}
 
-    this.secAPIsvc.deleteGame(this.userSvc.getToken(), this.selectedGame.id ).subscribe(
+    this.secAPIsvc.deleteGame(this.tokenSvc.getToken(), this.selectedGame.id ).subscribe(
       resp => {
         const indx = this.selectedMode.games.findIndex(ele => ele.id == this.selectedGame.id);
         this.selectedMode.games.splice(indx, 1);

@@ -67,7 +67,7 @@ export class StartGameComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.secAPIsvc.getActiveGamesByFieldProfile(this.userSvc.getToken(), this.userSvc.getFieldProfileID()).subscribe(
+        this.secAPIsvc.getActiveGamesByFieldProfile(this.tokenSvc.getToken(), this.userSvc.getFieldProfileID()).subscribe(
 
             activeGameConfig=>{
 
@@ -96,7 +96,7 @@ export class StartGameComponent implements OnInit {
             }
          )
          // This sets the dropdown menu with available game configurations
-         this.secAPIsvc.getGameConfigs(this.userSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
+         this.secAPIsvc.getGameConfigs(this.tokenSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
              savedConfigs => {
                  this.gameModes = savedConfigs;
              }
@@ -137,7 +137,7 @@ export class StartGameComponent implements OnInit {
         // device to baseline all configurations from saved configs
         let mode = this.selectedGameMode;
 
-        this.secAPIsvc.startGame(this.userSvc.getToken(), mode.id).subscribe(
+        this.secAPIsvc.startGame(this.tokenSvc.getToken(), mode.id).subscribe(
 
             data => {
                 this.gameData = data
@@ -191,7 +191,7 @@ export class StartGameComponent implements OnInit {
 
         let paused = !this.gameData.is_paused;
 
-        this.secAPIsvc.pauseGame(this.userSvc.getToken(), {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
+        this.secAPIsvc.pauseGame(this.tokenSvc.getToken(), {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
             data => this.gameData = data
         )
     }
@@ -206,7 +206,7 @@ export class StartGameComponent implements OnInit {
             // TODO: Why do we use tokenSvc for game data?
             this.tokenSvc.endGame();
 
-            this.secAPIsvc.endGame(this.userSvc.getToken(), this.gameData.id).subscribe(
+            this.secAPIsvc.endGame(this.tokenSvc.getToken(), this.gameData.id).subscribe(
                 data => {
                         this.gameInProgress = false;
                         this.gameBoardActive = false;

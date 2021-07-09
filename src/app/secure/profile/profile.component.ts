@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { subscribeOn } from 'rxjs/operators';
 import { UserServiceService } from 'src/service/user-service.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 
@@ -69,6 +70,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
       private userSvc      : UserServiceService,
+      private tokenSvc     : TokenStorageService,
       private nonSecAPIsvc : NonSecureAPIService,
       private secAPIsvc    : SecureAPIService,
       private router       : Router
@@ -167,7 +169,7 @@ export class ProfileComponent implements OnInit {
 
     if (this.isField) {
 
-        this.secAPIsvc.getUserListFromAPI(this.userSvc.getToken()).subscribe(
+        this.secAPIsvc.getUserListFromAPI(this.tokenSvc.getToken()).subscribe(
             data => this.playerList = data
         )
     }
@@ -180,7 +182,7 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteSkirmeshAccount(){
-    this.secAPIsvc.deleteUser(this.userSvc.getToken()).subscribe(
+    this.secAPIsvc.deleteUser(this.tokenSvc.getToken()).subscribe(
       resp => {
         this.router.navigate(['/non-secure']);
       },
@@ -194,14 +196,14 @@ export class ProfileComponent implements OnInit {
 
       let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
 
-      this.secAPIsvc.updateFieldProfile(this.userSvc.getToken(), data).subscribe(
+      this.secAPIsvc.updateFieldProfile(this.tokenSvc.getToken(), data).subscribe(
           resp => this.rfidToPair = resp["pair_uid"]
       )
   }
 
   checkRfidToPair() {
 
-      this.secAPIsvc.getMinimalFieldProfileFromAPI(this.userSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
+      this.secAPIsvc.getMinimalFieldProfileFromAPI(this.tokenSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
           data => this.rfidToPair = data["pair_uid"]
       )
   }
@@ -211,7 +213,7 @@ export class ProfileComponent implements OnInit {
       let data = {userID : this.playerSelected.id,
                   fieldID: this.currentVals.fieldProfileID}
 
-      this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
+      this.secAPIsvc.pairUid(this.tokenSvc.getToken(), data).subscribe(
           resp =>{
 
              this.rfidConnected = true;
@@ -235,7 +237,7 @@ export class ProfileComponent implements OnInit {
 
   onPasswordReset(){
     let data = {"user":{"password":this.passReset.get('pass').value}}
-    this.secAPIsvc.updatePass(this.userSvc.getToken() ,data).subscribe(
+    this.secAPIsvc.updatePass(this.tokenSvc.getToken() ,data).subscribe(
       resp => {
              document.getElementById('passResetPassed').classList.remove('d-none');
             },
@@ -313,7 +315,7 @@ export class ProfileComponent implements OnInit {
       data.player['id'] = this.currentVals.userID;
     }
 
-    this.secAPIsvc.saveProfile(this.userSvc.getToken(), data).subscribe(
+    this.secAPIsvc.saveProfile(this.tokenSvc.getToken(), data).subscribe(
       resp => {
         // this.profileForm.reset();
         document.getElementById('userCreatedMessage').classList.remove('d-none')
@@ -369,7 +371,7 @@ export class ProfileComponent implements OnInit {
 
       let data = {uid:uid.toLowerCase(), userID:userID};
 
-      this.secAPIsvc.pairUid(this.userSvc.getToken(), data).subscribe(
+      this.secAPIsvc.pairUid(this.tokenSvc.getToken(), data).subscribe(
           resp =>{
             this.connectedRfids = resp;
             console.log(resp,"response")
@@ -405,7 +407,7 @@ export class ProfileComponent implements OnInit {
 
     // console.log(data)
 
-    this.secAPIsvc.saveImage(this.userSvc.getToken(), data).subscribe(
+    this.secAPIsvc.saveImage(this.tokenSvc.getToken(), data).subscribe(
         resp => {
             document.getElementById('imageUpdateMessage').classList.remove('d-none')
         },
