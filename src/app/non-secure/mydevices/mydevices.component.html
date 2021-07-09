@@ -1,9 +1,5 @@
 <div class="container-fluid">
 
-        <div *ngIf="activeGame">
-            <div class="btn-primary btn" (click)="goBackToMainMenu()"> Go Back </div>
-        </div>
-
         <div *ngIf="!activeGame" class="row">
 
             <h5 *ngIf="!gameCardData.length"> Check back later. Games pop up all the time! </h5>
@@ -38,44 +34,64 @@
 
 
     <div *ngIf="activeGame" class="view-account" id="activeGame">
-        <section class="module">
-            <div class="module-inner">
-                <div class="side-bar">
-                    <nav class="side-menu">
-                        <ul class="nav">
-                            <li id="map" (click)="changeGameTab('map')" class="active"><a>Map</a></li>
-                            <li id="teamScore" (click)="changeGameTab('teamScore')"><a>Score</a></li>
-                            <li id="EventsTracker" (click)="changeGameTab('EventsTracker')"><a>Events</a></li>
-                        </ul>
-                    </nav>
-                </div>
+
+            <!-- <div class="module-inner"> -->
+                <!-- <div class="side-bar float-center"> -->
+                    <!-- <nav class="side-menu"> -->
+                    <div class="container ">
+
+
+                        <div class="col btn-group btn-group-toggle d-flex justify-content-center">
+
+                            <div class="btn btn-light fa fa-arrow-left" (click)="goBackToMainMenu()">
+                            </div>
+
+                            <div class="btn btn-light active" id="map" (click)="changeGameTab('map')">
+                            Map & Score
+                            </div>
+
+                            <div class="btn btn-light" id="eventsTracker" (click)="changeGameTab('eventsTracker')">
+                            Events
+                            </div>
+
+                        <a data-href="https://play.skirmesh.net/non-secure/live-games"
+                           data-layout="button_count"
+                           data-size="small"
+                           target="_blank"
+                           href="{{fbShareUrl}}"
+                           class="btn btn-md btn-social btn-facebook">
+                            <i class="fa fa-facebook fa-fw"></i>Share!</a>
+
+                      </div>
+
+                    </div>
+
+                    <!-- </nav> -->
+                <!-- </div> -->
 
                 <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
                     aria-labelledby="v-pills-home-tab">
 
-                    <a data-href="https://play.skirmesh.net/non-secure/live-games"
-                       data-layout="button_count"
-                       data-size="small"
-                       target="_blank"
-                       href="{{fbShareUrl}}"
-                       class="btn btn-md btn-social btn-facebook">
-                        <i class="fa fa-facebook fa-fw"> </i> Share!
-                    </a>
-
-                    <app-map [mapID]="map" [(deviceData)]="scoreSvc.devices"></app-map>
 
 
-                </div>
+                    <div class="container">
+                      <div class="row">
 
-                <div *ngIf="currentTab == 'teamScore'" class="content-panel" id="v-pills-profile" role="tabpanel"
-                    aria-labelledby="v-pills-profile-tab">
+                        <div class="col-md-6">
+                        <app-map [mapID]="map" [(deviceData)]="scoreSvc.devices"></app-map>
+                        </div>
 
-                    <app-team-score [teams]="scoreSvc.teams" [barChartData]="scoreSvc.barChartData"></app-team-score>
+                        <div class="col-md-6">
+                        <app-team-score [teams]="scoreSvc.teams" [barChartData]="scoreSvc.barChartData"></app-team-score>
+                        </div>
+
+                      </div>
+                    </div>
 
                 </div>
 
 
-                <div *ngIf="currentTab == 'EventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
+                <div *ngIf="currentTab == 'eventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
                     aria-labelledby="v-pills-settings-tab">
 
                     <h3 class="center-cust"> Event History</h3>
@@ -98,9 +114,8 @@
                     </ngx-datatable>
 
                 </div>
-            </div>
+            <!-- </div> -->
 
-        </section>
 
       </div>
 

@@ -157,8 +157,8 @@ export class MydevicesComponent implements OnInit {
         //     queryParamsHandling: 'merge',
         //   });
         document.getElementById("map").classList.remove('active');
-        document.getElementById("teamScore").classList.remove('active');
-        document.getElementById("EventsTracker").classList.remove('active');
+        // document.getElementById("teamScore").classList.remove('active');
+        document.getElementById("eventsTracker").classList.remove('active');
 
         document.getElementById(tabToChangeTo).classList.add('active');
     }
