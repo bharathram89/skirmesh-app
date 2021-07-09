@@ -71,7 +71,7 @@
               </select>
               <br/>
               <select *ngIf="selectedMode" size="7" class="form-control" (change)="changeGame($event)">
-                  <option disabled selected> -- Select Game -- </option>
+                  <option disabled> -- Select Game -- </option>
                   <option [value]=game.id *ngFor="let game of selectedMode.games">
                       {{game.creationDate.toLocaleString()}} </option>
               </select>

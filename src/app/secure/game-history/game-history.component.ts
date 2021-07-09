@@ -141,6 +141,9 @@ export class GameHistoryComponent implements OnInit {
 
     if (!this.selectedGame?.id) {return}
 
+    let safe = confirm("!! WARNING !!\n\nDeleting this Game will DELETE ALL SCORES earned from this game.\n\nAre you sure you want to DELETE it?");
+    if (!safe) {return}
+
     this.secAPIsvc.deleteGame(this.userSvc.getToken(), this.selectedGame.id ).subscribe(
       resp => {
         const indx = this.selectedMode.games.findIndex(ele => ele.id == this.selectedGame.id);
