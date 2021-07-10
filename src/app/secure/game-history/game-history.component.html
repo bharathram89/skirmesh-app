@@ -39,7 +39,7 @@
 
 <div *ngIf="selectedField" class="row">
 
-  <button *ngIf="userSvc.fieldProfile.id == selectedMode?.fieldProfileID"
+  <button *ngIf="userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
        class="btn btn-danger btn-block"
        [disabled]="!selectedGame?.id"
        (click)="deleteGame()"> DELETE </button>
@@ -88,7 +88,7 @@
 
 
             <div *ngIf="selectedGame && selectedMode" class="col">
-              <app-team-score [showLastLocation]="false" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
+            <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
             </div>
 
 

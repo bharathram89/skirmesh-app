@@ -59,54 +59,54 @@ export class MapComponent implements OnInit {
     ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized.
     //Applies to components only.
-        if(this.deviceData){
-            // update Map state with a delay - this works... not sure why
-            setTimeout(() => {
-                this.updateMapState()
-            }, 200);
-        }
+    this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
 
-        this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
+        mapData => {
 
-            mapData => {
+            this.mapData = mapData;
+            this.locationList = this.mapData.locations;
 
-                this.mapData = mapData;
-                this.locationList = this.mapData.locations;
-
-                this.updateToolTipListener();
-            }
-        )
+            if(this.deviceData){ this.updateMapState() };
+        })
     }
+
+
+    setToolTipText(event, device=null) {
+
+
+      let target = event.target as HTMLTextAreaElement;
+      let loc, dev;
+
+      loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+
+      if (this.deviceData) {
+          dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+      }
+      else if (device && target.id.replace('loc','') == device.location) {
+          dev = device
+      }
+
+      let str = `${loc ? loc.name : "Mystery Zone"}`
+
+      if (dev) {
+          str += "<br/>"
+          str += `${this.translateConfig(dev)}`
+      }
+
+      this.tooltipContent = `${str}`
+
+    }
+
 
     updateToolTipListener(device = null) {
 
+        console.log("running")
         let paths = document.getElementsByClassName("location");
 
         for (let i = 0; i < paths.length; i++) {
 
-            paths[i].addEventListener("mouseenter", event => {
-
-                let target = event.target as HTMLTextAreaElement;
-                let loc, dev;
-
-                loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
-
-                if (this.deviceData) {
-                    dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
-                }
-                else if (device && target.id.replace('loc','') == device.location) {
-                    dev = device
-                }
-
-                let str = `${loc ? loc.name : "Mystery Zone"}`
-
-                if (dev) {
-                    str += "<br/>"
-                    str += `${this.translateConfig(dev)}`
-                }
-
-                this.tooltipContent = `${str}`
-            });
+            // paths[i].removeEventListener("mouseenter", event => {this.setToolTipText(event, device)});
+            paths[i].addEventListener("mouseenter", event => {this.setToolTipText(event, device)});
         }
     }
 
