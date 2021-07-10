@@ -39,7 +39,7 @@
 
 <div *ngIf="selectedField" class="row">
 
-  <button *ngIf="userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
+  <button *ngIf="userSvc.getFieldProfileID() && userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
        class="btn btn-danger btn-block"
        [disabled]="!selectedGame?.id"
        (click)="deleteGame()"> DELETE </button>

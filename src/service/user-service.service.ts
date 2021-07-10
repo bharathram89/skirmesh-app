@@ -39,12 +39,14 @@ export class UserServiceService {
 
     getFieldProfileID(){
         let fpID;
+        if (!this.fieldProfile) {return null}
         this.fieldProfile.subscribe(fp => {fpID = fp.id});
         return fpID
     }
 
     getFieldProfile(){
         let fieldProfile
+        if (!this.fieldProfile) {return null}
         this.fieldProfile.subscribe(fp => {fieldProfile = fp});
         return fieldProfile
     }
