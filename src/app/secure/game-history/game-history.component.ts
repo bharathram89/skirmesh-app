@@ -33,6 +33,8 @@ export class GameHistoryComponent implements OnInit {
 
   pastGamesByConfig;
 
+  dateOptions = {"dateStyle":"long", "timeStyle":"medium", "hourCycle": "h24"};
+
   constructor(
     private userSvc      : UserServiceService,
     private tokenSvc     : TokenStorageService,
@@ -99,6 +101,10 @@ export class GameHistoryComponent implements OnInit {
                   for (let config of this.pastGamesByConfig) {
 
                       config.games.sort((a, b) => b.id - a.id);
+
+                      for (let game of config.games) {
+                        game.creationDate = new Date(game.creationDate);
+                      }
 
                       field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)
                       if (field) {
