@@ -67,46 +67,40 @@ export class MapComponent implements OnInit {
             this.locationList = this.mapData.locations;
 
             if(this.deviceData){ this.updateMapState() };
+
+            this.addToolTipListener();
         })
     }
 
 
-    setToolTipText(event, device=null) {
+    addToolTipListener() {
 
-
-      let target = event.target as HTMLTextAreaElement;
-      let loc, dev;
-
-      loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
-
-      if (this.deviceData) {
-          dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
-      }
-      else if (device && target.id.replace('loc','') == device.location) {
-          dev = device
-      }
-
-      let str = `${loc ? loc.name : "Mystery Zone"}`
-
-      if (dev) {
-          str += "<br/>"
-          str += `${this.translateConfig(dev)}`
-      }
-
-      this.tooltipContent = `${str}`
-
-    }
-
-
-    updateToolTipListener(device = null) {
-
-        console.log("running")
+        console.log("running", this.locationList)
         let paths = document.getElementsByClassName("location");
 
         for (let i = 0; i < paths.length; i++) {
 
             // paths[i].removeEventListener("mouseenter", event => {this.setToolTipText(event, device)});
-            paths[i].addEventListener("mouseenter", event => {this.setToolTipText(event, device)});
+            paths[i].addEventListener("mouseenter", event => {
+
+              let target = event.target as HTMLTextAreaElement;
+              let loc, dev;
+
+              loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+
+              if (this.deviceData) {
+                  dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+              }
+
+              let str = `${loc ? loc.name : "Mystery Zone"}`
+
+              if (dev) {
+                  str += "<br/>"
+                  str += `${this.translateConfig(dev)}`
+              }
+
+              this.tooltipContent = `${str}`
+            });
         }
     }
 
@@ -177,8 +171,6 @@ export class MapComponent implements OnInit {
                 this.deviceChange.emit(this.deviceData);
             }
         }
-
-        this.updateToolTipListener(device);
 
         let locID = device.location;
         let stable = device.stable;
