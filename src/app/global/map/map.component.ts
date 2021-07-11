@@ -41,7 +41,7 @@ export class MapComponent implements OnInit {
     ngOnInit(): void {
 
         this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
-            console.log(socketData, "Device Update");
+            console.log(socketData, " Device Update");
             if (socketData["gameID"] == this.gameID) {
                 this.updateLocationState(socketData)
             };
@@ -75,7 +75,6 @@ export class MapComponent implements OnInit {
 
     addToolTipListener() {
 
-        console.log("running", this.locationList)
         let paths = document.getElementsByClassName("location");
 
         for (let i = 0; i < paths.length; i++) {
