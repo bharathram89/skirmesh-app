@@ -16,8 +16,6 @@ import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 })
 export class MydevicesComponent implements OnInit {
 
-    activeGame = false;
-
     activeGamesByConfig;
 
     map;
@@ -71,24 +69,22 @@ export class MydevicesComponent implements OnInit {
         // socket events to update specific areas
         this.newAction = this.gameSvc.getNewAction().subscribe(
             socketData => {
-                console.log(socketData, " New Action");
 
-                if (this.activeGame &&
-                    this.gameID &&
+                if (this.gameID &&
                     this.gameID == socketData["gameID"]) {
 
+                      console.log(socketData, " New Action");
                       this.scoreSvc.updateActionAndCalcScore(socketData);
                 }
             })
 
         this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
             socketData => {
-                console.log(socketData, " Player Update");
 
-                if (this.activeGame &&
-                    this.scoreSvc.gameConfig?.length &&
+                if (this.scoreSvc.gameConfig?.length &&
                     this.scoreSvc.gameConfig?.teams.find(team => team.id == socketData["teamID"])) {
 
+                      console.log(socketData, " Player Update");
                       this.scoreSvc.updatePlayerData(socketData);
                 }
             })
@@ -97,7 +93,7 @@ export class MydevicesComponent implements OnInit {
             () => {
                 console.log("SOCKET CONNECTED")
 
-                if (this.activeGame && this.gameID) {
+                if (this.gameID) {
                     // We need to update all the data for the tables when the
                     // socket reconnects
                     this.nonSecAPIsvc.getGameStats(this.gameID).subscribe(
@@ -181,8 +177,6 @@ export class MydevicesComponent implements OnInit {
     selectActiveGame(ID) {
 
         const gameID = ID.target ? ID.target.value : ID;
-
-        this.gameID = gameID;
         // Pull device data in from live devices - not config data
         this.router.navigate([], {
             queryParams: {
@@ -201,7 +195,8 @@ export class MydevicesComponent implements OnInit {
                 let configData = extendedGameData["configData"];
                 let gameData = extendedGameData["gameData"];
 
-                this.activeGame = true;
+                this.gameID = gameID;
+
                 this.map = configData.mapID;
                 this.description = configData.description;
 
@@ -218,7 +213,6 @@ export class MydevicesComponent implements OnInit {
 
     goBackToMainMenu() {
         this.router.navigate([]);
-        this.activeGame = false;
         this.gameID = null;
     }
 

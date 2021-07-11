@@ -41,8 +41,9 @@ export class MapComponent implements OnInit {
     ngOnInit(): void {
 
         this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
-            console.log(socketData, " Device Update");
+
             if (socketData["gameID"] == this.gameID) {
+                console.log(socketData, " Device Update");
                 this.updateLocationState(socketData)
             };
         })
