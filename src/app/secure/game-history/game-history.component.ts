@@ -92,7 +92,7 @@ export class GameHistoryComponent implements OnInit {
 
               ([pastGamesByConfig, locations, actions, fields]) => {
 
-                  this.scoreSvc.setGlobalData(location, actions);
+                  this.scoreSvc.setGlobalData(locations, actions);
 
                   this.pastGamesByConfig = pastGamesByConfig;
                   this.fields = fields;
