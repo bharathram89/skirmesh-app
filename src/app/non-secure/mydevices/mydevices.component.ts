@@ -73,10 +73,11 @@ export class MydevicesComponent implements OnInit {
             socketData => {
                 console.log(socketData, " New Action");
 
-                if (this.activeGame) {
-                    if (this.gameID == socketData["gameID"]) {
+                if (this.activeGame &&
+                    this.gameID &&
+                    this.gameID == socketData["gameID"]) {
+
                       this.scoreSvc.updateActionAndCalcScore(socketData);
-                    }
                 }
             })
 
@@ -84,10 +85,11 @@ export class MydevicesComponent implements OnInit {
             socketData => {
                 console.log(socketData, " Player Update");
 
-                if (this.activeGame) {
-                    if (this.gameConfigs.length && this.scoreSvc.gameConfig.teams.find(team => team.id == socketData["teamID"])) {
+                if (this.activeGame &&
+                    this.scoreSvc.gameConfig?.length &&
+                    this.scoreSvc.gameConfig?.teams.find(team => team.id == socketData["teamID"])) {
+
                       this.scoreSvc.updatePlayerData(socketData);
-                    }
                 }
             })
 
