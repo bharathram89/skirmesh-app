@@ -22,8 +22,6 @@ export class UserServiceService {
   ) {
     this.tokenSvc     = tokenService;
     // this.signedIn     = new BehaviorSubject(false);
-    this.userData     = new BehaviorSubject({});
-    this.fieldProfile = new BehaviorSubject({});
   }
 
 
@@ -34,21 +32,23 @@ export class UserServiceService {
             this.isField = true;
 
             this.fieldProfileID = userData.user.fieldProfile.id;
-            this.fieldProfile = userData.user.fieldProfile;
+            this.fieldProfile = new BehaviorSubject(userData.user.fieldProfile);
         }
-
-        this.token = userData.token;
-
-        this.userData.next(userData.user)
-        this.tokenSvc.saveToken(userData.token)
+        this.userData = new BehaviorSubject(userData.user);
     }
 
     getFieldProfileID(){
-        return this.fieldProfileID;
+        let fpID;
+        if (!this.fieldProfile) {return null}
+        this.fieldProfile.subscribe(fp => {fpID = fp.id});
+        return fpID
     }
 
     getFieldProfile(){
-        return this.fieldProfile;
+        let fieldProfile
+        if (!this.fieldProfile) {return null}
+        this.fieldProfile.subscribe(fp => {fieldProfile = fp});
+        return fieldProfile
     }
 
     setSignIn(val: boolean) {
@@ -61,10 +61,6 @@ export class UserServiceService {
 
     getUserData(){
         return this.userData;
-    }
-
-    getToken(){
-        return this.token;
     }
 
     getGameModes(){

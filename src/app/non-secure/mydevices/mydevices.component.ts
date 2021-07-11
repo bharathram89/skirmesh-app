@@ -16,8 +16,6 @@ import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 })
 export class MydevicesComponent implements OnInit {
 
-    activeGame = false;
-
     activeGamesByConfig;
 
     map;
@@ -52,11 +50,11 @@ export class MydevicesComponent implements OnInit {
         this.setGameData();
 
         this.activatedRoute.queryParams.subscribe(
+
             data => {
                 if(data.gameid) {
-                    const gameid = data.gameid
                     //Need to check if game is active else we get console error.
-                    this.selectActiveGame({ target: { value: gameid } })
+                    this.selectActiveGame(data.gameid)
                 } else {
                     this.goBackToMainMenu();
                 }
@@ -71,19 +69,23 @@ export class MydevicesComponent implements OnInit {
         // socket events to update specific areas
         this.newAction = this.gameSvc.getNewAction().subscribe(
             socketData => {
-                console.log(socketData, " New Action");
 
-                if (this.activeGame) {
-                    this.scoreSvc.updateActionAndCalcScore(socketData);
+                if (this.gameID &&
+                    this.gameID == socketData["gameID"]) {
+
+                      console.log(socketData, " New Action");
+                      this.scoreSvc.updateActionAndCalcScore(socketData);
                 }
             })
 
         this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
             socketData => {
-                console.log(socketData, " Player Update");
 
-                if (this.activeGame) {
-                    this.scoreSvc.updatePlayerData(socketData);
+                if (this.scoreSvc.gameConfig?.length &&
+                    this.scoreSvc.gameConfig?.teams.find(team => team.id == socketData["teamID"])) {
+
+                      console.log(socketData, " Player Update");
+                      this.scoreSvc.updatePlayerData(socketData);
                 }
             })
 
@@ -91,7 +93,7 @@ export class MydevicesComponent implements OnInit {
             () => {
                 console.log("SOCKET CONNECTED")
 
-                if (this.activeGame && this.gameID) {
+                if (this.gameID) {
                     // We need to update all the data for the tables when the
                     // socket reconnects
                     this.nonSecAPIsvc.getGameStats(this.gameID).subscribe(
@@ -101,7 +103,6 @@ export class MydevicesComponent implements OnInit {
                         }
                     )
                 }
-
                 this.setGameData();
             }
         )
@@ -173,75 +174,46 @@ export class MydevicesComponent implements OnInit {
     }
 
 
-    selectActiveGame(gameID) {
-        if (gameID.target) {
-            // Pull device data in from live devices - not config data
-            this.router.navigate([], {
-                queryParams: {
-                    gameid: gameID.target.value
-                }
-            });
-            this.analyticSvc.viewLiveGame('view_live_game', 'engagement', 'view game ' + gameID.target.value)
+    selectActiveGame(ID) {
 
-            combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID.target.value),
-            this.nonSecAPIsvc.getGameStats(gameID.target.value)]).subscribe(
+        const gameID = ID;
+        // Pull device data in from live devices - not config data
+        this.router.navigate([], {
+            queryParams: {
+                gameid: gameID
+            }
+        });
 
-                ([extendedGameData, stats]) => {
+        this.analyticSvc.viewLiveGame('view_live_game', 'engagement', 'view game ' + gameID)
 
-                    this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl', gameID.target.value)
-                    let configData = extendedGameData["configData"];
-                    let gameData = extendedGameData["gameData"];
+        combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
+        this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(
 
-                    this.activeGame = true;
-                    this.map = configData.mapID;
-                    this.description = configData.description;
+            ([extendedGameData, stats]) => {
 
-                    this.scoreSvc.gameID = gameID.target.value;
-                    this.scoreSvc.devices = gameData.devices;
-                    this.scoreSvc.gameStats = stats
-                    this.scoreSvc.gameConfig = configData
+                this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl', gameID)
+                let configData = extendedGameData["configData"];
+                let gameData = extendedGameData["gameData"];
 
-                    this.scoreSvc.calcScoreAndSetActions();
-                    this.temp = [...this.scoreSvc.allActions];
-                })
-        } else {
-            // Pull device data in from live devices - not config data
-            this.router.navigate([], {
-                queryParams: {
-                    gameid: gameID
-                }
-            });
-            this.analyticSvc.viewLiveGame('view_live_game', 'engagement', 'view game ' + gameID)
+                this.gameID = gameID;
 
-            combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
-            this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(
+                this.map = configData.mapID;
+                this.description = configData.description;
 
-                ([extendedGameData, stats]) => {
+                this.scoreSvc.gameID = gameID;
+                this.scoreSvc.devices = gameData.devices;
+                this.scoreSvc.gameStats = stats
+                this.scoreSvc.gameConfig = configData
 
-                    this.fbShareUrl = this.fbShareUrl.replace('gameidFromUrl', gameID)
-                    let configData = extendedGameData["configData"];
-                    let gameData = extendedGameData["gameData"];
-
-                    this.activeGame = true;
-                    this.map = configData.mapID;
-                    this.description = configData.description;
-
-                    this.scoreSvc.gameID = gameID;
-                    this.scoreSvc.devices = gameData.devices;
-                    this.scoreSvc.gameStats = stats
-                    this.scoreSvc.gameConfig = configData
-
-                    this.scoreSvc.calcScoreAndSetActions();
-                    this.temp = [...this.scoreSvc.allActions];
-                })
-        }
-
+                this.scoreSvc.calcScoreAndSetActions();
+                this.temp = [...this.scoreSvc.allActions];
+            })
     }
 
 
     goBackToMainMenu() {
         this.router.navigate([]);
-        this.activeGame = false;
+        this.gameID = null;
     }
 
 

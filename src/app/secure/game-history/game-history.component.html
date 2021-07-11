@@ -39,7 +39,7 @@
 
 <div *ngIf="selectedField" class="row">
 
-  <button *ngIf="userSvc.fieldProfile.id == selectedMode?.fieldProfileID"
+  <button *ngIf="userSvc.getFieldProfileID() && userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
        class="btn btn-danger btn-block"
        [disabled]="!selectedGame?.id"
        (click)="deleteGame()"> DELETE </button>
@@ -62,7 +62,7 @@
 
             </div>
 
-            <div class="col px-1 py-1 gx-1 gy-1">
+            <div class="col-sm px-1 py-1 gx-1 gy-1">
 
               <select class="form-control" (change)="changeGameMode($event)">
                   <option disabled selected> -- Select Game Mode -- </option>
@@ -73,7 +73,7 @@
               <select *ngIf="selectedMode" size="7" class="form-control" (change)="changeGame($event)">
                   <option disabled> -- Select Game -- </option>
                   <option [value]=game.id *ngFor="let game of selectedMode.games">
-                      {{game.creationDate.toLocaleString()}} </option>
+                      {{game.creationDate.toLocaleString("en-US", this.dateOptions)}} </option>
               </select>
 
             </div>
@@ -88,7 +88,7 @@
 
 
             <div *ngIf="selectedGame && selectedMode" class="col">
-              <app-team-score [showLastLocation]="false" [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
+            <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
             </div>
 
 

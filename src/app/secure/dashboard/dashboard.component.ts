@@ -3,6 +3,7 @@ import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserServiceService } from 'src/service/user-service.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
@@ -75,6 +76,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
               private userSvc      : UserServiceService,
+              private tokenSvc     : TokenStorageService,
               private nonSecAPIsvc : NonSecureAPIService,
               private secAPIsvc    : SecureAPIService,
               private breakpointObserver : BreakpointObserver,
@@ -103,7 +105,7 @@ export class DashboardComponent implements OnInit {
           }
         });
 
-    combineLatest([this.secAPIsvc.getUser(this.userSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
+    combineLatest([this.secAPIsvc.getUser(this.tokenSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
 
         let userData;
         userData = userDataIn['user']
@@ -151,7 +153,7 @@ export class DashboardComponent implements OnInit {
 
     })
   }
- 
+
   onSelect(data): void {
     // console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
@@ -317,7 +319,7 @@ export class DashboardComponent implements OnInit {
                         hour12 : false};
 
     let games;
-    this.secAPIsvc.getGamesByFieldProfile(this.userSvc.getToken(), userData.fieldProfile.id).subscribe(
+    this.secAPIsvc.getGamesByFieldProfile(this.tokenSvc.getToken(), userData.fieldProfile.id).subscribe(
 
         data => {
 

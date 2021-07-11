@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserServiceService } from 'src/service/user-service.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from '../node.modal';
 import { TabsComponent } from '../tabs/tabs.component';
 import { SecureAPIService } from 'src/service/secure-api.service';
@@ -20,13 +21,14 @@ export class GameConfigComponent implements OnInit {
 
     constructor(
         private userSvc   : UserServiceService,
+        private tokenSvc  : TokenStorageService,
         private secAPIsvc : SecureAPIService
     ) {}
 
     ngOnInit(): void {
 
         let fpID  = this.userSvc.getFieldProfileID();
-        let token = this.userSvc.getToken();
+        let token = this.tokenSvc.getToken();
 
         this.secAPIsvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
 
@@ -56,7 +58,7 @@ export class GameConfigComponent implements OnInit {
 
         if (safe) {
 
-            this.secAPIsvc.deleteGameConfig(this.userSvc.getToken(), gameMode.id).subscribe(data => {
+            this.secAPIsvc.deleteGameConfig(this.tokenSvc.getToken(), gameMode.id).subscribe(data => {
                 this.gameModes = this.gameModes.filter(function (obj) {
                     return obj.id !== gameMode.id;
                 });
@@ -101,7 +103,7 @@ export class GameConfigComponent implements OnInit {
                 teams          : dataModel.teams
             }
 
-            this.secAPIsvc.modifyGameConfig(this.userSvc.getToken(), apiData).subscribe(
+            this.secAPIsvc.modifyGameConfig(this.tokenSvc.getToken(), apiData).subscribe(
                 data => {})
             this.gameModes = this.gameModes.map(gameMode => {
 
@@ -123,12 +125,12 @@ export class GameConfigComponent implements OnInit {
                 teams          : dataModel.teams
             }
             // dataModel.map = this.userSvc.findMapID(dataModel.map)
-            let maxModelId =   Math.max.apply(Math, this.gameModes.map(function(o) { return o.id; })) 
+            let maxModelId =   Math.max.apply(Math, this.gameModes.map(function(o) { return o.id; }))
 
             dataModel.id  = maxModelId + 1; // WHAT IS THIS FOR?
 
             this.gameModes.push(dataModel);
-            this.secAPIsvc.saveGameConfigs(this.userSvc.getToken(), apiData).subscribe(data => {
+            this.secAPIsvc.saveGameConfigs(this.tokenSvc.getToken(), apiData).subscribe(data => {
 
             })
         }

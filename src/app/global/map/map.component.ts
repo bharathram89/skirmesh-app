@@ -41,8 +41,9 @@ export class MapComponent implements OnInit {
     ngOnInit(): void {
 
         this.socketOBJ = this.gameSvc.getDeviceUpdate().subscribe(socketData => {
-            console.log(socketData, "Device Update");
+
             if (socketData["gameID"] == this.gameID) {
+                console.log(socketData, " Device Update");
                 this.updateLocationState(socketData)
             };
         })
@@ -51,7 +52,6 @@ export class MapComponent implements OnInit {
     ngOnDestroy(): void {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
-
         this.socketOBJ.unsubscribe()
 
     }
@@ -59,53 +59,46 @@ export class MapComponent implements OnInit {
     ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized.
     //Applies to components only.
-        if(this.deviceData){
-            // update Map state with a delay - this works... not sure why
-            setTimeout(() => {
-                this.updateMapState()
-            }, 200);
-        }
+    this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
 
-        this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
+        mapData => {
 
-            mapData => {
+            this.mapData = mapData;
+            this.locationList = this.mapData.locations;
 
-                this.mapData = mapData;
-                this.locationList = this.mapData.locations;
+            if(this.deviceData){ this.updateMapState() };
 
-                this.updateToolTipListener();
-            }
-        )
+            this.addToolTipListener();
+        })
     }
 
-    updateToolTipListener(device = null) {
+
+    addToolTipListener() {
 
         let paths = document.getElementsByClassName("location");
 
         for (let i = 0; i < paths.length; i++) {
 
+            // paths[i].removeEventListener("mouseenter", event => {this.setToolTipText(event, device)});
             paths[i].addEventListener("mouseenter", event => {
 
-                let target = event.target as HTMLTextAreaElement;
-                let loc, dev;
+              let target = event.target as HTMLTextAreaElement;
+              let loc, dev;
 
-                loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
+              loc = this.locationList.find(ele => ele.id == target.id.replace('loc',''));
 
-                if (this.deviceData) {
-                    dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
-                }
-                else if (device && target.id.replace('loc','') == device.location) {
-                    dev = device
-                }
+              if (this.deviceData) {
+                  dev = this.deviceData.find(ele => ele.location == target.id.replace('loc',''))
+              }
 
-                let str = `${loc ? loc.name : "Mystery Zone"}`
+              let str = `${loc ? loc.name : "Mystery Zone"}`
 
-                if (dev) {
-                    str += "<br/>"
-                    str += `${this.translateConfig(dev)}`
-                }
+              if (dev) {
+                  str += "<br/>"
+                  str += `${this.translateConfig(dev)}`
+              }
 
-                this.tooltipContent = `${str}`
+              this.tooltipContent = `${str}`
             });
         }
     }
@@ -177,8 +170,6 @@ export class MapComponent implements OnInit {
                 this.deviceChange.emit(this.deviceData);
             }
         }
-
-        this.updateToolTipListener(device);
 
         let locID = device.location;
         let stable = device.stable;

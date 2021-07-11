@@ -40,6 +40,7 @@ export class ScoreService {
       this.actionList   = actions;
   }
 
+
   calcScoreAndSetActions (
   ) {
     // This function grabs player and team stats from the initial load and parses

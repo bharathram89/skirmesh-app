@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { UserServiceService } from 'src/service/user-service.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModal, makeDeviceModals} from '../node.modal';
 import { SecureAPIService } from 'src/service/secure-api.service';
- 
+
 
 
 @Component({
@@ -40,6 +41,7 @@ export class EditGameComponent implements OnInit {
     constructor(
         private fb        : FormBuilder,
         private userSvc   : UserServiceService,
+        private tokenSvc  : TokenStorageService,
         private secAPIsvc : SecureAPIService
       ) {
 
@@ -156,7 +158,7 @@ export class EditGameComponent implements OnInit {
         let team = this.teams.value[i];
 
         if (team.id) {
-            this.secAPIsvc.deleteTeam(this.userSvc.getToken(), team.id).subscribe(
+            this.secAPIsvc.deleteTeam(this.tokenSvc.getToken(), team.id).subscribe(
                 data => {}
             );
         }
