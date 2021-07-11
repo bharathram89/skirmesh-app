@@ -50,11 +50,11 @@ export class MydevicesComponent implements OnInit {
         this.setGameData();
 
         this.activatedRoute.queryParams.subscribe(
+
             data => {
                 if(data.gameid) {
-                    const gameid = data.gameid
                     //Need to check if game is active else we get console error.
-                    this.selectActiveGame({ target: { value: gameid } })
+                    this.selectActiveGame(data.gameid)
                 } else {
                     this.goBackToMainMenu();
                 }
@@ -176,7 +176,7 @@ export class MydevicesComponent implements OnInit {
 
     selectActiveGame(ID) {
 
-        const gameID = ID.target ? ID.target.value : ID;
+        const gameID = ID;
         // Pull device data in from live devices - not config data
         this.router.navigate([], {
             queryParams: {
