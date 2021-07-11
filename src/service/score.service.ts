@@ -263,11 +263,11 @@ export class ScoreService {
   findLocationFromDeviceID(deviceID) {
 
     let device = this.devices.find(ele => ele.id == deviceID)
-
     let location;
-    if(device && device.location && this.locationList.length) {
 
-        location = this.locationList.find(ele => ele.id == device.location);
+    if(device && device.location) {
+
+        location = this.locationList?.find(ele => ele.id == device.location);
     }
     return location && location.name ? location.name : ' '
   }

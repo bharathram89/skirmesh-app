@@ -60,7 +60,7 @@ export class MydevicesComponent implements OnInit {
                 } else {
                     this.goBackToMainMenu();
                 }
-               
+
             }
         )
     }
@@ -120,7 +120,7 @@ export class MydevicesComponent implements OnInit {
 
                     this.gameCardData = [];
 
-                    this.scoreSvc.setGlobalData(location, actions);
+                    this.scoreSvc.setGlobalData(locations, actions);
 
                     this.activeGamesByConfig = activeGamesByConfig;
 
