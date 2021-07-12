@@ -57,7 +57,7 @@ export class GameHistoryComponent implements OnInit {
 
   changeGame(event){
 
-    let game = this.selectedMode.games.find(ele=> ele.id == event.target.value);
+    let game = this.selectedMode.games.find(ele=> ele.id == event.selected[0].id);
 
     if (!game) {return}
 
@@ -104,6 +104,7 @@ export class GameHistoryComponent implements OnInit {
 
                       for (let game of config.games) {
                         game.creationDate = new Date(game.creationDate);
+                        game.creationDate = game.creationDate.toLocaleString("en-US", this.dateOptions);
                       }
 
                       field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)

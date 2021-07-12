@@ -40,7 +40,7 @@ export class TeamScoreComponent implements OnInit {
 
     if (!this.userSvc.isSignedIn()) {return}
 
-    let name = valObj.selected.pop().name
+    let name = valObj.selected[0].name
 
     this.router.navigate(['/secure/dashboard'],{ queryParams: {viewForUser : name } })
 

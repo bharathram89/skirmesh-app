@@ -52,9 +52,9 @@
 
           <div class="card-body row">
 
-          <div class="col-sm-3">
+            <div class="col-sm-3">
 
-           <img
+            <img
               class="img img-thumbnail"
               src="{{selectedField.imageData}}"
               onerror="this.onerror=null"
@@ -62,7 +62,7 @@
 
             </div>
 
-            <div class="col-sm px-1 py-1 gx-1 gy-1">
+            <div class="col-sm-5 px-1 py-1 gx-1 gy-1">
 
               <select class="form-control" (change)="changeGameMode($event)">
                   <option disabled selected> -- Select Game Mode -- </option>
@@ -70,17 +70,28 @@
                       {{config.description}} ({{config.games.length}})</option>
               </select>
               <br/>
-              <select *ngIf="selectedMode" size="7" class="form-control" (change)="changeGame($event)">
-                  <option disabled> -- Select Game -- </option>
-                  <option [value]=game.id *ngFor="let game of selectedMode.games">
-                      {{game.creationDate.toLocaleString("en-US", this.dateOptions)}} </option>
-              </select>
+              <ngx-datatable
+                  *ngIf="selectedMode"
+                  style="overflow-y:scroll"
+                  class="material striped"
+                  [rows]="selectedMode.games"
+                  rowHeight="auto"
+                  [columns]="[
+                          {name:'Game Date',      prop:'creationDate',   sortable:true}
+                        ]"
+                  [columnMode]="'force'"
+                  [selectionType]="'single'"
+                  [limit]="5"
+                  [trackByProp]="'updated'"
+                  [footerHeight]="'auto'"
+                  (select)="changeGame($event)">
+              </ngx-datatable>
 
             </div>
 
 
 
-            <div *ngIf="selectedGame && selectedMode" class="col px-1 py-1 gx-1 gy-1">
+            <div *ngIf="selectedGame && selectedMode" class="col-sm-4 px-1 py-1 gx-1 gy-1">
             <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID" [deviceData]="selectedMode?.deviceMap"></app-map>
             </div>
 
