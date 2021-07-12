@@ -18,7 +18,7 @@
 
 <div class="row">
 
-      <table class="col-lg-6" formArrayName="teams">
+      <table class="col-md-5" formArrayName="teams">
 
         <tr>
           <th colspan="2">Assemble Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
@@ -47,7 +47,7 @@
 
       </table>
 
-      <div class="map-container col">
+      <div *ngIf="gameModeForm.get('map').value" class="map-container col-md-7">
         <app-map [mapID]="gameModeForm.get('map').value"></app-map>
       </div>
 
@@ -59,7 +59,7 @@
   <div *ngIf="isMapSelected">
     <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
   </div>
-  
+
   <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg btn-block">Save Configuration</button>
 
 
