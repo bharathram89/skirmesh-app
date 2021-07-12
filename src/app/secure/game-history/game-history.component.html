@@ -52,7 +52,7 @@
 
           <div class="card-body row">
 
-            <div class="col-sm-4">
+            <div class="col-md-4">
 
             <img
               class="img img-thumbnail"
@@ -62,7 +62,7 @@
 
             </div>
 
-            <div class="col-sm-4 px-1 py-1 gx-1 gy-1">
+            <div class="col-md-4">
 
               <select class="form-control" (change)="changeGameMode($event)">
                   <option disabled selected> -- Select Game Mode -- </option>
@@ -72,17 +72,13 @@
               <br/>
               <ngx-datatable
                   *ngIf="selectedMode"
-                  style="overflow-y:scroll"
                   class="material striped"
                   [rows]="selectedMode.games"
                   rowHeight="auto"
-                  [columns]="[
-                          {name:'Game Date',      prop:'creationDate',   sortable:true}
-                        ]"
+                  [columns]="[ {name:'Game Date', prop:'creationDate', sortable:false} ]"
                   [columnMode]="'force'"
                   [selectionType]="'single'"
                   [limit]="5"
-                  [trackByProp]="'updated'"
                   [footerHeight]="'auto'"
                   (select)="changeGame($event)">
               </ngx-datatable>
@@ -91,8 +87,8 @@
 
 
 
-            <div *ngIf="selectedGame && selectedMode" class="col-sm-4 px-1 py-1 gx-1 gy-1">
-            <app-map [gameID]="selectedGame?.id" [mapID]="selectedMode?.mapID" [deviceData]="selectedMode?.deviceMap"></app-map>
+            <div *ngIf="selectedGame && selectedMode" class="col-md-4">
+            <app-map [gameID]="" [mapID]="selectedMode?.mapID" [deviceData]="selectedMode?.deviceMap"></app-map>
             </div>
 
             </div>
