@@ -166,21 +166,6 @@ export class DashboardComponent implements OnInit {
     // console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
-  updateFilter(event) {
-
-    const val = event.target.value.toLowerCase();
-
-    // filter our data
-    const temp = this.temp.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-
-    // update the rows
-    this.rows = temp;
-    // Whenever the filter changes, always go back to the first page
-    this.table.offset = 0;
-  }
-
   setGameScoreStats(userData) {
 
     let games       = [];
@@ -255,20 +240,6 @@ export class DashboardComponent implements OnInit {
               break;
           }
         }
-
-        // this.gameHistData.push({
-        //
-        //     id       : game.id,
-        //     // start    : game.startTime.toLocaleString('en-US', {hourCycle:"h24"}),
-        //     // end      : game.endTime.toLocaleString('en-US', {hourCycle:"h24"}),
-        //     pieData  : [{name:"Captures",       value:captures},
-        //                 {name:"Assists",        value:assists},
-        //                 {name:"Medics",         value:medics},
-        //                 {name:"Bombs Armed",    value:bombArm},
-        //                 {name:"Bombs Diffused", value:bombDis}]
-        //     // duration : new Date(duration).toUTCString().slice(17,25)
-        //
-        // })
 
         let xVal = "Game #" + (index + 1) + " - " + new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
@@ -390,16 +361,6 @@ export class DashboardComponent implements OnInit {
                                {name:"Medics",        value:medics},
                                {name:"Bombs Armed",   value:bombArm},
                                {name:"Bombs Diffused",value:bombDis}];
-
-                // this.gameHistData.push({
-                //
-                //     id       : game.id,
-                //     start    : new Date(game.startTime).toLocaleString('en', time_options) ,
-                //     end      : new Date(game.endTime).toLocaleString('en', time_options) ,
-                //     pieData  : pieData,
-                //     duration : new Date(duration).toUTCString().slice(17,25)
-                //
-                // })
 
                 let xVal = "Game #" + (index + 1) + " - " + new Date(game.gameActions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
