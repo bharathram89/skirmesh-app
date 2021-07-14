@@ -1,8 +1,8 @@
 
 <div class="events_area">
-    <div class="container">
-        <div *ngIf="!gameInProgress" class="row justify-content-center">
-            <div class="col-lg-5">
+    <div class="container px-0">
+
+            <div *ngIf="!gameInProgress" class="col-flex-6">
                 <div class="main_title">
                     <!-- <h4>Select Game Configuration</h4> -->
                     <select class="form-control" (change)="changeGame($event)">
@@ -14,7 +14,6 @@
                     <button type="button" class="bg-primary btn" [disabled]="!gameBoardActive" (click)="startGame()">START GAME</button>
                 </div>
             </div>
-        </div>
 
 
 
@@ -47,7 +46,7 @@
 
                     </div>
 
-                    <div class="row justify-content-center">
+                    <div class="row px-0 justify-content-center">
 
                         <div *ngIf="gameBoardActive" class="col-xs">
 
@@ -58,21 +57,12 @@
                               <div class="team_header font_white text-xs-center" [style.background-color]="team.color">
 
                                   <h5>
-                                      <div class="team_row font-weight-bold row padding-xs-x">
+                                      <div class="team_row font-weight-bold row px-0">
                                           <div class="col "> {{team.name}} ({{team.teamPlayers.length}})</div>
                                       </div>
                                   </h5>
 
                               </div>
-
-                              <!-- <ngx-datatable
-                                  style="overflow-y:scroll"
-                                  class="material striped"
-                                  [rows]="team.teamPlayers"
-                                  [columns]="teamColumns"
-                                  [columnMode]="'force'"
-                                  [rowHeight]="'auto'">
-                              </ngx-datatable> -->
 
                           </div>
 
