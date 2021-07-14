@@ -33,6 +33,10 @@ export class GameHistoryComponent implements OnInit {
 
   pastGamesByConfig;
 
+  tempReplayData = [];
+  holdData       = [];
+  replayIntervalID;
+
   dateOptions = {"dateStyle":"long", "timeStyle":"medium", "hourCycle": "h24"};
 
   constructor(
@@ -56,6 +60,8 @@ export class GameHistoryComponent implements OnInit {
   }
 
   changeGame(event){
+
+    if (this.replayIntervalID){clearInterval(this.replayIntervalID)}
 
     let game = this.selectedMode.games.find(ele=> ele.id == event.selected[0].id);
 
@@ -81,7 +87,6 @@ export class GameHistoryComponent implements OnInit {
 
 
   setGameHistoryData() {
-
       // Need to clarify this is "ByConfig"
       combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
                      this.nonSecAPIsvc.getLocationsList(),
@@ -165,8 +170,41 @@ export class GameHistoryComponent implements OnInit {
 
 
   getTotalGamesFromField(field) {
-      
+
       return field.configs.reduce((acc,config) => acc + (config.games.length), 0)
   }
+
+
+  replay() {
+
+      let holdData = [...this.scoreSvc.allActions];
+
+      for (let player of this.scoreSvc.gameStats["player_stats"]) {
+          player.data = [];
+      }
+
+      for (let team of this.scoreSvc.gameStats["team_stats"]) {
+          team.data = [];
+      }
+
+      this.scoreSvc.calcScoreAndSetActions()
+
+      if (!this.replayIntervalID) {
+          this.replayIntervalID = setInterval(
+              () => {
+
+                  if (!holdData?.length && this.replayIntervalID) {
+                      clearInterval(this.replayIntervalID);
+                      this.replayIntervalID = null;
+                  }
+
+                  if (holdData?.length) {
+                      this.scoreSvc.updateActionAndCalcScore(holdData.pop());
+                  }
+
+              }, 500);
+      }
+  }
+
 
 }

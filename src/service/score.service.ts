@@ -8,7 +8,7 @@ export class ScoreService {
 
   gameID;
   gameStats;
-  devices;
+  devices       = [];
   gameConfig;
 
   actionList    = [];
@@ -81,16 +81,22 @@ export class ScoreService {
             if (!team) {continue}
 
             let historyObj = {
-                id        : act.id,
-                team      : team.name,
-                name      : player.name,
-                action    : this.actionList.find(ele =>ele.id == act.actionID).action,
-                points    : this.actionList.find(ele => ele.id == act.actionID).points,
-                time_held : act.time_held,
-                location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
-                timestamp : date.toLocaleString('en-US', {hour12:false})
+                // id          : act.id,
+                // creationDate: act.creationDate,
+                team        : team.name,
+                teamID      : team.id,
+                name        : player.name,
+                rfidID      : player.rfidID,
+                // actionID    : act.actionID,
+                action      : this.actionList.find(ele =>ele.id == act.actionID).action,
+                points      : this.actionList.find(ele => ele.id == act.actionID).points,
+                // time_held   : act.time_held,
+                location    : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
+                timestamp   : date.toLocaleString('en-US', {hour12:false}),
+                gameID      : this.gameID
             }
-            this.allActions.push(historyObj);
+            //Join the action with aggregated data 
+            this.allActions.push({...act, ...historyObj});
         }
 
     });
@@ -119,17 +125,22 @@ export class ScoreService {
 
             let date = new Date(act.creationDate);
             let historyObj = {
-                id        : act.id,
-                team      : team.name,
-                name      : null,
-                action    : this.actionList.find(ele =>ele.id == act.actionID).action,
-                points    : act.points,
-                time_held : act.time_held,
-                location  : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
-                timestamp : date.toLocaleString('en-US', {hour12:false})
+                // id          : act.id,
+                // creationDate: act.creationDate,
+                team        : team.name,
+                teamID      : team.id,
+                // name        : null,
+                // rfidID      : null,
+                // actionID    : act.actionID,
+                action      : this.actionList.find(ele =>ele.id == act.actionID).action,
+                // points      : act.points,
+                // time_held   : act.time_held,
+                location    : act.deviceID ? this.findLocationFromDeviceID(act.deviceID) : null,
+                timestamp   : date.toLocaleString('en-US', {hour12:false}),
+                gameID      : this.gameID
             }
 
-            this.allActions.push(historyObj);
+            this.allActions.push({...act, ...historyObj});
         }
 
         this.barChartData.push({"name":teamObj.name, "teamID":team.id, "series":[
@@ -199,8 +210,9 @@ export class ScoreService {
     }
     // Purge all the stuff without a player name to show the stuff that matters
     this.teams = [...this.teams]
-    this.allActions = this.allActions.filter(act => act.name);
+    // this.allActions = this.allActions.filter(act => act.name);
   }
+
 
   updatePlayerData(player) {
       // The update needs to be for a player on a team in this configuration
@@ -256,7 +268,6 @@ export class ScoreService {
           }
           this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
       }
-
       this.calcScoreAndSetActions();
   }
 

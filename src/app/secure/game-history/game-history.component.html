@@ -1,9 +1,19 @@
 
 <div class="container">
 
-<div *ngIf="selectedField"
-      class="btn btn-secondary btn-block"
-      (click)="deSelectField()">Go Back
+<div class="d-grid gap-2 col-6 mx-auto">
+
+    <div *ngIf="selectedField"
+          class="btn btn-secondary btn-block"
+          (click)="deSelectField()">Go Back
+    </div>
+
+    <button  *ngIf="selectedGame"
+          class="btn btn-outline-primary btn-block"
+          (click)="replay()"
+          [disabled]="this.replayIntervalID">Replay
+    </button>
+
 </div>
 
 
