@@ -125,23 +125,23 @@ export class MydevicesComponent implements OnInit {
 
                     this.activeGamesByConfig = activeGamesByConfig;
 
-                    for (let config of this.activeGamesByConfig) {
-                        // This works well, for now, because each game config
-                        // can only have a single active game with that config
-                        // That's why we always shift() the first index
-                        let game = config.games.shift()
-                        if (!game) { continue }
+                    if (this.activeGamesByConfig) {
+                        for (let config of this.activeGamesByConfig) {
+                            // This works well, for now, because each game config
+                            // can only have a single active game with that config
+                            // That's why we always shift() the first index
+                            let game = config.games.shift()
+                            if (!game) { continue }
 
-                        let start = new Date(game.startTime)
-                        this.gameCardData.push({
-                            'description': config.description,
-                            'startTime': start.toLocaleString('en-US', { hour12: false }),
-                            'id': game.id,
-                            'mapID': config.mapID,
-                            'devices': game.devices
-                        });
-
-
+                            let start = new Date(game.startTime)
+                            this.gameCardData.push({
+                                'description': config.description,
+                                'startTime': start.toLocaleString('en-US', { hour12: false }),
+                                'id': game.id,
+                                'mapID': config.mapID,
+                                'devices': game.devices
+                            });
+                        }
                     }
                     this.gameCardData.sort((a, b) => b.id - a.id);
                 })
