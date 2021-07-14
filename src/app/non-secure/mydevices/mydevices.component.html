@@ -33,87 +33,76 @@
         </div>
 
 
-    <div *ngIf="gameID" class="view-account">
-            <!-- <div class="module-inner"> -->
-                <!-- <div class="side-bar float-center"> -->
-                    <!-- <nav class="side-menu"> -->
-                    <div class="container ">
+    <div *ngIf="gameID">
 
-                        <div class="col btn-group btn-group-toggle d-flex justify-content-center align-middle">
+        <div class="container ">
 
-                            <div class="btn fa fa-arrow-left" (click)="goBackToMainMenu()">
-                            </div>
+            <div class="col btn-group btn-group-toggle d-flex justify-content-center align-middle">
 
-                            <div class="btn btn-light active" id="map" (click)="changeGameTab('map')">
-                            C3I
-                            </div>
-
-                            <div class="btn btn-light" id="eventsTracker" (click)="changeGameTab('eventsTracker')">
-                            Events
-                            </div>
-
-                        <a data-href="https://play.skirmesh.net/non-secure/live-games"
-                           data-layout="button_count"
-                           data-size="small"
-                           target="_blank"
-                           href="{{fbShareUrl}}"
-                           class="btn btn-social btn-facebook fa fa-share">
-                            <i class="fa fa-facebook fa-fw"></i></a>
-
-                      </div>
-
-                    </div>
-
-                    <!-- </nav> -->
-                <!-- </div> -->
-
-                <div *ngIf="currentTab == 'map'" class="content-panel" id="v-pills-home" role="tabpanel"
-                    aria-labelledby="v-pills-home-tab">
-
-
-
-                    <div class="container">
-                      <div class="row">
-
-                        <div class="col-md-6">
-                        <app-map [mapID]="map" [(deviceData)]="scoreSvc.devices" [gameID]="gameID"></app-map>
-                        </div>
-
-                        <div class="col-md-6">
-                        <app-team-score [teams]="scoreSvc.teams" [barChartData]="scoreSvc.barChartData"></app-team-score>
-                        </div>
-
-                      </div>
-                    </div>
-
+                <div class="btn fa fa-arrow-left" (click)="goBackToMainMenu()">
                 </div>
 
-
-                <div *ngIf="currentTab == 'eventsTracker'" class="content-panel" id="v-pills-settings" role="tabpanel"
-                    aria-labelledby="v-pills-settings-tab">
-
-                    <h3 class="center-cust"> Event History</h3>
-
-                    <input
-                      type="text"
-                      class="form-control"
-                      style="padding:8px;margin:15px auto;width:30%;"
-                      placeholder="Type to filter by Callsign..."
-                      (keyup)="updateFilter($event)"
-                    />
-
-                    <ngx-datatable
-                        class="material striped"
-                        [rows]="scoreSvc.allActions"
-                        [columns]="scoreSvc.allActionsColumns"
-                        [columnMode]="'standard'"
-                        [rowHeight]="'auto'"
-                        [scrollbarH]="true">
-                    </ngx-datatable>
-
+                <div class="btn btn-light active" id="map" (click)="changeGameTab('map')">
+                C3I
                 </div>
-            <!-- </div> -->
 
+                <div class="btn btn-light" id="eventsTracker" (click)="changeGameTab('eventsTracker')">
+                Events
+                </div>
+
+            <a data-href="https://play.skirmesh.net/non-secure/live-games"
+               data-layout="button_count"
+               data-size="small"
+               target="_blank"
+               href="{{fbShareUrl}}"
+               class="btn btn-social btn-facebook fa fa-share">
+                <i class="fa fa-facebook fa-fw"></i></a>
+
+            </div>
+
+        </div>
+
+
+        <div *ngIf="currentTab == 'map'" class="container">
+
+          <div class="row px-0">
+
+            <div class="col-md-6">
+            <app-map [mapID]="map" [(deviceData)]="scoreSvc.devices" [gameID]="gameID"></app-map>
+            </div>
+
+            <div class="col-md-6">
+            <app-team-score [teams]="scoreSvc.teams" [barChartData]="scoreSvc.barChartData"></app-team-score>
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <div *ngIf="currentTab == 'eventsTracker'" class="container">
+
+            <h3 class="center-cust"> Event History</h3>
+
+            <input
+              type="text"
+              class="form-control"
+              style="padding:8px;margin:15px auto;width:30%;"
+              placeholder="Type to filter by Callsign..."
+              (keyup)="updateFilter($event)"
+            />
+
+            <ngx-datatable
+                class="material striped"
+                [rows]="scoreSvc.allActions"
+                [columns]="scoreSvc.allActionsColumns"
+                [columnMode]="'standard'"
+                [rowHeight]="'auto'"
+                [scrollbarH]="true">
+            </ngx-datatable>
+
+        </div>
 
       </div>
 
