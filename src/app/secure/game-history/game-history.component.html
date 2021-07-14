@@ -1,11 +1,11 @@
 
 <div class="container">
+
 <div *ngIf="selectedField"
       class="btn btn-secondary btn-block"
       (click)="deSelectField()">Go Back
 </div>
 
-<div class="container">
 
 <div *ngIf="!selectedField" class="row">
 
@@ -37,20 +37,20 @@
 
 </div>
 
-<div *ngIf="selectedField" class="row">
+<div *ngIf="selectedField" class="row px-0">
 
   <button *ngIf="userSvc.getFieldProfileID() && userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
        class="btn btn-danger btn-block"
        [disabled]="!selectedGame?.id"
        (click)="deleteGame()"> DELETE </button>
 
-        <div class="container">
+        <div class="container px-0">
 
           <div class="card-header row">
             <h5> {{selectedField.name}} ({{selectedField.configs.length}})</h5>
           </div>
 
-          <div class="card-body row">
+          <div class="card-body row px-0">
 
             <div class="col-md-4">
 
@@ -94,7 +94,7 @@
             </div>
 
 
-            <div *ngIf="selectedGame && selectedMode" class="col">
+            <div *ngIf="selectedGame && selectedMode" class="col px-0">
             <app-team-score [teams]="scoreSvc?.teams" [barChartData]="scoreSvc?.barChartData" ></app-team-score>
             </div>
 
@@ -102,3 +102,5 @@
         </div>
 
   </div>
+
+</div>
