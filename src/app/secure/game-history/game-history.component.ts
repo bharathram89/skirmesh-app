@@ -163,4 +163,10 @@ export class GameHistoryComponent implements OnInit {
     )
   }
 
+
+  getTotalGamesFromField(field) {
+      
+      return field.configs.reduce((acc,config) => acc + (config.games.length), 0)
+  }
+
 }

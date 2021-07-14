@@ -16,7 +16,7 @@
       <div class="card-header"
            [value]="field.id"
            (click)="selectField(field.id)">
-        <h5> {{field.name}} ({{field.configs.length}})</h5>
+        <h5> {{field.name}} ({{getTotalGamesFromField(field)}})</h5>
       </div>
 
       <div class="card-body"
@@ -47,7 +47,7 @@
         <div class="container px-0">
 
           <div class="card-header row">
-            <h5> {{selectedField.name}} ({{selectedField.configs.length}})</h5>
+            <h5> {{selectedField.name}} ({{getTotalGamesFromField(selectedField)}})</h5>
           </div>
 
           <div class="card-body row px-0">
