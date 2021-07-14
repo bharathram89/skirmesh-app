@@ -8,10 +8,10 @@
           (click)="deSelectField()">Go Back
     </div>
 
-    <button  *ngIf="selectedGame"
+    <button  *ngIf="selectedField"
           class="btn btn-outline-primary btn-block"
           (click)="replay()"
-          [disabled]="this.replayIntervalID">Replay
+          [disabled]="!selectedGame?.id || replayIntervalID">Replay
     </button>
 
 </div>
@@ -47,12 +47,16 @@
 
 </div>
 
-<div *ngIf="selectedField" class="row px-0">
+<div *ngIf="selectedField" class="row">
 
-  <button *ngIf="userSvc.getFieldProfileID() && userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
-       class="btn btn-danger btn-block"
-       [disabled]="!selectedGame?.id"
-       (click)="deleteGame()"> DELETE </button>
+    <div class="d-grid gap-2 col-6 mx-auto">
+
+      <button *ngIf="selectedGame?.id && userSvc.getFieldProfileID() && userSvc.getFieldProfileID() == selectedMode?.fieldProfileID"
+           class="btn btn-danger btn-block"
+           [disabled]="!selectedGame?.id"
+           (click)="deleteGame()"> DELETE </button>
+
+   </div>
 
         <div class="container px-0">
 
