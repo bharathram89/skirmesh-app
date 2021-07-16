@@ -380,3 +380,62 @@
       </g>
     </svg>
 </div>
+
+<div *ngIf="mapID==7">
+
+    <svg
+       class="map"
+       id="map7"
+       viewBox="0 0 1728 1304"
+       version="1.1">
+      <defs/>
+      <image
+         xlink:href="../../../assets/images/Nashville_Airsoft.png"
+         preserveAspectRatio="none"
+         width="1728"
+         height="1304" />
+      <path
+         d="M 9.1834278,34.897026 V 301.21643 H 69.794052 l 1.836685,64.284 77.140793,-1.83669 75.30411,89.9976 h 40.40708 l 115.71119,23.87691 117.54788,-69.79405 60.61062,-82.65085 1.83669,-286.522953 z"
+         id="loc66"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+      <path
+         d="m 380.19391,477.53825 115.71119,78.97748 62.44731,75.30411 3.67337,134.07804 -148.77153,200.19873 -75.30411,168.97509 1.83669,134.078 L 5.5100567,1267.313 9.1834278,301.21643 H 69.794052 l 1.836685,64.284 77.140793,-1.83669 75.30411,89.9976 h 40.40708 z"
+         id="loc67"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+      <path
+         d="m 562.02578,765.89788 h 262.64604 l 191.01528,121.22125 148.7716,80.81416 42.2437,108.36441 -1.8367,196.5254 -865.07887,-3.6734 -1.83669,-134.078 75.30411,-168.97509 z"
+         id="path938"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+      <path
+         d="m 560.1891,38.570397 530.8021,-1.836686 1.8367,290.196319 -124.89461,-3.67337 -71.63073,34.89703 H 664.88018 L 558.35241,325.09335 Z"
+         id="loc69"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+      <path
+         d="M 1092.8279,326.93003 V 534.4755 l 183.6686,1.83669 326.93,58.77393 34.897,-1.83668 V 36.733711 h -547.3323 z"
+         id="loc70"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+      <path
+         d="M 1092.8279,326.93003 V 534.4755 l -102.85438,84.48754 1.83669,176.32181 -34.89703,53.26388 -132.24136,-82.65085 H 562.02578 L 558.35241,631.81984 495.9051,556.51573 380.19391,477.53825 497.74179,407.7442 l 60.61062,-82.65085 106.52777,33.06034 h 231.42238 l 71.63073,-34.89703 z"
+         id="loc71"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+      <path
+         d="m 1092.8279,534.4755 183.6686,1.83669 326.93,58.77393 34.897,-1.83668 -1.8367,266.31941 -214.8922,1.83668 -143.2614,242.44247 h -73.4675 l 1.8367,-27.5503 -42.2437,-108.36441 -148.7716,-80.81416 -58.77392,-38.5704 34.89703,-53.26388 -1.83669,-176.32181 z"
+         id="loc72"
+         class="location"
+         [tooltip]="tooltipTemplate"
+         container="tooltipContainer" />
+    </svg>
+
+</div>
