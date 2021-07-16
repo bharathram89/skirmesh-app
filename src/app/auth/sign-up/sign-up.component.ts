@@ -95,34 +95,32 @@ export class SignUpComponent implements OnInit {
   get fieldName() { return this.addUser.get('fieldName'); }
 
   fieldSignUp() {
-    let social = document.getElementById("social_media");
-    let or = document.getElementById("or");
+
     let fieldSignUp = document.getElementById("fieldSignUp");
     let playerSignUp = document.getElementById("playerSignUp");
     let callSign = document.getElementById("callSign");
     let fieldName = document.getElementById("fieldName")
+
     callSign.style.display = 'none'
     fieldName.style.display = 'block'
     this.addUser.controls['callSign'].disable();
     this.addUser.controls['fieldName'].enable();
-    social.style.display = 'none'
-    or.style.display = 'none'
+
     playerSignUp.classList.remove("active");
     fieldSignUp.classList.add("active");
   }
   playerSignUp() {
-    let social = document.getElementById("social_media");
-    let or = document.getElementById("or");
+
     let fieldSignUp = document.getElementById("fieldSignUp");
     let playerSignUp = document.getElementById("playerSignUp");
     let callSign = document.getElementById("callSign");
     let fieldName = document.getElementById("fieldName")
+
     callSign.style.display = 'block'
     fieldName.style.display = 'none'
     this.addUser.controls['callSign'].enable();
     this.addUser.controls['fieldName'].disable();
-    social.style.display = 'flex'
-    or.style.display = 'block'
+
     fieldSignUp.classList.remove("active");
     playerSignUp.classList.add("active");
   }

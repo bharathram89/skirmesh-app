@@ -17,6 +17,33 @@
 						</li>
 					</ul>
 					<br>
+
+
+					<div id="social_media" class="social_icon">
+						<!-- <div class="top-50 start-50"> -->
+						<div class="social-button-container">
+							<!-- <div class="top-50 start-50"> -->
+
+							<a (click)="loginWithFacebook()" class="btn btn-md btn-social btn-facebook">
+								<i class="fa fa-facebook fa-fw"> </i> Sign up with Facebook
+							</a>
+							<br/>
+							<a (click)="signInWithGoogle()" class="btn btn-md btn-social btn-google">
+								<img src="https://img.icons8.com/color/64/000000/google-logo.png"> Sign up with Google</a>
+						</div>
+						<!-- <div class="col-xs-4">
+							<a href="#" class="btn btn-lg btn-block social_icon">
+								<i class="fa fa-twitter"></i>
+							</a>
+						</div> -->
+					</div>
+
+
+					<div class="or">
+						<span>or signup oldschool</span>
+					</div>
+
+
 					<form [formGroup]="addUser" autocomplete="off" method="POST">
 						<div class="row gutters">
 							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -137,28 +164,7 @@
 						</div>
 					</form>
 
-					<div id="or" class="or">
-						<span>or signup using</span>
-					</div>
 
-					<div id="social_media" class="social_icon">
-						<!-- <div class="top-50 start-50"> -->
-						<div class="social-button-container">
-							<!-- <div class="top-50 start-50"> -->
-
-							<a (click)="loginWithFacebook()" class="btn btn-md btn-social btn-facebook">
-								<i class="fa fa-facebook fa-fw"> </i> Sign in with Facebook
-							</a>
-							<br/>
-							<a (click)="signInWithGoogle()" class="btn btn-md btn-social btn-google">
-								<img src="https://img.icons8.com/color/64/000000/google-logo.png"> Sign in with Google</a>
-						</div>
-						<!-- <div class="col-xs-4">
-							<a href="#" class="btn btn-lg btn-block social_icon">
-								<i class="fa fa-twitter"></i>
-							</a>
-						</div> -->
-					</div>
 					<a [routerLink]="['/auth/login']" class="additional-link">Have an Account?
 						<span>LOGIN</span></a>
 
