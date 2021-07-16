@@ -134,7 +134,7 @@ export class SignUpComponent implements OnInit {
             let socialData = {
                 "facebookID" : fbData.id,
                 // "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
-                "callSign"   : fbData.name,
+                "callSign"   : fbData.name + this.getRandomInt(),
                 "firstName"  : fbData.firstName,
                 "lastName"   : fbData.lastName,
                 "password"   : fbData.name + this.getRandomInt(),
@@ -155,7 +155,7 @@ export class SignUpComponent implements OnInit {
             let socialData = {
                 "googleID"  : googleData.id,
                 // "google"    : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
-                "callSign"  : googleData.name,
+                "callSign"  : googleData.name + this.getRandomInt(),
                 "firstName" : googleData.firstName,
                 "lastName"  : googleData.lastName,
                 "password"  : googleData.name + this.getRandomInt(),
