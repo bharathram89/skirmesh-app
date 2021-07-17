@@ -162,7 +162,6 @@ export class MapComponent implements OnInit {
 
         // Update device data as well since this is the only time
         // socketdata for the device is handled.
-
         if (this.deviceData) {
             let to_update = this.deviceData.findIndex(dev => dev.id == device.id);
             if (to_update != -1) {

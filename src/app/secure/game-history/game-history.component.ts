@@ -1,5 +1,6 @@
 import { newArray } from '@angular/compiler/src/util';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {MapComponent} from 'src/app/global/map/map.component'
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -24,6 +25,8 @@ interface ITab {
 })
 export class GameHistoryComponent implements OnInit {
 
+  @ViewChild(MapComponent) childMap : MapComponent;
+
   selectedField;
   selectedMode;
   selectedGame;
@@ -35,6 +38,7 @@ export class GameHistoryComponent implements OnInit {
 
   tempReplayData = [];
   holdData       = [];
+  baseDevices    = [];
   replayIntervalID;
 
   dateOptions = {"dateStyle":"long", "timeStyle":"medium", "hourCycle": "h24"};
@@ -53,15 +57,18 @@ export class GameHistoryComponent implements OnInit {
   }
 
   changeGameMode(event){
+
+    this.stopReplay();
+
     let newConfig = this.pastGamesByConfig.find(ele=> ele.id == event.target.value)
     this.selectedMode = newConfig;
-    this.selectedMode.deviceMap = JSON.parse(this.selectedMode.deviceMap);
+    this.selectedMode.deviceMap = JSON.parse(newConfig.deviceMap);
     this.selectedGame = null;
   }
 
   changeGame(event){
 
-    if (this.replayIntervalID){clearInterval(this.replayIntervalID)}
+    this.stopReplay();
 
     let game = this.selectedMode.games.find(ele=> ele.id == event.selected[0].id);
 
@@ -142,13 +149,23 @@ export class GameHistoryComponent implements OnInit {
 
   selectField(fieldID) {
     this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
-
   }
 
   deSelectField() {
     this.selectedField = null;
     this.selectedMode = null;
     this.selectedGame = null;
+
+    this.stopReplay();
+  }
+
+
+  stopReplay() {
+
+      if (this.replayIntervalID) {
+          clearInterval(this.replayIntervalID);
+          this.replayIntervalID = null;
+      }
   }
 
   deleteGame() {
@@ -179,6 +196,13 @@ export class GameHistoryComponent implements OnInit {
 
       let holdData = [...this.scoreSvc.allActions];
 
+      //Reset map
+      for (let device of this.selectedMode.deviceMap) {
+
+          device.team = device.teamID ? device.team : null;
+          this.childMap.updateLocationState(device);
+      }
+
       for (let player of this.scoreSvc.gameStats["player_stats"]) {
           player.data = [];
       }
@@ -199,7 +223,47 @@ export class GameHistoryComponent implements OnInit {
                   }
 
                   if (holdData?.length) {
-                      this.scoreSvc.updateActionAndCalcScore(holdData.pop());
+
+                      let act = holdData.pop()
+                      let dev = this.scoreSvc.devices.find(ele => ele.id == act.deviceID)
+                      let color = this.scoreSvc.teams.find(ele => ele.teamID == act.teamID)?.color
+
+                      if (dev) {
+
+                          dev.team = color ? color.replace("#","") : null;
+
+                          switch (act.actionID) {
+
+                              case 1:
+                                  dev.stable = true;
+                                  dev.config = 0x0A;
+                                  break;
+
+                              case 2:
+                                  dev.stable = false;
+                                  dev.config = 0x0A;
+                                  break;
+
+                              case 8:
+                                  dev.bomb_status = 0xBA;
+                                  dev.config = 0xBB;
+                                  break;
+
+                              case 9:
+                                  dev.bomb_status = 0xBD;
+                                  dev.config = 0xBB;
+                                  break;
+
+                              case 11:
+                              case 12:
+                              case 13:
+                                  dev.config = 0x0E;
+                                  break;
+                          }
+
+                          this.childMap.updateLocationState(dev);
+                      }
+                      this.scoreSvc.updateActionAndCalcScore(act);
                   }
 
               }, 500);
