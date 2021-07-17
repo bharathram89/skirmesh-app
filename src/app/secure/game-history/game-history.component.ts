@@ -254,6 +254,11 @@ export class GameHistoryComponent implements OnInit {
                                   dev.config = 0xBB;
                                   break;
 
+                              case 15:
+                                  dev.bomb_status = 0xDD;
+                                  dev.config = 0xBB;
+                                  break;
+
                               case 11:
                               case 12:
                               case 13:
