@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
@@ -22,20 +22,13 @@ export class HeaderComponent implements OnInit {
 
 
   constructor(userService:UserServiceService,tokenService:TokenStorageService,
-    private router: Router) {
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
     this.userSvc = userService;
     this.tokenSvc = tokenService;
    }
 
-  ngOnInit(): void {
-    // window.location.href.includes('/auth/sign-up')? document.getElementById("nav_register").classList.add('active'):null;
-    // window.location.href.includes('/non-secure/field-info')? document.getElementById("nav_fieldInfo").classList.add('active'):null;
-    // window.location.href.includes('/non-secure/player-info')? document.getElementById("nav_playerInfo").classList.add('active'):null;
-    // window.location.href.includes('/non-secure/feature-list')? document.getElementById("nav_featureList").classList.add('active'):null;
-    // window.location.href.includes('/non-secure/home')? document.getElementById("nav_home").classList.add('active'):null;
-    // window.location.href.includes('home')? $("#nav_home").addClass('active'):null;
-    // window.location.href.includes('newGame')? $("#nav_newGame").addClass('active'):null;
-    // window.location.href.includes('pastGames')? $("#nav_pastGames").addClass('active'):null;
+  ngOnInit(): void { 
     this.isSecure = this.userSvc.isSignedIn() 
 
     this.isField = this.userSvc.isField;
@@ -145,7 +138,14 @@ export class HeaderComponent implements OnInit {
     //   },
     //   "retina_detect": true
     // });
-
+  }
+  
+  route(route){
+    this.router.navigate([route] );
+    let currentUrl = route;
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    // this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate([currentUrl]);
   }
   signOut(){
     this.tokenSvc.signOut();
@@ -174,30 +174,7 @@ export class HeaderComponent implements OnInit {
     let menu = document.getElementById("navdrop")
     menu.classList.toggle('collapse')
   }
-
-// $("[data-trigger]").on("click", function (e) {
-//   e.preventDefault();
-//   e.stopPropagation();
-//   var offcanvas_id = $(this).attr("data-trigger");
-//   $(offcanvas_id).toggleClass("show");
-//   $("body").toggleClass("offcanvas-active");
-//   $(".screen-overlay").toggleClass("show");
-// });
-
-// // Close menu when pressing ESC
-// $(document).on("keydown", function (event) {
-//   if (event.keyCode === 27) {
-//     $(".mobile-offcanvas").removeClass("show");
-//     $("body").removeClass("overlay-active");
-//   }
-// });
-
-// $(".btn-close, .screen-overlay").click(function (e) {
-//   $(".screen-overlay").removeClass("show");
-//   $(".mobile-offcanvas").removeClass("show");
-//   $("body").removeClass("offcanvas-active");
-// });
-
+ 
 
 
 }

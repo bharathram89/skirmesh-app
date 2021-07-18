@@ -7,7 +7,7 @@ import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 // actionIDs associated with specific actions
 const RESPAWN  = 13;
 const MEDIC    = 11;
@@ -80,17 +80,69 @@ export class DashboardComponent implements OnInit {
               private nonSecAPIsvc : NonSecureAPIService,
               private secAPIsvc    : SecureAPIService,
               private breakpointObserver : BreakpointObserver,
-              private router: Router
+              private router: Router,
+              private activatedRoute: ActivatedRoute
             ) {}
 
   ngOnInit(): void {
 
-    this.isField = this.userSvc.isField;
+   
+    this.activatedRoute.queryParams.subscribe(
 
-    if(window.location.href.includes('viewForUser')){
-      const urlParams = new URLSearchParams(window.location.search);
-      this.viewForUser = urlParams.get('viewForUser');
-    }
+      data => {
+          if(data.viewForUser) {
+              //Need to check if game is active else we get console error.
+              this.viewForUser = data.viewForUser;
+          }  
+          combineLatest([this.secAPIsvc.getUser(this.tokenSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
+            this.isField = this.userSvc.isField;
+            let userData;
+            userData = userDataIn['user']
+    
+            this.pageLvlError = userData ? false : true
+    
+            if (!userData) {return}
+    
+            this.isField = userData.fieldProfile ? true : false;
+    
+            this.actionList = actions;
+    
+            if (this.isField) {
+    
+              this.setGameHistStats(userData);
+              this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
+              this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
+              this.currentVals.fieldProfileID = userData.fieldProfile.id;
+              this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
+            }
+            else {
+    
+              this.setGameScoreStats(userData);
+    
+              this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
+              this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
+              this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
+              this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
+            }
+            this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
+            this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
+            this.currentVals.email = userData.email ? userData.email : 'E-mail';
+            this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
+    
+            this.currentVals.userID = userData.id;
+            if(this.currentVals.imageID){
+              this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
+                imageData => {
+                  this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
+                }
+              )
+            }
+    
+    
+    
+        })
+      }
+    ) 
 
     this.breakpointObserver.observe([
       '(max-width: 768px)'
@@ -105,53 +157,7 @@ export class DashboardComponent implements OnInit {
           }
         });
 
-    combineLatest([this.secAPIsvc.getUser(this.tokenSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
-
-        let userData;
-        userData = userDataIn['user']
-
-        this.pageLvlError = userData ? false : true
-
-        if (!userData) {return}
-
-        this.isField = userData.fieldProfile ? true : false;
-
-        this.actionList = actions;
-
-        if (this.isField) {
-
-          this.setGameHistStats(userData);
-          this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
-          this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
-          this.currentVals.fieldProfileID = userData.fieldProfile.id;
-          this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
-        }
-        else {
-
-          this.setGameScoreStats(userData);
-
-          this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
-          this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-          this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
-          this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
-        }
-        this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
-        this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
-        this.currentVals.email = userData.email ? userData.email : 'E-mail';
-        this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
-
-        this.currentVals.userID = userData.id;
-        if(this.currentVals.imageID){
-          this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
-            imageData => {
-              this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
-            }
-          )
-        }
-
-
-
-    })
+    
   }
 
   onSelect(data): void {

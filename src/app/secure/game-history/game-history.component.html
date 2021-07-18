@@ -21,17 +21,17 @@
 
 
   <div *ngFor="let field of fieldCardData;"
-       class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1">
+       class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1"
+       (click)="selectField(field.id)">
 
       <div class="card-header"
            [value]="field.id"
-           (click)="selectField(field.id)">
+           >
         <h5> {{field.name}} ({{getTotalGamesFromField(field)}})</h5>
       </div>
 
       <div class="card-body"
-           [value]="field.id"
-           (click)="selectField(field.id)">
+           [value]="field.id" >
 
          <img
             class="img img-thumbnail"
