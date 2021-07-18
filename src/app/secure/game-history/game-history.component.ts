@@ -105,34 +105,36 @@ export class GameHistoryComponent implements OnInit {
               this.fieldCardData.push(cardData);
             }
           }
+
           this.fieldCardData.sort((a, b) => b.id - a.id);
+
           if (queryParams.field) {
-            //Need to check if game is active else we get console error.
-            console.log('specific past game')
+
             this.selectField(queryParams.field)
-            if(queryParams.gameMode){
+
+            if (queryParams.gameMode) {
+
               this.changeGameMode({target:{value:queryParams.gameMode}})
 
-              if(queryParams.gameID){
-                this.changeGame({selected:[{id:queryParams.gameID}]})
-                if(queryParams.replay){
-                  this.replay()
-                }
-              }
+              if (queryParams.gameID) {
 
+                this.changeGame({selected:[{id:queryParams.gameID}]})
+              }
             }
           }
-        }) 
+
+        })
   }
 
   changeGameMode(event) {
 
-    this.router.navigate([], { 
+    this.router.navigate([], {
       queryParams: {
         gameMode: event.target.value
       },
-      queryParamsHandling: 'merge'
+      // queryParamsHandling: 'merge'
     });
+
     this.stopReplay();
 
     let newConfig = this.pastGamesByConfig.find(ele => ele.id == event.target.value)
@@ -142,12 +144,14 @@ export class GameHistoryComponent implements OnInit {
   }
 
   changeGame(event) {
-    this.router.navigate([], { 
+
+    this.router.navigate([], {
       queryParams: {
         gameID: event.selected[0].id,
       },
-      queryParamsHandling: 'merge'
+      // queryParamsHandling: 'merge'
     });
+
     this.stopReplay();
 
     let game = this.selectedMode.games.find(ele => ele.id == event.selected[0].id);
@@ -172,7 +176,7 @@ export class GameHistoryComponent implements OnInit {
       })
   }
 
- 
+
 
   selectField(fieldID) {
     //viewGame
@@ -180,7 +184,7 @@ export class GameHistoryComponent implements OnInit {
       queryParams: {
         field: fieldID
       },
-      queryParamsHandling: 'merge'
+      // queryParamsHandling: 'merge'
 
     });
     this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
