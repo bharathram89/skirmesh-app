@@ -408,7 +408,7 @@
          container="tooltipContainer" />
       <path
          d="m 562.02578,765.89788 h 262.64604 l 191.01528,121.22125 148.7716,80.81416 42.2437,108.36441 -1.8367,196.5254 -865.07887,-3.6734 -1.83669,-134.078 75.30411,-168.97509 z"
-         id="path938"
+         id="loc68"
          class="location"
          [tooltip]="tooltipTemplate"
          container="tooltipContainer" />

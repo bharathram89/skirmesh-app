@@ -1,6 +1,6 @@
 import { newArray } from '@angular/compiler/src/util';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MapComponent } from 'src/app/global/map/map.component'
+import { MapComponent } from 'src/app/global/map/map.component';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import { UserServiceService } from 'src/service/user-service.service';

@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-
+import { MapComponent } from 'src/app/global/map/map.component';
 import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
@@ -16,6 +16,7 @@ import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 })
 export class MydevicesComponent implements OnInit {
 
+    @ViewChild(MapComponent) childMap: MapComponent;
     activeGamesByConfig;
 
     map;
@@ -75,6 +76,7 @@ export class MydevicesComponent implements OnInit {
 
                       console.log(socketData, " New Action");
                       this.scoreSvc.updateActionAndCalcScore(socketData);
+                      this.parseActionForMapUpdate(socketData);
                 }
             })
 
@@ -232,6 +234,29 @@ export class MydevicesComponent implements OnInit {
 
         // update the rows
         this.scoreSvc.allActions = temp;
+    }
+
+
+    parseActionForMapUpdate(action) {
+
+        let dev = this.scoreSvc.devices.find(ele => ele.id == action.deviceID)
+        let color = this.scoreSvc.teams.find(ele => ele.teamID == action.teamID)?.color
+
+        if (dev) {
+
+          dev.team = color ? color.replace("#", "") : null;
+
+          switch (action.actionID) {
+
+            case 11:
+            case 12:
+            case 13:
+              dev.config = 0x0E;
+              break;
+          }
+
+          this.childMap.updateLocationState(dev);
+        }
     }
 
 }
