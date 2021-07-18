@@ -175,9 +175,8 @@ export class MapComponent implements OnInit {
         let color = '#' + device.team;
 
         let element = document.getElementById("loc" + locID);
-        // If the device corresponds to a location and the configuration
-        // is of CAPTURE or REGISTER ... maybe later ... MEDIC, update
-        // to beacon or fill the color as appropriate
+        // If the device corresponds to a location and the configuration,
+        // beacon or fill the color as appropriate
         if (element) {
             // This resets the class list to a proper baseline
             while (element.classList.length) {
@@ -187,33 +186,32 @@ export class MapComponent implements OnInit {
             element.classList.add("location")
         }
 
-        if (element && (device.config == CAPTURE)) {
+        else {return}
 
-            if (!stable && device.team) {
+        if (device.config == CAPTURE && device.team) {
 
-                element.classList.add("beacon");
-                element.setAttribute("fill", color);
-
-            }
-            else if (stable && device.team) {
+            if (stable) {
 
                 element.classList.add("owned");
                 element.setAttribute("fill", color);
+
             }
+            else {
 
-        }
-
-        if (element && (device.config == REGISTER)) {
-
-            if (device.team) {
-
-                element.classList.add("register");
+                element.classList.add("beacon");
                 element.setAttribute("fill", color);
             }
 
         }
 
-        else if (element && device.config == BOMB) {
+        else if (device.config == REGISTER && device.team) {
+
+            element.classList.add("register");
+            element.setAttribute("fill", color);
+
+        }
+
+        else if (device.config == BOMB) {
 
             switch (device.bomb_status) {
 
@@ -232,6 +230,14 @@ export class MapComponent implements OnInit {
                 default:
                     break;
             }
+
+        }
+
+        else if (device.config == MEDIC) {
+
+            element.classList.add("medic");
+            element.setAttribute("fill", "#00A000");
+            setTimeout(() => element.classList.remove("medic"), 250);
 
         }
 

@@ -53,6 +53,15 @@ path.location.register {
     transform-origin : center;
     transform-box    : fill-box;
 }
+
+.medic {
+    animation: pulsate 0.25s linear;
+    transform-origin : center;
+    transform-box    : fill-box;
+    stroke: #B0FFB0;
+    stroke-width: 2%;
+}
+
 @keyframes pulsate {
     from {transform: scale(0.8);
         opacity: 1;
