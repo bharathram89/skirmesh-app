@@ -108,6 +108,7 @@ export class GameHistoryComponent implements OnInit {
 
           this.fieldCardData.sort((a, b) => b.id - a.id);
 
+
           if (queryParams.field) {
 
             this.selectField(queryParams.field)
@@ -126,14 +127,31 @@ export class GameHistoryComponent implements OnInit {
         })
   }
 
+
+
+  selectField(fieldID) {
+
+      const urlTree = this.router.createUrlTree([], {
+        queryParams: { field: fieldID },
+        queryParamsHandling: "merge",
+        preserveFragment: true });
+
+      window.history.replaceState(urlTree, "Field", urlTree.toString());
+
+      this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
+  }
+
+
   changeGameMode(event) {
 
-    this.router.navigate([], {
+    const urlTree = this.router.createUrlTree([], {
       queryParams: {
-        gameMode: event.target.value
-      },
-      // queryParamsHandling: 'merge'
-    });
+          field     : this.selectedField.id,
+          gameMode  : event.target.value },
+      queryParamsHandling: "merge",
+      preserveFragment: true });
+
+    window.history.replaceState(urlTree, "Field", urlTree.toString());
 
     this.stopReplay();
 
@@ -143,14 +161,19 @@ export class GameHistoryComponent implements OnInit {
     this.selectedGame = null;
   }
 
+
+
   changeGame(event) {
 
-    this.router.navigate([], {
+    const urlTree = this.router.createUrlTree([], {
       queryParams: {
-        gameID: event.selected[0].id,
-      },
-      // queryParamsHandling: 'merge'
-    });
+          field     : this.selectedField.id,
+          gameMode  : this.selectedMode.id,
+          gameID    : event.selected[0].id },
+      queryParamsHandling: "merge",
+      preserveFragment: true });
+
+    window.history.replaceState(urlTree, "Field", urlTree.toString());
 
     this.stopReplay();
 
@@ -176,19 +199,6 @@ export class GameHistoryComponent implements OnInit {
       })
   }
 
-
-
-  selectField(fieldID) {
-    //viewGame
-    this.router.navigate(['secure/past-games'], {
-      queryParams: {
-        field: fieldID
-      },
-      // queryParamsHandling: 'merge'
-
-    });
-    this.selectedField = this.fieldCardData.find(ele => ele.id == fieldID);
-  }
 
   deSelectField() {
     this.router.navigate([]);
