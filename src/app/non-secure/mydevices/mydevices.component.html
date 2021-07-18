@@ -7,18 +7,17 @@
             <div
                 *ngFor="let gameData of gameCardData;"
                 class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1"
+                (click)="selectActiveGame(gameData.id)"
                 >
 
                 <div class="card-header"
                      [value]="gameData.id"
-                     (click)="selectActiveGame(gameData.id)"
                      >
                      <h5 [innerHtml]="gameData.description"></h5>
                 </div>
 
                 <div class="card-body"
-                     [value]="gameData.id"
-                     (click)="selectActiveGame(gameData.id)">
+                     [value]="gameData.id">
 
                     <p [innerHtml]="gameData.startTime"></p>
 
