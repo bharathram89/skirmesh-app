@@ -100,7 +100,7 @@
             </div>
 
 
-            <div *ngIf="selectedGame && selectedMode" class="col-md-4">
+            <div *ngIf="selectedGame && selectedMode" class="col-md-4" id="appMapComponent">
             <app-map [gameID]="" [mapID]="selectedMode?.mapID" [deviceData]="selectedMode?.deviceMap"></app-map>
             </div>
 

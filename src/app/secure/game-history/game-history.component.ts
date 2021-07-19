@@ -244,6 +244,11 @@ export class GameHistoryComponent implements OnInit {
 
   replay() {
 
+    let mapElement = document.getElementById("appMapComponent")
+    if (this.isElementOutViewport(mapElement)) {
+        mapElement.scrollIntoView();
+    }
+
     let holdData = [...this.scoreSvc.allActions];
 
     //Reset map
@@ -323,6 +328,12 @@ export class GameHistoryComponent implements OnInit {
 
         }, 500);
     }
+  }
+
+
+  isElementOutViewport(el) {
+    var rect = el.getBoundingClientRect();
+    return rect.bottom < 0 || rect.right < 0 || rect.left > window.innerWidth || rect.top > window.innerHeight;
   }
 
 
