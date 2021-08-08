@@ -1,0 +1,6 @@
+{
+	"appId": "com.example.app",
+	"appName": "skirmesh-ui",
+	"webDir": "dist/skirmesh-ui",
+	"bundledWebRuntime": false
+}

@@ -24,6 +24,11 @@
     "@angular/platform-browser": "~11.2.4",
     "@angular/platform-browser-dynamic": "~11.2.4",
     "@angular/router": "~11.2.4",
+    "@capacitor/android": "^3.1.2",
+    "@capacitor/angular": "^1.0.3",
+    "@capacitor/core": "latest",
+    "@capacitor/ios": "^3.1.2",
+    "@ionic/angular": "^5.6.13",
     "@swimlane/ngx-charts": "^18.0.1",
     "@swimlane/ngx-datatable": "^19.0.0",
     "@types/bootstrap": "^5.0.11",
@@ -36,6 +41,7 @@
     "ngx-bootstrap": "^6.2.0",
     "ngx-color-picker": "^11.0.0",
     "ngx-feedback": "^1.0.0",
+    "ngx-google-analytics": "^11.2.1",
     "ngx-pagination": "^5.0.0",
     "ngx-socket-io": "^4.0.0",
     "path": "^0.12.7",
@@ -60,6 +66,7 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
-    "tslint": "~6.1.0"
+    "tslint": "~6.1.0",
+    "@capacitor/cli": "latest"
   }
 }
