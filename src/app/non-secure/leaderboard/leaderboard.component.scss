@@ -1,0 +1,20 @@
+.leaderboardRow:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+}
+.leaderboardRow:active {
+    cursor: pointer;
+    transform: scale(0.98);
+}
+
+.bg-gold {
+    background-color: #D6AF36;
+}
+
+.bg-silver {
+    background-color: #A7A7AD;
+}
+
+.bg-bronze {
+    background-color: #A77044;
+}

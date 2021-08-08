@@ -18,6 +18,7 @@ export class NonSecureAPIService {
     // BASE = 'http://lvh.me:5000/'
 
     // setup source routes
+    RSRC = 'resources/'
     NONS = 'nonSecure/'
     STAT = 'statistics/'
     LOGN = 'login'
@@ -64,6 +65,10 @@ export class NonSecureAPIService {
         return this.http.get(route + 'extendedGameData', options)
     }
 
+    getActionPoints(){
+        return this.http.get(this.BASE + this.RSRC + 'action')
+    }
+
 
     getActiveGamesByConfig() {
         return this.http.get(this.BASE + this.NONS + 'activeGamesByConfig')
@@ -99,12 +104,12 @@ export class NonSecureAPIService {
 
 
     getActionsList(viewForUser?){
-        if(viewForUser){ 
-            const options = { params  : new HttpParams().set("callSign", viewForUser) } 
+        if(viewForUser){
+            const options = { params  : new HttpParams().set("callSign", viewForUser) }
             return this.http.get(this.BASE + this.NONS + 'actions',options)
         }else{
             return this.http.get(this.BASE + this.NONS + 'actions')
-        } 
+        }
     }
 
 
@@ -122,4 +127,12 @@ export class NonSecureAPIService {
         return this.http.post(route + "/passwordReset", data, this.options)
     }
 
+    getLeaderboard(args={weekly:false}){
+
+        let route = this.BASE + this.STAT
+
+        const options = { params  : new HttpParams().set("weekly", args.weekly ? "true" : "") }
+
+        return this.http.get(route + "leaderboard", options)
+    }
 }

@@ -27,7 +27,6 @@
         </div>
 
         <ngx-datatable
-            style="overflow-y:scroll"
             class="material striped"
             [rows]="team.players"
             [columns]="teamScoreColumns"
@@ -35,7 +34,8 @@
             [rowHeight]="'auto'"
             [selectionType]="'single'"
             [rowClass]="getRowClass"
-            (select)="viewPlayerProfile($event)">
+            (select)="viewPlayerProfile($event)"
+            >
         </ngx-datatable>
 
 </div>

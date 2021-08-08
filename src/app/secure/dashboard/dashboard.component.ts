@@ -9,12 +9,18 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import { ActivatedRoute, Router } from '@angular/router';
 // actionIDs associated with specific actions
-const RESPAWN  = 13;
-const MEDIC    = 11;
-const CAPTURE  = 2;
-const ASSIST   = 3;
-const BOMB_ARM = 8;
-const BOMB_DIF = 9;
+
+const CAPTURE   = 2;
+const ASSIST    = 3;
+
+const BOMB_ARM  = 8;
+const BOMB_DIF  = 9;
+
+const MEDIC_IN  = 11;
+const MEDIC_OUT = 12;
+const RESPAWN   = 13;
+
+const SURVIVAL  = 16;
 
 
 @Component({
@@ -36,7 +42,7 @@ export class DashboardComponent implements OnInit {
   isDoughnut: boolean = false;
   pageLvlError: boolean =false;
   colorScheme = {
-    domain: ['#A10A28', '#C7B42C', '#5AA454', '#CC5500', '#AAAAAA']
+    domain: ['#A10A28', '#C7B42C', '#5AA454', '#A0522D', '#CC5500', '#AAAAAA']
   };
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -64,15 +70,10 @@ export class DashboardComponent implements OnInit {
   isField;
 
   actionList;
-
   allActions;
-  totalCaptures = 0;
-  totalAssists = 0;
-  totalMedics = 0;
-  totalBombArm = 0;
-  totalBombDis = 0;
+
   viewForUser;
-  // gameHistData = [];
+
 
   constructor(
               private userSvc      : UserServiceService,
@@ -86,29 +87,29 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-   
+
     this.activatedRoute.queryParams.subscribe(
 
       data => {
           if(data.viewForUser) {
               //Need to check if game is active else we get console error.
               this.viewForUser = data.viewForUser;
-          }  
+          }
           combineLatest([this.secAPIsvc.getUser(this.tokenSvc.getToken(),this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
             this.isField = this.userSvc.isField;
             let userData;
             userData = userDataIn['user']
-    
+
             this.pageLvlError = userData ? false : true
-    
+
             if (!userData) {return}
-    
+
             this.isField = userData.fieldProfile ? true : false;
-    
+
             this.actionList = actions;
-    
+
             if (this.isField) {
-    
+
               this.setGameHistStats(userData);
               this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
               this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
@@ -116,9 +117,9 @@ export class DashboardComponent implements OnInit {
               this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
             }
             else {
-    
+
               this.setGameScoreStats(userData);
-    
+
               this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
               this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
               this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
@@ -128,7 +129,7 @@ export class DashboardComponent implements OnInit {
             this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
             this.currentVals.email = userData.email ? userData.email : 'E-mail';
             this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
-    
+
             this.currentVals.userID = userData.id;
             if(this.currentVals.imageID){
               this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
@@ -137,12 +138,12 @@ export class DashboardComponent implements OnInit {
                 }
               )
             }
-    
-    
-    
+
+
+
         })
       }
-    ) 
+    )
 
     this.breakpointObserver.observe([
       '(max-width: 768px)'
@@ -157,7 +158,7 @@ export class DashboardComponent implements OnInit {
           }
         });
 
-    
+
   }
 
   onSelect(data): void {
@@ -195,6 +196,8 @@ export class DashboardComponent implements OnInit {
                             "series":[]},
                            {"name"  :"Medic Events",
                             "series":[]},
+                           {"name"  :"Survivalist",
+                            "series":[]},
                            {"name"  :"Bombs Armed",
                             "series":[]},
                            {"name"  :"Bombs Diffused",
@@ -202,65 +205,88 @@ export class DashboardComponent implements OnInit {
 
     games = games.sort((a,b) => a.id - b.id);
 
-    for (let [index, game] of games.entries()) {
+    let totalMedics   = 0;
+    let totalCaptures = 0;
+    let totalAssists  = 0;
+    let totalBombArm  = 0;
+    let totalBombDis  = 0;
+    let totalSurvive  = 0;
+
+    games.forEach( game => {
 
         let medics   = 0;
         let captures = 0;
         let assists  = 0;
         let bombArm  = 0;
         let bombDis  = 0;
+        let survive  = 0;
 
         for (let action of game.actions) {
 
-          let points = this.actionList.find(ele => ele.id == action.actionID).points;
+          let points = action.points || this.actionList.find(ele => ele.id == action.actionID).points;
 
           switch (action.actionID) {
 
-            case MEDIC:
+            case MEDIC_IN:
             case RESPAWN:
-              medics ++ // += points;
-              this.totalMedics += points;
+              medics ++; // += points;
+              // totalMedics ++
+              totalMedics += points;
+              break;
+
+            case MEDIC_OUT:
+              totalMedics += points;
               break;
 
             case CAPTURE:
-              captures ++ // += points;
-              this.totalCaptures += points;
+              captures ++; // += points;
+              // totalCaptures ++;
+              totalCaptures += points;
               break;
 
             case ASSIST:
-              assists ++ // += points;
-              this.totalAssists += points;
+              assists ++; // += points;
+              // totalAssists ++;
+              totalAssists += points;
               break;
 
             case BOMB_ARM:
-              bombArm ++ // += points;
-              this.totalBombArm += points;
+              bombArm ++; // += points;
+              // totalBombArm ++;
+              totalBombArm += points;
               break;
 
             case BOMB_DIF:
               bombDis ++ // += points;
-              this.totalBombDis += points;
+              // totalBombDis ++;
+              totalBombDis += points;
               break;
+
+            case SURVIVAL:
+              survive ++;
+              totalSurvive += points;
 
             default:
               break;
           }
         }
 
-        let xVal = "Game #" + (index + 1) + " - " + new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
+        let xVal = "Game #" + game.id + " - " + new Date(game.actions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
         stackedAreaData[0].series.push({"value":captures, "name":xVal});
         stackedAreaData[1].series.push({"value":assists,  "name":xVal});
         stackedAreaData[2].series.push({"value":medics,   "name":xVal});
-        stackedAreaData[3].series.push({"value":bombArm,  "name":xVal});
-        stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
+        stackedAreaData[3].series.push({"value":survive,  "name":xVal});
+        stackedAreaData[4].series.push({"value":bombArm,  "name":xVal});
+        stackedAreaData[5].series.push({"value":bombDis,  "name":xVal});
 
-    }
-    this.pieData = [{name:"Captures",       value:this.totalCaptures},
-                    {name:"Assists",        value:this.totalAssists},
-                    {name:"Medics",         value:this.totalMedics},
-                    {name:"Bombs Armed",    value:this.totalBombArm},
-                    {name:"Bombs Diffused", value:this.totalBombDis}]
+    })
+    this.pieData = [{name:"Captures",       value:totalCaptures},
+                    {name:"Assists",        value:totalAssists},
+                    {name:"Medics",         value:totalMedics},
+                    {name:"Survival",       value:totalSurvive},
+                    {name:"Bombs Armed",    value:totalBombArm},
+                    {name:"Bombs Diffused", value:totalBombDis}]
 
     this.areaData = stackedAreaData;
   }
@@ -308,12 +334,21 @@ export class DashboardComponent implements OnInit {
                                     "series":[]},
                                    {"name"  :"Medic Events",
                                     "series":[]},
+                                   {"name"  :"Survivalist",
+                                    "series":[]},
                                    {"name"  :"Bombs Armed",
                                     "series":[]},
                                    {"name"  :"Bombs Diffused",
                                     "series":[]}];
 
-            for (let [index, game] of games.sort((a, b) => a.id - b.id).entries()) {
+            let totalMedics   = 0;
+            let totalCaptures = 0;
+            let totalAssists  = 0;
+            let totalBombArm  = 0;
+            let totalBombDis  = 0;
+            let totalSurvive  = 0;
+
+            for (let game of games.sort((a, b) => a.id - b.id)) {
 
                 if (!game?.gameActions?.length){
                     continue
@@ -324,36 +359,41 @@ export class DashboardComponent implements OnInit {
                 let assists  = 0;
                 let bombArm  = 0;
                 let bombDis  = 0;
+                let survive  = 0;
 
                 for (let action of game.gameActions){
 
                     switch (action.actionID) {
 
-                      case MEDIC:
+                      case MEDIC_IN:
                       case RESPAWN:
                         medics ++;
-                        this.totalMedics ++;
+                        totalMedics ++;
                         break;
 
                       case CAPTURE:
                         captures ++;
-                        this.totalCaptures ++;
+                        totalCaptures ++;
                         break;
 
                       case ASSIST:
                         assists ++;
-                        this.totalAssists ++;
+                        totalAssists ++;
                         break;
 
                       case BOMB_ARM:
                         bombArm ++;
-                        this.totalBombArm ++;
+                        totalBombArm ++;
                         break;
 
                       case BOMB_DIF:
                         bombDis ++;
-                        this.totalBombDis ++;
+                        totalBombDis ++;
                         break;
+
+                      case SURVIVAL:
+                        survive ++;
+                        totalSurvive ++;
 
                       default:
                         break;
@@ -365,24 +405,27 @@ export class DashboardComponent implements OnInit {
                 let pieData = [{name:"Captures",      value:captures},
                                {name:"Assists",       value:assists},
                                {name:"Medics",        value:medics},
+                               {name:"Survival",      value:survive},
                                {name:"Bombs Armed",   value:bombArm},
                                {name:"Bombs Diffused",value:bombDis}];
 
-                let xVal = "Game #" + (index + 1) + " - " + new Date(game.gameActions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
+                let xVal = "Game #" + game.id + " - " + new Date(game.gameActions.sort((a,b) => b.id - a.id)[0].creationDate).toDateString()
 
                 stackedAreaData[0].series.push({"value":captures, "name":xVal});
                 stackedAreaData[1].series.push({"value":assists,  "name":xVal});
                 stackedAreaData[2].series.push({"value":medics,   "name":xVal});
-                stackedAreaData[3].series.push({"value":bombArm,  "name":xVal});
-                stackedAreaData[4].series.push({"value":bombDis,  "name":xVal});
+                stackedAreaData[3].series.push({"value":survive,  "name":xVal});
+                stackedAreaData[4].series.push({"value":bombArm,  "name":xVal});
+                stackedAreaData[5].series.push({"value":bombDis,  "name":xVal});
             }
 
 
-            this.pieData = [{name:"Captures",      value:this.totalCaptures},
-                            {name:"Assists",       value:this.totalAssists},
-                            {name:"Medics",        value:this.totalMedics},
-                            {name:"Bombs Armed",   value:this.totalBombArm},
-                            {name:"Bombs Diffused",value:this.totalBombDis}];
+            this.pieData = [{name:"Captures",      value:totalCaptures},
+                            {name:"Assists",       value:totalAssists},
+                            {name:"Medics",        value:totalMedics},
+                            {name:"Survival",      value:totalSurvive},
+                            {name:"Bombs Armed",   value:totalBombArm},
+                            {name:"Bombs Diffused",value:totalBombDis}];
 
             this.areaData = stackedAreaData;
 

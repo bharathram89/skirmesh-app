@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserServiceService } from 'src/service/user-service.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { makeDeviceModals } from '../node.modal';
-import { TabsComponent } from '../tabs/tabs.component';
 import { SecureAPIService } from 'src/service/secure-api.service';
 
 @Component({
@@ -12,18 +11,16 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 })
 export class GameConfigComponent implements OnInit {
 
-    gameConfigs;
+    gameConfigs = <any>[];
 
-    @ViewChild('gameModeEdit') editModeTemplate;
-    @ViewChild(TabsComponent) tabsComponent;
-
-    gameModes = [];
+    activeConfig;
 
     constructor(
         private userSvc   : UserServiceService,
         private tokenSvc  : TokenStorageService,
         private secAPIsvc : SecureAPIService
     ) {}
+
 
     ngOnInit(): void {
 
@@ -39,104 +36,76 @@ export class GameConfigComponent implements OnInit {
                 savedConfig.teams.forEach(team => {
                     team.color = "#" + team.color;
                 })
-                this.gameModes.push({
 
-                    id:        savedConfig.id,
-                    name:      savedConfig.description,
-                    teams:     savedConfig.teams,
-                    nodeModes: makeDeviceModals(savedConfig.deviceMap),
-                    map:       savedConfig.mapID
-                });
+                savedConfig.devices = makeDeviceModals(savedConfig.deviceMap);
+
             });
 
         });
     }
 
-    onDeleteMode(gameMode) {
+
+    onDeleteMode(config) {
 
         let safe = confirm("!! WARNING !!\n\nDeleting this Game Configuration will DELETE ALL GAMES and SCORES using this configuration.\n\nAre you sure you want to DELETE it?");
 
         if (safe) {
 
-            this.secAPIsvc.deleteGameConfig(this.tokenSvc.getToken(), gameMode.id).subscribe(data => {
-                this.gameModes = this.gameModes.filter(function (obj) {
-                    return obj.id !== gameMode.id;
+            this.secAPIsvc.deleteGameConfig(this.tokenSvc.getToken(), config.id).subscribe(
+                resp => {
+                    this.gameConfigs = this.gameConfigs.filter(gc => gc.id != config.id);
                 });
-            })
         }
     }
 
-    onEditMode(gameMode) {
 
-        this.tabsComponent.openTab(
-              gameMode.name,
-              this.editModeTemplate,
-              gameMode,
-              true
-        );
+    onEditMode(config) {
+        this.activeConfig = config;
     }
+
+
+    deSelectConfig() {
+        this.activeConfig = null;
+    }
+
 
     onAddMode() {
-        this.tabsComponent.openTab('New Game Mode', this.editModeTemplate, {}, true);
-    }
 
-    onGameModeFormSubmit(dataModel) {
-
-        if (dataModel.id) {
-            let teams =[];
-            let gameConfig= this.gameConfigs.find(ele=>ele.id==dataModel.id);
-
-
-            dataModel.teams.forEach(element => {
-
-                let temp_ele = gameConfig.teams.find(ele=>ele.id == element.id);
-                if (temp_ele) {element.id = temp_ele.id}
-
-            });
-
-            let apiData = {
-                id             : dataModel.id,
-                mapID          : dataModel.map,
-                fieldProfileID : this.userSvc.getFieldProfileID(),
-                description    : dataModel.name,
-                deviceMap      : dataModel.nodeModes,
-                teams          : dataModel.teams
-            }
-
-            this.secAPIsvc.modifyGameConfig(this.tokenSvc.getToken(), apiData).subscribe(
-                data => {})
-            this.gameModes = this.gameModes.map(gameMode => {
-
-                if (gameMode.id === dataModel.id) {
-                    return dataModel;
-                } else {
-                    return gameMode;
-                }
-            });
+        let newConfig = {
+            description: "",
+            deviceMap:  "[]",
+            teams: [{name:"Team Alpha", color:"#FF0000", id:null},
+                    {name:"Team Bravo", color:"#0000FF", id:null}],
+            devices: []
         }
 
+        this.activeConfig = newConfig;
+
+    }
+
+
+    findMapName(mapID){
+
+        let map = this.userSvc.getFieldProfile().maps.find(map => map.id == mapID)
+        return map?.name
+    }
+
+
+    updateConfig(config) {
+
+        config.teams.forEach(team => {
+            team.color = "#" + team.color;
+        })
+
+        config.devices = makeDeviceModals(config.deviceMap);
+
+        let indx = this.gameConfigs.findIndex(gc => gc.id == config.id);
+        if (indx != -1) {
+            this.gameConfigs[indx] = config;
+        }
         else {
-
-            let apiData = {
-                mapID          : dataModel.map,
-                fieldProfileID : this.userSvc.getFieldProfileID(),
-                description    : dataModel.name,
-                deviceMap      : dataModel.nodeModes,
-                teams          : dataModel.teams
-            }
-            // dataModel.map = this.userSvc.findMapID(dataModel.map)
-            let maxModelId =   Math.max.apply(Math, this.gameModes.map(function(o) { return o.id; }))
-
-            dataModel.id  = maxModelId + 1; // WHAT IS THIS FOR?
-
-            this.gameModes.push(dataModel);
-            this.secAPIsvc.saveGameConfigs(this.tokenSvc.getToken(), apiData).subscribe(data => {
-
-            })
+            this.gameConfigs.push(config);
         }
-        // close the tab
-        this.tabsComponent.closeActiveTab();
     }
-
 
 }

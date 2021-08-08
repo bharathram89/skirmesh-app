@@ -7,14 +7,13 @@ import { GameService } from 'src/service/game.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { ScoreService } from 'src/service/score.service';
-import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 
 @Component({
-    selector: 'app-mydevices',
-    templateUrl: './mydevices.component.html',
-    styleUrls: ['./mydevices.component.scss']
+    selector: 'app-liveGames',
+    templateUrl: './liveGames.component.html',
+    styleUrls: ['./liveGames.component.scss']
 })
-export class MydevicesComponent implements OnInit {
+export class LiveGamesComponent implements OnInit {
 
     @ViewChild(MapComponent) childMap: MapComponent;
     activeGamesByConfig;
@@ -41,7 +40,6 @@ export class MydevicesComponent implements OnInit {
         private gameSvc: GameService,
         private nonSecAPIsvc: NonSecureAPIService,
         private scoreSvc: ScoreService,
-        private analyticSvc: GoogleAnalyticsService,
         private router: Router,
         private activatedRoute: ActivatedRoute
     ) { }
@@ -162,17 +160,6 @@ export class MydevicesComponent implements OnInit {
     changeGameTab(tabToChangeTo) {
 
         this.currentTab = tabToChangeTo;
-        // this.router.navigate([], {
-        //     queryParams: {
-        //         currentTab: tabToChangeTo
-        //     },
-        //     queryParamsHandling: 'merge',
-        //   });
-        document.getElementById("map").classList.remove('active');
-        // document.getElementById("teamScore").classList.remove('active');
-        document.getElementById("eventsTracker").classList.remove('active');
-
-        document.getElementById(tabToChangeTo).classList.add('active');
     }
 
 
@@ -186,7 +173,6 @@ export class MydevicesComponent implements OnInit {
             }
         });
 
-        this.analyticSvc.viewLiveGame('view_live_game', 'engagement', 'view game ' + gameID)
 
         combineLatest([this.nonSecAPIsvc.getExtendedGameData(gameID),
         this.nonSecAPIsvc.getGameStats(gameID)]).subscribe(

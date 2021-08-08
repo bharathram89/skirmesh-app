@@ -1,66 +1,79 @@
-<form [formGroup]="gameModeForm" (ngSubmit)="onNewGameModeFormSubmit()">
+<form [formGroup]="gameModeForm" (ngSubmit)="onFormSubmit()">
 
   <input type="hidden" formControlName="id">
 
+  <div class="d-grid gap-2 col-6 mx-auto my-2">
+  <button type="submit" [disabled]="gameModeForm.invalid" class="btn btn-primary btn-lg btn-block">Save</button>
+  <div *ngIf="saveSuccess" class="alert alert-success my-2" role="alert" (click)="saveSuccess = !saveSuccess">
+    Game Configuration Saved!
+  </div>
+  </div>
+
   <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" class="form-control" id="name" placeholder="Game Mode Name" formControlName="name">
+    <label for="description">Name</label>
+    <input type="text" class="form-control" placeholder="Game Mode Name" formControlName="description">
   </div>
 
   <div class="form-group">
     <label for="map">Map</label>
-    <select formControlName="map" class="form-control" (change)="changeMap($event)">
+    <select formControlName="mapID" class="form-control" (change)="changeMap()">
       <option disabled selected value> -- Select your Map -- </option>
-      <option [value]=map.id (name)=map.id *ngFor="let map of maps">{{map.name}}</option>
+      <option [value]=map.id *ngFor="let map of maps">{{map.name}}</option>
     </select>
   </div>
 
 
 <div class="row">
 
-      <table class="col-md-5" formArrayName="teams">
+    <div class="col-md-5 table" formArrayName="teams">
 
-        <tr>
-          <th colspan="2">Assemble Teams:<button type="button" (click)="addTeam()" class="btn btn-primary keepRight">
-              Add More</button></th>
-        </tr>
+    <thead>
+      <th scope="col"> Assemble Teams: </th>
 
-        <div class="table">
+      <th *ngIf="teams.length > 2" scope="col"></th>
 
-          <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index" [formGroupName]="i">
+      <th scope="col">
+      <button type="button" (click)="addTeam()" class="btn btn-primary">
+      Add More</button>
+      </th>
 
-            <td>
-              <input (change)="onChangeOfTeamList()" type="text" formControlName="name" class="form-control" placeholder="Team Name">
-            </td>
+    </thead>
 
-            <td>
-              <input type="color" formControlName="color">
-            </td>
 
-            <td *ngIf="teams.length > 2">
-              <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
-            </td>
+    <tbody>
+    <tr *ngFor="let team of gameModeForm.get('teams')['controls']; let i=index"
+        [formGroupName]="i">
 
-          </tr>
+    <td>
+      <input type="text" formControlName="name" class="form-control" placeholder="Team Name">
+    </td>
 
-        </div>
+    <td>
+      <input type="color" formControlName="color">
+    </td>
 
-      </table>
+    <td *ngIf="teams.length > 2">
+      <button  (click)="removeTeam(i)" class="btn btn-danger">Remove</button>
+    </td>
 
-      <div *ngIf="gameModeForm.get('map').value" class="map-container col-md-7">
-        <app-map [mapID]="gameModeForm.get('map').value"></app-map>
-      </div>
+    </tr>
+    </tbody>
+
+    </div>
+
+    <app-map *ngIf="gameModeForm.get('mapID').value" class="col-md-7 py-2" [mapID]="gameModeForm.get('mapID').value"></app-map>
 
 </div>
 
-
-  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg btn-block">Save Configuration</button>
-
-  <div *ngIf="isMapSelected">
-    <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+  <div *ngIf="gameModeForm.get('mapID').value">
+    <app-device-list  [config]="deviceListConfigs" (nodeConfigs)="syncNodeConfigs($event)"></app-device-list>
   </div>
 
-  <button type="submit" [disabled]="!isMapSelected" class="btn btn-primary btn-lg btn-block">Save Configuration</button>
-
+  <div class="d-grid gap-2 col-6 mx-auto my-2">
+  <button type="submit" [disabled]="gameModeForm.invalid" class="btn btn-primary btn-lg btn-block">Save</button>
+  <div *ngIf="saveSuccess" class="alert alert-success" role="alert" (click)="saveSuccess = !saveSuccess">
+    Game Configuration Saved!
+  </div>
+  </div>
 
 </form>

@@ -1,139 +1,84 @@
 <div class="container mb-1">
-
   <div class="card mb-3">
-
-    <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase"> Players </span>
-
+    <div class="p-4 text-center text-black text-lg bg-light rounded-top">
+      <span class="fs-1 text-uppercase"> Players </span>
+      <br>
+      <span class="fs-3"> Click each icon to learn more! </span>
       <div class="card-body">
         <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
-          <div class="step ">
-            <div class="step-icon-wrap">
+          <div class="step">
+            <div class="step-icon-wrap" (click)="changeInfo('register')">
               <div class="step-icon"><i class="fa fa-user-plus"></i></div>
             </div>
-            <h4 class="step-title text-white"> Register </h4>
+            <h4 class="step-title text-black"> Register </h4>
           </div>
-          <div class="step ">
-            <div class="step-icon-wrap">
+          <div class="step">
+            <div class="step-icon-wrap" (click)="changeInfo('wristband')">
               <div class="step-icon"><i class="fa fa-thumbs-o-up"></i></div>
             </div>
-            <h4 class="step-title text-white"> Purchase a wristband </h4>
+            <h4 class="step-title text-black"> Purchase a wristband </h4>
           </div>
-          <div class="step ">
-            <div class="step-icon-wrap">
+          <div class="step">
+            <div class="step-icon-wrap" (click)="changeInfo('play')">
               <div class="step-icon"><i class="fa fa-connectdevelop fa-spin fa-fw"></i></div>
             </div>
-            <h4 class="step-title text-white"> Get connected </h4>
+            <h4 class="step-title text-black"> Play </h4>
           </div>
           <div class="step">
-            <div class="step-icon-wrap">
+            <div class="step-icon-wrap" (click)="changeInfo('game')">
               <div class="step-icon"><i class="fa fa-rebel "></i></div>
             </div>
-            <h4 class="step-title text-white"> Play </h4>
+            <h4 class="step-title text-black"> View Game </h4>
           </div>
           <div class="step">
-            <div class="step-icon-wrap">
+            <div class="step-icon-wrap" (click)="changeInfo('compete')">
               <div class="step-icon"><i class="fa fa-share"></i></div>
             </div>
-            <h4 class="step-title text-white"> Share </h4>
+            <h4 class="step-title text-black"> Compete </h4>
+          </div>
+        </div>
+        <div>
+
+          <div *ngIf="isOpen" class="bg-dark" (click)="isOpen = !isOpen">
+            <p class="text-white" [innerHtml]="playerContent"></p>
           </div>
         </div>
       </div>
     </div>
-
     <div class="row center-cust">
-      <!-- <div class=" col-12">
-        <div class="card-header no-border">
-          <h5 class="card-title">Players</h5>
-        </div> -->
-        <!-- <div class="card-body pt-0">
-
-          <ol type="1">
-            <li> Register a profile. </li>
-            <li> Buy an approved wristband. </li>
-            <li> Connect your wristband. </li>
-            <li> Play at equipped fields. </li>
-            <li> View and share stats. </li>
-          </ol>
-
-        </div> -->
-      </div>
     </div>
-    <!-- <div class="d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-sm-between align-items-center">
-    <div class="custom-control custom-checkbox mr-3">
-      <input class="custom-control-input" type="checkbox" id="notify_me" checked="">
-      <label class="custom-control-label" for="notify_me">Notify me when order is delivered</label>
-    </div>
-    <div class="text-left text-sm-right"><a class="btn btn-outline-primary btn-rounded btn-sm" href="orderDetails" data-toggle="modal" data-target="#orderDetails">View Order Details</a></div>
-  </div> -->
-
-
-
+  </div>
   <div class="card mb-1">
-    <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase"> Fields </span>
+    <div class="p-4 text-center text-black text-lg bg-light rounded-top"><span class="text-uppercase"> Fields </span>
 
       <div class="card-body">
         <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
-          <div class="step  ">
+          <div class="step">
             <div class="step-icon-wrap">
               <div class="step-icon"><i class="fa fa-wrench"></i></div>
             </div>
-            <h4 class="step-title text-white"> Get setup </h4>
+            <h4 class="step-title text-black"> Get setup </h4>
           </div>
-          <div class="step  ">
+          <div class="step">
             <div class="step-icon-wrap">
               <div class="step-icon"><i class="fa fa-cogs"></i></div>
             </div>
-            <h4 class="step-title text-white"> Configure Games </h4>
+            <h4 class="step-title text-black"> Configure Games </h4>
           </div>
-          <div class="step  ">
+          <div class="step">
             <div class="step-icon-wrap">
               <div class="step-icon"><i class="fa fa-rebel"></i></div>
             </div>
-            <h4 class="step-title text-white"> Play </h4>
+            <h4 class="step-title text-black"> Play </h4>
           </div>
           <div class="step">
             <div class="step-icon-wrap">
               <div class="step-icon"><i class="fa fa-bullhorn"></i></div>
             </div>
-            <h4 class="step-title text-white"> Promote </h4>
+            <h4 class="step-title text-black"> Promote </h4>
           </div>
-          <!-- <div class="step">
-            <div class="step-icon-wrap">
-              <div class="step-icon"><i class="fa fa-share"></i></div>
-            </div>
-            <h4 class="step-title text-white"> Share </h4>
-          </div> -->
         </div>
       </div>
     </div>
-    <!-- <div class="row center-cust">
-      <div class=" col-12">
-        <div class="card-header no-border">
-          <h5 class="card-title">Players</h5>
-        </div>
-        <div class="card-body pt-0">
-
-          <ol type="1">
-            <li> Contact us for Setup. </li>
-            <li> Create Game Configurations. </li>
-            <li> Host Exciting Games. </li>
-            <li> Promote your Field. </li>
-            <li> Share. </li>
-          </ol>
-
-        </div>
-      </div>
-    </div> -->
-    <!-- <div class="d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-sm-between align-items-center">
-    <div class="custom-control custom-checkbox mr-3">
-      <input class="custom-control-input" type="checkbox" id="notify_me" checked="">
-      <label class="custom-control-label" for="notify_me">Notify me when order is delivered</label>
-    </div>
-    <div class="text-left text-sm-right"><a class="btn btn-outline-primary btn-rounded btn-sm" href="orderDetails" data-toggle="modal" data-target="#orderDetails">View Order Details</a></div>
   </div>
-  </div> -->
-  </div>
-
-
-
 </div>

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { SocialAuthService } from "angularx-social-login";
 import { FacebookLoginProvider, GoogleLoginProvider } from "angularx-social-login";
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 
 
 @Component({
@@ -16,12 +18,14 @@ export class SignUpComponent implements OnInit {
   addUser: FormGroup;
   socailPass: FormGroup;
 
-  fields   = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
-  fbFields = { pass:'', confirmPass:''}
+  fields = { fname: '', lname: '', email: '', password: '', callSign: '', confirmPassword: "", fieldName: "" }
+  fbFields = { pass: '', confirmPass: '' }
 
   constructor(
     private socialAuthService: SocialAuthService,
-    private nonSecAPIsvc : NonSecureAPIService
+    private nonSecAPIsvc: NonSecureAPIService,
+    private tokenStorage: TokenStorageService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +37,7 @@ export class SignUpComponent implements OnInit {
       "confirmPass": new FormControl(this.fbFields.confirmPass, [
         Validators.required
       ])
-    },{ validators: this.checkFBPasswords.bind(this) })
+    }, { validators: this.checkFBPasswords.bind(this) })
     this.addUser = new FormGroup({
 
       "fname": new FormControl(this.fields.fname, [
@@ -59,7 +63,7 @@ export class SignUpComponent implements OnInit {
       "fieldName": new FormControl(this.fields.fieldName, [
         Validators.required
       ]),
-    },{ validators: this.checkPasswords.bind(this) })
+    }, { validators: this.checkPasswords.bind(this) })
     this.socialAuthService.authState.subscribe((user) => {
       // this.socialUser = user;
       // this.isLoggedin = (user != null);
@@ -67,14 +71,14 @@ export class SignUpComponent implements OnInit {
     });
     this.addUser.controls['fieldName'].disable();//needed in ngonInit to disable fieldName
   }
-  checkPasswords(group: FormGroup){
+  checkPasswords(group: FormGroup) {
     const password = group.get('password').value;
     const confirmPassword = group.get('confirmPassword').value;
 
     return password === confirmPassword ? null : group.controls['confirmPassword'].setErrors({ notSame: true });
 
   }
-  checkFBPasswords(group: FormGroup){
+  checkFBPasswords(group: FormGroup) {
     const password = group.get('pass').value;
     const confirmPassword = group.get('confirmPass').value;
 
@@ -125,85 +129,110 @@ export class SignUpComponent implements OnInit {
     playerSignUp.classList.add("active");
   }
 
-    loginWithFacebook(): void {
+  loginWithFacebook(): void {
 
-        this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData => {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(fbData => {
 
-            let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
+      let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
 
-            let socialData = {
-                "facebookID" : fbData.id,
-                // "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
-                "callSign"   : fbData.name + this.getRandomInt(),
-                "firstName"  : fbData.firstName,
-                "lastName"   : fbData.lastName,
-                "password"   : fbData.name + this.getRandomInt(),
-                "email"      : fbData.email,
-                "type"       : type
-            }
+      let socialData = {
+        "facebookID": fbData.id,
+        // "facebook"   : JSON.stringify({"ID":fbData.id,"provider":"facebook","skirmesh":"rocks"}),
+        "callSign": fbData.name + this.getRandomInt(),
+        "firstName": fbData.firstName,
+        "lastName": fbData.lastName,
+        "password": fbData.name + this.getRandomInt(),
+        "email": fbData.email,
+        "type": type
+      }
+      let logindata = {
+        "facebookID": fbData.id, 
+        "email": fbData.email
+      }
+      this.submitSocial(socialData,logindata);
+    });
+  }
 
-            this.submitSocial(socialData);
-        });
-    }
+  signInWithGoogle(): void {
 
-    signInWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData => {
 
-        this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(googleData => {
+      let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
 
-            let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
-
-            let socialData = {
-                "googleID"  : googleData.id,
-                // "google"    : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
-                "callSign"  : googleData.name + this.getRandomInt(),
-                "firstName" : googleData.firstName,
-                "lastName"  : googleData.lastName,
-                "password"  : googleData.name + this.getRandomInt(),
-                "email"     : googleData.email,
-                "type"      : type
-            }
-
-            this.submitSocial(socialData);
-        });
-    }
+      let socialData = {
+        "googleID": googleData.id,
+        // "google"    : JSON.stringify({"ID":googleData.id,"provider":"google","skirmesh":"rocks"}),
+        "callSign": googleData.name + this.getRandomInt(),
+        "firstName": googleData.firstName,
+        "lastName": googleData.lastName,
+        "password": googleData.name + this.getRandomInt(),
+        "email": googleData.email,
+        "type": type
+      }
+      let logindata = {
+        "googleID": googleData.id, 
+        "email": googleData.email
+      }
+      this.submitSocial(socialData,logindata);
+    });
+  }
 
 
   getRandomInt() {
 
-      return Math.floor(Math.random() * 100000)
+    return Math.floor(Math.random() * 100000)
   }
 
 
   onSubmit() {
     let type = document.getElementById('fieldSignUp').classList.contains('active') ? 'field' : 'player';
     let data = {
-      "callSign": type=='field'?this.addUser.value.fieldName:this.addUser.value.callSign,
+      "callSign": type == 'field' ? this.addUser.value.fieldName : this.addUser.value.callSign,
       "firstName": this.addUser.value.fname,
       "lastName": this.addUser.value.lname,
       "password": this.addUser.value.password,
       "email": this.addUser.value.email,
       "type": type
     }
-    this.nonSecAPIsvc.createUser(data).subscribe(data=>{
-      document.getElementById('userCreatedMessage').classList.toggle('d-none')
+    this.nonSecAPIsvc.createUser(data).subscribe(createUserRsp => {
+      let logindata = {
+        "callSign": data.callSign,
+        "password": data.password
+      }
+      this.nonSecAPIsvc.userLogin(logindata).subscribe(
+        respData => { 
+          this.tokenStorage.saveToken(respData['token'])
+          this.router.navigate(['/secure/dashboard']);
+        },
+        err => {
+          document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
+        }
+      )
     },
-    err=>{
-      document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
-      console.log(err,"resp")
-    })
+      err => {
+        document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
+        console.log(err, "resp")
+      })
   }
 
 
-  submitSocial(socialData){
+  submitSocial(socialData,logindata) {
 
-    this.nonSecAPIsvc.createUser(socialData).subscribe(data => {
-      document.getElementById('userCreatedMessage').classList.toggle('d-none')
-      console.log(data,'social user created')
+    this.nonSecAPIsvc.createUser(socialData).subscribe(data => { 
+      this.nonSecAPIsvc.userLogin(logindata).subscribe(
+        respData => { 
+          this.tokenStorage.saveToken(respData['token'])
+          this.router.navigate(['/secure/dashboard']);
+        },
+        err => {
+          document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
+        }
+      ) 
     },
-    err => {
-      document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
-      console.log(err,"resp")
-    })
+      err => {
+        document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
+        console.log(err, "resp")
+      })
   }
 
 }

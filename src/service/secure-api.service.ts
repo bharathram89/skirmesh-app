@@ -63,7 +63,7 @@ export class SecureAPIService {
       return this.http.get(route, options)
   }
 
-  saveGameConfigs(token, data) {
+  saveGameConfig(token, data) {
 
       let route = this.BASE + this.SEC + this.GCFG
 
@@ -182,13 +182,13 @@ export class SecureAPIService {
       return this.http.get(route + 'gamesBy', options)
   }
 
-  getActiveGamesByFieldProfile(token, fieldProfileID) {
+  getActiveGamesByMap(token, mapID) {
 
       let route = this.BASE + this.SEC;
 
       const options = { params  : new HttpParams()
                                       .set("token", token)
-                                      .set("fieldProfileID", fieldProfileID)}
+                                      .set("mapID", mapID)}
 
       return this.http.get(route + 'activeGamesBy', options)
   }
@@ -267,6 +267,17 @@ export class SecureAPIService {
                         headers : this.headers }
 
       return this.http.put(route + 'pair_rfid', data, options)
+  }
+
+  deleteUid(token, rfidID) {
+
+      let route = this.BASE + this.SEC;
+
+      const options = { params  : new HttpParams()
+                                        .set("token", token)
+                                        .set("rfidID", rfidID)}
+
+      return this.http.delete(route + 'pair_rfid', options)
   }
 
   updateFieldProfile(token, data) {

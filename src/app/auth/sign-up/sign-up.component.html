@@ -19,28 +19,21 @@
 					<br>
 
 
-					<div id="social_media" class="social_icon">
-						<!-- <div class="top-50 start-50"> -->
-						<div class="social-button-container">
-							<!-- <div class="top-50 start-50"> -->
+					<div id="social_media" align="center">
 
-							<a (click)="loginWithFacebook()" class="btn btn-md btn-social btn-facebook">
+							<a (click)="loginWithFacebook()" class="btn btn-md btn-social btn-facebook w-75 my-1">
 								<i class="fa fa-facebook fa-fw"> </i> Sign up with Facebook
 							</a>
 							<br/>
-							<a (click)="signInWithGoogle()" class="btn btn-md btn-social btn-google">
+							<a (click)="signInWithGoogle()" class="btn btn-md btn-social btn-google w-75 my-1">
 								<img src="https://img.icons8.com/color/64/000000/google-logo.png"> Sign up with Google</a>
-						</div>
-						<!-- <div class="col-xs-4">
-							<a href="#" class="btn btn-lg btn-block social_icon">
-								<i class="fa fa-twitter"></i>
-							</a>
-						</div> -->
 					</div>
 
 
-					<div class="or">
-						<span>or signup oldschool</span>
+					<div class="row">
+						<div class="col"><hr></div>
+						<div class="col-auto">or sign-up oldschool</div>
+						<div class="col"><hr></div>
 					</div>
 
 
@@ -147,7 +140,7 @@
 						<div class="actions clearfix">
 
 							<button [disabled]="addUser.invalid" (click)="onSubmit()" type="submit"
-								class="btn btn-social cust_skir_signup">
+								class="btn btn-social cust_skir_signup w-75 my-1">
 								Signup
 								<i class="fa fa-arrow-right" aria-hidden="true"></i>
 							</button>

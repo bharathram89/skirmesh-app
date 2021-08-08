@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 
 @Component({
   selector: 'app-field-info',
@@ -8,10 +7,9 @@ import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 })
 export class FieldInfoComponent implements OnInit {
 
-  constructor(private analyticSvc:GoogleAnalyticsService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.analyticSvc.pageView('field-info','non-secure','non-secure/field-info')
   }
   tab3LearnMore(){
     var dots = document.getElementById("dots-tab3");

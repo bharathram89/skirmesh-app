@@ -1,15 +1,6 @@
 
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
 
-.social-button-container {
-    width: 100%;
-    text-align: center;
-}
-
-.btn {
-    width: 100%;
-    margin: 0.5rem 0;
-}
 
 .btn-facebook {
     color: #ffffff !important;
@@ -62,9 +53,7 @@
   color: #ffffff;
 }
 
-.social_icon{
-  justify-content: center;
-}
+
 .custom_skirmesh{
     background-image: url('../../../assets/images/soldierB.jpg');
     min-height: 500px;
@@ -145,62 +134,3 @@
     color: #8796af;
     text-align: center;
 }
-
-/*************** 13 B. OR | Line between two blocks ***************/
-.or {
-  position: relative;
-  text-align: center;
-  margin-bottom: 20px; }
-  .or::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 15%;
-    width: 70%;
-    height: 1px;
-    background-color: #e6ecf3; }
-  .or span {
-    position: relative;
-    background-color: #e3d1b3;
-    padding: 0 10px;
-    z-index: 10; }
-
-    /*************** 17 C. Buttons ***************/
-.btn {
-
-max-width: 75%;
-justify-content: center;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  border: 0;
-  padding: .375rem 1rem; }
-  .btn .icon {
-    font-size: 1.4rem;
-    vertical-align: middle;
-    margin-top: -4px;
-    display: inline-block; }
-  .btn.focus, .btn:focus {
-    color: #ffffff; }
-
-.btn-sm {
-  padding: .25rem .75rem; }
-  .btn-sm .icon {
-    font-size: 1rem;
-    vertical-align: middle;
-    margin-top: -2px;
-    display: inline-block; }
-
-.btn-rounded {
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  border-radius: 50px; }
-
-.btn-primary {
-  background: #223b04;//#786546-223b04-182b02
-  color: #ffffff; }
-  .btn-primary:hover {
-    background: #438bec;
-    color: #ffffff; }
-  .btn-primary:focus {
-    box-shadow: 0 0 0 3px #fcfdff; }

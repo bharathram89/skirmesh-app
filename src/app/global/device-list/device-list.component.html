@@ -1,231 +1,243 @@
-<div class="" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog">
-    <div class="" role="document">
-        <div class="modal-content">
 
-            <div *ngIf="mode == 'create'" class="modal-header">
-                <h5  class="modal-title" id="exampleModalLabel">
-                    Configure nodes for this game mode.
-                </h5>
+<div *ngIf="mode == 'create'" class="modal-header">
+    <h5  class="modal-title">
+        Configure nodes for this game mode.
+    </h5>
+</div>
+
+<div *ngIf="deviceUpdateFailed" class="alert alert-danger alert-dismissible fade show my-2" role="alert">
+  <strong>DEVICE UPDATE FAILED! Verify your internet connection!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="deviceUpdateFailed = !deviceUpdateFailed">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-content mb-2">
+
+    <div class="row px-0 py-2 mx-0 justify-content-center">
+
+        <div *ngFor="let device of devices; let i = index" class="card user-card">
+
+            <div class="card-header" align="center">
+
+                <div
+                    (click)="updateIncludeDevice(device)"
+                    class="btn btn-sm w-50 mb-2 p-0"
+                    [class.btn-danger]="!device.saveToConfigs"
+                    [class.disabled]="!device.saveToConfigs"
+                    [class.btn-success]="device.saveToConfigs"
+                    [class.btn-active]="device.saveToConfigs"
+                    > {{ device.saveToConfigs ? 'ENABLED' : 'DISABLED' }}
+                </div>
+
+                <div>
+                    <h6>{{device?.location?.name}}
+                        <select class="form-control"
+                            (change)="locationSelected($event,device)"
+                            (click)="saveOldVal(device)"
+                            [(ngModel)]="device.location"
+                            [disabled]="!device.saveToConfigs"
+                            >
+                            <option value="" selected> -- Select Location -- </option>
+                            <option *ngFor="let location of updatedLocationList ; let i = index"
+                                [ngValue]=location.id
+                                [disabled]="!location.enabled">
+                                {{location.name}}
+                            </option>
+                        </select>
+                    </h6>
+                    <h9>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
+                    </h9>
+
+                    <br>
+                </div>
+
             </div>
 
-            <div class="modal-body">
+            <div class="card-body" *ngIf="device.saveToConfigs">
 
-                        <div class="center-cust row px-0">
 
-                            <div *ngFor="let device of devices; let i = index" class="card user-card">
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableQuery(device)" type="checkbox"
+                            class="custom-control-input" [id]="'querySwitch-' + i"
+                            [disabled]="device.queryPlayer.enabled"
+                            [checked]="device.queryPlayer.enabled">
+                        <label class="custom-control-label" [for]="'querySwitch-' + i">Player Query</label>
+                    </div>
+                </div>
 
-                                <div class="card-header">
+                <div *ngIf="mode !== 'create'" class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableRegister(device)" type="checkbox"
+                            class="custom-control-input" [id]="'registerSwitch-' + i"
+                            [disabled]="device.registerPlayer.enabled || !teamsAvaliable"
+                            [checked]="device.registerPlayer.enabled">
+                        <label class="custom-control-label" [for]="'registerSwitch-' + i">Register Team</label>
+                    </div>
+                    <div *ngIf="device.registerPlayer.enabled">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="armTime">Team</label>
+                                <select class="form-control"
+                                        (change)="teamSelected($event, device)"
+                                        [(ngModel)]="device.registerPlayer.teamID">
+                                    <option disabled hidden>Select Team</option>
+                                    <option [value]=team.id
+                                            [disabled]=!team.id
+                                            *ngFor="let team of teamsAvaliable; let t = index">
+                                            {{team?.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                    <div>
-                                        <h6>{{device?.location?.name}}
-                                            <select class="form-control"
-                                                (change)="locationSelected($event,device)"
-                                                (click)="saveOldVal(device)"
-                                                [(ngModel)]="device.location"
-                                                >
-                                                <option value="" selected> -- Select Location -- </option>
-                                                <option *ngFor="let location of updatedLocationList ; let i = index"
-                                                    [ngValue]=location.id
-                                                    [disabled]="!location.enabled">
-                                                    {{location.name}}
-                                                </option>
-                                            </select>
-                                        </h6>
-                                        <h9>Address: {{device.address.slice(12,14)}} {{device.address.slice(14,16)}}
-                                        </h9>
-                                        <br>
+
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableMedic(device)" type="checkbox"
+                            class="custom-control-input" [id]="'medicSwitch-' + i"
+                            [disabled]="device.medic.enabled"
+                            [checked]="device.medic.enabled">
+                        <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
+                            Station</label>
+                    </div>
+                    <div *ngIf="device.medic.enabled">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="medicTime">Time to Medic</label>
+                                <input class="form-control-range" type="range" min="0"
+                                max="18" [value]="getMedIndex(device.medic.medTime)" step="1"
+                                (change)="medicTime(device,$event.target.value, true)"
+                                (input)="medicTime(device, $event.target.value)">
+                                {{convertTime(device.medic.medTime)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableBomb(device)" type="checkbox"
+                            class="custom-control-input" [id]="'bombSwitch-' + i"
+                            [disabled]="device.bomb.enabled"
+                            [checked]="device.bomb.enabled">
+                        <label class="custom-control-label"
+                            [for]="'bombSwitch-' + i">Bomb/IED</label>
+                    </div>
+                    <div *ngIf="device.bomb.enabled">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="armTime">Arm Time</label>
+                                <input class="form-control-range" type="range" min="0"
+                                    max="11" [value]="getTimeIndex(device.bomb.arm_time)" step="1"
+                                    (change)="armTime(device,$event.target.value, true)"
+                                    (input)="armTime(device,$event.target.value)">
+                                {{convertTime(device.bomb.arm_time)}}
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="blastTime">Fuse Timer</label>
+                                <input class="form-control-range" type="range"
+                                    min="0" max="32" [value]="getTimeIndex(device.bomb.bomb_time)"
+                                    step="1"
+                                    (change)="bombTime(device,$event.target.value, true)"
+                                    (input)="bombTime(device,$event.target.value)">
+                                {{convertTime(device.bomb.bomb_time)}}
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="difuseTime">Diffuse Time</label>
+                                <input class="form-control-range" type="range"
+                                    min="0" max="11" [value]="getTimeIndex(device.bomb.diff_time)"
+                                    step="1"
+                                    (change)="difuseTime(device,$event.target.value, true)"
+                                    (input)="difuseTime(device,$event.target.value)">
+                                {{convertTime(device.bomb.diff_time)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input (click)="enableCapture(device)" type="checkbox"
+                            class="custom-control-input" [id]="'captureSwitch-' + i"
+                            [disabled]="device.capture.enabled"
+                            [checked]="device.capture.enabled">
+                        <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
+                            Point</label>
+                    </div>
+
+                    <div *ngIf="device.capture.enabled">
+                        <div class="card card-body">
+
+                            <div class="form-group">
+                                <label for="captime">Stabilization Time</label>
+                                <input class="form-control-range" type="range" min="0"
+                                    max="32" [value]="getTimeIndex(device.capture.cap_time)"
+                                    step="1"
+                                    (change)="capTime(device,$event.target.value, true)"
+                                    (input)="capTime(device,$event.target.value)">
+                                {{convertTime(device.capture.cap_time)}}
+                            </div>
+                            <hr>
+
+                            <div class="form-group">
+                                <label for="capasst">Capture Assist</label>
+                                <input class="form-control-range" type="range" min="0"
+                                    max="8" [value]="getPercIndex(device.capture.cap_asst)" step="1"
+                                    (change)="capasst(device,$event.target.value, true)"
+                                    (input)="capasst(device,$event.target.value)">
+                                {{convertPerc(device.capture.cap_asst)}} %
+                            </div>
+                            <hr>
+
+                            <div class="form-group">
+                                <label for="pointScale">Point Scale</label>
+                                <input class="form-control-range" type="range"
+                                    min="0" max="11"
+                                    [value]="getScaleIndex(device.capture.point_scale)" step="1"
+                                    (change)="pointScale(device,$event.target.value, true)"
+                                    (input)="pointScale(device,$event.target.value)">
+                                {{convertPointScale(device.capture.point_scale)}}
+                            </div>
+                            <hr>
+
+                            <div class="custom-control custom-switch">
+                                <input (click)="enableAllowMedic(device)" type="checkbox"
+                                    class="custom-control-input" [id]="'allowMedicSwitch-' + i"
+                                    [checked]="device.capture.allow_medic">
+                                <label class="custom-control-label"
+                                    [for]="'allowMedicSwitch-' + i">Allow
+                                    Medic</label>
+                            </div>
+
+                            <div *ngIf="device.capture.allow_medic">
+                                <div class="card card-body">
+                                    <div class="form-group">
+                                        <label for="capmedicTime">Time to Medic</label>
+                                        <input class="form-control-range" type="range" min="0"
+                                        max="18" [value]="getMedIndex(device.medic.medTime)" step="1"
+                                        (change)="medicTime(device,$event.target.value, true)"
+                                        (input)="medicTime(device,$event.target.value)">
+                                        {{convertTime(device.medic.medTime)}}
                                     </div>
-
                                 </div>
-
-                                <div class="card-body">
-
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="enableQuery(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'querySwitch-' + i"
-                                                [disabled]="device.queryPlayer.enabled"
-                                                [checked]="device.queryPlayer.enabled">
-                                            <label class="custom-control-label" [for]="'querySwitch-' + i">Player Query</label>
-                                        </div>
-                                    </div>
-
-                                    <div *ngIf="mode !== 'create'" class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="enableRegister(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'registerSwitch-' + i"
-                                                [disabled]="device.registerPlayer.enabled || !teamsAvaliable"
-                                                [checked]="device.registerPlayer.enabled">
-                                            <label class="custom-control-label" [for]="'registerSwitch-' + i">Register Team</label>
-                                        </div>
-                                        <div *ngIf="device.registerPlayer.enabled">
-                                            <div class="card card-body">
-                                                <div class="form-group">
-                                                    <label for="armTime">Team</label>
-                                                    <select class="form-control"
-                                                            (change)="teamSelected($event, device)"
-                                                            [(ngModel)]="device.registerPlayer.teamID">
-                                                        <option disabled hidden>Select Team</option>
-                                                        <option [value]=team.id
-                                                                [disabled]=!team.id
-                                                                *ngFor="let team of teamsAvaliable; let t = index">
-                                                                {{team?.name}}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="enableMedic(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'medicSwitch-' + i"
-                                                [disabled]="device.medic.enabled"
-                                                [checked]="device.medic.enabled">
-                                            <label class="custom-control-label" [for]="'medicSwitch-' + i">Medic
-                                                Station</label>
-                                        </div>
-                                        <div *ngIf="device.medic.enabled">
-                                            <div class="card card-body">
-                                                <div class="form-group">
-                                                    <label for="medicTime">Time to Medic</label>
-                                                    <input class="form-control-range" type="range" min="0"
-                                                    max="17" [value]="getMedIndex(device.medic.medTime)" step="1"
-                                                    (change)="medicTime(device,$event.target.value, true)"
-                                                    (input)="medicTime(device, $event.target.value)">
-                                                    {{convertTime(device.medic.medTime)}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="enableBomb(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'bombSwitch-' + i"
-                                                [disabled]="device.bomb.enabled"
-                                                [checked]="device.bomb.enabled">
-                                            <label class="custom-control-label"
-                                                [for]="'bombSwitch-' + i">Bomb/IED</label>
-                                        </div>
-                                        <div *ngIf="device.bomb.enabled">
-                                            <div class="card card-body">
-                                                <div class="form-group">
-                                                    <label for="armTime">Arm Time</label>
-                                                    <input class="form-control-range" type="range" min="0"
-                                                        max="11" [value]="getTimeIndex(device.bomb.arm_time)" step="1"
-                                                        (change)="armTime(device,$event.target.value, true)"
-                                                        (input)="armTime(device,$event.target.value)">
-                                                    {{convertTime(device.bomb.arm_time)}}
-                                                </div>
-                                                <hr>
-                                                <div class="form-group">
-                                                    <label for="blastTime">Fuse Timer</label>
-                                                    <input class="form-control-range" type="range"
-                                                        min="0" max="32" [value]="getTimeIndex(device.bomb.bomb_time)"
-                                                        step="1"
-                                                        (change)="bombTime(device,$event.target.value, true)"
-                                                        (input)="bombTime(device,$event.target.value)">
-                                                    {{convertTime(device.bomb.bomb_time)}}
-                                                </div>
-                                                <hr>
-                                                <div class="form-group">
-                                                    <label for="difuseTime">Diffuse Time</label>
-                                                    <input class="form-control-range" type="range"
-                                                        min="0" max="11" [value]="getTimeIndex(device.bomb.diff_time)"
-                                                        step="1"
-                                                        (change)="difuseTime(device,$event.target.value, true)"
-                                                        (input)="difuseTime(device,$event.target.value)">
-                                                    {{convertTime(device.bomb.diff_time)}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <div class="custom-control custom-switch">
-                                            <input (click)="enableCapture(device)" type="checkbox"
-                                                class="custom-control-input" [id]="'captureSwitch-' + i"
-                                                [disabled]="device.capture.enabled"
-                                                [checked]="device.capture.enabled">
-                                            <label class="custom-control-label" [for]="'captureSwitch-' + i">Capture
-                                                Point</label>
-                                        </div>
-
-                                        <div *ngIf="device.capture.enabled">
-                                            <div class="card card-body">
-
-                                                <div class="form-group">
-                                                    <label for="captime">Stabilization Time</label>
-                                                    <input class="form-control-range" type="range" min="0"
-                                                        max="32" [value]="getTimeIndex(device.capture.cap_time)"
-                                                        step="1"
-                                                        (change)="capTime(device,$event.target.value, true)"
-                                                        (input)="capTime(device,$event.target.value)">
-                                                    {{convertTime(device.capture.cap_time)}}
-                                                </div>
-                                                <hr>
-
-                                                <div class="form-group">
-                                                    <label for="capasst">Capture Assist</label>
-                                                    <input class="form-control-range" type="range" min="0"
-                                                        max="8" [value]="getPercIndex(device.capture.cap_asst)" step="1"
-                                                        (change)="capasst(device,$event.target.value, true)"
-                                                        (input)="capasst(device,$event.target.value)">
-                                                    {{convertPerc(device.capture.cap_asst)}} %
-                                                </div>
-                                                <hr>
-
-                                                <div class="form-group">
-                                                    <label for="pointScale">Point Scale</label>
-                                                    <input class="form-control-range" type="range"
-                                                        min="0" max="11"
-                                                        [value]="getScaleIndex(device.capture.point_scale)" step="1"
-                                                        (change)="pointScale(device,$event.target.value, true)"
-                                                        (input)="pointScale(device,$event.target.value)">
-                                                    {{convertPointScale(device.capture.point_scale)}}
-                                                </div>
-                                                <hr>
-
-                                                <div class="custom-control custom-switch">
-                                                    <input (click)="enableAllowMedic(device)" type="checkbox"
-                                                        class="custom-control-input" [id]="'allowMedicSwitch-' + i"
-                                                        [checked]="device.capture.allow_medic">
-                                                    <label class="custom-control-label"
-                                                        [for]="'allowMedicSwitch-' + i">Allow
-                                                        Medic</label>
-                                                </div>
-
-                                                <div *ngIf="device.capture.allow_medic">
-                                                    <div class="card card-body">
-                                                        <div class="form-group">
-                                                            <label for="capmedicTime">Time to Medic</label>
-                                                            <input class="form-control-range" type="range" min="0"
-                                                            max="17" [value]="getMedIndex(device.medic.medTime)" step="1"
-                                                            (change)="medicTime(device,$event.target.value, true)"
-                                                            (input)="medicTime(device,$event.target.value)">
-                                                            {{convertTime(device.medic.medTime)}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
                             </div>
 
                         </div>
+                    </div>
+                </div>
 
             </div>
 
         </div>
+
     </div>
+
 </div>

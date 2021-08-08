@@ -46,6 +46,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">LIVE Games</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_pastgame"  (click)="route('/non-secure/leader-board')" >Leaderboard</a>
+                </li>
             </ul>
             <!-- SECURE LINKS BELOW -->
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure">
@@ -67,16 +70,12 @@
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_pastgame"  (click)="route('/secure/past-games')" >Past Games</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="secure_nav_pastgame"  (click)="route('/non-secure/leader-board')" >Leaderboard</a>
+                </li>
+
             </ul>
 
-            <!-- <ul class="navbar-nav mr-auto  mt-2 mt-lg-0" *ngIf="isSecure && isPlayer">
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/findGame']">Find Games</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/currentGame']">Current Games</a>
-                </li>
-            </ul> -->
 
             <!-- SIGN-IN / SIGN-OUT -->
             <ul class="navbar-nav my-2 my-lg-0" *ngIf="!isSecure">

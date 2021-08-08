@@ -67,4 +67,15 @@ export class UserServiceService {
         return this.fieldProfile.gameConfigs;
     }
 
+    isSocialAccount() {
+
+        let user;
+
+        this.userData.subscribe( data =>
+            user = data
+        )
+
+        return user.facebookID || user.googleID || user.twitterID ? true : false
+    }
+
 }

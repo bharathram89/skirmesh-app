@@ -1,16 +1,61 @@
-<app-tabs>
-    <app-tab [tabTitle]="'Home'">
-      <h4>Saved Configurations</h4>
-      <app-gamelist
-        [gamemodes]="gameModes"
-        (addMode)="onAddMode()"
-        (editMode)="onEditMode($event)"
-        (deleteMode)="onDeleteMode($event)">
-      </app-gamelist>
-      <hr />
-    </app-tab>
-  </app-tabs>
+<div *ngIf="!activeConfig" class="container">
+<h4 align="center">Saved Configurations</h4>
 
-  <ng-template let-gameModes="gameModes" #gameModeEdit>
-    <app-edit-game [gameMode]="gameModes" (saveGameMode)="onGameModeFormSubmit($event)"></app-edit-game>
-  </ng-template>
+<table class="table table-striped" align="center">
+
+    <thead>
+
+      <th scope="col">Name</th>
+      <!-- <th>Teams</th> -->
+      <!-- <th>Node Modes Enabled</th> -->
+      <th scope="col">Map</th>
+      <th scope="col" colspan="2"></th>
+
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let config of gameConfigs" scope="row">
+        <td>{{ config.description }}</td>
+        <!-- <td>{{ p.teams.length }}</td> -->
+        <!-- <td>{{ p.nodeModes }}</td> -->
+        <td>{{ findMapName(config.mapID) }}</td>
+        <td><button
+                class="btn btn-sm btn-default btn-primary"
+                (click)="onEditMode(config)"
+                align="center">Edit</button></td>
+        <td><button
+                class="btn btn-sm btn-default btn-danger"
+                (click)="onDeleteMode(config)"
+                align="center">Delete</button></td>
+      </tr>
+
+    </tbody>
+
+    <tfoot>
+        <tr scope="row" align="center">
+            <td colspan="4">
+            <button class="btn btn-default btn-primary" (click)="onAddMode()">Add new game mode</button>
+            </td>
+        </tr>
+    </tfoot>
+
+</table>
+</div>
+
+<div *ngIf="activeConfig" class="container">
+
+    <div class="d-grid gap-2 col-6 mx-auto mt-4">
+
+        <div class="btn btn-secondary btn-block"
+             (click)="deSelectConfig()">Go Back
+        </div>
+
+    </div>
+
+<app-edit-game
+    [gameMode]="activeConfig"
+    (updateConfig)="updateConfig($event)"
+    >
+</app-edit-game>
+</div>

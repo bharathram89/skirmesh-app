@@ -6,14 +6,14 @@
         <div class="side-bar">
           <nav class="side-menu">
             <ul class="nav">
-              <li id="profileNav" (click)="profile()" class="active"><a><span class="fa fa-user"></span> Profile</a></li>
-              <li id="settingsNav" (click)="settings()"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
-              <li id="securityNav" (click)="security()"><a><span class="fa fa-credit-card"></span> Security</a></li>
+              <li (click)="profile()" [class.active]="isProfileNav"><a><span class="fa fa-user"></span> Profile</a></li>
+              <li *ngIf="!isField" (click)="settings()" [class.active]="isSettingsNav"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
+              <li (click)="security()" [class.active]="isSecurityNav"><a><span class="fas fa-address-card"></span> Security</a></li>
             </ul>
           </nav>
         </div>
 
-        <div id="profile" class="content-panel">
+        <div class="content-panel" [class.d-block]="isProfileNav">
           <h2 class="title center-cust">Manage Profile</h2>
           <form [formGroup]="profileForm" autocomplete="off" method="PUT" class="form-horizontal">
 
@@ -36,10 +36,10 @@
                 </div>
 
                 <div class="row">
-                  <div id="imageUpdateMessage" class="alert alert-primary d-none center-cust">
+                  <div (click)="imageUpdateMessage = !imageUpdateMessage" [class.d-none]="!imageUpdateMessage" class="alert alert-primary center-cust">
                     Image updated!<br>
                   </div>
-                  <div id="imageUpdateFailedMessage" class="alert alert-danger d-none center-cust">
+                  <div (click)="imageUpdateFailedMessage = !imageUpdateFailedMessage" [class.d-none]="!imageUpdateFailedMessage" class="alert alert-danger center-cust">
                     Image update failed.
                   </div>
                 </div>
@@ -121,22 +121,22 @@
           </form>
 
           <div class="row">
-            <div id="userCreatedMessage" class="alert alert-primary d-none center-cust">
+            <div (click)="userCreatedMessage = !userCreatedMessage" [class.d-none]="!userCreatedMessage" class="alert alert-primary center-cust">
               Your profile has been updated!<br>
             </div>
-            <div id="userCreatFaileddMessage" class="alert alert-danger d-none center-cust">
+            <div (click)="userCreateFailedMessage = !userCreateFailedMessage" [class.d-none]="!userCreateFailedMessage" class="alert alert-danger center-cust">
               We are sorry we were not able to update your profile at this time <br>
               Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us.</a>
             </div>
           </div>
-          
+
         </div>
 
 
 
-        <div id="settings" class="content-panel">
+        <div class="content-panel" [class.d-block]="isSettingsNav">
 
-            <div *ngIf="isField">
+            <!-- <div *ngIf="isField">
               <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
 
               <div class="center-flex">
@@ -165,41 +165,46 @@
                     </option>
                 </select>
 
-                <!-- <a style="width:100%">Search for Player: </a><input [(ngModel)]="playerSelected.callSign" [typeahead]="playerList"
-                  typeaheadOptionField="name" [adaptivePosition]="true" class="form-control"> -->
                   <div class="center-cust" *ngIf="rfidToPair">
                     <button (click)="pairRfidToPlayer()" [disabled]="!playerSelected" type="button" class="btn btn-lg btn-success">Pair RFID</button>
                  </div>
-                <!-- <pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
-                <input [(ngModel)]="selected" [typeahead]="states" [adaptivePosition]="true" class="form-control"> -->
+
               </div>
-            </div>
+            </div> -->
 
             <div *ngIf="!isField" class="login-screen">
 
-              <h4>Currently Connected to Profile:</h4>
-              <table style="width:100%">
-                <tr>
-                  <th>Uid</th>
-                  <th>Creation Date</th>
-                  <th>Deactivation Date</th>
-                </tr>
-                <tr *ngFor="let rfid of connectedRfids ">
-                  <td>{{rfid.uid}}</td>
-                  <td>{{rfid.creationDate}}</td>
-                  <td>{{rfid.deactivated}}</td>
-                </tr>
+              <h4>Skirmesh Wristbands connected to your profile:</h4>
+
+              <table class="table material">
+                <thead>
+                    <tr>
+                      <th scope="col">UID</th>
+                      <th scope="col">Creation Date</th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let rfid of connectedRfids">
+                      <td [innerHtml]="rfid.uid.toUpperCase()"></td>
+                      <td [innerHtml]="rfid.creationDate"></td>
+                      <td></td>
+                      <td> <div *ngIf="rfid" class="btn btn-danger" (click)="deleteRFID(rfid.id)">Delete</div></td>
+                    </tr>
+                </tbody>
               </table>
+
               <hr>
-              <h4>Connect a new wristband to Profile:</h4>
+
+              <h4>Connect a new wristband:</h4>
               <form [formGroup]="uidEntry" autocomplete="off" method="POST">
                 <div class="col-6">
                   <h5 class="center-cust">Instructions:</h5>
                   <h7 class="center-cust">
                       <p>Look for the RFID on the reverse of your band.</p>
-                      <p>Type it in exactly as shown on the band to associate the band to your profile. </p>
-                      <p>Click "Pair RfID to your account" and wait for success message. </p>
-                      <p>Hit refresh to see new id in list above. </p>
+                      <p>Type the RFID in <b>exactly</b> as shown on the band. </p>
+                      <p>Click <b>CONNECT</b>. </p>
                   </h7>
                   <div class="form-group">
                     <input formControlName="uid" class="form-control" placeholder="RFID">
@@ -265,7 +270,7 @@
 
 
 
-        <div id="security" class="content-panel">
+        <div class="content-panel" [class.d-block]="isSecurityNav">
           <h2 class="title center-cust">Manage Security</h2>
 
           <div class="custom_skirmesh">
@@ -306,11 +311,11 @@
                         </div>
                       </form>
                       <div>
-                        <div id="passResetPassed" class="alert alert-primary d-none center-cust">
+                        <div (click)="passResetPassed = !passResetPassed" [class.d-none]="!passResetPassed" class="alert alert-primary center-cust">
                           Your password is changed<br>
                           <a [routerLink]="['/auth/login']">LOGIN</a>.
                         </div>
-                        <div id="passResetFailed" class="alert alert-danger d-none center-cust">
+                        <div (click)="passResetFailed = !passResetFailed" [class.d-none]="!passResetFailed" class="alert alert-danger center-cust">
                           We are sorry we were not able to change your password at this time <br>
                           Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
                             contact us page</a>
@@ -326,7 +331,7 @@
                           ONLY CHECK THE CHECK BOX IF YOU WOULD LIKE TO DELETE YOUR ACCOUNT AND REMOVE ALL YOUR DATA FROM SKIRMESH
                         </label>
                         <button (click)="deleteSkirmeshAccount()" class="btn btn-danger" [disabled]="!deleteAccount" > DELETE ACCOUNT!</button>
-                        <div id="deleteUserFailed" class="alert alert-danger d-none center-cust">
+                        <div (click)="deleteUserFailed = !deleteUserFailed" [class.d-none]="!deleteUserFailed" class="alert alert-danger center-cust">
                           We were not able to delete your account at this time. <br/>
                           Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us</a>.
                         </div>

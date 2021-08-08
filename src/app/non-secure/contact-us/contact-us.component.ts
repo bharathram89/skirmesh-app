@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
+import { Component, OnInit } from '@angular/core'; 
 
 @Component({
   selector: 'app-contact-us',
@@ -8,10 +7,9 @@ import { GoogleAnalyticsService } from 'src/service/google-analytics.service';
 })
 export class ContactUsComponent implements OnInit {
 
-  constructor(private analyticSvc:GoogleAnalyticsService) { }
+  constructor() { }
 
-  ngOnInit(): void {
-    this.analyticSvc.pageView('contact_us','non-secure','non-secure/contact-us')
+  ngOnInit(): void { 
   }
 
 }

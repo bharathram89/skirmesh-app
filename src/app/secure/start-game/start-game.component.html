@@ -1,37 +1,79 @@
+<div class="d-grid col-6 mx-auto my-2">
 
-<div class="events_area">
-    <div class="container px-0">
+    <div *ngIf="selectedMapID"
+          class="btn btn-secondary btn-block"
+         (click)="deSelectMap()">Go Back
+    </div>
 
-            <div *ngIf="!gameInProgress" class="col-flex-6">
-                <div class="main_title">
-                    <!-- <h4>Select Game Configuration</h4> -->
+</div>
+
+
+<div *ngIf="!selectedMapID" class="container-fluid">
+
+    <h4 align="center"> Select your Map </h4>
+
+    <div class="row mx-0 justify-content-center">
+    <div *ngFor="let map of userSvc.getFieldProfile().maps"
+         class="card col-sm-3 d-flex m-2 p-0"
+         (click)="selectMap(map.id)">
+        <div class="card-header">
+            <h5 [innerHtml]="map.name"></h5>
+        </div>
+        <div class="card-body">
+            <app-map [mapID]="map.id" [deviceData]="userSvc.getFieldProfile()?.devices"></app-map>
+        </div>
+    </div>
+    </div>
+
+</div>
+
+
+
+<div *ngIf="selectedMapID" class="events_area">
+    <div class="container" align="center">
+
+            <div *ngIf="!gameInProgress" class="col-md-6">
+
                     <select class="form-control" (change)="changeGame($event)">
                         <option disabled selected value> -- Select Game Configuration -- </option>
-                        <option [value]=gameMode.id *ngFor="let gameMode of gameModes">
+                        <option [value]=gameMode.id *ngFor="let gameMode of filteredGameModes">
                             {{gameMode.description}}</option>
                     </select>
-                    <br>
-                    <button type="button" class="bg-primary btn" [disabled]="!gameBoardActive" (click)="startGame()">START GAME</button>
-                </div>
+
+                    <div *ngIf="!teamsHavePlayers && !gameInProgress" class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Register players to each team before starting the game. </strong>
+                    </div>
+
+                    <div *ngIf="deviceInUse && !gameInProgress" class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <strong>One or more devices is in an active game and disabled below to preserve gameplay. </strong>
+                      Remove device(s) from this configuration before clicking "START GAME" to avoid game interference.
+
+                      <button type="button" class="close" aria-label="Close" (click)="deviceInUse = !deviceInUse">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+
+                    <button type="button" class="btn btn-primary m-2" [disabled]="!gameBoardActive" (click)="startGame()">START GAME</button>
+
             </div>
 
 
-
-        <div class="row collapsible" [@collapse]="!gameBoardActive" id="gameManagementBoard">
-            <div class="col-lg-12"><h1 class="text-center pt-3"><span *ngIf="gameData">Game #{{gameData?.id}}: </span> {{selectedGameMode?.description}}</h1></div>
+        <div class="row px-0" [@collapse]="!gameBoardActive">
+            <div class="col-lg-12"><h1 class="text-center pt-3"><span *ngIf="gameData?.id">Game #{{gameData.id}}: </span> {{selectedGameMode?.description}}</h1></div>
 
             <div class="col-lg-12">
                 <div class="text-center pt-3">
 
-                    <div *ngIf="!gameInProgress">
-                        <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
-                        <h5> NOTICE: Device changes will revert to the saved configuration on START GAME. </h5>
-
+                    <div *ngIf="!gameInProgress" class="alert alert-warning alert-dismissible fade show" role="alert">
+                         <strong>Device changes will revert to the saved configuration on START GAME.</strong>
                     </div>
 
                     <div *ngIf="gameInProgress">
                         <!-- <h5 *ngIf="mode == 'active'" class="modal-title" id="exampleModalLabel">Dynamic Game Configurations</h5> -->
                         <h4> WARNING: Changes impact live gameplay. </h4>
+
+                        <div class="btn-group d-flex m-2 w-auto justify-content-center align-middle">
 
                         <button *ngIf="!gameData?.is_paused" type="button" class="btn btn-warning btn-timer"
                             (click)="pauseGame()">PAUSE
@@ -41,8 +83,10 @@
                             (click)="pauseGame()">RESUME
                             <div class="timer" [innerHTML]="countUpTime"></div></button>
 
-                        <button type="button" class="btn btn-danger"
+                        <button type="button" class="btn btn-danger btn-timer"
                             (click)="endGame()">END GAME</button>
+
+                        </div>
 
                     </div>
 

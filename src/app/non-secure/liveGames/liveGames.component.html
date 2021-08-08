@@ -1,8 +1,20 @@
 <div class="container-fluid">
 
-        <div *ngIf="!gameID" class="row">
+        <div *ngIf="!gameID" class="row justify-content-center">
 
-            <h5 *ngIf="!gameCardData.length"> Check back later. Games pop up all the time! </h5>
+                <div *ngIf="!gameCardData.length" class="alert alert-info fade show mt-2" role="alert" align="center">
+                    <h5 align="center">You just missed an awesome live game.</h5>
+                    Don't worry - games pop up all the time. Check back later,
+                    <div class="row">
+                        <div class="col"><hr></div>
+                        <div class="col-auto">or</div>
+                        <div class="col"><hr></div>
+                    </div>
+                    <strong><a [routerLink]="['/auth/login']">login</a></strong> or <strong><a [routerLink]="['/auth/sign-up']">sign-up</a></strong>
+                    to view a full history of <a [routerLink]="['/secure/past-games']"><strong>past games</strong></a>.
+
+                </div>
+
 
             <div
                 *ngFor="let gameData of gameCardData;"
@@ -36,16 +48,16 @@
 
         <div class="container ">
 
-            <div class="col btn-group btn-group-toggle d-flex justify-content-center align-middle">
+            <div class="col btn-group btn-group-toggle d-flex my-2 justify-content-center align-middle">
 
                 <div class="btn fa fa-arrow-left" (click)="goBackToMainMenu()">
                 </div>
 
-                <div class="btn btn-light active" id="map" (click)="changeGameTab('map')">
+                <div class="btn btn-light" [class.active]="currentTab == 'map'" (click)="changeGameTab('map')">
                 C3I
                 </div>
 
-                <div class="btn btn-light" id="eventsTracker" (click)="changeGameTab('eventsTracker')">
+                <div class="btn btn-light" [class.active]="currentTab == 'eventsTracker'" (click)="changeGameTab('eventsTracker')">
                 Events
                 </div>
 
@@ -62,15 +74,15 @@
         </div>
 
 
-        <div *ngIf="currentTab == 'map'" class="container">
+        <div *ngIf="currentTab == 'map'" class="container-fluid">
 
           <div class="row px-0">
 
-            <div class="col-md-6">
+            <div class="col-md-5">
             <app-map [mapID]="map" [(deviceData)]="scoreSvc.devices" [gameID]="gameID"></app-map>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-7">
             <app-team-score [teams]="scoreSvc.teams" [barChartData]="scoreSvc.barChartData"></app-team-score>
             </div>
 
@@ -80,14 +92,13 @@
 
 
 
-        <div *ngIf="currentTab == 'eventsTracker'" class="container">
+        <div *ngIf="currentTab == 'eventsTracker'" class="container" align="center">
 
             <h3 class="center-cust"> Event History</h3>
 
             <input
               type="text"
-              class="form-control"
-              style="padding:8px;margin:15px auto;width:30%;"
+              class="form-control col-md-5 mb-2"
               placeholder="Type to filter by Callsign..."
               (keyup)="updateFilter($event)"
             />
@@ -96,7 +107,7 @@
                 class="material striped"
                 [rows]="scoreSvc.allActions"
                 [columns]="scoreSvc.allActionsColumns"
-                [columnMode]="'standard'"
+                [columnMode]="'force'"
                 [rowHeight]="'auto'"
                 [scrollbarH]="true">
             </ngx-datatable>

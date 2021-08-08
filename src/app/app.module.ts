@@ -4,23 +4,22 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GlobalModule } from './global/global.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SocialLoginModule, SocialAuthServiceConfig, SocialAuthService } from 'angularx-social-login';
-import {
-  GoogleLoginProvider,
-  FacebookLoginProvider
-} from 'angularx-social-login';
+import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 import { UserServiceService } from 'src/service/user-service.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-import { NgxFeedbackModule } from 'ngx-feedback';
+import { HttpErrorInterceptor } from './helpers/httpconfig.interceptor';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
+
 const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,11 +28,14 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
     HttpClientModule,
     BrowserAnimationsModule,
     NgxDatatableModule,
-    NgxFeedbackModule,
+    NgxGoogleAnalyticsModule.forRoot('Eau3tLmNdfqfQ9_oxjjmGa6QDfnPqRqQNppovPKIqNo'),
+    NgxGoogleAnalyticsRouterModule,
     SocketIoModule.forRoot(config)
   ],
   providers: [
     Meta,
+
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     UserServiceService,
     SocialAuthService,
     {
@@ -59,4 +61,5 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

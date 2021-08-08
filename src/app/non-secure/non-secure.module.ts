@@ -10,11 +10,13 @@ import { AuthRoutingModule } from '../auth/auth-routing.module';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { FieldInfoComponent } from './field-info/field-info.component';
-import { MydevicesComponent } from './mydevices/mydevices.component'
+import { LiveGamesComponent } from './liveGames/liveGames.component'
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { HowToUseComponent } from './how-to-use/how-to-use.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 @NgModule({
   declarations: [HowToUseComponent,
                  NonSecureComponent,
@@ -23,14 +25,16 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
                  ContactUsComponent,
                  PrivacyPolicyComponent,
                  FieldInfoComponent,
-                 MydevicesComponent],
+                 LiveGamesComponent,
+                 LeaderboardComponent],
   imports: [
     CommonModule,
     NonSecureRoutingModule,
     AuthRoutingModule,
     GlobalModule,
     CarouselModule,
-    NgxDatatableModule,
+    NgxDatatableModule, 
+    AccordionModule.forRoot(),
     NgxChartsModule
   ]
 })

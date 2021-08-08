@@ -16,26 +16,24 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 export class EditGameComponent implements OnInit {
 
     @Input() gameMode;
-    @Output() saveGameMode = new EventEmitter<any>();
+    @Output() updateConfig = new EventEmitter<any>();
 
     gameModeForm      : FormGroup;
     maps              : [];
     locations         : [];
+    saveSuccess;
+    deviceListConfigs = new BehaviorSubject({});
 
-    isMapSelected     : boolean = false;
-    deviceListConfigs : BehaviorSubject<any>;
-    selectedMapID;
     devices;
     deviceConfigs;
     gameConfigs;
 
     gameModeFrm = {
         id:'',
-        name:'',
+        description:'',
         teams:[],
-        nodeModes:'',
-        map:'',
-        quantities:[]
+        devices:'',
+        mapID:''
     };
 
     constructor(
@@ -45,14 +43,12 @@ export class EditGameComponent implements OnInit {
         private secAPIsvc : SecureAPIService
       ) {
 
-            this.deviceListConfigs = new BehaviorSubject({});
-
             this.gameModeForm      = this.fb.group({
-                id        : new FormControl(this.gameModeFrm.id, [Validators.required]),
-                name      : new FormControl(this.gameModeFrm.name, [Validators.required]),
-                teams     : this.fb.array([]),
-                nodeModes : new FormControl(this.gameModeFrm.nodeModes, [Validators.required]),
-                map       : new FormControl(this.gameModeFrm.map, [Validators.required])
+                id          : new FormControl(this.gameModeFrm.id),
+                description : new FormControl(this.gameModeFrm.description, [Validators.required]),
+                teams       : this.fb.array([]),
+                devices     : new FormControl(this.gameModeFrm.devices, [Validators.required]),
+                mapID       : new FormControl(this.gameModeFrm.mapID, [Validators.required])
             });
 
             let fieldProfile = this.userSvc.getFieldProfile()
@@ -63,81 +59,50 @@ export class EditGameComponent implements OnInit {
 
     }
 
+
     ngOnInit() {
 
-        if(this.gameMode.map){
+        this.deviceConfigs = makeDeviceModals(this.devices,true)
 
-            this.gameMode.teams.forEach(element => {
-                this.teams.push(this.fb.group(element))
-            });
+        // Setup the form data
+        this.gameMode.teams.forEach(element => {
+            this.teams.push(this.fb.group(element))
+        });
 
-            this.gameModeForm.patchValue({
-                id        : this.gameMode.id ,
-                map       : this.gameMode.map || null,
-                name      : this.gameMode.name || '',
-            });
+        this.gameModeForm.patchValue({
+            id          : this.gameMode.id ,
+            mapID       : this.gameMode.mapID || null,
+            description : this.gameMode.description || '',
+            devices     : this.deviceConfigs
+        });
 
-            this.isMapSelected = true;
-            this.locations = this.maps.find(locs=>{
+        // Grab location data for the map - if there is one
+        if (this.gameMode.mapID) {
+            this.locations = this.maps.find(map => {
 
-                if(locs['id']==this.gameMode.map){
-                    return locs['locations'];
+                if(map['id']==this.gameMode.mapID){
+                    return map['locations'];
                     }
             })
-
-            this.deviceConfigs = this.gameMode.nodeModes;
-            this.deviceListConfigs.next({
-                mode        : "create",
-                mapID       : this.gameMode.map ,
-                teams       : this.gameMode.teams,
-                nodeConfigs : this.gameMode.nodeModes
-            });
-
-        }else{
-
-            this.deviceConfigs = makeDeviceModals(this.devices,true)
-            this.teams.push(this.newTeam());
-            this.teams.push(this.newTeam());
-            this.gameModeForm.patchValue({
-                id        : this.gameMode.id   || null,
-                name      : this.gameMode.name || '',
-                teams     : this.gameMode.teams ? this.gameMode.teams :[{name:'Team Alpha',color:'#ff0000'},
-                                                                        {name:'Team Bravo',color:'#0000ff'}],
-                nodeModes : this.deviceConfigs,
-                mapID     : this.gameMode.map ? this.gameMode.map : null,
-                map       : this.gameMode.map || null,
-            });
-        }
-    }
-
-    onNewGameModeFormSubmit() {
-
-        this.setNodes();
-
-        let dataModel = this.gameModeForm.value;
-        this.saveGameMode.emit(dataModel);
-    }
-
-    get teams() : FormArray {
-        return this.gameModeForm.get("teams") as FormArray
-    }
-
-    nodeConfigs(device){
-
-        device = JSON.parse(device);
-
-        let isIndex = this.deviceConfigs.findIndex(dev => dev.id == device.id)
-
-        if (isIndex !== -1) {
-            this.deviceConfigs[isIndex] = makeDeviceModal(device);
         }
 
-        this.gameModeForm.value.nodeModes = this.deviceConfigs;
+        // Enable the devices already saved to the config
+        this.gameMode.devices.forEach(device => {
+            device.saveToConfigs = true;
+            this.syncNodeConfigs(device)
+        })
+
+        // Send DeviceList data to deviceList component
+        this.deviceListConfigs.next({
+            mode        : "create",
+            mapID       : this.gameMode.mapID ,
+            teams       : this.gameMode.teams,
+            nodeConfigs : this.deviceConfigs
+        });
+
+
     }
 
-    saveConfigs(){
-    // console.log(this.gameModeForm.value)
-    }
 
     newTeam(): FormGroup {
         return this.fb.group({
@@ -147,11 +112,78 @@ export class EditGameComponent implements OnInit {
                              })
     }
 
+
+    get teams() : FormArray {
+        return this.gameModeForm.get("teams") as FormArray
+    }
+
+
+    onFormSubmit() {
+
+        let dataModel = this.gameModeForm.value;
+
+        for (var i = dataModel.devices.length - 1; i >= 0; i--) {
+            if (!dataModel.devices[i].saveToConfigs) {
+                dataModel.devices.splice(i, 1);
+            }
+        }
+
+        let apiData = {
+            id             : dataModel.id,
+            mapID          : dataModel.mapID,
+            fieldProfileID : this.userSvc.getFieldProfileID(),
+            description    : dataModel.description,
+            deviceMap      : dataModel.devices,
+            teams          : dataModel.teams
+        }
+
+        if (dataModel.id) {
+            this.secAPIsvc.modifyGameConfig(this.tokenSvc.getToken(), apiData).subscribe(
+                resp => {
+                    this.updateConfig.emit(resp);
+                    this.gameModeForm.patchValue({teams:resp["teams"]});
+                    this.saveSuccess = true;
+                } 
+            )
+        }
+        else {
+
+            this.secAPIsvc.saveGameConfig(this.tokenSvc.getToken(), apiData).subscribe(
+                resp => {
+                    this.updateConfig.emit(resp);
+                    this.gameModeForm.controls["id"].setValue(resp["id"]);
+                    this.gameModeForm.patchValue({teams:resp["teams"]});
+                    this.saveSuccess = true;
+
+                })
+        }
+
+
+    }
+
+
+    syncNodeConfigs(device){
+
+        if (typeof device === 'string') {
+            device = makeDeviceModal(JSON.parse(device));
+        }
+
+        let isIndex = this.deviceConfigs.findIndex(dev => dev.id == device.id)
+
+        if (isIndex !== -1) {
+            this.deviceConfigs[isIndex] = device;
+        }
+
+        this.gameModeForm.controls["devices"].setValue(this.deviceConfigs);
+    }
+
+
     addTeam() {
 
         this.teams.push(this.newTeam());
-        this.setNodes();
+        this.updateDeviceListConfigs();
     }
+
 
     removeTeam(i:number) {
 
@@ -163,31 +195,27 @@ export class EditGameComponent implements OnInit {
             );
         }
         this.teams.removeAt(i);
-        this.setNodes();
+        this.updateDeviceListConfigs();
     }
 
-    onChangeOfTeamList(){
-        this.setNodes();
-    }
 
-    changeMap(selectedMap){
+    changeMap(){
 
-        let mapID = selectedMap.target.value
-        this.gameModeForm.controls['map'].setValue(mapID)
-        this.selectedMapID = mapID;
+        let mapID = this.gameModeForm.get('mapID').value;
         this.locations = this.maps.find(map => map["id"] == mapID)["locations"];
 
-        this.setNodes()
-        this.isMapSelected = true;
+        this.updateDeviceListConfigs()
+        // this.isMapSelected = true;
     }
 
-    setNodes(){
 
-        this.gameModeForm.value.nodeModes = this.deviceConfigs
+    updateDeviceListConfigs(){
+
+        this.gameModeForm.controls["devices"].setValue(this.deviceConfigs);
 
         this.deviceListConfigs.next({
             mode        : "create",
-            mapID       : this.gameModeForm.get('map').value,
+            mapID       : this.gameModeForm.get('mapID').value,
             teams       : this.gameModeForm.get('teams')['controls'],
             nodeConfigs : this.deviceConfigs
         })

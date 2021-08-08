@@ -37,20 +37,23 @@ export class StartGameComponent implements OnInit {
     gameInProgress      = false;
     gameModes;
 
+    selectedMapID;
     selectedGameMode;
+    filteredGameModes;
+
     activeDevices       : BehaviorSubject<any>;
-    adminNodes          : BehaviorSubject<any>;
-    activeNodes         : BehaviorSubject<any>;
-    // deviceListConfigs;
-    // activeNodesList;
-    // adminNodesList;
+    allDevices          : [];
+    deviceInUse         = false;
+
     teams               = [];
     mapID;
-    gameData            = <any>[];
+    gameData            = <any>{};
 
     countUpTime;
     countUpTimer;
     pausedTimer = 0;
+
+    teamsHavePlayers    = true;
 
     playerUpdate;
     teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
@@ -67,38 +70,11 @@ export class StartGameComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.secAPIsvc.getActiveGamesByFieldProfile(this.tokenSvc.getToken(), this.userSvc.getFieldProfileID()).subscribe(
-
-            activeGameConfig=>{
-
-                if(activeGameConfig){
-                    // Active games route starts query with fieldProfileID and
-                    // returns the gameConfig, which contains the game
-                    // Look for the game that is not ended
-                    let game = activeGameConfig["games"].shift()
-
-                    if (game) {
-
-                        this.gameData        = game;
-                        this.gameBoardActive = true;
-                        this.gameInProgress  = true;
-
-                        activeGameConfig["deviceMap"] = game.devices;
-
-                        this.setSelectedGameConfig(activeGameConfig);
-                        this.countUpFromTime();
-
-                    }
-                }
-            },
-            err=>{
-               //show message on page no games are active.
-            }
-         )
          // This sets the dropdown menu with available game configurations
          this.secAPIsvc.getGameConfigs(this.tokenSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
              savedConfigs => {
-                 this.gameModes = savedConfigs;
+                 this.gameModes  = savedConfigs;
+                 this.allDevices = this.userSvc.getFieldProfile().devices;
              }
          )
     }
@@ -141,6 +117,18 @@ export class StartGameComponent implements OnInit {
 
             data => {
                 this.gameData = data
+
+                // Update user devices to flag warnings when in use
+                const res = this.allDevices.reduce((acc,curr) => {
+
+                    const stored = this.gameData.devices.find(({id}) => id == curr["id"]);
+                    acc.push(stored ? stored : curr);
+                    return acc;
+
+                }, <any>[]);
+
+                this.allDevices = res;
+
                 this.countUpFromTime();
             },
             err => {console.log(err)}
@@ -169,21 +157,30 @@ export class StartGameComponent implements OnInit {
             nodeConfigs : makeDeviceModals(mode.deviceMap)
         });
 
+        this.activeDevices.subscribe(
+            data => {
+                for (let device of data.nodeConfigs) {
+
+                    let check = this.allDevices.find(dev => dev["id"] == device.id);
+
+                    if (check) {
+                        this.deviceInUse = check["gameID"] || this.deviceInUse ? true : false;
+                        device.saveToConfigs = this.gameInProgress ? true : check["gameID"] ? false : true;
+                    }
+                    else {
+                        device.saveToConfigs = this.gameInProgress ? true : false;
+                    }
+                }
+            }
+        )
+
         this.gameBoardActive = true;
+        this.checkTeamPlayers();
     }
 
 
     // Device is passed in from device-list.component
-    // I use this method to check for active game and assign
-    // a gameID to the device - this will allow an "inactive"
-    // device to become "active"
     nodeConfigs(device){
-
-      if (this.gameInProgress && this.gameData.id) {
-
-        device.gameID = this.gameData.id
-
-      }
     }
 
 
@@ -203,14 +200,26 @@ export class StartGameComponent implements OnInit {
 
         if (safe) {
 
-            // TODO: Why do we use tokenSvc for game data?
-            this.tokenSvc.endGame();
-
             this.secAPIsvc.endGame(this.tokenSvc.getToken(), this.gameData.id).subscribe(
                 data => {
                         this.gameInProgress = false;
                         this.gameBoardActive = false;
+                        this.teamsHavePlayers = true;
+                        this.deviceInUse = false;
                         this.gameData = null;
+
+                        // Clear out devices used in game to remove warning
+                        this.activeDevices.subscribe(
+                            data => {
+                                data.nodeConfigs.forEach(node => {
+
+                                let device = this.allDevices.find(({id}) => id == node.id) as {};
+                                if (device) {
+                                    device["gameID"] = null;
+                                }
+                            })
+                        })
+
                     })
         }
 
@@ -272,6 +281,71 @@ export class StartGameComponent implements OnInit {
             team.teamPlayers.push(teamPlayer)
         }
 
+        this.checkTeamPlayers();
+
+    }
+
+
+    selectMap(mapID) {
+
+        this.selectedMapID = mapID;
+
+        this.filteredGameModes = this.gameModes.filter(config => config.mapID == mapID)
+
+        this.secAPIsvc.getActiveGamesByMap(this.tokenSvc.getToken(), mapID).subscribe(
+
+            activeGameConfig=>{
+
+                if(activeGameConfig){
+                    // Active games route starts query with fieldProfileID and
+                    // returns the gameConfig, which contains the game
+                    // Look for the game that is not ended
+                    let game = activeGameConfig["games"].shift()
+
+                    if (game) {
+
+                        this.gameData        = game;
+                        this.gameBoardActive = true;
+                        this.gameInProgress  = true;
+
+                        activeGameConfig["deviceMap"] = game.devices;
+
+                        this.setSelectedGameConfig(activeGameConfig);
+                        this.countUpFromTime();
+
+                    }
+                }
+            },
+            err=>{
+               //show message on page no games are active.
+            }
+         )
+    }
+
+
+    deSelectMap() {
+
+        this.selectedMapID = null;
+
+        this.gameData        = null;
+        this.gameBoardActive = false;
+        this.gameInProgress  = false;
+
+        this.deviceInUse = false;
+        clearInterval(this.countUpTimer);
+    }
+
+
+    checkTeamPlayers() {
+
+        for (let team of this.teams) {
+            if (!team.teamPlayers.length){
+                this.teamsHavePlayers = false;
+                return
+            }
+        }
+
+        this.teamsHavePlayers = true;
     }
 
 }

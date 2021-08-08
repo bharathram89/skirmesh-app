@@ -23,12 +23,17 @@ export class ProfileComponent implements OnInit {
 
   deleteAccount = false;
 
-  pfNav           : HTMLElement;
-  securityNav     : HTMLElement;
-  settingsNav     : HTMLElement;
-  pfSection       : HTMLElement;
-  securitySection : HTMLElement;
-  settingsSection : HTMLElement;
+  isSecurityNav = false;
+  isSettingsNav = false;
+  isProfileNav  = true;
+
+  imageUpdateMessage;
+  imageUpdateFailedMessage;
+  userCreatedMessage;
+  userCreateFailedMessage;
+  passResetPassed;
+  passResetFailed;
+  deleteUserFailed;
 
   passReset       : FormGroup;
   uidEntry        : FormGroup;
@@ -77,16 +82,6 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    this.pfNav           = document.getElementById('profileNav');
-    this.securityNav     = document.getElementById('securityNav');
-    this.settingsNav     = document.getElementById('settingsNav');
-    this.pfSection       = document.getElementById('profile');
-    this.securitySection = document.getElementById('security');
-    this.settingsSection = document.getElementById('settings');
-
-    this.pfSection.style.display = 'block';
-
 
     this.passReset = new FormGroup({
       "pass": new FormControl(this.resetPass.pass, [
@@ -156,9 +151,9 @@ export class ProfileComponent implements OnInit {
 
         this.currentVals.userID = userData.id;
 
-      }
-    )
-      if(this.currentVals.imageID){
+     })
+
+     if(this.currentVals.imageID){
         this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
           imageData => {
             this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
@@ -173,8 +168,10 @@ export class ProfileComponent implements OnInit {
             data => this.playerList = data
         )
     }
-
-
+    // Disable the e-mail field for social users - if they change the e-mail they can't log in
+    if (this.userSvc.isSocialAccount()) {
+        this.profileForm.controls['email'].disable();
+    }
   }
 
   deleteCheckboxClicked(){
@@ -187,45 +184,45 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/non-secure']);
       },
       err => {
-        document.getElementById('deleteUserFailed').classList.remove('d-none');
+        this.deleteUserFailed = true;
       }
   )
   }
 
-  clearRfidPairField() {
+  // clearRfidPairField() {
+  //
+  //     let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
+  //
+  //     this.secAPIsvc.updateFieldProfile(this.tokenSvc.getToken(), data).subscribe(
+  //         resp => this.rfidToPair = resp["pair_uid"]
+  //     )
+  // }
 
-      let data = {id:this.currentVals.fieldProfileID, pair_uid:null}
+  // checkRfidToPair() {
+  //
+  //     this.secAPIsvc.getMinimalFieldProfileFromAPI(this.tokenSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
+  //         data => this.rfidToPair = data["pair_uid"]
+  //     )
+  // }
 
-      this.secAPIsvc.updateFieldProfile(this.tokenSvc.getToken(), data).subscribe(
-          resp => this.rfidToPair = resp["pair_uid"]
-      )
-  }
-
-  checkRfidToPair() {
-
-      this.secAPIsvc.getMinimalFieldProfileFromAPI(this.tokenSvc.getToken(), this.currentVals.fieldProfileID).subscribe(
-          data => this.rfidToPair = data["pair_uid"]
-      )
-  }
-
-  pairRfidToPlayer(){
-
-      let data = {userID : this.playerSelected.id,
-                  fieldID: this.currentVals.fieldProfileID}
-
-      this.secAPIsvc.pairUid(this.tokenSvc.getToken(), data).subscribe(
-          resp =>{
-
-             this.rfidConnected = true;
-             this.rfidToPair = null;
-            },
-          err =>{
-            this.rfidConnected = false;
-          }
-      )
-      // TODO: Give a success response to the user.
-
-  }
+  // pairRfidToPlayer(){
+  //
+  //     let data = {userID : this.playerSelected.id,
+  //                 fieldID: this.currentVals.fieldProfileID}
+  //
+  //     this.secAPIsvc.pairUid(this.tokenSvc.getToken(), data).subscribe(
+  //         resp =>{
+  //
+  //            this.rfidConnected = true;
+  //            this.rfidToPair = null;
+  //           },
+  //         err =>{
+  //           this.rfidConnected = false;
+  //         }
+  //     )
+  //     // TODO: Give a success response to the user.
+  //
+  // }
 
 
   get pass() { return this.passReset.get('pass'); }
@@ -239,57 +236,42 @@ export class ProfileComponent implements OnInit {
     let data = {"user":{"password":this.passReset.get('pass').value}}
     this.secAPIsvc.updatePass(this.tokenSvc.getToken() ,data).subscribe(
       resp => {
-             document.getElementById('passResetPassed').classList.remove('d-none');
-            },
-      err => { document.getElementById('passResetFailed').classList.remove('d-none');
-             console.log('password Reset failed',err)}
+          this.passResetPassed = true;
+      },
+      err => {
+          this.passResetFailed = true;
+      }
     )
   }
 
 
-  _closeTabs(){}
+  _closeTabs(){
+    this.isSecurityNav = false;
+    this.isSettingsNav = false;
+    this.isProfileNav  = false;
+  }
 
 
   profile() {
-
-    this.pfNav.classList.add('active')
-    this.securityNav.classList.remove('active')
-
-    document.getElementById('settingsNav').classList.remove('active')
-    this.settingsSection.style.display = 'none';
-
-    this.pfSection.style.display = 'block';
-    this.securitySection.style.display = 'none';
+    this._closeTabs()
+    this.isProfileNav  = true;
   }
 
 
   settings() {
+    this._closeTabs()
+    this.isSettingsNav = true;
 
-    this.pfNav.classList.remove('active')
-    this.securityNav.classList.remove('active')
+    // if(this.isField){
+    //   this.clearRfidPairField();
+    // }
 
-    document.getElementById('settingsNav').classList.add('active')
-    this.settingsSection.style.display = 'block';
-
-    if(this.isField){
-      this.clearRfidPairField();
-    }
-
-    this.pfSection.style.display = 'none';
-    this.securitySection.style.display = 'none';
   }
 
 
   security() {
-
-    this.pfNav.classList.remove('active')
-    this.securityNav.classList.add('active')
-
-    document.getElementById('settingsNav').classList.remove('active')
-    this.settingsSection.style.display = 'none';
-
-    this.pfSection.style.display = 'none';
-    this.securitySection.style.display = 'block';
+    this._closeTabs()
+    this.isSecurityNav = true;
   }
 
 
@@ -318,11 +300,11 @@ export class ProfileComponent implements OnInit {
     this.secAPIsvc.saveProfile(this.tokenSvc.getToken(), data).subscribe(
       resp => {
         // this.profileForm.reset();
-        document.getElementById('userCreatedMessage').classList.remove('d-none')
+        this.userCreatedMessage = true;
       },
       err=>{
         this.profileForm.reset();
-        document.getElementById('userCreatFaileddMessage').classList.remove('d-none')
+        this.userCreateFailedMessage = true;
       }
     )
     //saveProfile
@@ -374,7 +356,6 @@ export class ProfileComponent implements OnInit {
       this.secAPIsvc.pairUid(this.tokenSvc.getToken(), data).subscribe(
           resp =>{
             this.connectedRfids = resp;
-            console.log(resp,"response")
           },
           err =>{}
       )
@@ -405,19 +386,33 @@ export class ProfileComponent implements OnInit {
     let data  = {'user' :{'id':this.currentVals.userID},
                  'image':{'data':this.base64toUpload}};
 
-    // console.log(data)
-
     this.secAPIsvc.saveImage(this.tokenSvc.getToken(), data).subscribe(
         resp => {
-            document.getElementById('imageUpdateMessage').classList.remove('d-none')
+            this.imageUpdateMessage = true;
         },
         err => {
-            document.getElementById('imageUpdateFailedMessage').classList.remove('d-none')
+            this.imageUpdateFailedMessage = true;
         }
-    );;
-
-
-
+    );
   }
+
+
+  deleteRFID(rfidID) {
+
+      let temp = [];
+      this.secAPIsvc.deleteUid(this.tokenSvc.getToken(), rfidID).subscribe(
+          
+          resp =>{
+              let indx = this.connectedRfids.findIndex(rfid => rfid.id == resp["id"]);
+              if (indx != -1) {
+                  this.connectedRfids.splice(indx, 1);
+              };
+          },
+          err =>{
+              console.log("error in removing rfid")
+          }
+      )
+  }
+
 
 }

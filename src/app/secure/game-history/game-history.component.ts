@@ -132,7 +132,10 @@ export class GameHistoryComponent implements OnInit {
   selectField(fieldID) {
 
       const urlTree = this.router.createUrlTree([], {
-        queryParams: { field: fieldID },
+        queryParams: {
+            field     : fieldID,
+            gameMode  : null,
+            gameID    : null },
         queryParamsHandling: "merge",
         preserveFragment: true });
 
@@ -147,7 +150,8 @@ export class GameHistoryComponent implements OnInit {
     const urlTree = this.router.createUrlTree([], {
       queryParams: {
           field     : this.selectedField.id,
-          gameMode  : event.target.value },
+          gameMode  : event.target.value,
+          gameID    : null  },
       queryParamsHandling: "merge",
       preserveFragment: true });
 
@@ -157,7 +161,7 @@ export class GameHistoryComponent implements OnInit {
 
     let newConfig = this.pastGamesByConfig.find(ele => ele.id == event.target.value)
     this.selectedMode = newConfig;
-    this.selectedMode.deviceMap = JSON.parse(newConfig.deviceMap);
+    this.selectedMode.deviceMap = Array.isArray(newConfig.deviceMap) ? newConfig.deviceMap : JSON.parse(newConfig.deviceMap);
     this.selectedGame = null;
   }
 
@@ -201,7 +205,16 @@ export class GameHistoryComponent implements OnInit {
 
 
   deSelectField() {
-    this.router.navigate([]);
+
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: {
+          field     : null,
+          gameMode  : null,
+          gameID    : null },
+      queryParamsHandling: "merge",
+      preserveFragment: true });
+
+    window.history.replaceState(urlTree, "Field", urlTree.toString());
     this.selectedField = null;
     this.selectedMode = null;
     this.selectedGame = null;

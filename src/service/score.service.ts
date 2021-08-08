@@ -1,5 +1,17 @@
 import { Injectable } from '@angular/core';
 
+
+const CAPTURE  = 2;
+const ASSIST   = 3;
+
+const BOMB_ARM = 8;
+const BOMB_DIF = 9;
+
+const MEDIC_IN  = 11;
+const MEDIC_OUT = 12;
+
+const RESPAWN  = 13;
+
 @Injectable({
     providedIn: 'root'
 })
@@ -56,6 +68,8 @@ export class ScoreService {
     // Build barChartData
     this.barChartData = [];
 
+    let maxDeaths = 0;
+
     // Assemble PLAYER stats from API data
     this.gameStats["player_stats"].forEach(player => {
 
@@ -68,8 +82,12 @@ export class ScoreService {
             is_alive     : player.is_alive,
             lastAction   : this.actionList.find(ele => ele.id == player.data[0]?.actionID)?.action || " ",
             lastLocation : this.findLocationFromDeviceID(player.data[0]?.deviceID) || " ",
-            totalPoints  : player.data.reduce((prev, next) => prev + this.actionList.find(ele => ele.id == next.actionID).points, 0)
+            totalPoints  : player.data.reduce((accu, next) => accu + this.actionList.find(ele => ele.id == next.actionID).points, 0),
+            totalDeaths  : player.data.reduce((accu, next) => next.actionID == RESPAWN || next.actionID == MEDIC_IN ? accu + 1 : accu, 0),
+            survivalPoints: 0
         }
+
+        maxDeaths = Math.max(maxDeaths,playerObj.totalDeaths);
         this.players.push(playerObj)
 
         // Stuff it in ALL ACTIONS history also
@@ -95,17 +113,22 @@ export class ScoreService {
                 timestamp   : date.toLocaleString('en-US', {hour12:false}),
                 gameID      : this.gameID
             }
-            //Join the action with aggregated data 
+            //Join the action with aggregated data
             this.allActions.push({...act, ...historyObj});
         }
 
     });
-
     // Assemble TEAM stats from API data
     this.gameStats["team_stats"].forEach(team => {
 
         let team_players = this.players.filter(player => player.teamID == team.id);
-        let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+
+        team_players.forEach(player => {
+            player.survivalPoints = Math.floor((maxDeaths - player.totalDeaths)/team_players.length);
+            player.totalPoints += player.survivalPoints;
+        })
+
+        let plyr_points   = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
 
         let team_score = team.data.reduce((accu, ele) => accu + ele.points, 0);
 
@@ -157,16 +180,22 @@ export class ScoreService {
         if (is_team) {continue}
 
         let team_players = this.players.filter(player => player.teamID == team.id);
-        let plyr_points  = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+
+        team_players.forEach(player => {
+            player.survivalPoints = Math.floor((maxDeaths - player.totalDeaths)/team_players.length);
+            player.totalPoints += player.survivalPoints;
+        })
+
+        let plyr_points   = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
 
         this.teams.push({
-                         teamID       : team.id,
-                         name         : team.name,
-                         color        : '#' + team.color,
-                         score        : 0,
-                         player_score : plyr_points,
-                         comb_score   : 0 + plyr_points,
-                         players      : team_players,
+                         teamID         : team.id,
+                         name           : team.name,
+                         color          : '#' + team.color,
+                         score          : 0,
+                         player_score   : plyr_points,
+                         comb_score     : 0 + plyr_points,
+                         players        : team_players,
                         })
 
         this.barChartData.push({"name":team.name, "teamID":team.id, "series":[
@@ -209,7 +238,7 @@ export class ScoreService {
 
     }
     // Purge all the stuff without a player name to show the stuff that matters
-    this.teams = [...this.teams]
+    // this.teams = [...this.teams]
     // this.allActions = this.allActions.filter(act => act.name);
   }
 
@@ -222,7 +251,7 @@ export class ScoreService {
 
       if (index != -1) {
           this.gameStats["player_stats"][index].is_alive = player.is_alive;
-          this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
+          // this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
       }
       this.calcScoreAndSetActions();
   }
@@ -248,7 +277,7 @@ export class ScoreService {
                   "data" : [action]
               })
           }
-          this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
+          // this.gameStats["team_stats"] = [...this.gameStats["team_stats"]];
       }
       // If RFID associated, push to player_stats
       else {
@@ -266,7 +295,7 @@ export class ScoreService {
                   "data"     : [action]
               })
           }
-          this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
+          // this.gameStats["player_stats"] = [...this.gameStats["player_stats"]];
       }
       this.calcScoreAndSetActions();
   }

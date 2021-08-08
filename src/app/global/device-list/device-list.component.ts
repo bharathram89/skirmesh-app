@@ -46,6 +46,8 @@ export class DeviceListComponent implements OnInit {
     teamsAvaliable      = [];
     previousSelected;
 
+    deviceUpdateFailed  = false;
+
     constructor(
         userService   : UserServiceService,
         tokenService  : TokenStorageService,
@@ -62,52 +64,50 @@ export class DeviceListComponent implements OnInit {
 
     this.config.subscribe( modeConfig => {
 
-        this.userSvc.getUserData().subscribe(userData => {
+      this.mode  = modeConfig.mode;
+      this.mapid = modeConfig.mapID;
 
-          this.mode  = modeConfig.mode;
-          this.mapid = modeConfig.mapID;
+      //  TEAMS CONFIGS
+      if(modeConfig.teams){
 
-          //  TEAMS CONFIGS
-          if(modeConfig.teams){
+          const teams = [];
+          modeConfig.teams.forEach(element => {
 
-              const teams = [];
-              modeConfig.teams.forEach(element => {
+            if(element.value && element.value.name){
 
-                if(element.value && element.value.name){
+              teams.push({ 'id': element.value.id, 'name': element.value.name, 'color': element.value.color })
 
-                  teams.push({ 'id': element.value.id, 'name': element.value.name, 'color': element.value.color })
+            }else{
 
-                }else{
+              teams.push({ 'id': element.id, 'name': element.name, 'color': element.color })
 
-                  teams.push({ 'id': element.id, 'name': element.name, 'color': element.color })
+            }
+          });
+          this.teamsAvaliable = teams
 
-                }
-              });
-              this.teamsAvaliable = teams
+      }
 
-          }
+      this.devices = modeConfig.nodeConfigs;
+      this.devices?.sort((a, b) => a.saveToConfigs && a.id - b.id);
 
-          this.devices = modeConfig.nodeConfigs;
-          this.devices?.sort((a, b) => a.id - b.id);
+      if(modeConfig.mapID){
 
-          if(modeConfig.mapID){
+          this.userSvc.fieldProfile.subscribe( fp => {
+              this.locationsToSet = fp.maps.find(map => map.id == modeConfig.mapID)?.locations;
+          });
 
-              this.userSvc.fieldProfile.subscribe( fp => {
-                  this.locationsToSet = fp.maps.find(map => map.id == modeConfig.mapID)?.locations;
-              });
+          let arr=[];
 
-              let arr=[];
+          this.devices.forEach(device=>{
 
-              this.devices.forEach(device=>{
+            if(device.location){
+              arr.push(device.location);
+            }
+          })
+          this.selectedLocations   = arr;
+          this.updatedLocationList = this.getLocationList();
+      }
 
-                if(device.location){
-                  arr.push(device.location);
-                }
-              })
-              this.selectedLocations   = arr;
-              this.updatedLocationList = this.getLocationList();
-          }
-        })
       })
     }
 
@@ -119,12 +119,15 @@ export class DeviceListComponent implements OnInit {
 
         // Emit to Parent (Start Game) to modify device with
         // gameID as necessary
-        this.nodeConfigs.emit(device)
+        // this.nodeConfigs.emit(device)
 
         if (this.mode == 'active') {
             //update the database here
             this.secAPIsvc.modifyDevice(this.tokenSvc.getToken(), device).subscribe(
-                data => {}
+                resp => {},
+                err => {
+                    this.deviceUpdateFailed = true;
+                }
             );
         }
         else {}
@@ -178,6 +181,10 @@ export class DeviceListComponent implements OnInit {
           return this.updatedLocationList.find(ele => ele.id == locID)
     }
 
+
+    updateIncludeDevice(device) {
+        device.saveToConfigs = !device.saveToConfigs;
+    }
 
 
     updateModeSwitches(device){

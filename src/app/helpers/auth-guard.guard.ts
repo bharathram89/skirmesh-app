@@ -45,6 +45,7 @@ export class AuthGuardGuard implements CanActivate {
 
         err=>{
           console.log(err,"error in AUTH GUARD")
+          this.tokenStorage.signOut();
           return false;
         }))
 

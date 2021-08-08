@@ -1,6 +1,4 @@
 
-<div class="container">
-
 <div class="d-grid gap-2 col-6 mx-auto">
 
     <div *ngIf="selectedField"
@@ -8,20 +6,25 @@
           (click)="deSelectField()">Go Back
     </div>
 
-    <button  *ngIf="selectedField"
-          class="btn btn-outline-primary btn-block"
+    <div  *ngIf="selectedGame?.id"
+          class="btn btn-block"
+          [class.btn-success]="replayIntervalID"
+          [class.btn-outline-primary]="!replayIntervalID"
           (click)="replay()"
-          [disabled]="!selectedGame?.id || replayIntervalID">Replay
-    </button>
+          [disabled]="replayIntervalID">Replay
+    </div>
 
 </div>
 
 
-<div *ngIf="!selectedField" class="row">
+<div class="container">
+
+
+<div *ngIf="!selectedField" class="row justify-content-center">
 
 
   <div *ngFor="let field of fieldCardData;"
-       class="card user-card col-sm-3 d-flex px-1 py-1 gx-1 gy-1"
+       class="card user-card col-sm-3 d-flex px-0 g-1"
        (click)="selectField(field.id)">
 
       <div class="card-header"
@@ -85,15 +88,15 @@
               </select>
               <br/>
               <ngx-datatable
+                  style="max-height: 350px;"
                   *ngIf="selectedMode"
                   class="material striped"
                   [rows]="selectedMode.games"
-                  rowHeight="auto"
-                  [columns]="[ {name:'Game Date, Time', prop:'creationDate', sortable:false} ]"
+                  [rowHeight]="40"
+                  [columns]="[ {name:'Game Date, Time', prop:'creationDate', sortable:true} ]"
                   [columnMode]="'force'"
                   [selectionType]="'single'"
-                  [limit]="5"
-                  [footerHeight]="'auto'"
+                  [scrollbarV]="'true'"
                   (select)="changeGame($event)">
               </ngx-datatable>
 
