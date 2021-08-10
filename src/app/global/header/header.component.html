@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav *ngIf="!appSvc.isMobile" class="navbar navbar-expand-lg navbar-light bg-light">
 
     <div class="container-fluid">
 
@@ -97,4 +97,40 @@
 
     </div>
 
+</nav>
+<nav *ngIf="appSvc.isMobile">
+    <i class="fa fa-arrow-right" (click)="toggleSideMenu()" aria-hidden="true"></i>
+    <div id='wrapper' *ngIf="openSideMenu">
+
+  <div id="sidebar-wrapper">
+    <ul class="sidebar-nav"> 
+      <li>
+        <a (click)="toggleSideMenu()" [routerLink]="['/secure/past-games']">Past Games</a>
+      </li>
+      <li>
+        <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/leader-board']">Leaderboard</a>
+      </li>
+      <li class="sidebar-brand">
+        <a>
+          Helpful links
+        </a>
+      </li>
+      <li>
+        <a href="#">Overview</a>
+      </li>
+      <li>
+        <a href="#">Events</a>
+      </li>
+      <li>
+        <a href="#">About</a>
+      </li>
+      <li>
+        <a href="#">Services</a>
+      </li>
+      <li>
+        <a href="#">Contact</a>
+      </li>
+    </ul>
+  </div>
+    </div>
 </nav>

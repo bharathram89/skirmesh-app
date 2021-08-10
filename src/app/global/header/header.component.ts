@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
+import { AppService } from 'src/service/app.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
 
@@ -13,24 +14,26 @@ declare const particlesJS: any;
 })
 export class HeaderComponent implements OnInit {
   isSideNavOpen: boolean = false;
-  isSecure:boolean = true;
-
-  isField  =false;
+  isSecure:boolean = true; 
+  isField  = false;
+  openSideMenu = false;
   userSvc:UserServiceService;
   tokenSvc:TokenStorageService;
+  appSvc:AppService;
 
 
 
   constructor(userService:UserServiceService,tokenService:TokenStorageService,
     private router: Router,
+     appSvc: AppService,
     private activatedRoute: ActivatedRoute) {
+      this.appSvc = appSvc;
     this.userSvc = userService;
     this.tokenSvc = tokenService;
    }
 
   ngOnInit(): void { 
-    this.isSecure = this.userSvc.isSignedIn() 
-
+    this.isSecure = this.userSvc.isSignedIn()  
     this.isField = this.userSvc.isField;
 
     // particlesJS( "particles-js", {
@@ -139,7 +142,9 @@ export class HeaderComponent implements OnInit {
     //   "retina_detect": true
     // });
   }
-  
+  toggleSideMenu(){
+    this.openSideMenu = !this.openSideMenu
+  }
   route(route){
     this.router.navigate([route] );
     let currentUrl = route;
