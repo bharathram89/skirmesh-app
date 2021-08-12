@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from 'src/service/app.service';
+import { UserServiceService } from 'src/service/user-service.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,8 +9,11 @@ import { AppService } from 'src/service/app.service';
 })
 export class FooterComponent implements OnInit {
   appSvc:AppService;
-  constructor( appSvc: AppService) { 
-
+  isField;
+  isSecure;
+  constructor(userService:UserServiceService, appSvc: AppService) { 
+    this.isField = userService.isField;
+    this.isSecure = userService.isSignedIn();
     this.appSvc = appSvc;
   }
 

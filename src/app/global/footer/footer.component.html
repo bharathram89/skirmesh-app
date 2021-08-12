@@ -63,20 +63,33 @@
   </footer>
 
   <nav *ngIf="appSvc.isMobile"  class="mobile-bottom-nav">
-    <div [routerLink]="['/secure/live-games']" class="mobile-bottom-nav__item">
+    <div *ngIf="!isSecure" [routerLink]="['/non-secure/live-games']" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
         <i class="material-icons">Live Game</i> 
       </div>		
     </div> 
-    <div  [routerLink]="['/secure/dashboard']" class="mobile-bottom-nav__item">
+    <div *ngIf="isSecure" [routerLink]="['/secure/live-games']" class="mobile-bottom-nav__item">
+      <div class="mobile-bottom-nav__item-content">
+        <i class="material-icons">Live Game</i> 
+      </div>		
+    </div> 
+    <div *ngIf="!isField &&  isSecure" [routerLink]="['/secure/dashboard']" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
         <i class="material-icons">Dashboard</i> 
       </div>		
     </div>
     
-    <div  [routerLink]="['/secure/profile']" class="mobile-bottom-nav__item">
+    <div *ngIf="isField &&  isSecure" [routerLink]="['/secure/startGame']" class="mobile-bottom-nav__item">
+      <div class="mobile-bottom-nav__item-content">
+        <i class="material-icons">Manage Game</i> 
+      </div>		
+    </div>
+
+    <div *ngIf="isSecure" [routerLink]="['/secure/profile']" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
         <i class="material-icons">Profile</i> 
       </div>		
     </div>
+
+
   </nav>

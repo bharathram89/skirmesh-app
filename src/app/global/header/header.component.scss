@@ -1,5 +1,14 @@
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
 
+.cust_floater{
+  padding-left: 5px;
+  background-color: white;
+  opacity: 0.8;
+  position: fixed;
+  box-shadow: 0 -2px 5px -2px #333;
+  top:0;
+}
+
 .hc_custom {
   max-height: 40px;;
 }
