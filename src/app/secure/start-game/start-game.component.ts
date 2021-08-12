@@ -57,7 +57,7 @@ export class StartGameComponent implements OnInit {
 
     playerUpdate;
     teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
-
+    userToken;
     constructor(
         private userSvc      : UserServiceService,
         private tokenSvc     : TokenStorageService,
@@ -68,10 +68,15 @@ export class StartGameComponent implements OnInit {
         this.activeDevices = new BehaviorSubject({})
     }
 
-    ngOnInit(): void {
-
+   async ngOnInit() {
+        await this.tokenSvc.getToken().then(
+            data => {
+                this.userToken = data;
+            }
+        );
+        
          // This sets the dropdown menu with available game configurations
-         this.secAPIsvc.getGameConfigs(this.tokenSvc.getToken(),this.userSvc.getFieldProfileID()).subscribe(
+         this.secAPIsvc.getGameConfigs(this.userToken,this.userSvc.getFieldProfileID()).subscribe(
              savedConfigs => {
                  this.gameModes  = savedConfigs;
                  this.allDevices = this.userSvc.getFieldProfile().devices;
@@ -86,7 +91,6 @@ export class StartGameComponent implements OnInit {
         // socket events to update specific areas
         this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
             socketData => {
-                console.log(socketData," Player Update");
                 this.updatePlayerData(socketData);
         })
     }
@@ -113,7 +117,7 @@ export class StartGameComponent implements OnInit {
         // device to baseline all configurations from saved configs
         let mode = this.selectedGameMode;
 
-        this.secAPIsvc.startGame(this.tokenSvc.getToken(), mode.id).subscribe(
+        this.secAPIsvc.startGame(this.userToken, mode.id).subscribe(
 
             data => {
                 this.gameData = data
@@ -188,7 +192,7 @@ export class StartGameComponent implements OnInit {
 
         let paused = !this.gameData.is_paused;
 
-        this.secAPIsvc.pauseGame(this.tokenSvc.getToken(), {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
+        this.secAPIsvc.pauseGame(this.userToken, {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
             data => this.gameData = data
         )
     }
@@ -200,7 +204,7 @@ export class StartGameComponent implements OnInit {
 
         if (safe) {
 
-            this.secAPIsvc.endGame(this.tokenSvc.getToken(), this.gameData.id).subscribe(
+            this.secAPIsvc.endGame(this.userToken, this.gameData.id).subscribe(
                 data => {
                         this.gameInProgress = false;
                         this.gameBoardActive = false;
@@ -292,7 +296,7 @@ export class StartGameComponent implements OnInit {
 
         this.filteredGameModes = this.gameModes.filter(config => config.mapID == mapID)
 
-        this.secAPIsvc.getActiveGamesByMap(this.tokenSvc.getToken(), mapID).subscribe(
+        this.secAPIsvc.getActiveGamesByMap(this.userToken, mapID).subscribe(
 
             activeGameConfig=>{
 

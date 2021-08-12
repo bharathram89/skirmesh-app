@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChange } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -13,25 +13,39 @@ declare const particlesJS: any;
 })
 export class HeaderComponent implements OnInit {
   isSideNavOpen: boolean = false;
-  isSecure:boolean = true;
+  isSecure: boolean = false;
 
-  isField  =false;
-  userSvc:UserServiceService;
-  tokenSvc:TokenStorageService;
+  isField = false;
+  userSvc: UserServiceService;
+  tokenSvc: TokenStorageService;
 
 
 
-  constructor(userService:UserServiceService,tokenService:TokenStorageService,
+  constructor(userService: UserServiceService, tokenService: TokenStorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute) {
     this.userSvc = userService;
     this.tokenSvc = tokenService;
-   }
+  }
 
-  ngOnInit(): void { 
-    this.isSecure = this.userSvc.isSignedIn() 
+  async ngOnInit() {
 
-    this.isField = this.userSvc.isField;
+    await this.tokenSvc.getToken().then(
+      data => {
+        if (data) {
+          if (data.length) {
+            this.isSecure = true;
+          } else {
+            this.isSecure = false;
+          }
+          this.isField = this.userSvc.isField;
+        } else {
+          this.isSecure = false;
+          this.isField = this.userSvc.isField;
+        }
+
+      }
+    );
 
     // particlesJS( "particles-js", {
     //   "particles": {
@@ -139,42 +153,42 @@ export class HeaderComponent implements OnInit {
     //   "retina_detect": true
     // });
   }
-  
-  route(route){
-    this.router.navigate([route] );
+
+  route(route) {
+    this.router.navigate([route]);
     let currentUrl = route;
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // this.router.onSameUrlNavigation = 'reload';
     this.router.navigate([currentUrl]);
   }
-  signOut(){
+  signOut() {
     this.tokenSvc.signOut();
     this.userSvc.setSignIn(false);
 
     this.router.navigate(['/secure-player']);
   }
 
-  closeInfoMenu(){
+  closeInfoMenu() {
     let menu = document.getElementById("infoDropdown")
-    menu.style.display=='none'
+    menu.style.display == 'none'
   }
 
-  openInfoMenu(){
+  openInfoMenu() {
     let menu = document.getElementById("infoDropdown")
-    if(menu.style.display=='none'){
-      menu.style.display='block';
-    }else{
-      menu.style.display='none';
+    if (menu.style.display == 'none') {
+      menu.style.display = 'block';
+    } else {
+      menu.style.display = 'none';
     }
 
 
   }
 
-  openMenu(){
+  openMenu() {
     let menu = document.getElementById("navdrop")
     menu.classList.toggle('collapse')
   }
- 
+
 
 
 }

@@ -1,58 +1,51 @@
 import { tokenName } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { TokenStorageService } from './token-storage.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserServiceService {
 
-  signedIn:boolean =false;
-  userType;
-  userData: BehaviorSubject<any>;
-  tokenSvc:TokenStorageService;
-  isField:boolean=false;
-  token;
-  fieldProfileID;
-  fieldProfile;
+    signedIn: boolean = false;
+    userType;
+    userData: BehaviorSubject<any>;
+    isField: boolean = false;
+    token;
+    fieldProfileID;
+    fieldProfile;
 
-  constructor(
-    tokenService: TokenStorageService
-  ) {
-    this.tokenSvc     = tokenService;
-    // this.signedIn     = new BehaviorSubject(false);
-  }
+    constructor(
+    ) {
+        // this.signedIn     = new BehaviorSubject(false);
+    }
 
 
-    setUserData(userData){
-
-        if(userData.user.fieldProfile){
-
+    setUserData(userData) {
+        if (userData.user.fieldProfile) {
             this.isField = true;
-
             this.fieldProfileID = userData.user.fieldProfile.id;
             this.fieldProfile = new BehaviorSubject(userData.user.fieldProfile);
         }
         this.userData = new BehaviorSubject(userData.user);
     }
 
-    getFieldProfileID(){
+    getFieldProfileID() {
         let fpID;
-        if (!this.fieldProfile) {return null}
-        this.fieldProfile.subscribe(fp => {fpID = fp.id});
+        if (!this.fieldProfile) { return null }
+        this.fieldProfile.subscribe(fp => { fpID = fp.id });
         return fpID
     }
 
-    getFieldProfile(){
+    getFieldProfile() {
         let fieldProfile
-        if (!this.fieldProfile) {return null}
-        this.fieldProfile.subscribe(fp => {fieldProfile = fp});
+        if (!this.fieldProfile) { return null }
+        this.fieldProfile.subscribe(fp => { fieldProfile = fp });
         return fieldProfile
     }
 
     setSignIn(val: boolean) {
-        this.signedIn=val;
+        this.signedIn = val;
     }
 
     isSignedIn() {
@@ -60,22 +53,25 @@ export class UserServiceService {
     }
 
     getUserData(){
-        return this.userData;
+        if (this.userData) {
+            return this.userData;
+        }
+        else return null;
     }
 
-    getGameModes(){
+    getGameModes() {
         return this.fieldProfile.gameConfigs;
     }
 
     isSocialAccount() {
 
         let user;
-
+        if (this.userData) {
         this.userData.subscribe( data =>
             user = data
         )
-
-        return user.facebookID || user.googleID || user.twitterID ? true : false
+        return user.facebookID || user.googleID || user.twitterID ? true : false 
+    }
     }
 
 }

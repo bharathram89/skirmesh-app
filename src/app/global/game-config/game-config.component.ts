@@ -5,9 +5,9 @@ import { makeDeviceModals } from '../node.modal';
 import { SecureAPIService } from 'src/service/secure-api.service';
 
 @Component({
-  selector: 'app-game-config',
-  templateUrl: './game-config.component.html',
-  styleUrls: ['./game-config.component.scss']
+    selector: 'app-game-config',
+    templateUrl: './game-config.component.html',
+    styleUrls: ['./game-config.component.scss']
 })
 export class GameConfigComponent implements OnInit {
 
@@ -15,19 +15,25 @@ export class GameConfigComponent implements OnInit {
 
     activeConfig;
 
+    userToken;
+
     constructor(
-        private userSvc   : UserServiceService,
-        private tokenSvc  : TokenStorageService,
-        private secAPIsvc : SecureAPIService
-    ) {}
+        private userSvc: UserServiceService,
+        private tokenSvc: TokenStorageService,
+        private secAPIsvc: SecureAPIService
+    ) { }
 
 
-    ngOnInit(): void {
+    async ngOnInit() {
 
-        let fpID  = this.userSvc.getFieldProfileID();
-        let token = this.tokenSvc.getToken();
+        let fpID = this.userSvc.getFieldProfileID();
+        await this.tokenSvc.getToken().then(
+            data => {
+                this.userToken = data;
+            }
+        );
 
-        this.secAPIsvc.getGameConfigs(token, fpID).subscribe(savedConfigs => {
+        this.secAPIsvc.getGameConfigs(this.userToken, fpID).subscribe(savedConfigs => {
 
             this.gameConfigs = savedConfigs;
             this.gameConfigs.forEach(savedConfig => {
@@ -51,7 +57,7 @@ export class GameConfigComponent implements OnInit {
 
         if (safe) {
 
-            this.secAPIsvc.deleteGameConfig(this.tokenSvc.getToken(), config.id).subscribe(
+            this.secAPIsvc.deleteGameConfig(this.userToken, config.id).subscribe(
                 resp => {
                     this.gameConfigs = this.gameConfigs.filter(gc => gc.id != config.id);
                 });
@@ -73,9 +79,9 @@ export class GameConfigComponent implements OnInit {
 
         let newConfig = {
             description: "",
-            deviceMap:  "[]",
-            teams: [{name:"Team Alpha", color:"#FF0000", id:null},
-                    {name:"Team Bravo", color:"#0000FF", id:null}],
+            deviceMap: "[]",
+            teams: [{ name: "Team Alpha", color: "#FF0000", id: null },
+            { name: "Team Bravo", color: "#0000FF", id: null }],
             devices: []
         }
 
@@ -84,7 +90,7 @@ export class GameConfigComponent implements OnInit {
     }
 
 
-    findMapName(mapID){
+    findMapName(mapID) {
 
         let map = this.userSvc.getFieldProfile().maps.find(map => map.id == mapID)
         return map?.name

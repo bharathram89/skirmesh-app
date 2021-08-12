@@ -201,8 +201,11 @@ export class SignUpComponent implements OnInit {
       }
       this.nonSecAPIsvc.userLogin(logindata).subscribe(
         respData => { 
-          this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure/dashboard']);
+          this.tokenStorage.saveToken(respData['token']).then(
+            data => {
+              this.router.navigate(['/secure/dashboard']);
+            }
+          )
         },
         err => {
           document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
@@ -221,8 +224,11 @@ export class SignUpComponent implements OnInit {
     this.nonSecAPIsvc.createUser(socialData).subscribe(data => { 
       this.nonSecAPIsvc.userLogin(logindata).subscribe(
         respData => { 
-          this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure/dashboard']);
+          this.tokenStorage.saveToken(respData['token']).then(
+            data=> {
+              this.router.navigate(['/secure/dashboard']);
+            }
+          )
         },
         err => {
           document.getElementById('userCreateFailedMessage').classList.toggle('d-none')
