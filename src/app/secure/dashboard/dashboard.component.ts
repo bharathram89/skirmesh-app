@@ -8,6 +8,7 @@ import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppService } from 'src/service/app.service';
 // actionIDs associated with specific actions
 
 const CAPTURE = 2;
@@ -80,6 +81,7 @@ export class DashboardComponent implements OnInit {
     private tokenSvc: TokenStorageService,
     private nonSecAPIsvc: NonSecureAPIService,
     private secAPIsvc: SecureAPIService,
+    private appSvc: AppService,
     private breakpointObserver: BreakpointObserver,
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -150,18 +152,14 @@ export class DashboardComponent implements OnInit {
       }
     )
 
-    this.breakpointObserver.observe([
-      '(max-width: 768px)'
-    ]).subscribe(result => {
 
-      if (result.matches) {
-        this.chartView = [300, 300]
-      }
-      else {
-        // if necessary:
-        this.chartView = [500, 300]
-      }
-    });
+    if (this.appSvc.isMobile) {
+      this.chartView = [300, 300]
+    }
+    else {
+      // if necessary:
+      this.chartView = [500, 300]
+    }
 
 
   }

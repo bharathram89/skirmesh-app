@@ -1,6 +1,7 @@
 import { Component, OnInit, SimpleChange } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
+import { AppService } from 'src/service/app.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
 
@@ -18,12 +19,16 @@ export class HeaderComponent implements OnInit {
   isField = false;
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
+  openSideMenu = false;
+  appSvc:AppService;
 
 
 
   constructor(userService: UserServiceService, tokenService: TokenStorageService,
     private router: Router,
+     appSvc: AppService,
     private activatedRoute: ActivatedRoute) {
+      this.appSvc = appSvc;
     this.userSvc = userService;
     this.tokenSvc = tokenService;
   }
@@ -153,9 +158,11 @@ export class HeaderComponent implements OnInit {
     //   "retina_detect": true
     // });
   }
-
-  route(route) {
-    this.router.navigate([route]);
+  toggleSideMenu(){
+    this.openSideMenu = !this.openSideMenu
+  }
+  route(route){
+    this.router.navigate([route] );
     let currentUrl = route;
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // this.router.onSameUrlNavigation = 'reload';

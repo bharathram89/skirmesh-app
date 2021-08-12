@@ -14,6 +14,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { HttpErrorInterceptor } from './helpers/httpconfig.interceptor';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
+import { AppService } from 'src/service/app.service';
 
 const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
 
@@ -37,6 +38,7 @@ const config: SocketIoConfig = { url: 'https://api.skirmesh.net', options: {} };
 
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     UserServiceService,
+    AppService,
     SocialAuthService,
     {
       provide: 'SocialAuthServiceConfig',

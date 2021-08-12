@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from 'src/service/app.service';
 
 @Component({
   selector: 'app-footer',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
+  appSvc:AppService;
+  constructor( appSvc: AppService) { 
 
-  constructor() { }
+    this.appSvc = appSvc;
+  }
 
   ngOnInit(): void {
   }

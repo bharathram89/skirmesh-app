@@ -1,15 +1,16 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav *ngIf="!appSvc.isMobile" class="navbar navbar-expand-lg navbar-light bg-light">
 
     <div class="container-fluid">
 
-      <!-- <div id="particles-js" onload="particlesJS(this.id)"> </div> -->
+        <!-- <div id="particles-js" onload="particlesJS(this.id)"> </div> -->
 
         <button class="navbar-toggler" type="button" (click)="openMenu()" aria-controls="navbarTogglerDemo03"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png" alt="user" />
+        <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
+            alt="user" />
 
         <div class="collapse navbar-collapse" id="navdrop">
 
@@ -23,8 +24,10 @@
                     </a>
                     <div id="infoDropdown" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/home']">Home</a>
-                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/feature-list']">Features</a>
-                        <a class="dropdown-item" (click)="closeInfoMenu()" [routerLink]="['/non-secure/field-info']">Field Info</a>
+                        <a class="dropdown-item" (click)="closeInfoMenu()"
+                            [routerLink]="['/non-secure/feature-list']">Features</a>
+                        <a class="dropdown-item" (click)="closeInfoMenu()"
+                            [routerLink]="['/non-secure/field-info']">Field Info</a>
                     </div>
                 </li>
             </ul>
@@ -32,10 +35,11 @@
             <!-- NON SECURE LINKS BELOW -->
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="!isSecure">
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_home" (click)="route('/non-secure/home')" >Home </a>
+                    <a class="nav-link" id="nav_home" (click)="route('/non-secure/home')">Home </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']"> How it works </a>
+                    <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']"> How it works
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Info</a>
@@ -47,7 +51,8 @@
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">LIVE Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_pastgame"  (click)="route('/non-secure/leader-board')" >Leaderboard</a>
+                    <a class="nav-link" id="secure_nav_pastgame"
+                        (click)="route('/non-secure/leader-board')">Leaderboard</a>
                 </li>
             </ul>
             <!-- SECURE LINKS BELOW -->
@@ -59,7 +64,8 @@
                     <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
                 </li>
                 <li *ngIf=" isField" class="nav-item">
-                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Manage Games</a>
+                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Manage
+                        Games</a>
                 </li>
                 <li *ngIf=" isField" class="nav-item">
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Games</a>
@@ -68,10 +74,11 @@
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/live-games']">LIVE Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_pastgame"  (click)="route('/secure/past-games')" >Past Games</a>
+                    <a class="nav-link" id="secure_nav_pastgame" (click)="route('/secure/past-games')">Past Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_pastgame"  (click)="route('/non-secure/leader-board')" >Leaderboard</a>
+                    <a class="nav-link" id="secure_nav_pastgame"
+                        (click)="route('/non-secure/leader-board')">Leaderboard</a>
                 </li>
 
             </ul>
@@ -88,7 +95,8 @@
 
             <ul class="navbar-nav my-2 my-lg-0" *ngIf="isSecure">
                 <div class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign Out</button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign
+                        Out</button>
                 </div>
 
             </ul>
@@ -97,4 +105,50 @@
 
     </div>
 
+</nav>
+<nav *ngIf="appSvc.isMobile">
+    <i class="fa fa-arrow-right" (click)="toggleSideMenu()" aria-hidden="true"></i>
+    <div id='wrapper' *ngIf="openSideMenu">
+
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav"> 
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/secure/past-games']">Past Games</a>
+                </li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/leader-board']">Leaderboard</a>
+                </li>
+                <li class="sidebar-brand">
+                    <a>
+                        Field Management
+                    </a>
+                </li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/secure/manageGame']">Configure Games</a>
+                </li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/secure/startGame']">Manage Games</a>
+                </li>
+                <li class="sidebar-brand">
+                    <a>
+                        Helpful links
+                    </a>
+                </li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-up']">Register</a>
+                </li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/how-to-use']">How it works</a>
+                </li>
+                <li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/contact-us']">Conact Us</a>
+                </li>
+                <li>
+                    <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/privacy-policy']">Privacy Policy</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
 </nav>

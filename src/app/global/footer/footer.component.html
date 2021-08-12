@@ -1,5 +1,5 @@
 
-<footer class="mainfooter" role="contentinfo">
+<footer *ngIf="!appSvc.isMobile" class="mainfooter" role="contentinfo">
     <div class="footer-middle">
     <div class="container">
       <div class="row">
@@ -61,3 +61,22 @@
     </div>
     </div>
   </footer>
+
+  <nav *ngIf="appSvc.isMobile"  class="mobile-bottom-nav">
+    <div [routerLink]="['/secure/live-games']" class="mobile-bottom-nav__item">
+      <div class="mobile-bottom-nav__item-content">
+        <i class="material-icons">Live Game</i> 
+      </div>		
+    </div> 
+    <div  [routerLink]="['/secure/dashboard']" class="mobile-bottom-nav__item">
+      <div class="mobile-bottom-nav__item-content">
+        <i class="material-icons">Dashboard</i> 
+      </div>		
+    </div>
+    
+    <div  [routerLink]="['/secure/profile']" class="mobile-bottom-nav__item">
+      <div class="mobile-bottom-nav__item-content">
+        <i class="material-icons">Profile</i> 
+      </div>		
+    </div>
+  </nav>
