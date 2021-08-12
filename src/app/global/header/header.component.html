@@ -63,11 +63,11 @@
                 <li class="nav-item">
                     <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
                 </li>
-                <li *ngIf=" isField" class="nav-item">
+                <li *ngIf="isField" class="nav-item">
                     <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Manage
                         Games</a>
                 </li>
-                <li *ngIf=" isField" class="nav-item">
+                <li *ngIf="isField" class="nav-item">
                     <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Games</a>
                 </li>
                 <li class="nav-item">
@@ -106,8 +106,9 @@
     </div>
 
 </nav>
-<nav *ngIf="appSvc.isMobile">
-    <i class="fa fa-arrow-right" (click)="toggleSideMenu()" aria-hidden="true"></i>
+<nav *ngIf="appSvc.isMobile" style="background-color: black;
+color: white;">
+    <i style="margin: 1rem" class="fa fa-bars" (click)="toggleSideMenu()" aria-hidden="true"></i>
     <div id='wrapper' *ngIf="openSideMenu">
 
         <div id="sidebar-wrapper">
@@ -123,10 +124,10 @@
                         Field Management
                     </a>
                 </li>
-                <li>
+                <li *ngIf="isField">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/manageGame']">Configure Games</a>
                 </li>
-                <li>
+                <li *ngIf="isField">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/startGame']">Manage Games</a>
                 </li>
                 <li class="sidebar-brand">

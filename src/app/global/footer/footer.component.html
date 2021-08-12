@@ -63,20 +63,29 @@
   </footer>
 
   <nav *ngIf="appSvc.isMobile"  class="mobile-bottom-nav">
-    <div [routerLink]="['/secure/live-games']" class="mobile-bottom-nav__item">
+    <div [routerLink]="['/secure/live-games']"  routerLinkActive="active-link" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="material-icons">Live Game</i> 
+        <i class="fa fa-gamepad" aria-hidden="true"></i>
+        <i><b>
+          Live Game
+        </b></i> 
       </div>		
     </div> 
-    <div  [routerLink]="['/secure/dashboard']" class="mobile-bottom-nav__item">
+    <div  [routerLink]="['/secure/dashboard']"  routerLinkActive="active-link" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="material-icons">Dashboard</i> 
+        <i class="fa fa-home" aria-hidden="true"></i>
+        <i><b>
+          Dashboard
+        </b></i> 
       </div>		
     </div>
     
-    <div  [routerLink]="['/secure/profile']" class="mobile-bottom-nav__item">
+    <div  [routerLink]="['/secure/profile']"  routerLinkActive="active-link" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="material-icons">Profile</i> 
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <i ><b>
+          Profile
+        </b></i> 
       </div>		
     </div>
   </nav>

@@ -130,20 +130,15 @@ footer {
 	//give nav it's own compsite layer
 	will-change:transform;
 	transform: translateZ(0);
-	
 	display:flex;	
-	
-	height:75px;
-	
 	box-shadow: 0 -2px 5px -2px #333;
   background-color:#fff;
-  padding-top: 10px;
 	&__item{
 		flex-grow:1;
     text-align:center;
     font-style: normal;
 		font-size:12px;
-    border-left:1px solid #000;
+    border-left:1px solid #885100;
     height:50px;
 		display:flex;
 		flex-direction:column;
@@ -153,4 +148,9 @@ footer {
 		display:flex;
 		flex-direction:column;		
 	}
+}
+
+.active-link {
+  background-color: #885100;
+  color: white;
 }
