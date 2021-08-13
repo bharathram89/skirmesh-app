@@ -107,50 +107,68 @@
 
 </nav>
 <nav *ngIf="appSvc.isMobile" style="background-color: black; ">
-    <i style="margin: 1rem" class="fa fa-bars cust_floater" (click)="toggleSideMenu()" aria-hidden="true"></i>
+    <i *ngIf="!openSideMenu" style="margin: 1rem" class="fa fa-bars cust_floater" (click)="toggleSideMenu()" aria-hidden="true"></i>
     <div id='wrapper' *ngIf="openSideMenu">
-
+        <i class="fa fa-times cust_floater2" (click)="toggleSideMenu()" aria-hidden="true"></i>
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav"> 
-                <li *ngIf="!isSecure">
+                <li   *ngIf="!isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-in']">Sign In</a>
+                    <hr>
+                </li>
+                <li *ngIf="isSecure" class="sidebar-brand">
+                    <a>
+                        Player Section
+                    </a>
+                    <hr>
                 </li>
                 <li *ngIf="isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/past-games']">Past Games</a>
+                    <hr>
                 </li>
                 <li *ngIf="isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/leader-board']">Leaderboard</a>
+                    <hr>
                 </li>
                 <li *ngIf="isField && isSecure" class="sidebar-brand">
                     <a>
                         Field Management
                     </a>
+                    <hr>
                 </li>
                 <li *ngIf="isField &&  isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/manageGame']">Configure Games</a>
+                    <hr>
                 </li>
                 <li *ngIf="isField &&  isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/startGame']">Manage Games</a>
+                    <hr>
                 </li>
                 <li class="sidebar-brand">
                     <a>
                         Helpful links
                     </a>
+                    <hr>
                 </li>
                 <li>
                     <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-up']">Register</a>
+                    <hr>
                 </li>
                 <li>
                     <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/how-to-use']">How it works</a>
+                    <hr>
                 </li> 
                 <li>
                     <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/contact-us']">Conact Us</a>
+                    <hr>
                 </li>
                 <li>
                     <a (click)="toggleSideMenu()" [routerLink]="['/non-secure/privacy-policy']">Privacy Policy</a>
+                    <hr>
                 </li>
                 <li *ngIf="isSecure">
                     <a (click)="signOut()">Sign out</a>
+                    <hr>
                 </li>
             </ul>
         </div>
