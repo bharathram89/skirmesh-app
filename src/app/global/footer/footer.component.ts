@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from 'src/service/app.service';
+import { TokenStorageService } from 'src/service/token-storage.service';
 import { UserServiceService } from 'src/service/user-service.service';
 
 @Component({
@@ -11,13 +12,33 @@ export class FooterComponent implements OnInit {
   appSvc:AppService;
   isField;
   isSecure;
-  constructor(userService:UserServiceService, appSvc: AppService) { 
-    this.isField = userService.isField;
-    this.isSecure = userService.isSignedIn();
+  userSvc:UserServiceService; 
+  tokenSvc:TokenStorageService;
+  constructor(userService:UserServiceService, tokenService: TokenStorageService,appSvc: AppService) { 
+    this.appSvc = appSvc;
+    this.tokenSvc=tokenService;
+    this.userSvc = userService;
     this.appSvc = appSvc;
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+
+    await this.tokenSvc.getToken().then(
+      data => {
+        if (data) {
+          if (data.length) {
+            this.isSecure = true;
+          } else {
+            this.isSecure = false;
+          }
+          this.isField = this.userSvc.isField;
+        } else {
+          this.isSecure = false;
+          this.isField = this.userSvc.isField;
+        }
+
+      }
+    ) 
   }
 
 }

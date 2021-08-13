@@ -36,6 +36,8 @@ export class EditGameComponent implements OnInit {
         mapID:''
     };
 
+    userToken;
+
     constructor(
         private fb        : FormBuilder,
         private userSvc   : UserServiceService,
@@ -118,7 +120,7 @@ export class EditGameComponent implements OnInit {
     }
 
 
-    onFormSubmit() {
+   async onFormSubmit() {
 
         let dataModel = this.gameModeForm.value;
 
@@ -137,8 +139,14 @@ export class EditGameComponent implements OnInit {
             teams          : dataModel.teams
         }
 
+        await this.tokenSvc.getToken().then(
+            data => {
+              this.userToken = data;
+            }
+          );
+
         if (dataModel.id) {
-            this.secAPIsvc.modifyGameConfig(this.tokenSvc.getToken(), apiData).subscribe(
+            this.secAPIsvc.modifyGameConfig(this.userToken, apiData).subscribe(
                 resp => {
                     this.updateConfig.emit(resp);
                     this.gameModeForm.patchValue({teams:resp["teams"]});
@@ -148,7 +156,7 @@ export class EditGameComponent implements OnInit {
         }
         else {
 
-            this.secAPIsvc.saveGameConfig(this.tokenSvc.getToken(), apiData).subscribe(
+            this.secAPIsvc.saveGameConfig(this.userToken, apiData).subscribe(
                 resp => {
                     this.updateConfig.emit(resp);
                     this.gameModeForm.controls["id"].setValue(resp["id"]);
@@ -185,12 +193,18 @@ export class EditGameComponent implements OnInit {
     }
 
 
-    removeTeam(i:number) {
+    async removeTeam(i:number) {
 
         let team = this.teams.value[i];
 
+        await this.tokenSvc.getToken().then(
+            data => {
+              this.userToken = data;
+            }
+          );
+
         if (team.id) {
-            this.secAPIsvc.deleteTeam(this.tokenSvc.getToken(), team.id).subscribe(
+            this.secAPIsvc.deleteTeam(this.userToken, team.id).subscribe(
                 data => {}
             );
         }

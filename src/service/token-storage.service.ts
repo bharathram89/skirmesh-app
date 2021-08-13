@@ -1,4 +1,8 @@
+import { map } from 'rxjs/operators';
+import { SecureAPIService } from 'src/service/secure-api.service';
+import { UserServiceService } from 'src/service/user-service.service';
 import { Injectable } from '@angular/core';
+import { Storage } from '@capacitor/storage';
 
 const TOKEN_KEY = 'auth-token';
 const GAME_KEY = 'game-key';
@@ -8,31 +12,63 @@ const GAME_KEY = 'game-key';
 })
 export class TokenStorageService {
 
-  constructor() { }
+  constructor(private userSvc: UserServiceService,
+    private secAPIsvc: SecureAPIService,) { }
 
-  signOut(): void {
-    window.sessionStorage.clear();
-  }
+  signOut = async () => {
+    return await Storage.clear();
+  };
 
-  public saveToken(token: string): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
-  }
 
-  public getToken(): string | null {
-    return window.sessionStorage.getItem(TOKEN_KEY);
-  }
- 
-  public saveGameInfo(gameInfo):void {
-    window.sessionStorage.removeItem(GAME_KEY);
-    window.sessionStorage.setItem(GAME_KEY, gameInfo); 
+  saveToken = async (token: string) => {
+    await Storage.remove({ key: TOKEN_KEY });
+    return await Storage.set({
+      key: TOKEN_KEY,
+      value: token,
+    });
   }
 
-  public getGameInfo():string | null { 
-    return window.sessionStorage.getItem(GAME_KEY);
+  getToken = async () => {
+    const token = await Storage.get({ key: TOKEN_KEY });
+     await this.verifyToken(token.value);
+     return token.value;
   }
 
-  public endGame():void{
-    window.sessionStorage.removeItem(GAME_KEY); 
+  async verifyToken(token) {
+    if (!token && window.location.href.includes('token')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      token = urlParams.get('token');
+      await this.saveToken(token);
+      return true;
+    }
+    if (token) {
+      return await this.secAPIsvc.getUser(token).subscribe(userdata => {
+          if (userdata) {
+            this.userSvc.setUserData(userdata);
+            return true;
+          }
+        },
+
+          err => {
+            this.signOut();
+            return false;
+          })
+
+    } else {
+      return false;
+    }
   }
+
+  // public saveGameInfo(gameInfo): void {
+  //   window.sessionStorage.removeItem(GAME_KEY);
+  //   window.sessionStorage.setItem(GAME_KEY, gameInfo);
+  // }
+
+  // public getGameInfo(): string | null {
+  //   return window.sessionStorage.getItem(GAME_KEY);
+  // }
+
+  // public endGame(): void {
+  //   window.sessionStorage.removeItem(GAME_KEY);
+  // }
 }

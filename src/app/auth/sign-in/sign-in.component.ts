@@ -26,6 +26,14 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.tokenStorage.getToken().then(
+      data => {
+        if (data) {
+          this.router.navigate(['/secure/dashboard']);
+        }
+      }
+    )
     this.login = new FormGroup({
 
       "callSign": new FormControl(this.fields.callSign, [
@@ -55,8 +63,11 @@ export class SignInComponent implements OnInit {
 
       respData => {
 
-        this.tokenStorage.saveToken(respData['token'])
-        this.router.navigate(['/secure/dashboard']);
+        this.tokenStorage.saveToken(respData['token']).then (
+          data => {
+            this.router.navigate(['/secure/dashboard']);
+          }
+        )
       },
       err => {
         document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
@@ -76,9 +87,11 @@ export class SignInComponent implements OnInit {
       this.nonSecAPIsvc.userLogin(data).subscribe(
 
         respData => {
-
-          this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure/dashboard']);
+          this.tokenStorage.saveToken(respData['token']).then(
+            data => {
+              this.router.navigate(['/secure/dashboard']);
+            }
+          )
 
         },
         err => {
@@ -116,13 +129,15 @@ export class SignInComponent implements OnInit {
       this.nonSecAPIsvc.userLogin(logindata).subscribe(
 
         respData => { 
-          this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure/dashboard']);
+          this.tokenStorage.saveToken(respData['token']).then(
+            data => {
+              this.router.navigate(['/secure/dashboard']);
+            }
+          )
         })
     },
       err => {
         document.getElementById('userLoginFaileddMessage').classList.toggle('d-none')
-        console.log(err, "resp")
       })
   }
   loginWithFacebook(): void {
@@ -138,8 +153,11 @@ export class SignInComponent implements OnInit {
 
         respData => {
 
-          this.tokenStorage.saveToken(respData['token'])
-          this.router.navigate(['/secure/dashboard']);
+          this.tokenStorage.saveToken(respData['token']).then(
+            data => {
+              this.router.navigate(['/secure/dashboard']);
+            }
+          )
 
         },
         err => { 

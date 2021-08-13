@@ -72,7 +72,6 @@ export class LiveGamesComponent implements OnInit {
                 if (this.gameID &&
                     this.gameID == socketData["gameID"]) {
 
-                      console.log(socketData, " New Action");
                       this.scoreSvc.updateActionAndCalcScore(socketData);
                       this.parseActionForMapUpdate(socketData);
                 }
@@ -84,7 +83,6 @@ export class LiveGamesComponent implements OnInit {
                 if (this.scoreSvc.gameConfig?.length &&
                     this.scoreSvc.gameConfig?.teams.find(team => team.id == socketData["teamID"])) {
 
-                      console.log(socketData, " Player Update");
                       this.scoreSvc.updatePlayerData(socketData);
                 }
             })

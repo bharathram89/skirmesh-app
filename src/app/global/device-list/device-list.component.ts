@@ -59,6 +59,7 @@ export class DeviceListComponent implements OnInit {
         this.tokenSvc  = tokenService;
     }
 
+    userToken;
 
   ngOnInit(): void {
 
@@ -115,15 +116,21 @@ export class DeviceListComponent implements OnInit {
         this.previousSelected = device.location;
     }
 
-    saveNodeConfigs(device) {
+   async saveNodeConfigs(device) {
 
         // Emit to Parent (Start Game) to modify device with
         // gameID as necessary
         // this.nodeConfigs.emit(device)
+        await this.tokenSvc.getToken().then(
+            data => {
+              this.userToken = data;
+            }
+          );
 
         if (this.mode == 'active') {
             //update the database here
-            this.secAPIsvc.modifyDevice(this.tokenSvc.getToken(), device).subscribe(
+
+            this.secAPIsvc.modifyDevice(this.userToken, device).subscribe(
                 resp => {},
                 err => {
                     this.deviceUpdateFailed = true;

@@ -15,7 +15,7 @@
 
         <div class="content-panel" [class.d-block]="isProfileNav">
           <h2 class="title center-cust">Manage Profile</h2>
-          <form [formGroup]="profileForm" autocomplete="off" method="PUT" class="form-horizontal">
+          <form [formGroup]="profileForm" autocomplete="off" method="PUT" class="form-horizontal" style="margin-bottom: 5rem">
 
             <fieldset class="fieldset">
 
@@ -172,7 +172,7 @@
               </div>
             </div> -->
 
-            <div *ngIf="!isField" class="login-screen">
+            <div *ngIf="!isField" class="login-screen" >
 
               <h4>Skirmesh Wristbands connected to your profile:</h4>
 
@@ -255,7 +255,7 @@
               </form>
 
               <button [disabled]="uidEntry.invalid"  type="submit" (click)="onSubmitPairRfid()"
-                class="btn btn-primary cust_skir_signup"> Connect</button>
+                class="btn btn-primary cust_skir_signup" style="margin-bottom: 5rem;"> Connect</button>
                 <div *ngIf="rfidConnected" class="alert alert-primary" role="alert">
                    Wristband registered to your profile
                 </div>

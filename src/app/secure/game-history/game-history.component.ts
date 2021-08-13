@@ -41,7 +41,7 @@ export class GameHistoryComponent implements OnInit {
   holdData = [];
   baseDevices = [];
   replayIntervalID;
-
+  userToken;
   dateOptions = { "dateStyle": "long", "timeStyle": "medium", "hourCycle": "h24" };
 
   constructor(
@@ -53,11 +53,16 @@ export class GameHistoryComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.tokenSvc.getToken().then(
+      data => {
+          this.userToken = data;
+      }
+  );
     combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
     this.nonSecAPIsvc.getLocationsList(),
     this.nonSecAPIsvc.getActionsList(),
-    this.secAPIsvc.getFieldListFromAPI(this.tokenSvc.getToken()),
+    this.secAPIsvc.getFieldListFromAPI(this.userToken),
     this.activatedRoute.queryParams
     ])
       .subscribe(
@@ -238,7 +243,7 @@ export class GameHistoryComponent implements OnInit {
     let safe = confirm("!! WARNING !!\n\nDeleting this Game will DELETE ALL SCORES earned from this game.\n\nAre you sure you want to DELETE it?");
     if (!safe) { return }
 
-    this.secAPIsvc.deleteGame(this.tokenSvc.getToken(), this.selectedGame.id).subscribe(
+    this.secAPIsvc.deleteGame(this.userToken, this.selectedGame.id).subscribe(
       resp => {
         const indx = this.selectedMode.games.findIndex(ele => ele.id == this.selectedGame.id);
         this.selectedMode.games.splice(indx, 1);
