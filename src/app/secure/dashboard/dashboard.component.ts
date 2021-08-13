@@ -88,7 +88,16 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-
+    this.userSvc.userData.subscribe(
+      userData => {
+        console.log(userData);
+        if (userData?.fieldProfile) {
+          this.isField = true;
+        } else {
+          this.isField = false;
+        }
+      }
+    );
     await this.tokenSvc.getToken().then(
       data => {
         this.userToken = data;
@@ -103,7 +112,6 @@ export class DashboardComponent implements OnInit {
         }
 
         combineLatest([this.secAPIsvc.getUser(this.userToken, this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
-          this.isField = this.userSvc.isField;
           let userData;
           userData = userDataIn['user']
 
@@ -111,7 +119,6 @@ export class DashboardComponent implements OnInit {
 
           if (!userData) { return }
 
-          this.isField = userData.fieldProfile ? true : false;
 
           this.actionList = actions;
 

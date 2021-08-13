@@ -9,7 +9,7 @@ export class UserServiceService {
 
     signedIn: boolean = false;
     userType;
-    userData: BehaviorSubject<any>;
+    userData: BehaviorSubject<any> = new BehaviorSubject(null);
     isField: boolean = false;
     token;
     fieldProfileID;
@@ -27,7 +27,7 @@ export class UserServiceService {
             this.fieldProfileID = userData.user.fieldProfile.id;
             this.fieldProfile = new BehaviorSubject(userData.user.fieldProfile);
         }
-        this.userData = new BehaviorSubject(userData.user);
+        this.userData.next(userData.user);
     }
 
     getFieldProfileID() {
@@ -56,7 +56,7 @@ export class UserServiceService {
         if (this.userData) {
             return this.userData;
         }
-        else return null;
+        return null;
     }
 
     getGameModes() {

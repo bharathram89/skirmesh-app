@@ -33,9 +33,18 @@ export class HeaderComponent implements OnInit {
     this.tokenSvc = tokenService;
   }
 
-  async ngOnInit() {
-
-    await this.tokenSvc.getToken().then(
+  ngOnInit() {
+    this.userSvc.userData.subscribe(
+      userData => {
+        console.log(userData);
+        if (userData?.fieldProfile) {
+          this.isField = true;
+        } else {
+          this.isField = false;
+        }
+      }
+    );
+    this.tokenSvc.getToken().then(
       data => {
         if (data) {
           if (data.length) {
@@ -43,14 +52,15 @@ export class HeaderComponent implements OnInit {
           } else {
             this.isSecure = false;
           }
-          this.isField = this.userSvc.isField;
+        
         } else {
           this.isSecure = false;
-          this.isField = this.userSvc.isField;
         }
 
       }
     );
+   
+    
 
     // particlesJS( "particles-js", {
     //   "particles": {

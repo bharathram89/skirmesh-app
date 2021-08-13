@@ -22,7 +22,16 @@ export class FooterComponent implements OnInit {
   }
 
   async ngOnInit() {
-
+    this.userSvc.userData.subscribe(
+      userData => {
+        console.log(userData);
+        if (userData?.fieldProfile) {
+          this.isField = true;
+        } else {
+          this.isField = false;
+        }
+      }
+    );
     await this.tokenSvc.getToken().then(
       data => {
         if (data) {
@@ -31,10 +40,8 @@ export class FooterComponent implements OnInit {
           } else {
             this.isSecure = false;
           }
-          this.isField = this.userSvc.isField;
         } else {
           this.isSecure = false;
-          this.isField = this.userSvc.isField;
         }
 
       }
