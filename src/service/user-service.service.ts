@@ -13,7 +13,7 @@ export class UserServiceService {
     isField: boolean = false;
     token;
     fieldProfileID;
-    fieldProfile;
+    fieldProfile: BehaviorSubject<any> = new BehaviorSubject(null);
 
     constructor(
     ) {
@@ -25,23 +25,9 @@ export class UserServiceService {
         if (userData.user.fieldProfile) {
             this.isField = true;
             this.fieldProfileID = userData.user.fieldProfile.id;
-            this.fieldProfile = new BehaviorSubject(userData.user.fieldProfile);
+            this.fieldProfile.next(userData.user.fieldProfile);
         }
         this.userData.next(userData.user);
-    }
-
-    getFieldProfileID() {
-        let fpID;
-        if (!this.fieldProfile) { return null }
-        this.fieldProfile.subscribe(fp => { fpID = fp.id });
-        return fpID
-    }
-
-    getFieldProfile() {
-        let fieldProfile
-        if (!this.fieldProfile) { return null }
-        this.fieldProfile.subscribe(fp => { fieldProfile = fp });
-        return fieldProfile
     }
 
     setSignIn(val: boolean) {
@@ -52,26 +38,26 @@ export class UserServiceService {
         return this.signedIn;
     }
 
-    getUserData(){
+    getUserData() {
         if (this.userData) {
             return this.userData;
         }
         return null;
     }
 
-    getGameModes() {
-        return this.fieldProfile.gameConfigs;
-    }
+    // getGameModes() {
+    //     return this.fieldProfile.gameConfigs;
+    // }
 
     isSocialAccount() {
 
         let user;
         if (this.userData) {
-        this.userData.subscribe( data =>
-            user = data
-        )
-        return user.facebookID || user.googleID || user.twitterID ? true : false 
-    }
+            this.userData.subscribe(data =>
+                user = data
+            )
+            return user.facebookID || user.googleID || user.twitterID ? true : false
+        }
     }
 
 }

@@ -16,7 +16,7 @@ export class GameConfigComponent implements OnInit {
     activeConfig;
 
     userToken;
-
+    fieldProfile;
     constructor(
         private userSvc: UserServiceService,
         private tokenSvc: TokenStorageService,
@@ -26,14 +26,21 @@ export class GameConfigComponent implements OnInit {
 
     async ngOnInit() {
 
-        let fpID = this.userSvc.getFieldProfileID();
+        this.userSvc.fieldProfile.subscribe(
+            res => {
+                if (res) {
+                    this.fieldProfile = res;
+                }
+            }
+        )
+
         await this.tokenSvc.getToken().then(
             data => {
                 this.userToken = data;
             }
         );
 
-        this.secAPIsvc.getGameConfigs(this.userToken, fpID).subscribe(savedConfigs => {
+        this.secAPIsvc.getGameConfigs(this.userToken, this.fieldProfile.id).subscribe(savedConfigs => {
 
             this.gameConfigs = savedConfigs;
             this.gameConfigs.forEach(savedConfig => {
@@ -92,7 +99,7 @@ export class GameConfigComponent implements OnInit {
 
     findMapName(mapID) {
 
-        let map = this.userSvc.getFieldProfile().maps.find(map => map.id == mapID)
+        let map = this.fieldProfile.maps.find(map => map.id == mapID)
         return map?.name
     }
 

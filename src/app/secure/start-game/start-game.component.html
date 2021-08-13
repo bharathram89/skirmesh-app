@@ -13,14 +13,14 @@
     <h4 align="center"> Select your Map </h4>
 
     <div class="row mx-0 justify-content-center">
-    <div *ngFor="let map of userSvc.getFieldProfile().maps"
+    <div *ngFor="let map of fieldProfile?.maps"
          class="card col-sm-3 d-flex m-2 p-0"
          (click)="selectMap(map.id)">
         <div class="card-header">
             <h5 [innerHtml]="map.name"></h5>
         </div>
         <div class="card-body">
-            <app-map [mapID]="map.id" [deviceData]="userSvc.getFieldProfile()?.devices"></app-map>
+            <app-map [mapID]="map.id" [deviceData]="fieldProfile?.devices"></app-map>
         </div>
     </div>
     </div>
