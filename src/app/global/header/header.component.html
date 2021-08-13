@@ -112,15 +112,23 @@
         <i class="fa fa-times cust_floater2" (click)="toggleSideMenu()" aria-hidden="true"></i>
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav"> 
-                <li   *ngIf="!isSecure">
+                <li *ngIf="!isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-in']">Sign In</a>
                     <hr>
                 </li>
                 <li *ngIf="isSecure" class="sidebar-brand">
                     <a>
-                        Player Section
-                    </a>
+                        User
+                    </a> 
+                </li>
+                <li *ngIf="isSecure">
+                    <a (click)="toggleSideMenu()" [routerLink]="['/secure/dashboard']">Dashboard</a>
                     <hr>
+                </li>
+                <li *ngIf="isSecure" class="sidebar-brand">
+                    <a>
+                        Player Section
+                    </a> 
                 </li>
                 <li *ngIf="isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/past-games']">Past Games</a>
@@ -133,8 +141,7 @@
                 <li *ngIf="isField && isSecure" class="sidebar-brand">
                     <a>
                         Field Management
-                    </a>
-                    <hr>
+                    </a> 
                 </li>
                 <li *ngIf="isField &&  isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/manageGame']">Configure Games</a>
@@ -147,8 +154,7 @@
                 <li class="sidebar-brand">
                     <a>
                         Helpful links
-                    </a>
-                    <hr>
+                    </a> 
                 </li>
                 <li>
                     <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-up']">Register</a>
@@ -168,6 +174,9 @@
                 </li>
                 <li *ngIf="isSecure">
                     <a (click)="signOut()">Sign out</a>
+                    <hr>
+                </li>
+                <li > 
                     <hr>
                 </li>
             </ul>
