@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.userSvc.userData.subscribe(
       userData => {
         if (userData?.fieldProfile) {

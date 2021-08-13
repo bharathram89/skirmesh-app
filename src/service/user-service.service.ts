@@ -53,10 +53,15 @@ export class UserServiceService {
 
         let user;
         if (this.userData) {
-            this.userData.subscribe(data =>
-                user = data
+            this.userData.subscribe(data =>{
+
+                if(data){
+                    user = data;
+                    return user.facebookID || user.googleID || user.twitterID ? true : false; 
+                }
+            }
             )
-            return user.facebookID || user.googleID || user.twitterID ? true : false
+            return false;
         }
     }
 
