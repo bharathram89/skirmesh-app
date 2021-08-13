@@ -3,6 +3,7 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { Injectable } from '@angular/core';
 import { Storage } from '@capacitor/storage';
+import {BehaviorSubject} from 'rxjs';
 
 const TOKEN_KEY = 'auth-token';
 const GAME_KEY = 'game-key';
@@ -12,10 +13,13 @@ const GAME_KEY = 'game-key';
 })
 export class TokenStorageService {
 
+  userToken: BehaviorSubject<any> = new BehaviorSubject(null)
+
   constructor(private userSvc: UserServiceService,
     private secAPIsvc: SecureAPIService,) { }
 
   signOut = async () => {
+    this.userToken.next(null);
     return await Storage.clear();
   };
 
@@ -31,6 +35,7 @@ export class TokenStorageService {
   getToken = async () => {
     const token = await Storage.get({ key: TOKEN_KEY });
      await this.verifyToken(token.value);
+     this.userToken.next(token.value);
      return token.value;
   }
 
@@ -50,6 +55,7 @@ export class TokenStorageService {
         },
 
           err => {
+            this.userToken.next(null);
             this.signOut();
             return false;
           })

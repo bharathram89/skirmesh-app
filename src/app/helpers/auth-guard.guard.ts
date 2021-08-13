@@ -12,24 +12,26 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 export class AuthGuardGuard implements CanActivate {
 
   constructor(
-    private tokenStorage : TokenStorageService ,
-    private userSvc      : UserServiceService,
-    private secAPIsvc    : SecureAPIService,
-    private router       : Router
-  ){}
+    private tokenStorage: TokenStorageService,
+    private userSvc: UserServiceService,
+    private secAPIsvc: SecureAPIService,
+    private router: Router
+  ) { }
 
   canActivate(
 
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      //if session storage has valid key return true else false
-    return this.tokenStorage.getToken().then(
-      token => {
-        if(token) {
-          return true;
-        } 
-        return false;
+    //if session storage has valid key return true else false
+    let bool: boolean = false;
+    const flag = this.tokenStorage.userToken;
+    flag.subscribe(data => {
+      if (flag) {
+        bool = true;
       }
-    );
-    }
+    });
+    
+    return bool;
+     
+  }
 }

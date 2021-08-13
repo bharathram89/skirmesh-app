@@ -58,12 +58,18 @@ export class EditGameComponent implements OnInit {
             this.maps          = fieldProfile.maps;
             this.devices       = fieldProfile.devices;
             this.gameConfigs   = fieldProfile.gameConfigs;
+            this.tokenSvc.userToken.subscribe(
+                data => {
+                    this.userToken = data;
+                }
+            );
 
     }
 
 
     ngOnInit() {
 
+      
         this.deviceConfigs = makeDeviceModals(this.devices,true)
 
         // Setup the form data
@@ -147,11 +153,7 @@ export class EditGameComponent implements OnInit {
             teams          : dataModel.teams
         }
 
-        await this.tokenSvc.getToken().then(
-            data => {
-              this.userToken = data;
-            }
-          );
+       
 
         if (dataModel.id) {
             this.secAPIsvc.modifyGameConfig(this.userToken, apiData).subscribe(
@@ -204,12 +206,6 @@ export class EditGameComponent implements OnInit {
     async removeTeam(i:number) {
 
         let team = this.teams.value[i];
-
-        await this.tokenSvc.getToken().then(
-            data => {
-              this.userToken = data;
-            }
-          );
 
         if (team.id) {
             this.secAPIsvc.deleteTeam(this.userToken, team.id).subscribe(

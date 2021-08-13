@@ -20,23 +20,37 @@ export class HeaderComponent implements OnInit {
   userSvc: UserServiceService;
   tokenSvc: TokenStorageService;
   openSideMenu = false;
-  appSvc:AppService;
+  appSvc: AppService;
 
 
 
   constructor(userService: UserServiceService, tokenService: TokenStorageService,
     private router: Router,
-     appSvc: AppService,
+    appSvc: AppService,
     private activatedRoute: ActivatedRoute) {
-      this.appSvc = appSvc;
+    this.appSvc = appSvc;
     this.userSvc = userService;
     this.tokenSvc = tokenService;
+    this.tokenSvc.userToken.subscribe(
+      data => {
+        if (data) {
+          if (data.length) {
+            this.isSecure = true;
+            this.userSvc.setSignIn(true);
+          } else {
+            this.isSecure = false;
+          }
+
+        } else {
+          this.isSecure = false;
+        }
+      }
+  );
   }
 
   ngOnInit() {
     this.userSvc.userData.subscribe(
       userData => {
-        console.log(userData);
         if (userData?.fieldProfile) {
           this.isField = true;
         } else {
@@ -44,24 +58,8 @@ export class HeaderComponent implements OnInit {
         }
       }
     );
-    this.tokenSvc.getToken().then(
-      data => {
-        if (data) {
-          if (data.length) {
-            this.isSecure = true;
-    this.userSvc.setSignIn(true);
-          } else {
-            this.isSecure = false;
-          }
-        
-        } else {
-          this.isSecure = false;
-        }
-
-      }
-    );
-   
     
+
 
     // particlesJS( "particles-js", {
     //   "particles": {
@@ -169,11 +167,11 @@ export class HeaderComponent implements OnInit {
     //   "retina_detect": true
     // });
   }
-  toggleSideMenu(){
+  toggleSideMenu() {
     this.openSideMenu = !this.openSideMenu
   }
-  route(route){
-    this.router.navigate([route] );
+  route(route) {
+    this.router.navigate([route]);
     let currentUrl = route;
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // this.router.onSameUrlNavigation = 'reload';

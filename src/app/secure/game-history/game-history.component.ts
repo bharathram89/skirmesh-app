@@ -52,21 +52,24 @@ export class GameHistoryComponent implements OnInit {
     private secAPIsvc: SecureAPIService,
     private scoreSvc: ScoreService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute) { 
+      this.tokenSvc.userToken.subscribe(
+        data => {
+            this.userToken = data;
+            this.userSvc.fieldProfile.subscribe(
+              res => {
+                  if (res) {
+                      this.fieldProfile = res;
+                  }
+              }
+          )
+        }
+    );
+    }
 
-  async ngOnInit() {
-    await this.tokenSvc.getToken().then(
-      data => {
-          this.userToken = data;
-          this.userSvc.fieldProfile.subscribe(
-            res => {
-                if (res) {
-                    this.fieldProfile = res;
-                }
-            }
-        )
-      }
-  );
+   ngOnInit() {
+    
+
     combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
     this.nonSecAPIsvc.getLocationsList(),
     this.nonSecAPIsvc.getActionsList(),

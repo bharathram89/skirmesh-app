@@ -21,42 +21,44 @@ export class GameConfigComponent implements OnInit {
         private userSvc: UserServiceService,
         private tokenSvc: TokenStorageService,
         private secAPIsvc: SecureAPIService
-    ) { }
-
-
-    async ngOnInit() {
-
-        
-
-        await this.tokenSvc.getToken().then(
+    ) {
+        this.tokenSvc.userToken.subscribe(
             data => {
                 this.userToken = data;
-                this.userSvc.fieldProfile.subscribe(
-                    res => {
-                        if (res) {
-                            this.fieldProfile = res;
-                            this.secAPIsvc.getGameConfigs(this.userToken, this.fieldProfile.id).subscribe(savedConfigs => {
-
-                                this.gameConfigs = savedConfigs;
-                                this.gameConfigs.forEach(savedConfig => {
-                                    // We need to do this to attach the "#" to the front
-                                    // of each color, because it's not held in the DB
-                                    savedConfig.teams.forEach(team => {
-                                        team.color = "#" + team.color;
-                                    })
-                    
-                                    savedConfig.devices = makeDeviceModals(savedConfig.deviceMap);
-                    
-                                });
-                    
-                            });
-                        }
-                    }
-                )
             }
         );
+    }
 
-       
+
+     ngOnInit() {
+
+        
+        this.userSvc.fieldProfile.subscribe(
+            res => {
+                if (res) {
+                    this.fieldProfile = res;
+                    this.secAPIsvc.getGameConfigs(this.userToken, this.fieldProfile.id).subscribe(savedConfigs => {
+
+                        this.gameConfigs = savedConfigs;
+                        this.gameConfigs.forEach(savedConfig => {
+                            // We need to do this to attach the "#" to the front
+                            // of each color, because it's not held in the DB
+                            savedConfig.teams.forEach(team => {
+                                team.color = "#" + team.color;
+                            })
+
+                            savedConfig.devices = makeDeviceModals(savedConfig.deviceMap);
+
+                        });
+
+                    });
+                }
+            }
+        )
+
+
+
+
     }
 
 

@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit {
     private secAPIsvc: SecureAPIService,
     private router: Router
   ) {
-   
+
   }
 
   ngOnInit() {
@@ -126,40 +126,37 @@ export class ProfileComponent implements OnInit {
     })
     this.tokenSvc.getToken().then(
       data => {
-        this.userToken = data;
+          this.userToken = data;
+          this.secAPIsvc.getUser(data).subscribe(
+          (user: any) => {
+            let userData = user.user;
+            if (userData.fieldProfile) {
 
-        if (this.userSvc.getUserData()) {
-          this.userSvc.getUserData().subscribe(
+              this.isField = true;
 
-            userData => {
+              this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
+              this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
+              this.currentVals.fieldProfileID = userData.fieldProfile.id;
+              this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : null;
+            }
 
-              if (userData.fieldProfile) {
+            else {
+              this.connectedRfids = userData.rfids;
+              this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
+              this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
+              this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
+              this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : null;
+            }
 
-                this.isField = true;
+            this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
+            this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
+            this.currentVals.email = userData.email ? userData.email : 'E-mail';
+            this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
 
-                this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
-                this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
-                this.currentVals.fieldProfileID = userData.fieldProfile.id;
-                this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : null;
-              }
+            this.currentVals.userID = userData.id;
 
-              else {
-                this.connectedRfids = userData.rfids;
-                this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
-                this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-                this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
-                this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : null;
-              }
+          })
 
-              this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
-              this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
-              this.currentVals.email = userData.email ? userData.email : 'E-mail';
-              this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
-
-              this.currentVals.userID = userData.id;
-
-            })
-        }
 
 
         if (this.currentVals.imageID) {

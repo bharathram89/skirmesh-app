@@ -9,35 +9,22 @@ import { UserServiceService } from 'src/service/user-service.service';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  appSvc:AppService;
+  appSvc: AppService;
   isField;
   isSecure;
-  userSvc:UserServiceService; 
-  tokenSvc:TokenStorageService;
-  constructor(userService:UserServiceService, tokenService: TokenStorageService,appSvc: AppService) { 
+  userSvc: UserServiceService;
+  tokenSvc: TokenStorageService;
+  constructor(userService: UserServiceService, tokenService: TokenStorageService, appSvc: AppService) {
     this.appSvc = appSvc;
-    this.tokenSvc=tokenService;
+    this.tokenSvc = tokenService;
     this.userSvc = userService;
     this.appSvc = appSvc;
-  }
-
-  async ngOnInit() {
-    this.userSvc.userData.subscribe(
-      userData => {
-        console.log(userData);
-        if (userData?.fieldProfile) {
-          this.isField = true;
-        } else {
-          this.isField = false;
-        }
-      }
-    );
-    await this.tokenSvc.getToken().then(
+    this.tokenSvc.userToken.subscribe(
       data => {
         if (data) {
           if (data.length) {
             this.isSecure = true;
-    this.userSvc.setSignIn(true);
+            this.userSvc.setSignIn(true);
 
           } else {
             this.isSecure = false;
@@ -45,9 +32,21 @@ export class FooterComponent implements OnInit {
         } else {
           this.isSecure = false;
         }
-
       }
-    ) 
+    );
+  }
+
+  ngOnInit() {
+    this.userSvc.userData.subscribe(
+      userData => {
+        if (userData?.fieldProfile) {
+          this.isField = true;
+        } else {
+          this.isField = false;
+        }
+      }
+    );
+   
   }
 
 }

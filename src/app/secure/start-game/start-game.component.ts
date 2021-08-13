@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserServiceService } from 'src/service/user-service.service';
 import {
-  AUTO_STYLE,
-  animate,
-  state,
-  style,
-  transition,
-  trigger
+    AUTO_STYLE,
+    animate,
+    state,
+    style,
+    transition,
+    trigger
 } from '@angular/animations';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -18,80 +18,80 @@ import { GameService } from 'src/service/game.service';
 
 const DEFAULT_DURATION = 300;
 @Component({
-  selector: 'app-start-game',
-  templateUrl: './start-game.component.html',
-  styleUrls: ['./start-game.component.scss'],
-  animations: [
-    trigger('collapse', [
-      state('false', style({ height: AUTO_STYLE, visibility: AUTO_STYLE })),
-      state('true', style({ height: '0', visibility: 'hidden' })),
-      transition('false => true', animate(DEFAULT_DURATION + 'ms ease-in')),
-      transition('true => false', animate(DEFAULT_DURATION + 'ms ease-out'))
-    ])
-  ]
+    selector: 'app-start-game',
+    templateUrl: './start-game.component.html',
+    styleUrls: ['./start-game.component.scss'],
+    animations: [
+        trigger('collapse', [
+            state('false', style({ height: AUTO_STYLE, visibility: AUTO_STYLE })),
+            state('true', style({ height: '0', visibility: 'hidden' })),
+            transition('false => true', animate(DEFAULT_DURATION + 'ms ease-in')),
+            transition('true => false', animate(DEFAULT_DURATION + 'ms ease-out'))
+        ])
+    ]
 })
 
 export class StartGameComponent implements OnInit {
 
-    gameBoardActive     = false;
-    gameInProgress      = false;
+    gameBoardActive = false;
+    gameInProgress = false;
     gameModes;
 
     selectedMapID;
     selectedGameMode;
     filteredGameModes;
 
-    activeDevices       : BehaviorSubject<any>;
-    allDevices          : [];
-    deviceInUse         = false;
+    activeDevices: BehaviorSubject<any>;
+    allDevices: [];
+    deviceInUse = false;
 
-    teams               = [];
+    teams = [];
     mapID;
-    gameData            = <any>{};
+    gameData = <any>{};
 
     countUpTime;
     countUpTimer;
     pausedTimer = 0;
 
-    teamsHavePlayers    = true;
+    teamsHavePlayers = true;
     fieldProfile;
     playerUpdate;
-    teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
+    teamColumns = [{ name: 'RFID', prop: 'rfidID', sortable: true }];
     userToken;
     constructor(
-        private userSvc      : UserServiceService,
-        private tokenSvc     : TokenStorageService,
-        private nonSecAPIsvc : NonSecureAPIService,
-        private secAPIsvc    : SecureAPIService,
-        private gameSvc      : GameService,
-    ){
-        this.activeDevices = new BehaviorSubject({})
-    }
-
-   async ngOnInit() {
-        await this.tokenSvc.getToken().then(
+        private userSvc: UserServiceService,
+        private tokenSvc: TokenStorageService,
+        private nonSecAPIsvc: NonSecureAPIService,
+        private secAPIsvc: SecureAPIService,
+        private gameSvc: GameService,
+    ) {
+        this.activeDevices = new BehaviorSubject({});
+        this.tokenSvc.userToken.subscribe(
             data => {
                 this.userToken = data;
-                console.log(this.userToken);
-                this.userSvc.fieldProfile.subscribe(
-                    res => {
-                        if(res) {
-                            this.fieldProfile = res;
-                            this.secAPIsvc.getGameConfigs(this.userToken,res.id).subscribe(
-                                savedConfigs => {
-                                    this.gameModes  = savedConfigs;
-                                    this.allDevices = res.devices;
-                                }
-                            )
-                        }
-                    }
-                ) 
             }
         );
-         // This sets the dropdown menu with available game configurations
-            
-         
-       
+    }
+
+    ngOnInit() {
+
+        this.userSvc.fieldProfile.subscribe(
+            res => {
+                if (res) {
+                    this.fieldProfile = res;
+                    this.secAPIsvc.getGameConfigs(this.userToken, res.id).subscribe(
+                        savedConfigs => {
+                            this.gameModes = savedConfigs;
+                            this.allDevices = res.devices;
+                        }
+                    )
+                }
+            }
+        )
+        // This sets the dropdown menu with available game configurations
+
+
+
     }
 
 
@@ -102,7 +102,7 @@ export class StartGameComponent implements OnInit {
         this.playerUpdate = this.gameSvc.getPlayerUpdate().subscribe(
             socketData => {
                 this.updatePlayerData(socketData);
-        })
+            })
     }
 
 
@@ -113,7 +113,7 @@ export class StartGameComponent implements OnInit {
     }
 
 
-    changeGame(gameConfig){
+    changeGame(gameConfig) {
         // When a dropdown menu selection is made - update the gameboard
         let gameConfigID = gameConfig.target.value;
         this.selectedGameMode = this.gameModes.find(ele => ele.id == gameConfigID);
@@ -122,7 +122,7 @@ export class StartGameComponent implements OnInit {
     }
 
 
-    startGame(){
+    startGame() {
         // On start game, push all device configuration data to each
         // device to baseline all configurations from saved configs
         let mode = this.selectedGameMode;
@@ -133,9 +133,9 @@ export class StartGameComponent implements OnInit {
                 this.gameData = data
 
                 // Update user devices to flag warnings when in use
-                const res = this.allDevices.reduce((acc,curr) => {
+                const res = this.allDevices.reduce((acc, curr) => {
 
-                    const stored = this.gameData.devices.find(({id}) => id == curr["id"]);
+                    const stored = this.gameData.devices.find(({ id }) => id == curr["id"]);
                     acc.push(stored ? stored : curr);
                     return acc;
 
@@ -145,7 +145,7 @@ export class StartGameComponent implements OnInit {
 
                 this.countUpFromTime();
             },
-            err => {console.log(err)}
+            err => { console.log(err) }
         )
 
         this.setSelectedGameConfig(mode);
@@ -155,20 +155,20 @@ export class StartGameComponent implements OnInit {
     }
 
 
-    setSelectedGameConfig(mode){
+    setSelectedGameConfig(mode) {
 
         this.selectedGameMode = mode;
-        this.teams            = mode.teams;
-        this.mapID            = mode.mapID;
+        this.teams = mode.teams;
+        this.mapID = mode.mapID;
 
         for (let team of this.teams) {
             team.color = "#" + team.color;
         }
         this.activeDevices.next({
-            mode        : "active",
-            mapID       : this.mapID,
-            teams       : this.teams,
-            nodeConfigs : makeDeviceModals(mode.deviceMap)
+            mode: "active",
+            mapID: this.mapID,
+            teams: this.teams,
+            nodeConfigs: makeDeviceModals(mode.deviceMap)
         });
 
         this.activeDevices.subscribe(
@@ -194,7 +194,7 @@ export class StartGameComponent implements OnInit {
 
 
     // Device is passed in from device-list.component
-    nodeConfigs(device){
+    nodeConfigs(device) {
     }
 
 
@@ -202,13 +202,13 @@ export class StartGameComponent implements OnInit {
 
         let paused = !this.gameData.is_paused;
 
-        this.secAPIsvc.pauseGame(this.userToken, {"gameID":this.gameData.id, "is_paused":paused}).subscribe(
+        this.secAPIsvc.pauseGame(this.userToken, { "gameID": this.gameData.id, "is_paused": paused }).subscribe(
             data => this.gameData = data
         )
     }
 
 
-    endGame(){
+    endGame() {
 
         let safe = confirm("Do you really want to end the game?");
 
@@ -216,25 +216,25 @@ export class StartGameComponent implements OnInit {
 
             this.secAPIsvc.endGame(this.userToken, this.gameData.id).subscribe(
                 data => {
-                        this.gameInProgress = false;
-                        this.gameBoardActive = false;
-                        this.teamsHavePlayers = true;
-                        this.deviceInUse = false;
-                        this.gameData = null;
+                    this.gameInProgress = false;
+                    this.gameBoardActive = false;
+                    this.teamsHavePlayers = true;
+                    this.deviceInUse = false;
+                    this.gameData = null;
 
-                        // Clear out devices used in game to remove warning
-                        this.activeDevices.subscribe(
-                            data => {
-                                data.nodeConfigs.forEach(node => {
+                    // Clear out devices used in game to remove warning
+                    this.activeDevices.subscribe(
+                        data => {
+                            data.nodeConfigs.forEach(node => {
 
-                                let device = this.allDevices.find(({id}) => id == node.id) as {};
+                                let device = this.allDevices.find(({ id }) => id == node.id) as {};
                                 if (device) {
                                     device["gameID"] = null;
                                 }
                             })
                         })
 
-                    })
+                })
         }
 
         clearInterval(this.countUpTimer);
@@ -258,10 +258,10 @@ export class StartGameComponent implements OnInit {
         secsInAMin = 60 * 1000;
 
         hours = Math.floor(timeDiff / secsInAHour);
-        mins  = Math.floor((timeDiff % secsInAHour) / secsInAMin);
-        secs  = Math.floor(((timeDiff % secsInAHour) % secsInAMin) / 1000);
+        mins = Math.floor((timeDiff % secsInAHour) / secsInAMin);
+        secs = Math.floor(((timeDiff % secsInAHour) % secsInAMin) / 1000);
 
-        this.countUpTime  = ("0" + hours).slice(-2) + ":"
+        this.countUpTime = ("0" + hours).slice(-2) + ":"
         this.countUpTime += ("0" + mins).slice(-2) + ":"
         this.countUpTime += ("0" + secs).slice(-2)
 
@@ -271,15 +271,15 @@ export class StartGameComponent implements OnInit {
 
     updatePlayerData(teamPlayer) {
 
-        if (!teamPlayer.teamID) {return}
+        if (!teamPlayer.teamID) { return }
 
         let team = this.teams.find(ele => ele.id == teamPlayer.teamID);
 
-        if (!team) {return}
+        if (!team) { return }
 
         // This removes the player from other teams
         for (let other_team of this.teams) {
-            if (other_team.teamID == teamPlayer.teamID) {continue}
+            if (other_team.teamID == teamPlayer.teamID) { continue }
             const plr_idx = other_team.teamPlayers.findIndex(ele => ele.id == teamPlayer.id);
             if (plr_idx != -1) {
                 other_team.teamPlayers.splice(plr_idx, 1)
@@ -308,9 +308,9 @@ export class StartGameComponent implements OnInit {
 
         this.secAPIsvc.getActiveGamesByMap(this.userToken, mapID).subscribe(
 
-            activeGameConfig=>{
+            activeGameConfig => {
 
-                if(activeGameConfig){
+                if (activeGameConfig) {
                     // Active games route starts query with fieldProfileID and
                     // returns the gameConfig, which contains the game
                     // Look for the game that is not ended
@@ -318,9 +318,9 @@ export class StartGameComponent implements OnInit {
 
                     if (game) {
 
-                        this.gameData        = game;
+                        this.gameData = game;
                         this.gameBoardActive = true;
-                        this.gameInProgress  = true;
+                        this.gameInProgress = true;
 
                         activeGameConfig["deviceMap"] = game.devices;
 
@@ -330,10 +330,10 @@ export class StartGameComponent implements OnInit {
                     }
                 }
             },
-            err=>{
-               //show message on page no games are active.
+            err => {
+                //show message on page no games are active.
             }
-         )
+        )
     }
 
 
@@ -341,9 +341,9 @@ export class StartGameComponent implements OnInit {
 
         this.selectedMapID = null;
 
-        this.gameData        = null;
+        this.gameData = null;
         this.gameBoardActive = false;
-        this.gameInProgress  = false;
+        this.gameInProgress = false;
 
         this.deviceInUse = false;
         clearInterval(this.countUpTimer);
@@ -353,7 +353,7 @@ export class StartGameComponent implements OnInit {
     checkTeamPlayers() {
 
         for (let team of this.teams) {
-            if (!team.teamPlayers.length){
+            if (!team.teamPlayers.length) {
                 this.teamsHavePlayers = false;
                 return
             }

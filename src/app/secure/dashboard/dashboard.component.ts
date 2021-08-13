@@ -90,7 +90,6 @@ export class DashboardComponent implements OnInit {
   async ngOnInit() {
     this.userSvc.userData.subscribe(
       userData => {
-        console.log(userData);
         if (userData?.fieldProfile) {
           this.isField = true;
         } else {
@@ -98,11 +97,12 @@ export class DashboardComponent implements OnInit {
         }
       }
     );
-    await this.tokenSvc.getToken().then(
+    this.tokenSvc.userToken.subscribe(
       data => {
-        this.userToken = data;
+          this.userToken = data;
       }
-    );
+  );
+   
     this.activatedRoute.queryParams.subscribe(
 
       data => {
@@ -350,11 +350,7 @@ export class DashboardComponent implements OnInit {
     };
 
     let games;
-    await this.tokenSvc.getToken().then(
-      data => {
-        this.userToken = data;
-      }
-    );
+   
     this.secAPIsvc.getGamesByFieldProfile(this.userToken, userData.fieldProfile.id).subscribe(
 
       data => {

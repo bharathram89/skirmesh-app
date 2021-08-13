@@ -47,6 +47,7 @@ export class DeviceListComponent implements OnInit {
     previousSelected;
 
     deviceUpdateFailed  = false;
+    userToken;
 
     constructor(
         userService   : UserServiceService,
@@ -57,9 +58,13 @@ export class DeviceListComponent implements OnInit {
     ) {
         this.userSvc   = userService;
         this.tokenSvc  = tokenService;
+        this.tokenSvc.userToken.subscribe(
+            data => {
+                this.userToken = data;
+            }
+        );
     }
 
-    userToken;
 
   ngOnInit(): void {
 
@@ -121,11 +126,8 @@ export class DeviceListComponent implements OnInit {
         // Emit to Parent (Start Game) to modify device with
         // gameID as necessary
         // this.nodeConfigs.emit(device)
-        await this.tokenSvc.getToken().then(
-            data => {
-              this.userToken = data;
-            }
-          );
+       
+
 
         if (this.mode == 'active') {
             //update the database here
