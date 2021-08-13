@@ -37,6 +37,8 @@ export class FooterComponent implements OnInit {
         if (data) {
           if (data.length) {
             this.isSecure = true;
+    this.userSvc.setSignIn(true);
+
           } else {
             this.isSecure = false;
           }

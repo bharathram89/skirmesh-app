@@ -121,7 +121,11 @@ export class DashboardComponent implements OnInit {
 
 
           this.actionList = actions;
-
+          if (userData?.fieldProfile) {
+            this.isField = true;
+          } else {
+            this.isField = false;
+          }
           if (this.isField) {
 
             this.setGameHistStats(userData);
