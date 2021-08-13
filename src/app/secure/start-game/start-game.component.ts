@@ -54,7 +54,7 @@ export class StartGameComponent implements OnInit {
     pausedTimer = 0;
 
     teamsHavePlayers    = true;
-
+    fieldProfile;
     playerUpdate;
     teamColumns = [{name:'RFID', prop:'rfidID', sortable:true}];
     userToken;
@@ -72,16 +72,26 @@ export class StartGameComponent implements OnInit {
         await this.tokenSvc.getToken().then(
             data => {
                 this.userToken = data;
+                console.log(this.userToken);
+                this.userSvc.fieldProfile.subscribe(
+                    res => {
+                        if(res) {
+                            this.fieldProfile = res;
+                            this.secAPIsvc.getGameConfigs(this.userToken,res.id).subscribe(
+                                savedConfigs => {
+                                    this.gameModes  = savedConfigs;
+                                    this.allDevices = res.devices;
+                                }
+                            )
+                        }
+                    }
+                ) 
             }
         );
-        
          // This sets the dropdown menu with available game configurations
-         this.secAPIsvc.getGameConfigs(this.userToken,this.userSvc.getFieldProfileID()).subscribe(
-             savedConfigs => {
-                 this.gameModes  = savedConfigs;
-                 this.allDevices = this.userSvc.getFieldProfile().devices;
-             }
-         )
+            
+         
+       
     }
 
 

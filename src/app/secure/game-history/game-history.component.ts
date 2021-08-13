@@ -42,6 +42,7 @@ export class GameHistoryComponent implements OnInit {
   baseDevices = [];
   replayIntervalID;
   userToken;
+  fieldProfile;
   dateOptions = { "dateStyle": "long", "timeStyle": "medium", "hourCycle": "h24" };
 
   constructor(
@@ -57,6 +58,13 @@ export class GameHistoryComponent implements OnInit {
     await this.tokenSvc.getToken().then(
       data => {
           this.userToken = data;
+          this.userSvc.fieldProfile.subscribe(
+            res => {
+                if (res) {
+                    this.fieldProfile = res;
+                }
+            }
+        )
       }
   );
     combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),

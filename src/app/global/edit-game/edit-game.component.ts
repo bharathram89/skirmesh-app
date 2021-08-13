@@ -27,7 +27,7 @@ export class EditGameComponent implements OnInit {
     devices;
     deviceConfigs;
     gameConfigs;
-
+    fieldProfile;
     gameModeFrm = {
         id:'',
         description:'',
@@ -53,7 +53,7 @@ export class EditGameComponent implements OnInit {
                 mapID       : new FormControl(this.gameModeFrm.mapID, [Validators.required])
             });
 
-            let fieldProfile = this.userSvc.getFieldProfile()
+            let fieldProfile = this.fieldProfile;
 
             this.maps          = fieldProfile.maps;
             this.devices       = fieldProfile.devices;
@@ -102,6 +102,13 @@ export class EditGameComponent implements OnInit {
             nodeConfigs : this.deviceConfigs
         });
 
+        this.userSvc.fieldProfile.subscribe(
+            res => {
+                if (res) {
+                    this.fieldProfile = res;
+                }
+            }
+        )
 
     }
 
@@ -121,6 +128,7 @@ export class EditGameComponent implements OnInit {
 
 
    async onFormSubmit() {
+       
 
         let dataModel = this.gameModeForm.value;
 
@@ -133,7 +141,7 @@ export class EditGameComponent implements OnInit {
         let apiData = {
             id             : dataModel.id,
             mapID          : dataModel.mapID,
-            fieldProfileID : this.userSvc.getFieldProfileID(),
+            fieldProfileID : this.fieldProfile.id,
             description    : dataModel.description,
             deviceMap      : dataModel.devices,
             teams          : dataModel.teams
