@@ -99,69 +99,21 @@ export class DashboardComponent implements OnInit {
     );
     this.tokenSvc.userToken.subscribe(
       data => {
+        if (data) {
           this.userToken = data;
+          this.combineLatest();
+        }
       }
-  );
-   
+    );
     this.activatedRoute.queryParams.subscribe(
-
       data => {
         if (data.viewForUser) {
           //Need to check if game is active else we get console error.
           this.viewForUser = data.viewForUser;
+          this.combineLatest();
         }
-
-        combineLatest([this.secAPIsvc.getUser(this.userToken, this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
-          let userData;
-          userData = userDataIn['user']
-
-          this.pageLvlError = userData ? false : true
-
-          if (!userData) { return }
-
-
-          this.actionList = actions;
-          if (userData?.fieldProfile) {
-            this.isField = true;
-          } else {
-            this.isField = false;
-          }
-          if (this.isField) {
-
-            this.setGameHistStats(userData);
-            this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
-            this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
-            this.currentVals.fieldProfileID = userData.fieldProfile.id;
-            this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
-          }
-          else {
-
-            this.setGameScoreStats(userData);
-
-            this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
-            this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
-            this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
-            this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
-          }
-          this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
-          this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
-          this.currentVals.email = userData.email ? userData.email : 'E-mail';
-          this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
-
-          this.currentVals.userID = userData.id;
-          if (this.currentVals.imageID) {
-            this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
-              imageData => {
-                this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
-              }
-            )
-          }
-
-
-
-        })
       }
-    )
+    );
 
 
     if (this.appSvc.isMobile) {
@@ -175,6 +127,60 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  combineLatest() {
+    if(this.userToken) {
+      combineLatest([this.secAPIsvc.getUser(this.userToken, this.viewForUser), this.nonSecAPIsvc.getActionsList(this.viewForUser)]).subscribe(([userDataIn, actions]) => {
+        let userData;
+        userData = userDataIn['user']
+  
+        this.pageLvlError = userData ? false : true
+  
+        if (!userData) { return }
+  
+  
+        this.actionList = actions;
+        if (userData?.fieldProfile) {
+          this.isField = true;
+        } else {
+          this.isField = false;
+        }
+        if (this.isField) {
+  
+          this.setGameHistStats(userData);
+          this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
+          this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
+          this.currentVals.fieldProfileID = userData.fieldProfile.id;
+          this.currentVals.imageID = userData.fieldProfile.imageID ? userData.fieldProfile.imageID : 0;
+        }
+        else {
+  
+          this.setGameScoreStats(userData);
+  
+          this.currentVals.bio = userData.playerProfile.outfit ? userData.playerProfile.outfit : 'Tell us about your loadout!';
+          this.currentVals.clanTag = userData.playerProfile.clanTag ? userData.playerProfile.clanTag : 'Declare your Clan!';
+          this.currentVals.callSign = userData.callSign ? userData.callSign : 'Whats your callsign!';
+          this.currentVals.imageID = userData.playerProfile.imageID ? userData.playerProfile.imageID : 0;
+        }
+        this.currentVals.firstName = userData.firstName ? userData.firstName : 'First Name';
+        this.currentVals.lastName = userData.lastName ? userData.lastName : 'Last Name';
+        this.currentVals.email = userData.email ? userData.email : 'E-mail';
+        this.currentVals.phone = userData.phoneNumber ? userData.phoneNumber : 'Phone Number';
+  
+        this.currentVals.userID = userData.id;
+        if (this.currentVals.imageID) {
+          this.nonSecAPIsvc.getImage(this.currentVals.imageID).subscribe(
+            imageData => {
+              this.currentVals.imageData = imageData['image'] ? imageData['image'] : null;
+            }
+          )
+        }
+  
+  
+  
+      })
+    }
+ 
+  }
   onSelect(data): void {
     // console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
@@ -350,7 +356,7 @@ export class DashboardComponent implements OnInit {
     };
 
     let games;
-   
+
     this.secAPIsvc.getGamesByFieldProfile(this.userToken, userData.fieldProfile.id).subscribe(
 
       data => {
