@@ -45,11 +45,10 @@ p.font-large{
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
-    margin-bottom: 5rem;
+    background-size: cover; 
 }
     .view-account{
-    background:#FFFFFF;
+    background:#ccba87;
     }
     .view-account .pro-label {
     font-size: 13px;
@@ -133,7 +132,7 @@ p.font-large{
     }
 
     .view-account .side-bar .side-menu .nav>li.active a {
-    color: #40babd;
+    color: #142401;
     border-bottom: 2px solid #40babd;
     background: none;
     border-right: none
@@ -598,16 +597,16 @@ p.font-large{
     }
     .view-account .side-bar .side-menu .nav>li>a {
         display: block;
-        color: #9499a3;
+        color: #142401;
         padding: 10px 15px;
         padding-left: 30px
     }
     .view-account .side-bar .side-menu .nav>li>a:hover {
-        background: #f9f9fb
+        background: #928b56
     }
     .view-account .side-bar .side-menu .nav>li.active a {
-        background: #f9f9fb;
-        border-right: 4px solid #40babd;
+        background: #928b56;
+        border-right: 4px solid #142401;
         border-bottom: none
     }
     .theme-2 .view-account .side-bar .side-menu .nav>li.active a {

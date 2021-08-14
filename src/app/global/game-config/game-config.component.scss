@@ -1,4 +1,12 @@
 
-    .container{
-        padding-left: 0px;
-    }
+.container {
+    background-color: #ccba87;
+    padding-left: 10px; 
+    box-shadow: 5px 5px 50px #ccba87;
+}
+ 
+
+.cust_row:hover{
+    transform: scale(1.01); 
+
+}
