@@ -8,9 +8,9 @@
 </div>
 
 
-<div *ngIf="!selectedMapID" class="container-fluid">
-
-    <h4 align="center"> Select your Map </h4>
+<div *ngIf="!selectedMapID" >
+    
+    <h4 class="head_container" align="center"> Select your Map </h4>
 
     <div class="row mx-0 justify-content-center">
     <div *ngFor="let map of fieldProfile?.maps"
@@ -90,7 +90,7 @@
 
                     </div>
 
-                    <div class="row px-0 justify-content-center cust_bg">
+                    <div class="row px-0 justify-content-center">
 
                         <div *ngIf="gameBoardActive" class="col-xs">
 
