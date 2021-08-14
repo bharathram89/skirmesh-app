@@ -57,8 +57,10 @@ export class GameHistoryComponent implements OnInit {
     }
 
    ngOnInit() {
+   
     this.tokenSvc.userToken.subscribe(
       data => {
+        if(data){
           this.userToken = data;
           this.userSvc.fieldProfile.subscribe(
             res => {
@@ -66,81 +68,82 @@ export class GameHistoryComponent implements OnInit {
                     this.fieldProfile = res;
                 }
             }
-        )
-      }
-  );
-
-    combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
-    this.nonSecAPIsvc.getLocationsList(),
-    this.nonSecAPIsvc.getActionsList(),
-    this.secAPIsvc.getFieldListFromAPI(this.userToken),
-    this.activatedRoute.queryParams
-    ])
-      .subscribe(
-
-        ([pastGamesByConfig, locations, actions, fields, queryParams]) => {
-
-          this.scoreSvc.setGlobalData(locations, actions);
-
-          this.pastGamesByConfig = pastGamesByConfig;
-          this.fields = fields;
-
-          let new_field, field, game, start
-          for (let config of this.pastGamesByConfig) {
-
-            config.games.sort((a, b) => b.id - a.id);
-
-            for (let game of config.games) {
-              game.creationDate = new Date(game.creationDate);
-              game.creationDate = game.creationDate.toLocaleString("en-US", this.dateOptions);
-            }
-
-            field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)
-            if (field) {
-              field.configs.push(config)
-            }
-            else {
-
-              new_field = this.fields.find(ele => ele.fieldProfile.id == config.fieldProfileID);
-              let cardData = {
-                'id': new_field.fieldProfile.id,
-                'name': new_field.callSign,
-                'description': new_field.fieldProfile.profile,
-                'imageData': null,
-                'configs': [config]
-              }
-
-              if (new_field.fieldProfile.imageID) {
-                this.nonSecAPIsvc.getImage(new_field.fieldProfile.imageID).subscribe(
-                  imageData => {
-                    cardData.imageData = imageData['image'] ? imageData['image'] : null;
+        );
+        combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
+          this.nonSecAPIsvc.getLocationsList(),
+          this.nonSecAPIsvc.getActionsList(),
+          this.secAPIsvc.getFieldListFromAPI(this.userToken),
+          this.activatedRoute.queryParams
+          ])
+            .subscribe(
+      
+              ([pastGamesByConfig, locations, actions, fields, queryParams]) => {
+      
+                this.scoreSvc.setGlobalData(locations, actions);
+      
+                this.pastGamesByConfig = pastGamesByConfig;
+                this.fields = fields;
+      
+                let new_field, field, game, start
+                for (let config of this.pastGamesByConfig) {
+      
+                  config.games.sort((a, b) => b.id - a.id);
+      
+                  for (let game of config.games) {
+                    game.creationDate = new Date(game.creationDate);
+                    game.creationDate = game.creationDate.toLocaleString("en-US", this.dateOptions);
                   }
-                )
-              }
-
-              this.fieldCardData.push(cardData);
-            }
-          }
-
-          this.fieldCardData.sort((a, b) => b.id - a.id);
-
-
-          if (queryParams.field) {
-
-            this.selectField(queryParams.field)
-
-            if (queryParams.gameMode) {
-
-              this.changeGameMode({target:{value:queryParams.gameMode}})
-
-              if (queryParams.gameID) {
-
-                this.changeGame({selected:[{id:queryParams.gameID}]})
-              }
-            }
-          }
-
-        })
+      
+                  field = this.fieldCardData.find(ele => ele.id == config.fieldProfileID)
+                  if (field) {
+                    field.configs.push(config)
+                  }
+                  else {
+      
+                    new_field = this.fields.find(ele => ele.fieldProfile.id == config.fieldProfileID);
+                    let cardData = {
+                      'id': new_field.fieldProfile.id,
+                      'name': new_field.callSign,
+                      'description': new_field.fieldProfile.profile,
+                      'imageData': null,
+                      'configs': [config]
+                    }
+      
+                    if (new_field.fieldProfile.imageID) {
+                      this.nonSecAPIsvc.getImage(new_field.fieldProfile.imageID).subscribe(
+                        imageData => {
+                          cardData.imageData = imageData['image'] ? imageData['image'] : null;
+                        }
+                      )
+                    }
+      
+                    this.fieldCardData.push(cardData);
+                  }
+                }
+      
+                this.fieldCardData.sort((a, b) => b.id - a.id);
+      
+      
+                if (queryParams.field) {
+      
+                  this.selectField(queryParams.field)
+      
+                  if (queryParams.gameMode) {
+      
+                    this.changeGameMode({target:{value:queryParams.gameMode}})
+      
+                    if (queryParams.gameID) {
+      
+                      this.changeGame({selected:[{id:queryParams.gameID}]})
+                    }
+                  }
+                }
+      
+              })
+      }
+    }
+  );
+  
   }
 
 

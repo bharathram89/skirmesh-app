@@ -288,7 +288,6 @@ export class SecureAPIService {
     }
 
     getFieldListFromAPI(token) {
-
         let route = this.BASE + this.SEC;
 
         const options = { params: new HttpParams().set("token", token) }
