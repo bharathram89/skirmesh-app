@@ -3,24 +3,24 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { BehaviorSubject } from 'rxjs';
 import { UserServiceService } from 'src/service/user-service.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
-import { makeDeviceModal, makeDeviceModals} from '../node.modal';
+import { makeDeviceModal, makeDeviceModals } from '../node.modal';
 import { SecureAPIService } from 'src/service/secure-api.service';
 
 
 
 @Component({
-    selector    : 'app-edit-game',
-    templateUrl : './edit-game.component.html',
-    styleUrls   : ['./edit-game.component.scss']
+    selector: 'app-edit-game',
+    templateUrl: './edit-game.component.html',
+    styleUrls: ['./edit-game.component.scss']
 })
 export class EditGameComponent implements OnInit {
 
     @Input() gameMode;
     @Output() updateConfig = new EventEmitter<any>();
 
-    gameModeForm      : FormGroup;
-    maps              : [];
-    locations         : [];
+    gameModeForm: FormGroup;
+    maps: [];
+    locations: [];
     saveSuccess;
     deviceListConfigs = new BehaviorSubject({});
 
@@ -29,48 +29,54 @@ export class EditGameComponent implements OnInit {
     gameConfigs;
     fieldProfile;
     gameModeFrm = {
-        id:'',
-        description:'',
-        teams:[],
-        devices:'',
-        mapID:''
+        id: '',
+        description: '',
+        teams: [],
+        devices: '',
+        mapID: ''
     };
 
     userToken;
 
     constructor(
-        private fb        : FormBuilder,
-        private userSvc   : UserServiceService,
-        private tokenSvc  : TokenStorageService,
-        private secAPIsvc : SecureAPIService
-      ) {
+        private fb: FormBuilder,
+        private userSvc: UserServiceService,
+        private tokenSvc: TokenStorageService,
+        private secAPIsvc: SecureAPIService
+    ) {
 
-            this.gameModeForm      = this.fb.group({
-                id          : new FormControl(this.gameModeFrm.id),
-                description : new FormControl(this.gameModeFrm.description, [Validators.required]),
-                teams       : this.fb.array([]),
-                devices     : new FormControl(this.gameModeFrm.devices, [Validators.required]),
-                mapID       : new FormControl(this.gameModeFrm.mapID, [Validators.required])
-            });
+        this.gameModeForm = this.fb.group({
+            id: new FormControl(this.gameModeFrm.id),
+            description: new FormControl(this.gameModeFrm.description, [Validators.required]),
+            teams: this.fb.array([]),
+            devices: new FormControl(this.gameModeFrm.devices, [Validators.required]),
+            mapID: new FormControl(this.gameModeFrm.mapID, [Validators.required])
+        });
+        this.userSvc.fieldProfile.subscribe(
+            res => {
+                if (res) {
+                    this.fieldProfile = res;
+                    let fieldProfile = this.fieldProfile;
 
-            let fieldProfile = this.fieldProfile;
-
-            this.maps          = fieldProfile.maps;
-            this.devices       = fieldProfile.devices;
-            this.gameConfigs   = fieldProfile.gameConfigs;
-            this.tokenSvc.userToken.subscribe(
-                data => {
-                    this.userToken = data;
+                    this.maps = fieldProfile?.maps;
+                    this.devices = fieldProfile?.devices;
+                    this.gameConfigs = fieldProfile?.gameConfigs;
+                    this.tokenSvc.userToken.subscribe(
+                        data => {
+                            this.userToken = data;
+                        }
+                    );
                 }
-            );
+            }
+        )
+
 
     }
 
 
     ngOnInit() {
 
-      
-        this.deviceConfigs = makeDeviceModals(this.devices,true)
+        this.deviceConfigs = makeDeviceModals(this.devices, true)
 
         // Setup the form data
         this.gameMode.teams.forEach(element => {
@@ -78,19 +84,19 @@ export class EditGameComponent implements OnInit {
         });
 
         this.gameModeForm.patchValue({
-            id          : this.gameMode.id ,
-            mapID       : this.gameMode.mapID || null,
-            description : this.gameMode.description || '',
-            devices     : this.deviceConfigs
+            id: this.gameMode.id,
+            mapID: this.gameMode.mapID || null,
+            description: this.gameMode.description || '',
+            devices: this.deviceConfigs
         });
 
         // Grab location data for the map - if there is one
         if (this.gameMode.mapID) {
             this.locations = this.maps.find(map => {
 
-                if(map['id']==this.gameMode.mapID){
+                if (map['id'] == this.gameMode.mapID) {
                     return map['locations'];
-                    }
+                }
             })
         }
 
@@ -102,39 +108,35 @@ export class EditGameComponent implements OnInit {
 
         // Send DeviceList data to deviceList component
         this.deviceListConfigs.next({
-            mode        : "create",
-            mapID       : this.gameMode.mapID ,
-            teams       : this.gameMode.teams,
-            nodeConfigs : this.deviceConfigs
+            mode: "create",
+            mapID: this.gameMode.mapID,
+            teams: this.gameMode.teams,
+            nodeConfigs: this.deviceConfigs
         });
 
-        this.userSvc.fieldProfile.subscribe(
-            res => {
-                if (res) {
-                    this.fieldProfile = res;
-                }
-            }
-        )
+
+
+
 
     }
 
 
     newTeam(): FormGroup {
         return this.fb.group({
-                                name  :'Team Name',
-                                color :'#A000A0',
-                                id    : null
-                             })
+            name: 'Team Name',
+            color: '#A000A0',
+            id: null
+        })
     }
 
 
-    get teams() : FormArray {
+    get teams(): FormArray {
         return this.gameModeForm.get("teams") as FormArray
     }
 
 
-   async onFormSubmit() {
-       
+    async onFormSubmit() {
+
 
         let dataModel = this.gameModeForm.value;
 
@@ -145,23 +147,23 @@ export class EditGameComponent implements OnInit {
         }
 
         let apiData = {
-            id             : dataModel.id,
-            mapID          : dataModel.mapID,
-            fieldProfileID : this.fieldProfile.id,
-            description    : dataModel.description,
-            deviceMap      : dataModel.devices,
-            teams          : dataModel.teams
+            id: dataModel.id,
+            mapID: dataModel.mapID,
+            fieldProfileID: this.fieldProfile.id,
+            description: dataModel.description,
+            deviceMap: dataModel.devices,
+            teams: dataModel.teams
         }
 
-       
+
 
         if (dataModel.id) {
             this.secAPIsvc.modifyGameConfig(this.userToken, apiData).subscribe(
                 resp => {
                     this.updateConfig.emit(resp);
-                    this.gameModeForm.patchValue({teams:resp["teams"]});
+                    this.gameModeForm.patchValue({ teams: resp["teams"] });
                     this.saveSuccess = true;
-                } 
+                }
             )
         }
         else {
@@ -170,7 +172,7 @@ export class EditGameComponent implements OnInit {
                 resp => {
                     this.updateConfig.emit(resp);
                     this.gameModeForm.controls["id"].setValue(resp["id"]);
-                    this.gameModeForm.patchValue({teams:resp["teams"]});
+                    this.gameModeForm.patchValue({ teams: resp["teams"] });
                     this.saveSuccess = true;
 
                 })
@@ -180,7 +182,7 @@ export class EditGameComponent implements OnInit {
     }
 
 
-    syncNodeConfigs(device){
+    syncNodeConfigs(device) {
 
         if (typeof device === 'string') {
             device = makeDeviceModal(JSON.parse(device));
@@ -203,13 +205,13 @@ export class EditGameComponent implements OnInit {
     }
 
 
-    async removeTeam(i:number) {
+    async removeTeam(i: number) {
 
         let team = this.teams.value[i];
 
         if (team.id) {
             this.secAPIsvc.deleteTeam(this.userToken, team.id).subscribe(
-                data => {}
+                data => { }
             );
         }
         this.teams.removeAt(i);
@@ -217,7 +219,7 @@ export class EditGameComponent implements OnInit {
     }
 
 
-    changeMap(){
+    changeMap() {
 
         let mapID = this.gameModeForm.get('mapID').value;
         this.locations = this.maps.find(map => map["id"] == mapID)["locations"];
@@ -227,15 +229,15 @@ export class EditGameComponent implements OnInit {
     }
 
 
-    updateDeviceListConfigs(){
+    updateDeviceListConfigs() {
 
         this.gameModeForm.controls["devices"].setValue(this.deviceConfigs);
 
         this.deviceListConfigs.next({
-            mode        : "create",
-            mapID       : this.gameModeForm.get('mapID').value,
-            teams       : this.gameModeForm.get('teams')['controls'],
-            nodeConfigs : this.deviceConfigs
+            mode: "create",
+            mapID: this.gameModeForm.get('mapID').value,
+            teams: this.gameModeForm.get('teams')['controls'],
+            nodeConfigs: this.deviceConfigs
         })
     }
 
