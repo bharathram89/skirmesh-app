@@ -65,44 +65,29 @@
   <nav *ngIf="appSvc.isMobile"  class="mobile-bottom-nav">
     <div *ngIf="!isSecure" [routerLink]="['/non-secure/live-games']" routerLinkActive="active-link" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="fa fa-gamepad" aria-hidden="true"></i>
-        <i><b>
-          Live Game
-        </b></i> 
+        <i class="fa fa-gamepad fa-2x" aria-hidden="true"></i> 
       </div>		
     </div> 
     <div *ngIf="isSecure" [routerLink]="['/secure/live-games']" routerLinkActive="active-link" class="mobile-bottom-nav__item">
        <div class="mobile-bottom-nav__item-content">
-        <i class="fa fa-gamepad" aria-hidden="true"></i>
-        <i><b>
-          Live Game
-        </b></i> 
+        <i class="fa fa-gamepad fa-2x" aria-hidden="true"></i> 
       </div>		
     </div> 
     <div *ngIf="!isField &&  isSecure" [routerLink]="['/secure/dashboard']" routerLinkActive="active-link" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="fa fa-home" aria-hidden="true"></i>
-        <i><b>
-          Dashboard
-        </b></i> 
+        <i class="fa fa-home fa-2x" aria-hidden="true"></i> 
       </div>		
     </div>
     
     <div *ngIf="isField &&  isSecure" [routerLink]="['/secure/startGame']" routerLinkActive="active-link"  class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="fa fa-cog" aria-hidden="true"></i>
-        <i><b>
-          Manage Game
-        </b></i>  
+        <i class="fa fa-cog fa-2x" aria-hidden="true"></i> 
       </div>		
     </div>
  
     <div *ngIf="isSecure"  [routerLink]="['/secure/profile']"  routerLinkActive="active-link" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
-        <i class="fa fa-user" aria-hidden="true"></i>
-        <i ><b>
-          Profile
-        </b></i> 
+        <i class="fa fa-user fa-2x" aria-hidden="true"></i> 
       </div>		
     </div>
 

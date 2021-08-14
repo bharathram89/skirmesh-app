@@ -132,7 +132,7 @@ footer {
 	transform: translateZ(0);
 	display:flex;	
 	box-shadow: 0 -2px 5px -2px #333;
-  background-color:#fff;
+  background-color:#c8b372;
 	&__item{
 		flex-grow:1;
     text-align:center;
@@ -151,6 +151,6 @@ footer {
 }
 
 .active-link {
-  background-color: #885100;
+  background-color: #4E4B2C;
   color: white;
 }

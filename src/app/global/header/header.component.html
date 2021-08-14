@@ -106,8 +106,8 @@
     </div>
 
 </nav>
-<nav *ngIf="appSvc.isMobile" style="background-color: black; ">
-    <i *ngIf="!openSideMenu" style="margin: 1rem" class="fa fa-bars cust_floater" (click)="toggleSideMenu()" aria-hidden="true"></i>
+<nav *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; ">
+    <i *ngIf="!openSideMenu" class="fa fa-bars cust_floater" (click)="toggleSideMenu()" aria-hidden="true"></i>
     <div id='wrapper' *ngIf="openSideMenu">
         <i class="fa fa-times cust_floater2" (click)="toggleSideMenu()" aria-hidden="true"></i>
         <div id="sidebar-wrapper">
@@ -116,12 +116,12 @@
                     <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-in']">Sign In</a>
                     <hr>
                 </li>
-                <li *ngIf="isSecure" class="sidebar-brand">
+                <li *ngIf="isField && isSecure" class="sidebar-brand">
                     <a>
                         User
                     </a> 
                 </li>
-                <li *ngIf="isSecure">
+                <li *ngIf="isField && isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/secure/dashboard']">Dashboard</a>
                     <hr>
                 </li>

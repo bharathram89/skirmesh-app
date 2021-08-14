@@ -6,10 +6,11 @@
   position: fixed; 
   top:0;
   z-index: 9999;
+  margin: 1rem
 }
 
 .cust_floater2{
-  margin-left: 200px; 
+  margin-left: 170px; 
   opacity: 1.0;
   position: fixed; 
   top:0;
@@ -35,7 +36,7 @@
   width: 0;
   height: 100%; 
   overflow-y: auto;
-  background: #808080;
+  background: #4E4B2C;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -43,7 +44,7 @@
 }
 
 #wrapper #sidebar-wrapper {
-  width: 250px;
+  width: 200px;
 }
 
 #page-content-wrapper {
@@ -76,7 +77,7 @@
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: #fff;
+  color: #c8b372;
 }
 
 .sidebar-nav li a:hover {
@@ -98,7 +99,7 @@
 }
 
 .sidebar-nav > .sidebar-brand a {
-  color: #000;
+  color: #050608;
   font-style: bold;
   font-size: 20px;
 }
@@ -107,10 +108,4 @@
   color: #fff;
   background: none;
 }
-
-@media (min-width: 768px) { 
-  #wrapper #sidebar-wrapper {
-    width: 40%;
-  }
  
-}
