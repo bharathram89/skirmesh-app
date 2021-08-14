@@ -1,7 +1,7 @@
 
 <div class="container" align="center">
 
-    <div class="col-md-6">
+    <div class="col-md-6  rounded-2">
 
     <div
     [innerHtml]="isWeekly ? 'Weekly Leaderboard' : 'Monthly Leaderboard'"
@@ -35,7 +35,8 @@
         <div class="col-md-6">
             <ngx-charts-bar-vertical
             [scheme]="podiumColors"
-            [results]="podiumData"
+            [showDataLabel]="true"
+            [results]="podiumData" 
             [xAxis]="true"
             [legend]="false"
             [yScaleMax]="yScaleMax"
@@ -47,11 +48,10 @@
         <div class="col-md-6">
 
             <div *ngFor="let leader of leaderboardData; index as i; first as isFirst"
-                class="row p-2 m-1 border rounded leaderboardRow"
+                class="row p-2 m-1 border rounded leaderboardRow text-white"
                 [class.bg-gold]  ="i == 0"
                 [class.bg-silver]="i == 1"
-                [class.bg-bronze]="i == 2"
-                [class.text-white]="i == 1 || i == 2 || isFirst"
+                [class.bg-bronze]="i == 2" 
                 [class.font-weight-bold]="i == 1 || i == 2 || isFirst"
                 data-mdb-toggle="animation"
                 data-mdb-animation="fade-in-up"

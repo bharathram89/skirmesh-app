@@ -1,7 +1,5 @@
 
-.custom_skirmesh{
-    background-image: url('../../../assets/images/soldierB.jpg');
-    min-height: 500px;
+.custom_skirmesh{  
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -66,10 +64,10 @@
       width: 100%;
       margin-bottom: 30px;
       border-radius: 6px;
-      color: rgba(0, 0, 0, 0.87);
-      background: #fff;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  }
+      background-color: black;
+      background: #fff; 
+      box-shadow: 5px 5px 50px #ccba87;
+    }
   .blog-card .blog-card-image {
       height: 60%;
       position: relative;
