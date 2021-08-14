@@ -1,6 +1,15 @@
 
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
-
+ 
+.row{
+    margin: 0px;
+}
+.container{
+    background-color: #ccba87;
+    width: 100%; 
+    padding-top: 10px;
+    box-shadow: 5px 5px 50px #ccba87;
+}
 .card{
     margin: 1rem 0.5rem;
     // padding: 1rem;
@@ -13,6 +22,15 @@
 
 .card:active {
     transform: scale(0.95);
+}
+
+.card-header{
+    background-color: #72716c;
+}
+
+.card-body{
+    background-color:#928b56;
+
 }
 
 .map {

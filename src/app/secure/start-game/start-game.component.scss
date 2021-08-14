@@ -1,14 +1,18 @@
 select {
     margin: 1rem 0;
 }
-
+.container{
+    background-color: #ccba87;
+    width: 100%; 
+    padding-top: 10px;
+    box-shadow: 5px 5px 50px #ccba87;
+}
 div.main_title {
     text-align: center;
 }
 
 
-h1.text-center.pt-3 {
-    background-color: #F0F0F0;
+h1.text-center.pt-3 { 
     margin: 0;
     padding: 1rem 0;
 }

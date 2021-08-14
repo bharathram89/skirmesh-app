@@ -1,6 +1,10 @@
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
 
 
+ul>li:hover {
+  transform: scale(1.15);
+  color:white;
+} 
 .navbar{
   background:linear-gradient(59deg, #786546, #142401)
 }
