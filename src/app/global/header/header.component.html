@@ -109,9 +109,9 @@
 <nav *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; ">
     <i *ngIf="!openSideMenu" class="fa fa-bars cust_floater" (click)="toggleSideMenu()" aria-hidden="true"></i>
     <div id='wrapper' *ngIf="openSideMenu">
-        <i class="fa fa-times cust_floater2" (click)="toggleSideMenu()" aria-hidden="true"></i>
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav"> 
+       <div id="sidebar-wrapper"> 
+           <ul class="sidebar-nav"> <i class="fa fa-times cust_floater2" (click)="toggleSideMenu()" aria-hidden="true"></i> 
+            
                 <li *ngIf="!isSecure">
                     <a (click)="toggleSideMenu()" [routerLink]="['/auth/sign-in']">Sign In</a>
                     <hr>
