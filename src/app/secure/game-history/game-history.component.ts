@@ -60,7 +60,6 @@ export class GameHistoryComponent implements OnInit {
    ngOnInit() {
     this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
       data => {
-        debugger
         if(data){
           this.userToken = data;
           this.userSvc.fieldProfile.subscribe(
