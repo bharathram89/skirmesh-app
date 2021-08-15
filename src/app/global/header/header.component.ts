@@ -13,7 +13,7 @@ declare const particlesJS: any;
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  isSideNavOpen: boolean = false;
+  // isSideNavOpen: boolean = false;
   isSecure: boolean = false;
 
   isField = false;
@@ -166,9 +166,6 @@ export class HeaderComponent implements OnInit {
     //   },
     //   "retina_detect": true
     // });
-  }
-  toggleSideMenu() {
-    this.openSideMenu = !this.openSideMenu
   }
   route(route) {
     this.router.navigate([route]);

@@ -9,7 +9,7 @@ import { UserServiceService } from 'src/service/user-service.service';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  appSvc: AppService;
+  appSvc: AppService; 
   isField;
   isSecure;
   userSvc: UserServiceService;
@@ -47,6 +47,10 @@ export class FooterComponent implements OnInit {
       }
     );
    
+  }
+
+  toggleSideMenu() { 
+    this.appSvc.isSideNavOpen = !this.appSvc.isSideNavOpen;
   }
 
 }

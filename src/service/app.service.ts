@@ -10,6 +10,7 @@ const GAME_KEY = 'game-key';
 export class AppService {
     isMobileApp = false;
     isMobile = false;
+    isSideNavOpen = false;
     constructor(
         private breakpointObserver : BreakpointObserver
         ) { 
