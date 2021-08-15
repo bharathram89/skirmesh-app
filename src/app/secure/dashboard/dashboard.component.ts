@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter, take } from 'rxjs/operators';
 import { UserServiceService } from 'src/service/user-service.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
         }
       }
     );
-    this.tokenSvc.userToken.subscribe(
+    this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
       data => {
         if (data) {
           this.userToken = data;

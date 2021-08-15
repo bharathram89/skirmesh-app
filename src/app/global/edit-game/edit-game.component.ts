@@ -1,3 +1,4 @@
+import { filter, take } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -61,7 +62,7 @@ export class EditGameComponent implements OnInit {
                     this.maps = fieldProfile?.maps;
                     this.devices = fieldProfile?.devices;
                     this.gameConfigs = fieldProfile?.gameConfigs;
-                    this.tokenSvc.userToken.subscribe(
+                    this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
                         data => {
                             this.userToken = data;
                         }

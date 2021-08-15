@@ -1,3 +1,4 @@
+import { filter, take } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { UserServiceService } from 'src/service/user-service.service';
 import {
@@ -66,7 +67,7 @@ export class StartGameComponent implements OnInit {
         private gameSvc: GameService,
     ) {
         this.activeDevices = new BehaviorSubject({});
-        this.tokenSvc.userToken.subscribe(
+        this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
             data => {
                 this.userToken = data;
             }

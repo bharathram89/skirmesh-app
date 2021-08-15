@@ -1,3 +1,4 @@
+import { filter, take } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -58,7 +59,7 @@ export class DeviceListComponent implements OnInit {
     ) {
         this.userSvc   = userService;
         this.tokenSvc  = tokenService;
-        this.tokenSvc.userToken.subscribe(
+        this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
             data => {
                 this.userToken = data;
             }

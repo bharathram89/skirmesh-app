@@ -1,3 +1,4 @@
+import { filter, take } from 'rxjs/operators';
 import { Component, OnInit, SimpleChange } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthGuardGuard } from 'src/app/helpers/auth-guard.guard';
@@ -31,7 +32,7 @@ export class HeaderComponent implements OnInit {
     this.appSvc = appSvc;
     this.userSvc = userService;
     this.tokenSvc = tokenService;
-    this.tokenSvc.userToken.subscribe(
+    this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
       data => {
         if (data) {
           if (data.length) {

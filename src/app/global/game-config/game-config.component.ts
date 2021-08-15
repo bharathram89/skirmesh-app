@@ -1,3 +1,4 @@
+import { filter, take } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { UserServiceService } from 'src/service/user-service.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
@@ -22,7 +23,7 @@ export class GameConfigComponent implements OnInit {
         private tokenSvc: TokenStorageService,
         private secAPIsvc: SecureAPIService
     ) {
-        this.tokenSvc.userToken.subscribe(
+        this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
             data => {
                 this.userToken = data;
             }
