@@ -20,7 +20,6 @@ ul>li:hover {
 .cust_floater2{
   margin-left: 170px; 
   opacity: 1.0; 
-  // top:0;
   z-index: 99999;
 }
 
@@ -33,9 +32,9 @@ ul>li:hover {
 .cust {
   float: left;
 }
-
-//side bar
-
+.navbar-nav li a:hover {
+  color: white;
+}
 
 #sidebar-wrapper {
   z-index: 1000;
@@ -99,9 +98,7 @@ ul>li:hover {
 }
 
 .sidebar-nav > .sidebar-brand {
-  height: 65px;
   font-size: 18px;
-  font-style: italic;
   line-height: 60px;
 }
 
@@ -116,3 +113,6 @@ ul>li:hover {
   background: none;
 }
  
+hr{
+  margin:5px;
+}
