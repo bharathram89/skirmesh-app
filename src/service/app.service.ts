@@ -8,8 +8,9 @@ const GAME_KEY = 'game-key';
   providedIn: 'root'
 })
 export class AppService {
-
+    isMobileApp = false;
     isMobile = false;
+    isSideNavOpen = false;
     constructor(
         private breakpointObserver : BreakpointObserver
         ) { 
@@ -25,7 +26,9 @@ export class AppService {
                       this.isMobile =false;
                     }
                   });
-          
+          if(this.detectMob()){
+            this.isMobileApp= true;
+          }
     // if(
     //     navigator.userAgent.match(/Android/i) ||
     //     navigator.userAgent.match(/webOS/i) ||
@@ -34,5 +37,18 @@ export class AppService {
     //       this.isMobile = true;
     //    }
     }
-
+    detectMob() {
+      const toMatch = [
+          /Android/i, 
+          /iPhone/i,
+          /iPad/i,
+          /iPod/i,
+          /BlackBerry/i,
+          /Windows Phone/i
+      ];
+      
+      return toMatch.some((toMatchItem) => {
+          return navigator.userAgent.match(toMatchItem);
+      });
+  }
 }

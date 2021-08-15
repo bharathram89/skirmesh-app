@@ -15,15 +15,11 @@
 
     <tbody>
 
-      <tr *ngFor="let config of gameConfigs" scope="row">
+      <tr (click)="onEditMode(config)" class="cust_row" *ngFor="let config of gameConfigs" scope="row">
         <td>{{ config.description }}</td>
         <!-- <td>{{ p.teams.length }}</td> -->
         <!-- <td>{{ p.nodeModes }}</td> -->
-        <td>{{ findMapName(config.mapID) }}</td>
-        <td><button
-                class="btn btn-sm btn-default btn-primary"
-                (click)="onEditMode(config)"
-                align="center">Edit</button></td>
+        <td>{{ findMapName(config.mapID) }}</td> 
         <td><button
                 class="btn btn-sm btn-default btn-danger"
                 (click)="onDeleteMode(config)"
@@ -45,7 +41,7 @@
 
 <div *ngIf="activeConfig" class="container">
 
-    <div class="d-grid gap-2 col-6 mx-auto mt-4">
+    <div class="d-grid col-6 mx-auto">
 
         <div class="btn btn-secondary btn-block"
              (click)="deSelectConfig()">Go Back
