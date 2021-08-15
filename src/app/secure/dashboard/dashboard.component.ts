@@ -101,19 +101,25 @@ export class DashboardComponent implements OnInit {
       data => {
         if (data) {
           this.userToken = data;
-          this.combineLatest();
+          this.activatedRoute.queryParams.subscribe(
+            data => {
+              if(this.userToken) {
+                if (data.viewForUser) {
+                  //Need to check if game is active else we get console error.
+                  this.viewForUser = data.viewForUser;
+                  this.combineLatest();
+                } else {
+                  this.viewForUser = '';
+                  this.combineLatest();
+                }
+              }
+             
+            }
+          );
         }
       }
     );
-    this.activatedRoute.queryParams.subscribe(
-      data => {
-        if (data.viewForUser) {
-          //Need to check if game is active else we get console error.
-          this.viewForUser = data.viewForUser;
-          this.combineLatest();
-        }
-      }
-    );
+   
 
 
     if (this.appSvc.isMobile) {
