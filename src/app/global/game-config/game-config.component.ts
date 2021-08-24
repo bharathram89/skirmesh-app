@@ -31,9 +31,7 @@ export class GameConfigComponent implements OnInit {
     }
 
 
-     ngOnInit() {
-
-        
+     ngOnInit() { 
         this.userSvc.fieldProfile.subscribe(
             res => {
                 if (res) {

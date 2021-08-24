@@ -1,39 +1,53 @@
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
-
-
-ul>li:hover {
-  transform: scale(1.15);
-  color:white;
-} 
 .navbar{
-  background:linear-gradient(59deg, #786546, #142401)
+  margin: 0;
+  padding: 0;
+}
+
+.nav{
+  // background:linear-gradient(59deg, #786546, #142401)
+  display: block !important;
+  background: #92795D !important;
+  align-items: right;
+  padding: 0px;
+  .nav-item{
+    list-style-type:none;
+    color:#A8B3BB;
+    margin: 5px;
+    padding: 5px;
+  }
+}
+
+.btn-outline-secondary{
+  background-color: #444548;
+  color:#A8B3BB !important; 
+  transform: skewX(-15deg);
+
+}
+.btn-outline-danger{
+  background-color: #444548;
+  transform: skewX(-15deg);
+  border-color: #CD3500 !important;
 }
 .cust_floater{
   padding-left: 5px; 
   opacity: 1.0;
   position: fixed; 
-  top:0;
-  z-index: 9999;
+  top:0; 
   margin: 1rem
 }
 
 .cust_floater2{
   margin-left: 170px; 
-  opacity: 1.0; 
-  z-index: 99999;
+  opacity: 1.0;  
 }
 
 .hc_custom {
-  max-height: 40px;;
-}
-.navbar-nav {
-  z-index: 2;
+  max-height: 40px;
+  margin-left: 0px;
 }
 .cust {
   float: left;
-}
-.navbar-nav li a:hover {
-  color: white;
 }
 
 #sidebar-wrapper {
@@ -70,8 +84,8 @@ ul>li:hover {
   position: absolute;
   top: 0;
   width: 200px;
-  margin: 0;
-  padding: 0;
+  margin: 5px;
+  padding: 5px;
   list-style: none;
 }
 

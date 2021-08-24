@@ -70,7 +70,7 @@ export class LeaderboardComponent implements OnInit {
                 this.leaderboardData = leaderboard as [];
                 this.leaderboardData.sort((a,b) => b.total_points - a.total_points)
                 this.leaderboardData = this.leaderboardData.slice(0,10);
-
+                console.log( this.leaderboardData,'dtat')
                 this.podiumData = [
                     {
                     "name"  : this.leaderboardData[1].name,

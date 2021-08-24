@@ -1,22 +1,22 @@
-<nav *ngIf="!appSvc.isMobile" class="navbar rounded-2 navbar-expand-lg navbar-light bg-light">
+<div *ngIf="!appSvc.isMobile" class="header nav">
 
-    <div class="container-fluid">
+    <div class="container">
 
         <!-- <div id="particles-js" onload="particlesJS(this.id)"> </div> -->
 
-        <button class="navbar-toggler" type="button" (click)="openMenu()" aria-controls="navbarTogglerDemo03"
+        <!-- <button class="navbar-toggler" type="button" (click)="openMenu()" aria-controls="navbarTogglerDemo03"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> -->
 
-        <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
+       
+        <div class="navbar justify-content-end" id="navdrop">
+            <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
             alt="user" />
-
-        <div class="collapse navbar-collapse" id="navdrop">
 
             <!-- NON SECURE LINKS DURING SECURE SESSION -->
             <!-- <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> -->
-            <ul *ngIf="isSecure" class="navbar-nav mt-2 mt-lg-0">
+            <!-- <ul *ngIf="isSecure" class="">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
                         (click)="openInfoMenu()" aria-haspopup="true" aria-expanded="false">
@@ -30,73 +30,72 @@
                             [routerLink]="['/non-secure/field-info']">Field Info</a>
                     </div>
                 </li>
-            </ul>
+            </ul> -->
 
             <!-- NON SECURE LINKS BELOW -->
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="!isSecure">
+            <ul class="navbar justify-content-end" *ngIf="!isSecure">
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_home" (click)="route('/non-secure/home')">Home </a>
+                    <a class="btn btn-outline-secondary nav-link" id="nav_home" (click)="route('/non-secure/home')">Home </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']"> How it works
+                    <a class="btn btn-outline-secondary nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']"> Player Intel
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Info</a>
+                    <a class="btn btn-outline-secondary nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Intel</a>
                 </li>
+                <!-- <li class="nav-item">
+                    <a class="btn btn-outline-secondary nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Enlist</a>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Register</a>
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">LIVE Battles</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">LIVE Games</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_pastgame"
+                <!-- <li class="nav-item">
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame"
                         (click)="route('/non-secure/leader-board')">Leaderboard</a>
-                </li>
+                </li> -->
             </ul>
             <!-- SECURE LINKS BELOW -->
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0" *ngIf="isSecure">
+            <ul class="navbar justify-content-end" *ngIf="isSecure">
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_dashboard" [routerLink]="['/secure/dashboard']">Dashboard</a>
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_dashboard" [routerLink]="['/secure/dashboard']">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</a>
                 </li>
                 <li *ngIf="isField" class="nav-item">
-                    <a class="nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Manage
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_currentgame" [routerLink]="['/secure/startGame']">Manage
                         Games</a>
                 </li>
                 <li *ngIf="isField" class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Games</a>
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_mygame" [routerLink]="['/secure/manageGame']">Configure Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_mygame" [routerLink]="['/secure/live-games']">LIVE Games</a>
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_mygame" [routerLink]="['/secure/live-games']">LIVE Games</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_pastgame" (click)="route('/secure/past-games')">Past Games</a>
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame" (click)="route('/secure/past-games')">Past Games</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="secure_nav_pastgame"
+                <!-- <li class="nav-item">
+                    <a class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame"
                         (click)="route('/non-secure/leader-board')">Leaderboard</a>
-                </li>
+                </li> -->
 
             </ul>
 
 
             <!-- SIGN-IN / SIGN-OUT -->
-            <ul class="navbar-nav my-2 my-lg-0" *ngIf="!isSecure">
-                <div class="form-inline">
-                    <button class="btn btn-outline-success my-2 my-sm-0" [routerLink]="['/auth/login']"
-                        type="submit">Sign In</button>
+            <ul class="navbar justify-content-end" *ngIf="!isSecure">
+                <div class="nav-item">
+                    <button class="btn btn-outline-danger " [routerLink]="['/auth/login']"
+                        type="submit">Barracks</button>
                 </div>
 
             </ul>
 
-            <ul class="navbar-nav my-2 my-lg-0" *ngIf="isSecure">
-                <div class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-outline-danger my-2 my-sm-0" (click)="signOut()" type="submit">Sign
-                        Out</button>
+            <ul class="navbar justify-content-end" *ngIf="isSecure">
+                <div class="nav-item ">
+                    <button class="btn btn-outline-danger " (click)="signOut()" type="submit">Sign Out</button>
                 </div>
 
             </ul>
@@ -105,9 +104,9 @@
 
     </div>
 
-</nav>
+</div>
 
-<nav *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; "> 
+<div *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; "> 
     <div id='wrapper' *ngIf="appSvc.isSideNavOpen">
        <div id="sidebar-wrapper"> 
            <ul class="sidebar-nav"> <i class="fa fa-times cust_floater2" (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" aria-hidden="true"></i> 
@@ -182,4 +181,4 @@
             </ul>
         </div>
     </div>
-  </nav>
+</div>

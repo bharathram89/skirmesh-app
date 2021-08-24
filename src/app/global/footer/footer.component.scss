@@ -3,14 +3,12 @@
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
 
 footer {
-    background: #16222A;
-    background: -webkit-linear-gradient(59deg, #142401 , #786546);
-    background: linear-gradient(59deg,  #142401,#786546 );
-    color: white;
+    background: #92795D;
+    color: #A8B3BB;
   }
   
   footer a {
-    color: #fff;
+    color: #A8B3BB;
     font-size: 14px;
     transition-duration: 0.2s;
   }
@@ -23,12 +21,12 @@ footer {
   .copy {
     font-size: 12px;
     padding: 10px;
-    border-top: 1px solid #FFFFFF;
+    border-top: 1px solid #A8B3BB;
   }
   
   .footer-middle {
     padding-top: 2em;
-    color: white;
+    color: #A8B3BB;
   }
   
   
