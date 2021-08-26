@@ -1,6 +1,6 @@
 <div *ngIf="!appSvc.isMobile" class="header nav">
 
-    <div class="container">
+    <div class="">
 
         <!-- <div id="particles-js" onload="particlesJS(this.id)"> </div> -->
 
@@ -10,9 +10,8 @@
         </button> -->
 
        
-        <div class="navbar " id="navdrop">
-            <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
-            alt="user" />
+        <div id="navdrop">
+           
 
             <!-- NON SECURE LINKS DURING SECURE SESSION -->
             <!-- <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> -->
@@ -33,7 +32,9 @@
             </ul> -->
 
             <!-- NON SECURE LINKS BELOW -->
-            <ul class="navbar justify-content-end" *ngIf="!isSecure">
+            <ul class="" *ngIf="!isSecure">
+                <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
+                alt="user" />
                 <div class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="nav_home" (click)="route('/non-secure/home')">Home </div>
                 </div>
@@ -49,6 +50,10 @@
                 </li> -->
                 <div class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">LIVE Battles</div>
+                </div> 
+                <div class="nav-item">
+                    <div class="btn btn-outline-danger  nav-link" [routerLink]="['/auth/login']"
+                        type="submit">Barracks</div>
                 </div>
                 <!-- <li class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame"
@@ -56,7 +61,9 @@
                 </li> -->
             </ul>
             <!-- SECURE LINKS BELOW -->
-            <ul class="navbar justify-content-end" *ngIf="isSecure">
+            <ul class="" *ngIf="isSecure">
+                <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
+                alt="user" />
                 <div class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_dashboard" [routerLink]="['/secure/dashboard']">Dashboard</div>
                 </div>
@@ -76,6 +83,9 @@
                 <div class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame" (click)="route('/secure/past-games')">Past Games</div>
                 </div>
+                <div class="nav-item ">
+                    <div class="btn btn-outline-danger  nav-link" (click)="signOut()" >Sign Out</div>
+                </div>
                 <!-- <li class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame"
                         (click)="route('/non-secure/leader-board')">Leaderboard</a>
@@ -86,17 +96,12 @@
 
             <!-- SIGN-IN / SIGN-OUT -->
             <ul class="navbar justify-content-end" *ngIf="!isSecure">
-                <div class="nav-item">
-                    <button class="btn btn-outline-danger " [routerLink]="['/auth/login']"
-                        type="submit">Barracks</button>
-                </div>
+               
 
             </ul>
 
             <ul class="navbar justify-content-end" *ngIf="isSecure">
-                <div class="nav-item ">
-                    <button class="btn btn-outline-danger " (click)="signOut()" type="submit">Sign Out</button>
-                </div>
+                
 
             </ul>
             <!-- </ul> -->
@@ -106,7 +111,7 @@
 
 </div>
 
-<div *ngIf="appSvc.isMobile" style="background-color: #2b1f07; "> 
+<div *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; "> 
     <div id='wrapper' *ngIf="appSvc.isSideNavOpen">
        <div id="sidebar-wrapper"> 
            <ul class="sidebar-nav"> <i class="fa fa-times cust_floater2" (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" aria-hidden="true"></i> 
