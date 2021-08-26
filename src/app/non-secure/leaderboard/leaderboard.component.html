@@ -1,21 +1,22 @@
 
-<div class="container" align="center">
+<div class="" align="center">
 
-    <div class="col-md-6  rounded-2">
+    <div class="col rounded-2">
 
+        <h3 class="title-text text-white my-2">National Leaderboard</h3>
     <div
-    [innerHtml]="isWeekly ? 'Weekly Leaderboard' : 'Monthly Leaderboard'"
-    class="btn btn-outline-info my-2 w-100"
+    [innerHtml]="isWeekly ? 'Weekly' : 'Monthly'"
+    class="btn btn-outline-info"
     (click)="setLeaderboardData()">
     </div>
 
-    <h5 class="my-2" [innerHtml]="minDate"></h5>
-        <div class="row">
+    <p class="text-white my-2" [innerHtml]="minDate"></p>
+        <div class="text-white row">
             <div class="col"><hr></div>
             <div class="col-auto">to</div>
             <div class="col"><hr></div>
         </div>
-    <h5 [innerHtml]="nowDate"></h5>
+    <p class="text-white" [innerHtml]="nowDate"></p>
 
     <!-- <p class="my-4">Click to view a leader's profile!</p> -->
 
@@ -32,7 +33,7 @@
 
     <div class="row mx-0">
 
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
             <ngx-charts-bar-vertical
             [scheme]="podiumColors"
             [showDataLabel]="true"
@@ -43,12 +44,12 @@
             [yScaleMin]="0"
             >
         	</ngx-charts-bar-vertical>
-        </div>
+        </div> -->
 
-        <div class="col-md-6">
+        <div class="col">
 
             <div *ngFor="let leader of leaderboardData; index as i; first as isFirst"
-                class="row p-2 m-1 border rounded leaderboardRow text-white"
+                class="row p-1 border rounded leaderboardRow text-white"
                 [class.bg-gold]  ="i == 0"
                 [class.bg-silver]="i == 1"
                 [class.bg-bronze]="i == 2" 

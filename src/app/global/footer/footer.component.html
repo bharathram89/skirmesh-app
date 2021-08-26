@@ -62,7 +62,7 @@
     </div>
   </footer>
 
-  <nav *ngIf="appSvc.isMobile"  class="mobile-bottom-nav">
+  <div *ngIf="appSvc.isMobile"  class="mobile-bottom-nav">
     <div routerLinkActive="active-link" (click)="toggleSideMenu()" class="mobile-bottom-nav__item">
       <div class="mobile-bottom-nav__item-content">
         <i class="fa fa-angle-double-up  fa-2x" aria-hidden="true"></i> 
@@ -97,4 +97,4 @@
     </div>
 
 
-  </nav>
+  </div>

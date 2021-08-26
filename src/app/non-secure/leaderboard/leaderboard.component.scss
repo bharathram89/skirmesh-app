@@ -2,6 +2,9 @@
     cursor: pointer;
     transform: scale(1.02);
 }
+.title-text {
+    font-family: 'revamped'; 
+}
 .leaderboardRow:active {
     cursor: pointer;
     transform: scale(0.98);
@@ -20,6 +23,5 @@
 } 
 .container {
     background-color: #ccba87;
-
     box-shadow: 5px 5px 50px #ccba87;
 }

@@ -8,11 +8,16 @@
 
  
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
+@font-face {
+    font-family: 'revamped';
+    src: url('./assets/libs/fonts/Revamped.otf') format("opentype");
+  }
 .btn:hover {
     transform: scale(1.05);
 }
-
+#root {
+    background-color: #2b1f07; 
+}
 .btn:active {
     transform: scale(0.95);
 } 
@@ -21,22 +26,29 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     width: 100%;
     top:0;
     z-index:1000;
+    height: 10vh;
 }
 .mainfooter{
     position: fixed !important;
     width: 100%;
     bottom: 0;
     z-index:1000;
+    height: 25vh;
 }
 
   div.main_content {
-      margin-top: 60px;
-      margin-bottom: 200px;
+      background-image: url("./assets/images/soilderbg.jpeg");
+      @media screen and (min-width: 768px) {
+        margin-top: 10vh;
+        margin-bottom: 25vh;
+
+      }
+    //   overflow: scroll;
+    //   max-width: 100vh;
     position: relative; /* needed for footer positioning*/
     height: auto !important; /* real browsers */
     background-color: #2b1f07;
-    min-height: 100vh; /* real browsers */
-    background-color: #2b1f07;
+    min-height: 70vh; /* real browsers */
   }
   
   .card-header {

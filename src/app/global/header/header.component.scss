@@ -9,8 +9,8 @@
   display: block !important;
   background: #92795D !important;
   align-items: right;
-  padding: 0px;
   .nav-item{
+    min-width: 20px;
     list-style-type:none;
     color:#A8B3BB;
     margin: 5px;
@@ -43,7 +43,7 @@
 }
 
 .hc_custom {
-  max-height: 40px;
+  max-height: 10vh;
   margin-left: 0px;
 }
 .cust {
