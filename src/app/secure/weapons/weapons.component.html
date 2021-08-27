@@ -1,0 +1,181 @@
+<div cdkDropListGroup class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 m-3" style="background-color: bisque">
+        <div class="example-container">
+          <h2 style="color: rgb(41, 41, 41)">Available Weapons</h2>
+          <label class="example-box cursor" (click)="showWeapons('main')"
+            >Main Weapon</label
+          >
+          <label class="example-box cursor" (click)="showWeapons('secondary')"
+            >Secondary Weapon</label
+          >
+          <label class="example-box cursor" (click)="showWeapons('explosives')"
+            >Explosives</label
+          >
+  
+          <div
+            *ngIf="showMainWeapon"
+            cdkDropList
+            [cdkDropListData]="mainWeapons"
+            cdkDropListSortingDisabled
+          >
+            <div
+              class="example-box m-1 align-middle"
+              *ngFor="let item of mainWeapons"
+              cdkDrag
+            >
+              {{ item.name }}
+              <img
+                height="70px"
+                style="margin-left: 60%; background-color: white"
+                src="{{ item.imageUrl }}"
+              />
+            </div>
+          </div>
+  
+          <div
+            *ngIf="showSecondaryWeapon"
+            cdkDropList
+            [cdkDropListData]="secondaryWeapons"
+            cdkDropListSortingDisabled
+          >
+            <div
+              class="example-box m-1 align-middle"
+              *ngFor="let item of secondaryWeapons"
+              cdkDrag
+            >
+              {{ item.name }}
+              <img
+                height="70px"
+                style="margin-left: 60%; background-color: white"
+                src="{{ item.imageUrl }}"
+              />
+            </div>
+          </div>
+  
+          <div
+            *ngIf="showExplosive"
+            cdkDropList
+            [cdkDropListData]="explosive"
+            cdkDropListSortingDisabled
+          >
+            <div
+              class="example-box m-1 align-middle"
+              *ngFor="let item of explosive"
+              cdkDrag
+            >
+              {{ item.name }}
+              <img
+                height="70px"
+                style="margin-left: 50%; background-color: white"
+                src="{{ item.imageUrl }}"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8 m-3">
+        <div class="row">
+          <h2 style="color: wheat">Available Loadout</h2>
+          &nbsp; &nbsp; &nbsp;
+          <button class="btn btn-primary" (click)="addLoadOut()">
+            Add Loadout
+          </button>
+        </div>
+        <div class="row">
+          <div
+            class="example-container col-sm-3"
+            *ngFor="let loadOut of loadOutList"
+          >
+            <div class="row">
+              <h2 style="color: wheat">Loadout {{ loadOut.id }}</h2>
+              &nbsp; &nbsp;
+              <button class="btn btn-danger" (click)="removeLoadOut(loadOut.id)">
+                Delete
+              </button>
+            </div>
+  
+            <div
+              cdkDropList
+              [cdkDropListData]="loadOut.mainloadOut"
+              class="example-list"
+              (cdkDropListDropped)="drop($event, 1)"
+            >
+              <label
+                >Main Weapon
+                <div
+                  class="example-box"
+                  *ngFor="let item of loadOut.mainloadOut"
+                  cdkDrag
+                >
+                  {{ item.name }} &nbsp; &nbsp;
+  
+                  <img
+                    height="70px"
+                    style="background-color: white"
+                    src="{{ item.imageUrl }}"
+                  />
+  
+                  <button
+                    class="btn btn-danger"
+                    (click)="removeItem(item, loadOut.id, 1)"
+                  >
+                    Delete
+                  </button>
+                </div></label
+              >
+            </div>
+  
+            <div
+              cdkDropList
+              [cdkDropListData]="loadOut.secondaryloadOut"
+              class="example-list"
+              (cdkDropListDropped)="drop($event, 2)"
+            >
+              <label
+                >Secondary Weapon
+                <div
+                  class="example-box"
+                  *ngFor="let item of loadOut.secondaryloadOut"
+                  cdkDrag
+                >
+                  {{ item.name }} &nbsp; &nbsp;
+                  <button
+                    class="btn btn-danger"
+                    (click)="removeItem(item, loadOut.id, 2)"
+                  >
+                    Delete
+                  </button>
+                </div></label
+              >
+            </div>
+  
+            <div
+              cdkDropList
+              [cdkDropListData]="loadOut.explosiveloadOut"
+              class="example-list"
+              (cdkDropListDropped)="drop($event, 3)"
+            >
+              <label
+                >Explosive
+                <div
+                  class="example-box"
+                  *ngFor="let item of loadOut.explosiveloadOut"
+                  cdkDrag
+                >
+                  {{ item.name }} &nbsp; &nbsp;
+                  <button
+                    class="btn btn-danger"
+                    (click)="removeItem(item, loadOut.id, 3)"
+                  >
+                    Delete
+                  </button>
+                </div></label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

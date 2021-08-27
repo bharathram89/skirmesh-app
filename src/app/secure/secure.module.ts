@@ -1,3 +1,4 @@
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile/profile.component';
@@ -12,11 +13,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { GameHistoryComponent } from './game-history/game-history.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { WeaponsComponent } from './weapons/weapons.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 @NgModule({
-    declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent, GameHistoryComponent],
+    declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent, GameHistoryComponent, WeaponsComponent],
  
     imports: [
         CommonModule,
@@ -28,7 +31,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
         NgxDatatableModule,
         NgxChartsModule,
         TabsModule.forRoot(),
-        AccordionModule
+        AccordionModule,
+        DragDropModule
     ]
 })
 export class SecureModule {

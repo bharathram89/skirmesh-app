@@ -1,3 +1,4 @@
+import { WeaponsComponent } from './weapons/weapons.component';
 import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { LiveGamesComponent } from '../non-secure/liveGames/liveGames.component';
@@ -41,6 +42,10 @@ const routes: Routes = [
         path: 'manageGame',
         component: ManageGameComponent
       },
+      {
+        path: 'configureWeapons',
+        component: WeaponsComponent
+      }
     ]
   }
 ];
