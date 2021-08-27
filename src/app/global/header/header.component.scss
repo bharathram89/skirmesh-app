@@ -10,7 +10,8 @@
   background: #92795D !important;
   align-items: right;
   .nav-item{
-    min-width: 20px;
+    display: inline-block !important;
+    min-width: 5vh;
     list-style-type:none;
     color:#A8B3BB;
     margin: 5px;
