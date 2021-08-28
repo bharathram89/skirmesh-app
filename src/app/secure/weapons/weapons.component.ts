@@ -48,7 +48,6 @@ export class WeaponsComponent implements OnInit {
 
   loadOutList = [];
   drop(event: CdkDragDrop<any[]>, type) {
-    debugger;
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
