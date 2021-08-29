@@ -1,0 +1,67 @@
+[
+        {
+          "Army": [
+            {"100" : "Private"},
+            {"500" : "Private PV2"}, 
+            {"1000" : "Private First Class"}, 
+            {"1500" : "Corporal"}, 
+            {"3000" : "Sergeant"}, 
+            {"5000" : "Staff Sergeant"}, 
+            {"5000" : "Sergeant First Class"}, 
+            {"9000" : "First Sergeant"}, 
+            {"10000" : "Command Sergeant Major"}
+          ]
+        },
+        {
+          "Marine Corps": [
+            {"100" : "Private"},
+            {"500" : "Private First Class"}, 
+            {"1000" : "Lance Corporal"}, 
+            {"1500" : "Corporal"}, 
+            {"3000" : "Sergeant"}, 
+            {"5000" : "Staff Sergeant"}, 
+            {"5000" : "Gunnery Sergeant"}, 
+            {"9000" : "First Sergeant"}, 
+            {"10000" : "Sergeant Major"}
+          ]
+        },
+        {
+          "Navy": [
+            {"100" : "Seaman Recruit"},
+            {"500" : "Seaman Apprentice"}, 
+            {"1000" : "Seaman"}, 
+            {"1500" : "Petty Officer Third Class"}, 
+            {"3000" : "Petty Officer Second Class"}, 
+            {"5000" : "Petty Officer First Class"}, 
+            {"5000" : "Chief Petty Officer"}, 
+            {"9000" : "Senior Chief Petty Officer"}, 
+            {"10000" : "Fleet/Command Master Chief Petty Officer"}
+          ]
+        },
+        {
+          "Air Force": [
+            {"100" : "Airman Basic"},
+            {"500" : "Airman"}, 
+            {"1000" : "Airman First Class"}, 
+            {"1500" : "Senior Airman"}, 
+            {"3000" : "Staff Sergeant"}, 
+            {"5000" : "Technical Sergeant"}, 
+            {"5000" : "Master Sergeant"}, 
+            {"9000" : "First Sergeant"}, 
+            {"10000" : "Command Chief Master Sergeant"}
+          ]
+        },
+        {
+          "Coast Guard": [
+            {"100" : "Seaman Recruit"},
+            {"500" : "Seaman Apprentice"}, 
+            {"1000" : "Seaman"}, 
+            {"1500" : "Petty Officer Third Class"}, 
+            {"3000" : "Petty Officer Second Class"}, 
+            {"5000" : "Petty Officer First Class"}, 
+            {"5000" : "Chief Petty Officer"}, 
+            {"9000" : "Senior Chief Petty Officer"}, 
+            {"10000" : "Fleet/Command Master Chief Petty Officer"}
+          ]
+        }
+      ]

@@ -12,15 +12,13 @@
 }
 .leaderboard{
   @media screen and (min-width: 768px) { 
-    margin-right: 60vh;
-    align-items: right;
+    max-width: 30vh;
   }
-  @media screen and (min-width: 1200px) { 
-    margin-right: 80vh;
-    align-items: right;
-  }
-  :not(.mobileApp){
-    margin-right: 40vh;
+  // @media screen and (min-width: 1200px) {  
+  //   align-items: right;
+  // }
+  :not(.mobileApp){ 
+
   }
   // transform: skew(28deg, 0deg);  
 }
