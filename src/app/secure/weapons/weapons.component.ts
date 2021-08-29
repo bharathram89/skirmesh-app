@@ -15,6 +15,9 @@ export class WeaponsComponent implements OnInit {
   showMainWeapon = true;
   showSecondaryWeapon = false;
   showExplosive = false;
+  showTectical = false;
+  primaryLoadout = false;
+  selectedLayout: any = [];
   constructor() {}
 
   ngOnInit(): void {}
@@ -36,19 +39,19 @@ export class WeaponsComponent implements OnInit {
   explosive = [
     {
       type: 3,
-      name: "stan granade",
-      imageUrl: "../../../assets/gunImages/stan-granade.png",
-    },
-    {
-      type: 3,
       name: "grenade",
       imageUrl: "../../../assets/gunImages/grenade.png",
     },
   ];
-
+  tectical = [
+    {
+      type: 4,
+      name: "stan granade",
+      imageUrl: "../../../assets/gunImages/stan-granade.png",
+    },
+  ];
   loadOutList = [];
   drop(event: CdkDragDrop<any[]>, type) {
-    debugger;
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -72,7 +75,7 @@ export class WeaponsComponent implements OnInit {
               event.currentIndex
             );
           } else {
-            alert("Already Weapon Present");
+            alert("demo");
           }
         } else if (type === event.previousContainer.data[0].type) {
           if (event.container.data.length === 0) {
@@ -83,7 +86,7 @@ export class WeaponsComponent implements OnInit {
               event.currentIndex
             );
           } else {
-            alert("Already Weapon Present");
+            alert("demo");
           }
         } else if (type === event.previousContainer.data[0].type) {
           if (event.container.data.length === 0) {
@@ -94,7 +97,18 @@ export class WeaponsComponent implements OnInit {
               event.currentIndex
             );
           } else {
-            alert("Already Weapon Present");
+            alert("demo");
+          }
+        } else if (type === event.previousContainer.data[0].type) {
+          if (event.container.data.length === 0) {
+            copyArrayItem(
+              event.previousContainer.data,
+              event.container.data,
+              event.previousIndex,
+              event.currentIndex
+            );
+          } else {
+            alert("demo");
           }
         }
       }
@@ -105,9 +119,12 @@ export class WeaponsComponent implements OnInit {
   addLoadOut() {
     this.loadOutList.push({
       id: this.id,
+      primaryLoadout: this.primaryLoadout,
       mainloadOut: [],
       secondaryloadOut: [],
       explosiveloadOut: [],
+      tecticalloadOut: [],
+      isEditName: true
     });
     this.id = this.id + 1;
   }
@@ -130,6 +147,10 @@ export class WeaponsComponent implements OnInit {
             e.explosiveloadOut = [];
 
             break;
+          case 4:
+            e.tecticalloadOut = [];
+
+            break;
 
           default:
             break;
@@ -140,6 +161,15 @@ export class WeaponsComponent implements OnInit {
 
   removeLoadOut(loadOut) {
     this.loadOutList = this.loadOutList.filter((e) => e.id !== loadOut);
+    this.selectedLayout.filter((e) => {
+      e.id == loadOut, (this.selectedLayout = []);
+      console.log(e);
+    });
+    this.selectedLayout.push(this.loadOutList[0]);
+    console.log(this.loadOutList);
+    if (this.loadOutList.length === 0) {
+      this.selectedLayout = [];
+    }
   }
 
   showWeapons(data) {
@@ -147,14 +177,35 @@ export class WeaponsComponent implements OnInit {
       this.showMainWeapon = true;
       this.showSecondaryWeapon = false;
       this.showExplosive = false;
+      this.showTectical = false;
     } else if (data === "secondary") {
       this.showSecondaryWeapon = true;
       this.showMainWeapon = false;
       this.showExplosive = false;
+      this.showTectical = false;
     } else if (data === "explosives") {
       this.showExplosive = true;
       this.showSecondaryWeapon = false;
       this.showMainWeapon = false;
+      this.showTectical = false;
+    } else if (data === "tectical") {
+      this.showTectical = true;
+      this.showExplosive = false;
+      this.showSecondaryWeapon = false;
+      this.showMainWeapon = false;
     }
+  }
+
+  makeItPrimary(data) {
+    this.loadOutList.filter((e) => {
+      (e.primaryLoadout = true), (e.primaryLoadout = false);
+    });
+
+    data.primaryLoadout = true;
+  }
+
+  viewSelectedLayout(layout) {
+    this.selectedLayout = [];
+    this.selectedLayout.push(layout);
   }
 }
