@@ -10,6 +10,8 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { LiveGamesComponent } from './liveGames/liveGames.component'
 import { HowToUseComponent } from './how-to-use/how-to-use.component';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
+import { EventsComponent } from './events/events.component';
+import { GameHistoryComponent } from './game-history/game-history.component';
 
 // const routes: Routes = [{ path: '', component: NonSecureComponent }];
 
@@ -48,6 +50,14 @@ const routes: Routes = [
     {
       path: 'leader-board',
       component: LeaderboardComponent,
+    },
+    {
+      path: 'past-games',
+      component: GameHistoryComponent,
+    },
+    {
+      path: 'events',
+      component: EventsComponent,
     },
     {
       path: "",

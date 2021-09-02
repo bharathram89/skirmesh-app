@@ -15,13 +15,14 @@
         <div class="font_white text-xs-center" [style.background-color]="team.color">
 
             <h5>
-                <div class="team_row font-weight-bold row padding-xs-x">
+                <div class="team_row font-weight-bold row row-cols-2 px-1 border-bottom">
                     <div class="col "> {{team.name}} ({{team.players.length}})</div>
-                    <div class="col keepRight">TOTAL: {{team.comb_score}}pts </div>
+                    <div class="col" align="right">TOTAL: {{team.comb_score}}pts </div>
                 </div>
-                <div class="team_row row padding-xs-x">
-                    <div class="col"> Objective Control: {{team.score}}pts </div>
-                    <div class="col"> Team Members: {{team.player_score}}pts </div>
+                <div class="team_row row px-1">
+                    <div class="col" align="left"> Objective Control: {{team.score}}pts </div>
+                    <div class="col" align="center"> Member Action: {{team.player_score}}pts </div>
+                    <div class="col" align="right"> Deaths: {{team.player_deaths}} </div>
                 </div>
             </h5>
         </div>

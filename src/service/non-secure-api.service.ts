@@ -135,4 +135,34 @@ export class NonSecureAPIService {
 
         return this.http.get(route + "leaderboard", options)
     }
+
+
+
+    // █▀▀ ▀█░█▀ █▀▀ █▀▀▄ ▀▀█▀▀ █▀▀
+    // █▀▀ ░█▄█░ █▀▀ █░░█ ░░█░░ ▀▀█
+    // ▀▀▀ ░░▀░░ ▀▀▀ ▀░░▀ ░░▀░░ ▀▀▀
+
+
+    getEventsList(){
+        return this.http.get(this.BASE + this.NONS + 'events')
+    }
+
+
+    getEvent(eventID){
+
+        const options = { params  : new HttpParams().set("id", eventID) }
+
+        return this.http.get(this.BASE + this.NONS + 'events', options)
+    }
+
+
+
+    getFieldListFromAPI() {
+
+        let route = this.BASE + this.NONS;
+
+        return this.http.get(route + 'fieldProfile_list')
+    }
+
+
 }

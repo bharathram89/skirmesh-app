@@ -223,10 +223,10 @@ export class EditGameComponent implements OnInit {
     changeMap() {
 
         let mapID = this.gameModeForm.get('mapID').value;
-        this.locations = this.maps.find(map => map["id"] == mapID)["locations"];
+
+        if (!mapID) {return}
 
         this.updateDeviceListConfigs()
-        // this.isMapSelected = true;
     }
 
 

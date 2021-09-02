@@ -17,6 +17,16 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { EventsComponent } from './events/events.component';
+import { FormsModule, FormControl } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { GameHistoryComponent } from './game-history/game-history.component';
+
+
+
 @NgModule({
   declarations: [HowToUseComponent,
                  NonSecureComponent,
@@ -26,7 +36,9 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
                  PrivacyPolicyComponent,
                  FieldInfoComponent,
                  LiveGamesComponent,
-                 LeaderboardComponent],
+                 LeaderboardComponent,
+                 EventsComponent,
+                 GameHistoryComponent],
   imports: [
     CommonModule,
     NonSecureRoutingModule,
@@ -35,7 +47,12 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
     CarouselModule,
     NgxDatatableModule, 
     AccordionModule.forRoot(),
-    NgxChartsModule
+    NgxChartsModule,
+    FormsModule,
+    BsDatepickerModule.forRoot(),
+    TimepickerModule.forRoot(),
+    ModalModule.forRoot(),
+    CollapseModule.forRoot()
   ]
 })
 export class NonSecureModule { }

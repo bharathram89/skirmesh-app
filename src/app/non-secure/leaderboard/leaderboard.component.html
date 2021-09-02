@@ -18,6 +18,26 @@
         </div>
     <p class="text-white" [innerHtml]="nowDate"></p>
 
+    <div class="row row-cols-4 gx-2 my-auto justify-content-center">
+
+        <div class="col btn align-self-center"
+             (click)="filterByField(null)">
+        <h3><i class="fa fa-refresh" aria-hidden="true"></i></h3>
+        </div>
+
+        <div class="col btn align-self-center"
+             *ngFor="let image of fieldProfileImages"
+             (click)="image.isSelected = !image.isSelected; filterByField(image.id)">
+             <img src="{{image.data}}"
+                  style="max-height: 4rem; max-width: 4rem;"
+                  class="img img-thumbnail border-0 rounded"
+                  [class.selected]="image.isSelected"
+                  alt="">
+        </div>
+
+    </div>
+
+
     <!-- <p class="my-4">Click to view a leader's profile!</p> -->
 
     <div *ngIf="signInError"
@@ -59,8 +79,12 @@
                 (click)="viewPlayerProfile(leader.name)"
                 >
 
+                <img src="{{getFieldImage(leader.fieldProfileImageID)}}"
+                          style="max-height: 1.75rem; max-width: 1.75rem;"
+                          class="img rounded"
+                          alt="">
                 <div class="col-2 text-left" [innerHtml]="i+1"></div>
-                <div class="col-8 text-left" [innerHtml]="leader.name"></div>
+                <div class="col-6 text-left" [innerHtml]="leader.name"></div>
                 <div class="col-2 text-right" [innerHtml]="leader.total_points"></div>
 
             <div>

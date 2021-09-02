@@ -129,7 +129,7 @@ export class ScoreService {
         })
 
         let plyr_points   = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
-
+        let plyr_deaths   = team_players.reduce((accu, ele) => accu + ele.totalDeaths, 0);
         let team_score = team.data.reduce((accu, ele) => accu + ele.points, 0);
 
         let teamObj = {
@@ -138,6 +138,7 @@ export class ScoreService {
             color          : '#' + team.color,
             score          : team_score,
             player_score   : plyr_points,
+            player_deaths  : plyr_deaths,
             comb_score     : team_score + plyr_points,
             players        : team_players
         }
@@ -186,7 +187,8 @@ export class ScoreService {
             player.totalPoints += player.survivalPoints;
         })
 
-        let plyr_points   = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+        let plyr_points = team_players.reduce((accu, ele) => accu + ele.totalPoints, 0);
+        let plyr_deaths = team_players.reduce((accu, ele) => accu + ele.totalDeaths, 0);
 
         this.teams.push({
                          teamID         : team.id,
@@ -194,6 +196,7 @@ export class ScoreService {
                          color          : '#' + team.color,
                          score          : 0,
                          player_score   : plyr_points,
+                         player_deaths  : plyr_deaths,
                          comb_score     : 0 + plyr_points,
                          players        : team_players,
                         })

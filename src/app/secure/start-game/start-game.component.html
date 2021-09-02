@@ -54,7 +54,11 @@
                     </div>
 
 
-                    <button type="button" class="btn btn-primary m-2" [disabled]="!gameBoardActive" (click)="startGame()">START GAME</button>
+                    <button type="button"
+                            class="btn btn-primary col-sm-4 mx-0 my-2"
+                            [disabled]="!gameBoardActive"
+                            (click)="startGame()"
+                            align="center">START GAME</button>
 
             </div>
 
@@ -62,10 +66,17 @@
         <div class="row px-0" [@collapse]="!gameBoardActive">
             <div class="col-lg-12"><h1 class="text-center pt-3 "><span *ngIf="gameData?.id">Game #{{gameData.id}}: </span> {{selectedGameMode?.description}}</h1></div>
 
-            <div class="col-lg-12">
-                <div class="text-center pt-3">
+                <div class="row mx-auto">
 
-                    <div *ngIf="!gameInProgress" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <h1 *ngIf="gameData?.id" class="row text-center pt-3">
+                    <span>Game #{{gameData.id}}: </span> {{selectedGameMode?.description}}
+                </h1>
+
+                </div>
+
+                <div class="row mx-auto px-0 pt-3">
+
+                    <div *ngIf="!gameInProgress" class="alert alert-warning fade show" role="alert">
                          <strong>Device changes will revert to the saved configuration on START GAME.</strong>
                     </div>
 
@@ -90,37 +101,36 @@
 
                     </div>
 
-                    <div class="row px-0 justify-content-center">
+                </div>
 
-                        <div *ngIf="gameBoardActive" class="col-xs">
+                <div class="row mx-0 px-0">
 
-                          <app-map [mapID]="selectedGameMode.mapID" [deviceData]="gameData?.devices" [gameID]="gameData?.id"></app-map>
+                    <div *ngIf="gameBoardActive" class="col-sm-3">
 
-                          <div *ngFor="let team of teams" class="team-section">
+                      <app-map [mapID]="selectedGameMode.mapID" [deviceData]="gameData?.devices" [gameID]="gameData?.id"></app-map>
 
-                              <div class="team_header font_white text-xs-center" [style.background-color]="team.color">
+                      <div *ngFor="let team of teams" class="team-section">
 
-                                  <h5>
-                                      <div class="team_row font-weight-bold row px-0">
-                                          <div class="col "> {{team.name}} ({{team.teamPlayers.length}})</div>
-                                      </div>
-                                  </h5>
+                          <div class="team_header font_white text-xs-center" [style.background-color]="team.color">
 
-                              </div>
+                              <h5>
+                                  <div class="team_row font-weight-bold row px-0">
+                                      <div class="col "> {{team.name}} ({{team.teamPlayers.length}})</div>
+                                  </div>
+                              </h5>
 
                           </div>
 
+                      </div>
 
-                        </div>
-
-                        <div class="col-lg">
-                            <app-device-list [config]="activeDevices" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
-                        </div>
 
                     </div>
 
+                    <div class="col-lg-9">
+                        <app-device-list [config]="activeDevices" (nodeConfigs)="nodeConfigs($event)"></app-device-list>
+                    </div>
+
                 </div>
-            </div>
 
         </div>
 

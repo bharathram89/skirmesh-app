@@ -1,0 +1,339 @@
+<div class="container my-2" align="center">
+
+    <div *ngIf="!isSecure" class="alert col-6 alert-info fade show mt-2" role="alert">
+        <strong><a [routerLink]="['/auth/login']">Login</a></strong> or <strong><a [routerLink]="['/auth/sign-up']">sign-up</a></strong>
+        to join an event.
+    </div>
+
+    <div [collapse]="createEvent"
+         [isAnimated]="true"
+         *ngIf="!eventList.length">
+
+         <div class="alert col-6 alert-info fade show mt-2" role="alert">
+             Sorry, there are no events at this time.
+         </div>
+
+    </div>
+
+    <div [collapse]="!createEvent" [isAnimated]="true" class="container px-0 my-2">
+
+        <!-- <h1 align="center">Event Submission</h1> -->
+
+        <form (ngSubmit)="onEventSubmit()" #eventForm="ngForm" class="justify-content-center">
+
+          <div class="row mx-0 justify-content-center">
+
+                <div class="form-group col-lg-3 mx-sm-1 my-auto">
+                    <input type="file" class="form-control-file"
+                           (change)="getFile($event)">
+                </div>
+
+              <div class="col-lg-3 mx-sm-1 my-auto">
+                <input type="text" class="form-control" name="name"
+                       [class.is-invalid]="name.invalid && !name.pristine"
+                       required
+                       [(ngModel)]="eventModel.name"
+                       placeholder="Event Name"
+                       autocomplete="off"
+                       #name="ngModel">
+              </div>
+
+              <div class="col-lg-2 mx-sm-1 my-auto">
+                <input type="text" class="form-control" name="date"
+                       [class.is-invalid]="date.invalid && !date.pristine"
+                       required
+                       [(ngModel)]="eventModel.datetime"
+                       placeholder="Date"
+                       autocomplete="off"
+                       #date="ngModel"
+                       bsDatepicker>
+              </div>
+
+              <div class="col-lg-2 mx-sm-1 my-auto">
+                <timepicker [(ngModel)]="eventModel.datetime"
+                            [showMeridian]="false"
+                            name="time"
+                            required
+                            #time="ngModel">
+                </timepicker>
+              </div>
+          </div>
+
+
+          <div class="row mx-0">
+              <div class="col-sm-4 mx-1 my-1">
+                  <select class="form-control"
+                          [(ngModel)]="eventModel.gameConfigID"
+                          name="gameConfigID"
+                          #gameConfigID="ngModel">
+                  <option disabled selected value> -- Select Mission -- </option>
+                  <option [value]=config.id *ngFor="let config of gameConfigs">
+                      {{config.description}}</option>
+                  </select>
+              </div>
+          </div>
+
+          <div class="row justify-content-center mx-0">
+              <div class="col mx-1 my-auto">
+              <textarea rows="4" type="text" class="form-control mx-0" name="detail"
+                        [(ngModel)]="eventModel.detail"
+                        placeholder="Event Details"
+                        autocomplete="off"
+                        #detail="ngModel"></textarea>
+              </div>
+          </div>
+
+
+
+          <div class="row justify-content-center">
+              <button type="submit"
+                      class="btn col-sm-2 mx-sm-1 my-1"
+                      [class.btn-primary]="!submitEventSuccess && !submitEventFailure"
+                      [class.btn-success]="submitEventSuccess"
+                      [class.btn-danger]="submitEventFailure"
+                      [disabled]="!eventForm.form.valid">
+                      Submit
+                  </button>
+              <button type="button" class="btn btn-secondary col-sm-2 mx-sm-1 my-1" (click)="newEvent(); eventForm.reset()"> Reset </button>
+              <button type="button" class="btn btn-warning col-sm-2 mx-sm-1 my-1" (click)="createEvent = false; viewEventModel = false"> Cancel </button>
+          </div>
+
+          </form>
+
+    </div>
+
+    <div class="row mx-0 justify-content-center">
+        <button [class.d-none]="createEvent || !isField" class="btn btn-primary col-md-4"
+            (click)="!createEvent ? newEvent() : null; createEvent = true;"
+            role="button"
+            [disabled]="!isField">
+            New Event
+        </button>
+    </div>
+
+
+    <div [collapse]="createEvent"
+         [isAnimated]="true"
+         [class.d-none]="viewEventModel"
+         *ngIf="carouselEvents.length"
+         class="rounded">
+
+         <!-- <h2> Happening Soon! </h2> -->
+
+        <carousel [isAnimated]="true"
+                  [pauseOnFocus]="true">
+
+              <slide *ngFor="let event of carouselEvents">
+
+                  <img class="carousel-image w100 mx-auto" src="{{event.imageData}}"
+                    onerror="this.onerror=null" alt=""
+                    (click)="viewEvent(event)"
+                    style="display: block; width: 100%;"
+                    />
+
+                  <div class="carousel-caption d-none d-md-block">
+                      <h2 class="d-inline">{{event.name}}</h2>
+                      <h3>{{event.datetime.toLocaleString('en-US', {dateStyle:'medium', timeStyle:'short'})}}</h3>
+                  </div>
+
+          </slide>
+
+        </carousel>
+
+    </div>
+
+
+
+    <div [collapse]="createEvent" [isAnimated]="true" [class.d-none]="viewEventModel" class="mx-0 my-2" align="center">
+
+        <hr/>
+
+        <div *ngFor="let event of eventList"
+             class="card col-lg-7 px-0 m-2"
+             (click)="viewEvent(event)">
+
+             <div class="card-header py-2 px-4" align="left">
+
+                 <div class="btn figure float-left p-0 m-0"
+                      (click)="viewProfile(event.fieldCallsign)"
+                      align="left">
+                     <img src="{{event.fieldImageData}}"
+                          style="max-height: 50px;"
+                          class="figure-img img-thumbnail rounded"
+                          alt="">
+                 </div>
+                 <figcaption class="figure-caption">{{event.fieldCallsign}}</figcaption>
+
+                 <h4 class="d-inline">{{event.name}}</h4>
+
+                 <div class="btn-group float-right">
+                 <button [class.d-none]="!isField || event.fieldProfileID != userSvc.getFieldProfileID()"
+                     class="btn btn-outline-secondary btn-sm"
+                     (click)="editEvent(event)"
+                     role="button"
+                     [disabled]="!isField">
+                     Edit
+                 </button>
+
+                 <button [class.d-none]="!isField || event.fieldProfileID != userSvc.getFieldProfileID()"
+                     class="btn btn-outline-danger btn-sm"
+                     (click)="openModal(eventModal, event)"
+                     role="button"
+                     [disabled]="!isField">
+                     Delete
+                 </button>
+                 </div>
+
+             </div>
+
+             <div class="card-body">
+             <div class="row mx-0">
+
+                 <div class="col-sm-6">
+                     <h5>{{event.datetime.toLocaleString('en-US', {dateStyle:'medium', timeStyle:'short'})}}</h5>
+                     <br/>
+                     Mission: <br/>
+                     <h5>{{getConfigName(event.gameConfigID)}}</h5>
+                     <br/>
+                     Teams:
+                     <div class="row justify-content-center">
+                     <div *ngFor="let team of event.teamsMap"
+                          class="font_white text-center team_row font-weight-bold col p-2"
+                          [style.background-color]="team.color">
+
+                          {{team.name}} ({{team.teamPlayers.length}})
+
+                     </div>
+                     </div>
+                 </div>
+
+                 <div class="col-sm-6">
+                     <img class="img img-thumbnail border-0" src="{{event.imageData}}"
+                       onerror="this.onerror=null" alt="">
+                 </div>
+
+             </div>
+             </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div *ngIf="viewEventModel" class="card col-lg-8 px-0 m-2" align="left">
+
+        <div class="card-header">
+
+            <div class="btn figure float-left p-0 m-0"
+                 (click)="viewProfile(eventModel.fieldCallsign)"
+                 align="left">
+                <img src="{{eventModel.fieldImageData}}"
+                     style="max-height: 75px;"
+                     class="figure-img img-thumbnail rounded"
+                     alt="">
+            </div>
+            <figcaption class="figure-caption">{{eventModel.fieldCallsign}}</figcaption>
+
+            <h4 class="d-inline">{{eventModel.name}}</h4>
+
+            <div class="btn p-2 align-self-middle pull-right" (click)="viewEventModel = !viewEventModel">
+                 <h3><i class="fa fa-window-close"></i></h3>
+            </div>
+
+        </div>
+
+
+      <div class="card-body">
+
+          <div class="row mx-0">
+
+              <div class="col-md-6">
+
+                  <h4>{{eventModel.datetime.toLocaleString('en-US', {dateStyle:'medium', timeStyle:'short'})}}</h4>
+                  <br/>
+                  Mission: <br/>
+                  <h5>{{getConfigName(eventModel.gameConfigID)}}</h5>
+                  <br/>
+                  Teams:
+                  <div *ngFor="let team of eventModel.teamsMap">
+
+                      <div class="h5 font_white team_row text-center font-weight-bold p-3"
+                           [style.background-color]="team.color"
+                           (click)="team.isCollapsed = !team.isCollapsed">
+
+                           {{team.name}} ({{team.teamPlayers.length}})
+
+                           <button class="btn btn-light btn-sm float-right align-middle"
+                                   (click)="joinTeam(team)"
+                                   role="button"
+                                   [disabled]="isField || !isSecure">
+                                   Join
+                           </button>
+
+                      </div>
+
+                      <div [collapse]="team.isCollapsed" [isAnimated]="true">
+                      <div *ngFor="let player of team.teamPlayers"
+                           class="p-2 m-1 border rounded text-center">
+                           {{player.callSign}}
+                      </div>
+                      </div>
+
+                  </div>
+
+
+              </div>
+
+              <div class="col-md-6" align="right">
+                  <img class="img img-thumbnail border-0"
+                       src="{{eventModel.imageData}}"
+                       onerror="this.onerror=null" alt="">
+              </div>
+
+          </div>
+
+         <div class="row mx-0">
+             <div class="col">
+                  Details:<br/>
+                  {{eventModel.detail}}
+             </div>
+         </div>
+
+
+      </div>
+
+    </div>
+
+</div>
+
+
+
+<ng-template #eventModal>
+
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Sanity check</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    Are you sure you want to delete
+    <h3>{{eventModel.name}} ?</h3>
+  </div>
+
+  <div class="modal-footer">
+      <div class="form-check-inline">
+      <input class="form-check-input" type="checkbox" [(ngModel)]="allowDelete">
+      </div>
+      <button
+          class="btn btn-danger btn-sm"
+          (click)="deleteEvent(this.eventModel); modalRef.hide()"
+          role="button"
+          [disabled]="!allowDelete">
+          Delete
+      </button>
+  </div>
+
+</ng-template>

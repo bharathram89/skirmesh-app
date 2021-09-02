@@ -1,21 +1,30 @@
 <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
 <div class="cust_skirmesh">
   <div class="view-account">
+
     <section class="module">
+
       <div class="module-inner">
         <div class="side-bar">
           <nav class="side-menu">
             <ul class="nav">
               <li (click)="profile()" [class.active]="isProfileNav"><a><span class="fa fa-user"></span> Profile</a></li>
-              <li *ngIf="!isField" (click)="settings()" [class.active]="isSettingsNav"><a><span class="fa fa-cog"></span> Pair RFID</a></li>
-              <li (click)="security()" [class.active]="isSecurityNav"><a><span class="fas fa-address-card"></span> Security</a></li>
+              <li *ngIf="!isField" (click)="settings()" [class.active]="isSettingsNav"><a><span
+                    class="fa fa-link"></span> Pair RFID</a></li>
+              <li (click)="security()" [class.active]="isSecurityNav"><a><span class="fa fa-shield"></span> Security</a>
+              </li>
+              <li *ngIf="isField" (click)="fieldMarshal()" [class.active]="isFieldMarshalNav"><a><span
+                    class="fa fa-users"></span> Field Marshal</a></li>
+              <li *ngIf="isFieldMarshal" (click)="fieldMarshal()" [class.active]="isFieldMarshalNav"><a><span
+                    class="fa fa-gamepad"></span> Field Marshal</a></li>
             </ul>
           </nav>
         </div>
 
         <div class="content-panel" [class.d-block]="isProfileNav">
           <h2 class="title center-cust">Manage Profile</h2>
-          <form [formGroup]="profileForm" autocomplete="off" method="PUT" class="form-horizontal" style="margin-bottom: 5rem">
+          <form [formGroup]="profileForm" autocomplete="off" method="PUT" class="form-horizontal"
+            style="margin-bottom: 5rem">
 
             <fieldset class="fieldset">
 
@@ -36,10 +45,12 @@
                 </div>
 
                 <div class="row">
-                  <div (click)="imageUpdateMessage = !imageUpdateMessage" [class.d-none]="!imageUpdateMessage" class="alert alert-primary center-cust">
+                  <div (click)="imageUpdateMessage = !imageUpdateMessage" [class.d-none]="!imageUpdateMessage"
+                    class="alert alert-primary center-cust">
                     Image updated!<br>
                   </div>
-                  <div (click)="imageUpdateFailedMessage = !imageUpdateFailedMessage" [class.d-none]="!imageUpdateFailedMessage" class="alert alert-danger center-cust">
+                  <div (click)="imageUpdateFailedMessage = !imageUpdateFailedMessage"
+                    [class.d-none]="!imageUpdateFailedMessage" class="alert alert-danger center-cust">
                     Image update failed.
                   </div>
                 </div>
@@ -121,10 +132,12 @@
           </form>
 
           <div class="row">
-            <div (click)="userCreatedMessage = !userCreatedMessage" [class.d-none]="!userCreatedMessage" class="alert alert-primary center-cust">
+            <div (click)="userCreatedMessage = !userCreatedMessage" [class.d-none]="!userCreatedMessage"
+              class="alert alert-primary center-cust">
               Your profile has been updated!<br>
             </div>
-            <div (click)="userCreateFailedMessage = !userCreateFailedMessage" [class.d-none]="!userCreateFailedMessage" class="alert alert-danger center-cust">
+            <div (click)="userCreateFailedMessage = !userCreateFailedMessage" [class.d-none]="!userCreateFailedMessage"
+              class="alert alert-danger center-cust">
               We are sorry we were not able to update your profile at this time <br>
               Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us.</a>
             </div>
@@ -136,7 +149,7 @@
 
         <div class="content-panel" [class.d-block]="isSettingsNav">
 
-            <!-- <div *ngIf="isField">
+          <!-- <div *ngIf="isField">
               <h2 class="title center-cust">Pair RFID Band to a Registered Player</h2>
 
               <div class="center-flex">
@@ -172,97 +185,103 @@
               </div>
             </div> -->
 
-            <div *ngIf="!isField" class="login-screen" >
+          <div *ngIf="!isField" class="" align="center">
 
-              <h4>Skirmesh Wristbands connected to your profile:</h4>
+            <table class="table table-responsive-md material">
+              <thead>
+                <tr>
+                  <th scope="col">UID</th>
+                  <th scope="col">Creation Date</th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rfid of connectedRfids">
+                  <th scope="row" [innerHtml]="rfid.uid.toUpperCase()"></th>
+                  <td [innerHtml]="rfid.creationDate"></td>
+                  <td></td>
+                  <td>
+                    <div *ngIf="rfid" class="btn btn-danger" (click)="deleteRFID(rfid.id)">Delete</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-              <table class="table material">
-                <thead>
-                    <tr>
-                      <th scope="col">UID</th>
-                      <th scope="col">Creation Date</th>
-                      <th scope="col"></th>
-                      <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let rfid of connectedRfids">
-                      <td [innerHtml]="rfid.uid.toUpperCase()"></td>
-                      <td [innerHtml]="rfid.creationDate"></td>
-                      <td></td>
-                      <td> <div *ngIf="rfid" class="btn btn-danger" (click)="deleteRFID(rfid.id)">Delete</div></td>
-                    </tr>
-                </tbody>
-              </table>
+            <hr>
 
-              <hr>
+            <h4>Connect a new wristband!</h4>
+            <form [formGroup]="uidEntry" autocomplete="off" method="POST">
+              <div class="col-6">
+                <h5 class="center-cust">Instructions:</h5>
+                <h7 class="center-cust">
+                  <p>Look for the RFID on the reverse of your band.</p>
+                  <p>Type the RFID in <b>exactly</b> as shown on the band. </p>
+                  <p>Click <b>CONNECT</b>. </p>
+                </h7>
+                <div class="form-group">
+                  <input formControlName="uid" class="form-control" placeholder="RFID">
+                </div>
 
-              <h4>Connect a new wristband:</h4>
-              <form [formGroup]="uidEntry" autocomplete="off" method="POST">
-                <div class="col-6">
-                  <h5 class="center-cust">Instructions:</h5>
-                  <h7 class="center-cust">
-                      <p>Look for the RFID on the reverse of your band.</p>
-                      <p>Type the RFID in <b>exactly</b> as shown on the band. </p>
-                      <p>Click <b>CONNECT</b>. </p>
-                  </h7>
-                  <div class="form-group">
-                    <input formControlName="uid" class="form-control" placeholder="RFID">
+                <div *ngIf="uid.invalid && (uid.dirty || uid.touched) " class="alert alert-danger ">
+
+                  <div *ngIf="uid.errors?.required ">
+                    RFID is required
                   </div>
 
-                  <div *ngIf="uid.invalid && (uid.dirty || uid.touched) " class="alert alert-danger ">
-
-                    <div *ngIf="uid.errors?.required ">
-                      RFID is required
-                    </div>
-
-                    <div *ngIf="uid.errors?.minlength">
-                      RFID must be 8 characters
-                    </div>
-                    <div *ngIf="uid.errors?.maxlength">
-                      RFID must be 8 characters
-                    </div>
-
+                  <div *ngIf="uid.errors?.minlength">
+                    RFID must be 8 characters
+                  </div>
+                  <div *ngIf="uid.errors?.maxlength">
+                    RFID must be 8 characters
                   </div>
 
                 </div>
 
-                <div class="col-6">
+              </div>
 
-                  <div class="form-group">
-                    <input formControlName="confirmUid" class="form-control"
-                      placeholder="Confirm RFID">
+              <!-- <div class="col-6"> -->
+
+                <div class="form-group">
+                  <input formControlName="confirmUid" class="form-control" placeholder="Confirm RFID">
+                </div>
+
+                <div *ngIf="confirmUid.invalid && (confirmUid.dirty || confirmUid.touched) "
+                  class="alert alert-danger ">
+
+                  <div *ngIf="confirmUid.errors?.required ">
+                    Confirmation RFID is required
+                  </div>
+                  <div *ngIf="confirmUid.errors?.invalidRfid ">
+                    RFID is not valid
+                  </div>
+                  <div *ngIf="confirmUid.errors?.invalidLength ">
+                    RFID must be 8 characters
+                  </div>
+                  <div *ngIf="confirmUid.errors?.notMatched ">
+                    RFIDs must match
                   </div>
 
-                  <div *ngIf="confirmUid.invalid && (confirmUid.dirty || confirmUid.touched) "
-                    class="alert alert-danger ">
-
-                    <div *ngIf="confirmUid.errors?.required ">
-                      Confirmation RFID is required
-                    </div>
-                    <div *ngIf="confirmUid.errors?.invalidRfid ">
-                      RFID is not valid
-                    </div>
-                    <div *ngIf="confirmUid.errors?.invalidLength ">
-                      RFID must be 8 characters
-                    </div>
-                    <div *ngIf="confirmUid.errors?.notMatched ">
-                      RFIDs must match
-                    </div>
-
+                  <button [disabled]="uidEntry.invalid" type="submit" (click)="onSubmitPairRfid()"
+                    class="btn btn-primary cust_skir_signup" style="margin-bottom: 5rem;"> Connect</button>
+                  <div *ngIf="rfidConnected" class="alert alert-primary" role="alert">
+                    Wristband registered to your profile
+                  </div>
+                  <div *ngIf="rfidConnected == false" class="alert alert-danger" role="alert">
+                    Registration of wristband to profile failed
                   </div>
                 </div>
-              </form>
+            </form>
 
-              <button [disabled]="uidEntry.invalid"  type="submit" (click)="onSubmitPairRfid()"
-                class="btn btn-primary cust_skir_signup" style="margin-bottom: 5rem;"> Connect</button>
-                <div *ngIf="rfidConnected" class="alert alert-primary" role="alert">
-                   Wristband registered to your profile
-                </div>
-                <div *ngIf="rfidConnected == false" class="alert alert-danger" role="alert">
-                  Registration of wristband to profile failed
-                </div>
+            <button [disabled]="uidEntry.invalid" type="submit" (click)="onSubmitPairRfid()"
+              class="btn btn-primary cust_skir_signup"> Connect</button>
+            <div *ngIf="rfidConnected" class="alert alert-primary" role="alert">
+              Wristband registered to your profile
             </div>
+            <div *ngIf="rfidConnected == false" class="alert alert-danger" role="alert">
+              Registration of wristband to profile failed
+            </div>
+          </div>
 
 
 
@@ -277,74 +296,155 @@
             <div class="row center-cust justify-content-md-center">
               <!-- <div class="col-8"> -->
 
-                  <accordion>
+              <accordion>
 
-                    <accordion-group heading="Reset Password">
-                      <form [formGroup]="passReset" autocomplete="off" method="POST">
-                        <div class="col-6">
-                          <div class="form-group">
-                            <input formControlName="pass" type="password" class="form-control" placeholder="New Password">
-                          </div>
-                          <div *ngIf="pass.invalid && (pass.dirty || pass.touched) " class="alert alert-danger ">
-                            <div *ngIf="pass.errors?.required ">
-                              Password is required
-                            </div>
-                            <div *ngIf="pass.errors?.minlength ">
-                              Password needs to be min of 6 characters
-                            </div>
-                          </div>
+                <accordion-group heading="Reset Password">
+                  <form [formGroup]="passReset" autocomplete="off" method="POST">
+                    <div class="col">
+                      <div class="form-group">
+                        <input formControlName="pass" type="password" class="form-control" placeholder="New Password">
+                      </div>
+                      <div *ngIf="pass.invalid && (pass.dirty || pass.touched) " class="alert alert-danger ">
+                        <div *ngIf="pass.errors?.required ">
+                          Password is required
                         </div>
-                        <div class="col-6">
-                          <div class="form-group">
-                            <input formControlName="confirmPass" type="password" class="form-control"
-                              placeholder="Confirm New Password">
-                          </div>
-                          <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
-                            class="alert alert-danger ">
-                            <div *ngIf="confirmPass.errors?.required ">
-                              Confirm password is required
-                            </div>
-                            <div *ngIf="confirmPass.errors?.notSame">
-                              Passwords needs to match
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                      <div>
-                        <div (click)="passResetPassed = !passResetPassed" [class.d-none]="!passResetPassed" class="alert alert-primary center-cust">
-                          Your password is changed<br>
-                          <a [routerLink]="['/auth/login']">LOGIN</a>.
-                        </div>
-                        <div (click)="passResetFailed = !passResetFailed" [class.d-none]="!passResetFailed" class="alert alert-danger center-cust">
-                          We are sorry we were not able to change your password at this time <br>
-                          Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
-                            contact us page</a>
+                        <div *ngIf="pass.errors?.minlength ">
+                          Password needs to be min of 6 characters
                         </div>
                       </div>
-                      <button [disabled]="passReset.invalid" (click)="onPasswordReset()" type="submit"
-                        class="btn btn-primary cust_skir_signup"> Reset Password</button>
-                    </accordion-group>
-                    <accordion-group heading="Delete Account">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" (click)="deleteCheckboxClicked()" id="flexCheckDefault">
-                        <label class="alert alert-danger form-check-label" for="flexCheckDefault">
-                          ONLY CHECK THE CHECK BOX IF YOU WOULD LIKE TO DELETE YOUR ACCOUNT AND REMOVE ALL YOUR DATA FROM SKIRMESH
-                        </label>
-                        <button (click)="deleteSkirmeshAccount()" class="btn btn-danger" [disabled]="!deleteAccount" > DELETE ACCOUNT!</button>
-                        <div (click)="deleteUserFailed = !deleteUserFailed" [class.d-none]="!deleteUserFailed" class="alert alert-danger center-cust">
-                          We were not able to delete your account at this time. <br/>
-                          Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us</a>.
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <input formControlName="confirmPass" type="password" class="form-control"
+                          placeholder="Confirm New Password">
+                      </div>
+                      <div *ngIf="confirmPass.invalid && (confirmPass.dirty || confirmPass.touched) "
+                        class="alert alert-danger ">
+                        <div *ngIf="confirmPass.errors?.required ">
+                          Confirm password is required
+                        </div>
+                        <div *ngIf="confirmPass.errors?.notSame">
+                          Passwords needs to match
                         </div>
                       </div>
-                    </accordion-group>
+                    </div>
+                  </form>
+                  <div>
+                    <div (click)="passResetPassed = !passResetPassed" [class.d-none]="!passResetPassed"
+                      class="alert alert-primary center-cust">
+                      Your password is changed<br>
+                      <a [routerLink]="['/auth/login']">LOGIN</a>.
+                    </div>
+                    <div (click)="passResetFailed = !passResetFailed" [class.d-none]="!passResetFailed"
+                      class="alert alert-danger center-cust">
+                      We are sorry we were not able to change your password at this time <br>
+                      Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us from our
+                        contact us page</a>
+                    </div>
+                  </div>
+                  <button [disabled]="passReset.invalid" (click)="onPasswordReset()" type="submit"
+                    class="btn btn-primary cust_skir_signup"> Reset Password</button>
+                </accordion-group>
+                <accordion-group heading="Delete Account">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" (click)="deleteCheckboxClicked()"
+                      id="flexCheckDefault">
+                    <label class="alert alert-danger form-check-label" for="flexCheckDefault">
+                      ONLY CHECK THE CHECK BOX IF YOU WOULD LIKE TO DELETE YOUR ACCOUNT AND REMOVE ALL YOUR DATA FROM
+                      SKIRMESH
+                    </label>
+                    <button (click)="deleteSkirmeshAccount()" class="btn btn-danger" [disabled]="!deleteAccount"> DELETE
+                      ACCOUNT!</button>
+                    <div (click)="deleteUserFailed = !deleteUserFailed" [class.d-none]="!deleteUserFailed"
+                      class="alert alert-danger center-cust">
+                      We were not able to delete your account at this time. <br />
+                      Please try again or <a [routerLink]="['/non-secure/contact-us']">contact us</a>.
+                    </div>
+                  </div>
+                </accordion-group>
 
-                    </accordion>
+              </accordion>
 
             </div>
             <!-- </div> -->
           </div>
         </div>
+
+
+        <div *ngIf="isField || isFieldMarshal"
+             class="content-panel"
+             [class.d-none]="!isFieldMarshalNav"
+             [class.d-block]="isFieldMarshalNav">
+
+                <div *ngIf="isFieldMarshal" class="container col-6" align="center">
+
+                    <div class="bg-light p-4 m-4 rounded">
+                      <div class="btn btn-dark btn-lg shadow" [routerLink]="['/secure/startGame']">
+                          Manage Games
+                      </div>
+                      <!-- <app-start-game></app-start-game> -->
+                    </div>
+
+                    <div class="bg-light p-4 m-4 rounded">
+                      <div class="btn btn-dark btn-lg shadow" [routerLink]="['/secure/manageGame']">
+                          Configure Game Modes
+                      </div>
+                      <!-- <app-start-game></app-start-game> -->
+                    </div>
+
+                </div>
+
+                <div *ngIf="isField" class="mx-0" align="center">
+
+                <h6>Search for your Marshal by callsign.</h6>
+
+                <input [(ngModel)]="__playerSelectedForMarshal__"
+                       [typeahead]="playerList"
+                       [isAnimated]="true"
+                       (typeaheadOnSelect)="onMarshalSelect($event)"
+                       typeaheadOptionField="callSign"
+                       class="form-control col-md-6">
+
+                <button type="button" (click)="addMarshal()" class="btn btn-dark my-2">Add Marshal</button>
+
+                <hr/>
+
+                <div class="table-responsive-md">
+
+                    <table class="table table-striped table-hover">
+
+                      <thead>
+                        <tr>
+                          <th scope="col">Marshal Callsign</th>
+                          <th scope="col">Last Name</th>
+                          <th scope="col">First Name</th>
+                          <th scope="col">Phone</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr *ngFor="let marshal of fieldMarshalList" >
+                          <td> {{marshal.callSign}} </td>
+                          <td> {{marshal.lastName}} </td>
+                          <td> {{marshal.firstName}} </td>
+                          <td> {{marshal.phoneNumber}} </td>
+                          <td align="middle"><div (click)="removeMarshal(marshal)" class="btn btn-danger"> Delete</div></td>
+                        </tr>
+                      </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
       </div>
+
     </section>
+
+
   </div>
 </div>

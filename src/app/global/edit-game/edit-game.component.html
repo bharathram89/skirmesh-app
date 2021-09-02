@@ -17,7 +17,7 @@
   <div class="form-group">
     <label for="map">Map</label>
     <select formControlName="mapID" class="form-control" (change)="changeMap()">
-      <option disabled selected value> -- Select your Map -- </option>
+      <option selected value> -- Select your Map -- </option>
       <option [value]=map.id *ngFor="let map of maps">{{map.name}}</option>
     </select>
   </div>

@@ -23,6 +23,7 @@
         <td><button
                 class="btn btn-sm btn-default btn-danger"
                 (click)="onDeleteMode(config)"
+                [disabled]="!userSvc.isField"
                 align="center">Delete</button></td>
       </tr>
 

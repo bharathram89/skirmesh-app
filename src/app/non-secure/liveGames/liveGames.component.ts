@@ -142,6 +142,12 @@ export class LiveGamesComponent implements OnInit {
                         }
                     }
                     this.gameCardData.sort((a, b) => b.id - a.id);
+                    // Look for another live game every 15sec if not one
+                    if (!this.gameCardData.length) {
+                        setTimeout(function(){
+                            this.setGameData();
+                        }.bind(this),15000);
+                    }
                 })
     }
 
@@ -226,6 +232,8 @@ export class LiveGamesComponent implements OnInit {
         let dev = this.scoreSvc.devices.find(ele => ele.id == action.deviceID)
         let color = this.scoreSvc.teams.find(ele => ele.teamID == action.teamID)?.color
 
+        let prevConfig = dev.config;
+
         if (dev) {
 
           dev.team = color ? color.replace("#", "") : null;
@@ -240,7 +248,12 @@ export class LiveGamesComponent implements OnInit {
           }
 
           this.childMap.updateLocationState(dev);
+          dev.config = prevConfig;
+
+          setTimeout(() => this.childMap.updateLocationState(dev), 375);
+
         }
+
     }
 
 }

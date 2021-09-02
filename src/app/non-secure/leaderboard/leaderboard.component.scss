@@ -25,3 +25,8 @@
     background-color: #ccba87;
     box-shadow: 5px 5px 50px #ccba87;
 }
+
+.selected {
+    transform: scale(1.01);
+    box-shadow: 0 0 1rem #A00000;
+}

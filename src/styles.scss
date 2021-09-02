@@ -6,6 +6,9 @@
 @import '~@swimlane/ngx-datatable/themes/dark.scss';
 @import '~@swimlane/ngx-datatable/assets/icons.css';
 
+@import "assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
+@import "../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css";
+
  
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @font-face {

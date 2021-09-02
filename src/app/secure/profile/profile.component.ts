@@ -6,6 +6,7 @@ import { UserServiceService } from 'src/service/user-service.service';
 import { TokenStorageService } from 'src/service/token-storage.service';
 import { NonSecureAPIService } from 'src/service/non-secure-api.service';
 import { SecureAPIService } from 'src/service/secure-api.service';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
 
 @Component({
@@ -21,12 +22,17 @@ export class ProfileComponent implements OnInit {
   playerList;
   connectedRfids;
 
+  playerSelectedForMarshal;
+  __playerSelectedForMarshal__;
+
   deleteAccount = false;
 
   isSecurityNav = false;
   isSettingsNav = false;
-  isProfileNav = true;
-
+  isProfileNav  = true;
+  isFieldMarshalNav = false;
+  isFieldMarshal = false;
+  fieldMarshalList = <any>[];
   imageUpdateMessage;
   imageUpdateFailedMessage;
   userCreatedMessage;
@@ -75,7 +81,7 @@ export class ProfileComponent implements OnInit {
   }
 
   userToken;
-
+  userData;
   constructor(
     private userSvc: UserServiceService,
     private tokenSvc: TokenStorageService,
@@ -129,6 +135,7 @@ export class ProfileComponent implements OnInit {
           this.userToken = data;
           this.secAPIsvc.getUser(data).subscribe(
           (user: any) => {
+            this.userData = user.user;
             let userData = user.user;
             if (userData.fieldProfile) {
 
@@ -170,13 +177,25 @@ export class ProfileComponent implements OnInit {
 
         if (this.isField) {
 
-          this.secAPIsvc.getUserListFromAPI(this.userToken).subscribe(
-            data => this.playerList = data
-          )
+          this.getFieldMarshals();
+
+          this.currentVals.profile = this.userData.fieldProfile.profile ?  this.userData.fieldProfile.profile : 'Describe your Field!';
+          this.currentVals.fieldName =  this.userData.callSign ?  this.userData.callSign : 'Your Field Name';
+          this.currentVals.fieldProfileID =  this.userData.fieldProfile.id;
+          this.currentVals.imageID =  this.userData.fieldProfile.imageID ?  this.userData.fieldProfile.imageID : null;
         }
-        // Disable the e-mail field for social users - if they change the e-mail they can't log in
-        if (this.userSvc.isSocialAccount()) {
-          this.profileForm.controls['email'].disable();
+
+        else {
+
+          if ( this.userData.marshal_field_id) {
+              this.isFieldMarshal = true;
+          }
+
+          this.connectedRfids =  this.userData.rfids;
+          this.currentVals.bio =  this.userData.playerProfile.outfit ?  this.userData.playerProfile.outfit : 'Tell us about your loadout!';
+          this.currentVals.clanTag =  this.userData.playerProfile.clanTag ?  this.userData.playerProfile.clanTag : 'Declare your Clan!';
+          this.currentVals.callSign =  this.userData.callSign ?  this.userData.callSign : 'Whats your callsign!';
+          this.currentVals.imageID =  this.userData.playerProfile.imageID ?  this.userData.playerProfile.imageID : null;
         }
       }
     );
@@ -185,7 +204,8 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  deleteCheckboxClicked() {
+
+  deleteCheckboxClicked(){
     this.deleteAccount = !this.deleteAccount;
   }
 
@@ -259,7 +279,8 @@ export class ProfileComponent implements OnInit {
   _closeTabs() {
     this.isSecurityNav = false;
     this.isSettingsNav = false;
-    this.isProfileNav = false;
+    this.isProfileNav  = false;
+    this.isFieldMarshalNav = false;
   }
 
 
@@ -268,7 +289,10 @@ export class ProfileComponent implements OnInit {
     this.isProfileNav = true;
   }
 
-
+  fieldMarshal(){
+    this._closeTabs()
+    this.isFieldMarshalNav = true;
+  }
   settings() {
     this._closeTabs()
     this.isSettingsNav = true;
@@ -425,6 +449,58 @@ export class ProfileComponent implements OnInit {
         console.log("error in removing rfid")
       }
     )
+  }
+
+
+  getFieldMarshals() {
+
+      if (!this.isField) {return}
+
+      this.secAPIsvc.getFieldMarshals(this.tokenSvc.getToken()).subscribe(
+          resp => {
+              console.log(resp);
+              this.fieldMarshalList = resp;
+          },
+          err => {},
+          () => {}
+      )
+  }
+
+
+  onMarshalSelect(event: TypeaheadMatch): void {
+
+      this.playerSelectedForMarshal = event.item;
+  }
+
+
+  addMarshal(){
+
+      if(!this.playerSelectedForMarshal){ return }
+      if(this.fieldMarshalList.indexOf(this.playerSelectedForMarshal) != -1 ){
+          return
+      }
+
+      this.secAPIsvc.addFieldMarshal(this.tokenSvc.getToken(), this.playerSelectedForMarshal.id).subscribe(
+          resp => this.fieldMarshalList.push(this.playerSelectedForMarshal),
+          err => {},
+          () => {}
+      )
+
+  }
+
+
+  removeMarshal(marshal){
+
+      let indx = this.fieldMarshalList.findIndex(m => m.id == marshal.id);
+
+      if (indx != -1) {
+
+          this.secAPIsvc.deleteFieldMarshal(this.tokenSvc.getToken(), marshal.id).subscribe(
+              resp => this.fieldMarshalList.splice(indx,1),
+              err => {},
+              () => {}
+          )
+      }
   }
 
 

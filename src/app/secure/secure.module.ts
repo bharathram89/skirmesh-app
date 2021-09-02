@@ -12,14 +12,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { GameHistoryComponent } from './game-history/game-history.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts'; 
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { WeaponsComponent } from './weapons/weapons.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
 @NgModule({
-    declarations: [ProfileComponent, DashboardComponent, SecureComponent, StartGameComponent, ManageGameComponent, GameHistoryComponent, WeaponsComponent],
+    declarations: [
+        ProfileComponent,
+        DashboardComponent,
+        SecureComponent,
+        StartGameComponent,
+        ManageGameComponent,
+        WeaponsComponent
+    ],
  
     imports: [
         CommonModule,

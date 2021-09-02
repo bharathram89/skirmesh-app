@@ -9,6 +9,7 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from 'src/service/app.service';
+// import *  as  rank from './rank.json'
 // actionIDs associated with specific actions
 
 const CAPTURE = 2;
@@ -84,7 +85,8 @@ export class DashboardComponent implements OnInit {
     private appSvc: AppService,
     private breakpointObserver: BreakpointObserver,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    // private modalService: BsModalService
   ) { }
 
   ngOnInit() {
@@ -185,8 +187,10 @@ export class DashboardComponent implements OnInit {
   
       })
     }
- 
   }
+  // openModal(template: TemplateRef<any>) {
+  //   this.modalRef = this.modalService.show(template);
+  // }
   onSelect(data): void {
     // console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
@@ -319,12 +323,12 @@ export class DashboardComponent implements OnInit {
       stackedAreaData[5].series.push({ "value": bombDis, "name": xVal });
 
     })
-    this.pieData = [{ name: "Captures", value: totalCaptures },
-    { name: "Assists", value: totalAssists },
-    { name: "Medics", value: totalMedics },
-    { name: "Survival", value: totalSurvive },
-    { name: "Bombs Armed", value: totalBombArm },
-    { name: "Bombs Diffused", value: totalBombDis }]
+    this.pieData = [{name:"Captures",       value:totalCaptures},
+                    {name:"Assists",        value:totalAssists},
+                    {name:"Medics",         value:totalMedics},
+                    {name:"Survival",       value:totalSurvive},
+                    {name:"Bombs Armed",    value:totalBombArm},
+                    {name:"Bombs Diffused", value:totalBombDis}]
 
     this.areaData = stackedAreaData;
   }

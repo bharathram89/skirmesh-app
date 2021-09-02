@@ -1,4 +1,42 @@
 @import "../../../assets/libs/font-awesome-4.7.0/scss/font-awesome.scss";
+
+
+.dropbtn {
+  // background-color: #04AA6D;
+  // color: white;
+  // // padding: 16px;
+  // // font-size: 16px;
+  // border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute; 
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+// .dropdown-content div:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #CD3500;}
+
+
+
 .navbar{
   margin: 0;
   padding: 0;

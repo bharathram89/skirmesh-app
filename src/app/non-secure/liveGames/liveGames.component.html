@@ -1,18 +1,16 @@
 <div class="">
 
-    <div *ngIf="!gameID" class="parent_container row justify-content-center">
+        <div *ngIf="!gameID" class="row justify-content-center">
 
-            <div *ngIf="!gameCardData.length" class="alert alert-info fade show mt-2" role="alert" align="center">
-                <h5 align="center">You just missed an awesome live game.</h5>
-                Don't worry - games pop up all the time. Check back later,
-                <div class="row">
-                    <div class="col"><hr></div>
-                    <div class="col-auto">or</div>
-                    <div class="col"><hr></div>
-                </div>
-                <strong><a [routerLink]="['/auth/login']">login</a></strong> or <strong><a [routerLink]="['/auth/sign-up']">sign-up</a></strong>
-                to view a full history of <a [routerLink]="['/secure/past-games']"><strong>past games</strong></a>.
-
+                <div *ngIf="!gameCardData.length" class="alert alert-info fade show mt-2" role="alert" align="center">
+                    <h5 align="center">You just missed an awesome live game.</h5>
+                    Don't worry - games pop up all the time. Check back later,
+                    <div class="row">
+                        <div class="col"><hr></div>
+                        <div class="col-auto">or</div>
+                        <div class="col"><hr></div>
+                    </div>
+                    view a full history of <a [routerLink]="['/non-secure/past-games']"><strong>past games</strong></a>.
             </div>
 
 

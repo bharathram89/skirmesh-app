@@ -177,7 +177,7 @@ export class SecureAPIService {
             }
 
             return this.http.get(route, options);
-        }else {
+        } else {
             return EMPTY;
         }
     }
@@ -265,7 +265,7 @@ export class SecureAPIService {
     // █▀▀ ▀█▀ █▀▀ █░░ █░░█ 　 █▄▄█ █░░█ █░▀░█ ▀█▀ █░░█
     // ▀░░ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀░ 　 ▀░░▀ ▀▀▀░ ▀░░░▀ ▀▀▀ ▀░░▀
 
-    getMinimalFieldProfileFromAPI(token, fieldProfileID) {
+  getFieldProfileFromAPI(token, fieldProfileID) {
 
         let route = this.BASE + this.SEC + this.FPRO;
 
@@ -345,4 +345,78 @@ export class SecureAPIService {
         return this.http.delete(route + 'deleteGame', options)
     }
 
+  getFieldMarshals(token) {
+
+      let route = this.BASE + this.SEC;
+
+      const options = { params  : new HttpParams()
+                                      .set("token", token)}
+
+      return this.http.get(route + 'field_marshal', options)
+  }
+
+
+  addFieldMarshal(token, userID) {
+
+      let route = this.BASE + this.SEC;
+
+      const options = { params  : new HttpParams()
+                                      .set("token", token),
+                        headers : this.headers}
+
+      return this.http.put(route + 'field_marshal', {"userID":userID}, options)
+  }
+
+
+  deleteFieldMarshal(token, userID) {
+
+      let route = this.BASE + this.SEC;
+
+      const options = { params  : new HttpParams()
+                                      .set("token", token)
+                                      .set("userID", userID)}
+
+      return this.http.delete(route + 'field_marshal', options)
+  }
+
+
+    // █▀▀ ▀█░█▀ █▀▀ █▀▀▄ ▀▀█▀▀ █▀▀
+    // █▀▀ ░█▄█░ █▀▀ █░░█ ░░█░░ ▀▀█
+    // ▀▀▀ ░░▀░░ ▀▀▀ ▀░░▀ ░░▀░░ ▀▀▀
+
+    submitEvent(token, data) {
+
+        let route = this.BASE + this.SEC + 'events';
+        const options = {
+            params: new HttpParams()
+                .set("token", token)
+        };
+
+        return this.http.post(route, data, options)
+    }
+
+    updateEvent(token, data) {
+
+        let route = this.BASE + this.SEC + 'events';
+
+        const options = {
+            params: new HttpParams()
+                .set("token", token)
+        };
+
+        return this.http.put(route, data, options)
+    }
+
+    deleteEvent(token, id) {
+
+        let route = this.BASE + this.SEC + 'events';
+
+        const options = {
+            params: new HttpParams()
+                .set("token", token)
+                .set("id", id)
+        };
+
+        return this.http.delete(route, options)
+    }
 }

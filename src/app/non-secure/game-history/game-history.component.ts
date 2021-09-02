@@ -58,21 +58,10 @@ export class GameHistoryComponent implements OnInit {
     }
 
    ngOnInit() {
-    this.tokenSvc.userToken.pipe(filter(data => !!data)).pipe(take(1)).subscribe(
-      data => {
-        if(data){
-          this.userToken = data;
-          this.userSvc.fieldProfile.subscribe(
-            res => {
-                if (res) {
-                    this.fieldProfile = res;
-                }
-            }
-        );
           combineLatest([this.nonSecAPIsvc.getPastGamesByConfig(),
             this.nonSecAPIsvc.getLocationsList(),
             this.nonSecAPIsvc.getActionsList(),
-            this.secAPIsvc.getFieldListFromAPI(this.userToken),
+            this.nonSecAPIsvc.getFieldListFromAPI(),
             this.activatedRoute.queryParams
             ])
               .subscribe(
@@ -140,9 +129,8 @@ export class GameHistoryComponent implements OnInit {
                   }
         
                 })
-        }
-    }
-  );
+        
+    
   
   }
 
@@ -315,6 +303,8 @@ export class GameHistoryComponent implements OnInit {
             let dev = this.scoreSvc.devices.find(ele => ele.id == act.deviceID)
             let color = this.scoreSvc.teams.find(ele => ele.teamID == act.teamID)?.color
 
+            let prevConfig = dev.config;
+
             if (dev) {
 
               dev.team = color ? color.replace("#", "") : null;
@@ -350,6 +340,10 @@ export class GameHistoryComponent implements OnInit {
                 case 12:
                 case 13:
                   dev.config = 0x0E;
+                  setTimeout(() => {
+                      dev.config = prevConfig;
+                      this.childMap.updateLocationState(dev);
+                    }, 375);
                   break;
               }
 

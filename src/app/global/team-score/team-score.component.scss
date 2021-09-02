@@ -1,7 +1,6 @@
 .team-section{
     max-height: 400px;
     overflow-y: scroll;
-    margin: 10px;
 }
 
 .team_row {
@@ -13,13 +12,6 @@
     color: #A00000;
 }
 
-.padding-sm {
-    padding: 0.5em;
-}
-
-.padding-xs-x {
-    padding: 0 0.25em;
-}
 
 ::ng-deep .datatable-body-row:hover {
     cursor: pointer;

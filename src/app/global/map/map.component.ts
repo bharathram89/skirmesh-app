@@ -56,13 +56,12 @@ export class MapComponent implements OnInit {
 
     }
 
-    ngAfterViewInit(): void {
+    ngOnChanges(): void {
     //Called after ngAfterContentInit when the component's view has been initialized.
     //Applies to components only.
     this.nonSecAPIsvc.getMapData(this.mapID).subscribe(
 
         mapData => {
-
             this.mapData = mapData;
             this.locationList = this.mapData.locations;
 
@@ -71,7 +70,6 @@ export class MapComponent implements OnInit {
             this.addToolTipListener();
         })
     }
-
 
     addToolTipListener() {
 

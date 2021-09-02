@@ -1,0 +1,39 @@
+.card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 1rem #A00000;
+}
+
+// .card:active {
+//     transform: scale(0.95);
+// }
+
+.font_white{
+    color: white;
+}
+
+.team_row {
+    opacity: 0.9;
+}
+
+::ng-deep .carousel .carousel-control-prev-icon, ::ng-deep .carousel .carousel-control-next-icon {
+    background-color: #A0A0A0;
+    width: 50px;
+    height: 50px;
+    background-size: 50%;
+    border-radius: 50%;
+}
+
+
+slide div p, slide div h3, slide div h2{
+    color: #000000;
+    background-color: rgb(255,255,255,0.5);
+    border-radius: 0.2rem;
+}
+
+
+img.carousel-image {
+
+    object-fit: cover;
+    max-height: 400px;
+
+}
