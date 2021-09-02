@@ -186,16 +186,15 @@ export class ProfileComponent implements OnInit {
         }
 
         else {
-
-          if ( this.userData.marshal_field_id) {
+          if ( this.userData?.marshal_field_id) {
               this.isFieldMarshal = true;
           }
 
-          this.connectedRfids =  this.userData.rfids;
-          this.currentVals.bio =  this.userData.playerProfile.outfit ?  this.userData.playerProfile.outfit : 'Tell us about your loadout!';
-          this.currentVals.clanTag =  this.userData.playerProfile.clanTag ?  this.userData.playerProfile.clanTag : 'Declare your Clan!';
-          this.currentVals.callSign =  this.userData.callSign ?  this.userData.callSign : 'Whats your callsign!';
-          this.currentVals.imageID =  this.userData.playerProfile.imageID ?  this.userData.playerProfile.imageID : null;
+          this.connectedRfids =  this.userData?.rfids;
+          this.currentVals.bio =  this.userData?.playerProfile.outfit ?  this.userData?.playerProfile.outfit : 'Tell us about your loadout!';
+          this.currentVals.clanTag =  this.userData?.playerProfile.clanTag ?  this.userData?.playerProfile.clanTag : 'Declare your Clan!';
+          this.currentVals.callSign =  this.userData?.callSign ?  this.userData?.callSign : 'Whats your callsign!';
+          this.currentVals.imageID =  this.userData?.playerProfile.imageID ?  this.userData?.playerProfile.imageID : null;
         }
       }
     );

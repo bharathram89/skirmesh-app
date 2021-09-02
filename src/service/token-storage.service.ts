@@ -3,7 +3,7 @@ import { SecureAPIService } from 'src/service/secure-api.service';
 import { UserServiceService } from 'src/service/user-service.service';
 import { Injectable } from '@angular/core';
 import { Storage } from '@capacitor/storage';
-import {BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 const TOKEN_KEY = 'auth-token';
 const GAME_KEY = 'game-key';
@@ -34,9 +34,9 @@ export class TokenStorageService {
 
   getToken = async () => {
     const token = await Storage.get({ key: TOKEN_KEY });
-     await this.verifyToken(token.value);
-     this.userToken.next(token.value);
-     return token.value;
+    await this.verifyToken(token.value);
+    this.userToken.next(token.value);
+    return token.value;
   }
 
   async verifyToken(token) {
@@ -47,18 +47,28 @@ export class TokenStorageService {
       return true;
     }
     if (token) {
-      return await this.secAPIsvc.getUser(token).subscribe(userdata => {
-          if (userdata) {
-            this.userSvc.setUserData(userdata);
-            return true;
+      return await this.secAPIsvc.getUser(token).subscribe((userdata: any) => {
+        if (userdata) {
+          this.userSvc.setUserData(userdata);
+          // If they are a Marshal, they don't get to be a field,
+          // but we have to set the profile data for management purposes
+          if (userdata.user.marshal_field_id) {
+            this.secAPIsvc.getFieldProfileFromAPI(token, userdata.user.marshal_field_id).subscribe(
+              fp => {
+                this.userSvc.setFieldProfile(fp);
+              }
+            )
           }
-        },
 
-          err => {
-            this.userToken.next(null);
-            this.signOut();
-            return false;
-          })
+          return true;
+        }
+      },
+
+        err => {
+          this.userToken.next(null);
+          this.signOut();
+          return false;
+        })
 
     } else {
       return false;

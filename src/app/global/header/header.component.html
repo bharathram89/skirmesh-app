@@ -9,9 +9,9 @@
             <span class="navbar-toggler-icon"></span>
         </button> -->
 
-       
+
         <div id="navdrop">
-           
+
 
             <!-- NON SECURE LINKS DURING SECURE SESSION -->
             <!-- <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> -->
@@ -32,41 +32,53 @@
             </ul> -->
 
             <!-- NON SECURE LINKS BELOW -->
-            <div class="" *ngIf="!isSecure">
-                <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
-                alt="user" />
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" id="nav_home" (click)="route('/non-secure/home')">Home </div>
+            <div class="row" *ngIf="!isSecure">
+                <div class="col-sm-2">
+                    <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid"
+                        src="../../../assets/images/logo.png" alt="user" />
                 </div>
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" id="nav_featureList" [routerLink]="['/non-secure/how-to-use']"> Player Intel
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="nav-item col">
+                            <div class="btn btn-outline-secondary nav-link" id="nav_home"
+                                (click)="route('/non-secure/home')">Home </div>
+                        </div>
+                        <div class="nav-item col">
+                            <div class="btn btn-outline-secondary nav-link" id="nav_featureList"
+                                [routerLink]="['/non-secure/how-to-use']"> Player Intel
+                            </div>
+                        </div>
+                        <div class="nav-item col">
+                            <div class="btn btn-outline-secondary nav-link" id="nav_fieldInfo"
+                                [routerLink]="['/non-secure/field-info']">Field Intel</div>
+                        </div>
+                        <!-- <li class="nav-item">
+                        <div class="btn btn-outline-secondary nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Enlist</div>
+                    </li> -->
+                        <div class="dropdown nav-item col">
+                            <div class="btn btn-outline-secondary nav-link dropbtn" id="secure_nav_mygame"
+                                [routerLink]="['/non-secure/live-games']">Battles</div>
+                            <div class="dropdown-content">
+                                <hr>
+                                <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/live-games']"
+                                    type="submit">Live Battles</div>
+                                <hr>
+                                <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/past-games']"
+                                    type="submit">Past Battles</div>
+    
+                            </div>
+                        </div>
+                        <div class="nav-item col">
+                            <div class="btn btn-outline-secondary nav-link" [routerLink]="['/non-secure/events']">Events
+                            </div>
+                        </div>
+                        <div class="nav-item col">
+                            <div class="btn btn-outline-danger  nav-link" [routerLink]="['/auth/login']" type="submit">
+                                Barracks</div>
+    
+                        </div>
                     </div>
-                </div>
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" id="nav_fieldInfo" [routerLink]="['/non-secure/field-info']">Field Intel</div>
-                </div>
-                <!-- <li class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" id="nav_register" [routerLink]="['/auth/sign-up']">Enlist</div>
-                </li> -->
-                <div class="dropdown nav-item">
-                    <div class="btn btn-outline-secondary nav-link dropbtn" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Battles</div>
-                    <div class="dropdown-content">
-                        <hr>
-                        <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/live-games']"
-                        type="submit">Live Battles</div>
-                        <hr>
-                        <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/past-games']"
-                        type="submit">Past Battles</div>
-                        
-                      </div>
-                </div> 
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" [routerLink]="['/non-secure/events']" >Events</div>
-                </div>
-                <div class="nav-item">
-                    <div class="btn btn-outline-danger  nav-link" [routerLink]="['/auth/login']"
-                        type="submit">Barracks</div>
-                        
+                  
                 </div>
                 <!-- <li class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame"
@@ -74,61 +86,74 @@
                 </li> -->
             </div>
             <!-- SECURE LINKS BELOW -->
-            <div class="" *ngIf="isSecure">
-                <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid" src="../../../assets/images/logo.png"
-                alt="user" />
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" id="secure_nav_dashboard" [routerLink]="['/secure/dashboard']">Dashboard</div>
+            <div class="row" *ngIf="isSecure">
+                <div class="col-sm-2">
+                    <img [routerLink]="['/non-secure/home']" class="hc_custom img-fluid"
+                        src="../../../assets/images/logo.png" alt="user" />
                 </div>
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" id="secure_nav_profile" [routerLink]="['/secure/profile']">Profile</div>
-                </div>
+                <div class="col-sm-10">
+                    <div class="row">
 
-                <div *ngIf="!isField" class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" [routerLink]="['/secure/configureWeapons']" >Loadout</div>
-                </div>
-                <div *ngIf="isField" class="dropdown nav-item">
-                    <div class="btn btn-outline-secondary nav-link dropbtn" id="secure_nav_mygame" [routerLink]="['/secure/startGame']">Manage Missions</div>
-                    <div class="dropdown-content">
-                        <hr>
-                        <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/secure/startGame']"
-                        type="submit">Execute Missions</div>
-                        <hr>
-                        <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/secure/manageGame']"
-                        type="submit">Configure Missions</div> 
-                      </div>
-                </div> 
-                <div class="dropdown nav-item">
-                    <div class="btn btn-outline-secondary nav-link dropbtn" id="secure_nav_mygame" [routerLink]="['/non-secure/live-games']">Battles</div>
-                    <div class="dropdown-content">
-                        <hr>
-                        <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/live-games']"
-                        type="submit">Live Battles</div>
-                        <hr>
-                        <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/past-games']"
-                        type="submit">Past Battles</div>
-                        
-                      </div>
-                </div> 
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" [routerLink]="['/non-secure/events']" >Events</div>
-                </div>
-                <div class="nav-item">
-                    <div class="btn btn-outline-secondary nav-link" [routerLink]="['/non-secure/leader-board']" >Leaderboard</div>
-                </div>
-                <div class="nav-item ">
-                    <div class="btn btn-outline-danger  nav-link" (click)="signOut()" >Sign Out</div>
-                </div>
-                <!-- <li class="nav-item">
+                    <div class="nav-item col">
+                        <div class="btn btn-outline-secondary nav-link" id="secure_nav_dashboard"
+                            [routerLink]="['/secure/dashboard']">Dashboard</div>
+                    </div>
+                    <div class="nav-item col">
+                        <div class="btn btn-outline-secondary nav-link" id="secure_nav_profile"
+                            [routerLink]="['/secure/profile']">Profile</div>
+                    </div>
+
+                    <div *ngIf="!isField" class="nav-item col">
+                        <div class="btn btn-outline-secondary nav-link" [routerLink]="['/secure/configureWeapons']">
+                            Loadout</div>
+                    </div>
+                    <div *ngIf="isField" class="dropdown nav-item col">
+                        <div class="btn btn-outline-secondary nav-link dropbtn" id="secure_nav_mygame"
+                            [routerLink]="['/secure/startGame']">Missions</div>
+                        <div class="dropdown-content">
+                            <hr>
+                            <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/secure/startGame']"
+                                type="submit">Execute Missions</div>
+                            <hr>
+                            <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/secure/manageGame']"
+                                type="submit">Configure Missions</div>
+                        </div>
+                    </div>
+                    <div class="dropdown nav-item col" >
+                        <div class="btn btn-outline-secondary nav-link dropbtn" id="secure_nav_mygame"
+                            [routerLink]="['/non-secure/live-games']">Battles</div>
+                        <div class="dropdown-content">
+                            <hr>
+                            <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/live-games']"
+                                type="submit">Live Battles</div>
+                            <hr>
+                            <div class="btn btn-outline-secondary  nav-link" [routerLink]="['/non-secure/past-games']"
+                                type="submit">Past Battles</div>
+
+                        </div>
+                    </div>
+                    <div class="nav-item col">
+                        <div class="btn btn-outline-secondary nav-link" [routerLink]="['/non-secure/events']">Events
+                        </div>
+                    </div>
+                    <div class="nav-item col">
+                        <div class="btn btn-outline-secondary nav-link" [routerLink]="['/non-secure/leader-board']">
+                            Leaderboard</div>
+                    </div>
+                    <div class="nav-item col">
+                        <div class="btn btn-outline-danger  nav-link" (click)="signOut()">Sign Out</div>
+                    </div>
+                    <!-- <li class="nav-item">
                     <div class="btn btn-outline-secondary nav-link" id="secure_nav_pastgame"
                         (click)="route('/non-secure/leader-board')">Leaderboard</a>
                 </li> -->
-
             </div>
 
+                </div>
+            </div>
 
             <!-- SIGN-IN / SIGN-OUT -->
-             
+
             <!-- </ul> -->
         </div>
 
@@ -136,81 +161,93 @@
 
 </div>
 
-<div *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; "> 
+<div *ngIf="appSvc.isMobile" style="background-color: #4E4B2C; ">
     <div id='wrapper' *ngIf="appSvc.isSideNavOpen">
-       <div id="sidebar-wrapper"> 
-           <ul class="sidebar-nav"> <i class="fa fa-times cust_floater2" (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" aria-hidden="true"></i> 
-            
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav"> <i class="fa fa-times cust_floater2"
+                    (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" aria-hidden="true"></i>
+
                 <li *ngIf="!isSecure">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/auth/sign-in']">Sign In</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/auth/sign-in']">Sign
+                        In</a>
                     <hr>
                 </li>
                 <li *ngIf="isField && isSecure" class="sidebar-brand">
                     <a>
                         User
-                    </a> 
+                    </a>
                 </li>
                 <li *ngIf="isField && isSecure">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/secure/dashboard']">Dashboard</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/secure/dashboard']">Dashboard</a>
                     <hr>
                 </li>
 
                 <li class="nav-item">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/non-secure/events']" >Events</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/non-secure/events']">Events</a>
                     <hr>
                 </li>
                 <li *ngIf="isSecure" class="sidebar-brand">
                     <a>
                         Player Section
-                    </a> 
+                    </a>
                 </li>
                 <li *ngIf="isSecure">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/non-secure/past-games']">Past Games</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/non-secure/past-games']">Past Games</a>
                     <hr>
                 </li>
                 <li *ngIf="isSecure">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/non-secure/leader-board']">Leaderboard</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/non-secure/leader-board']">Leaderboard</a>
                     <hr>
                 </li>
                 <li *ngIf="isField && isSecure" class="sidebar-brand">
                     <a>
                         Field Management
-                    </a> 
+                    </a>
                 </li>
                 <li *ngIf="isField &&  isSecure">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/secure/manageGame']">Configure Games</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/secure/manageGame']">Configure Games</a>
                     <hr>
                 </li>
                 <li *ngIf="isField &&  isSecure">
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/secure/startGame']">Manage Games</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/secure/startGame']">Manage Games</a>
                     <hr>
                 </li>
                 <li class="sidebar-brand">
                     <a>
                         Helpful links
-                    </a> 
+                    </a>
                 </li>
                 <li>
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/auth/sign-up']">Register</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/auth/sign-up']">Register</a>
                     <hr>
                 </li>
                 <li>
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/non-secure/how-to-use']">How it works</a>
-                    <hr>
-                </li> 
-                <li>
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/non-secure/contact-us']">Conact Us</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/non-secure/how-to-use']">How it works</a>
                     <hr>
                 </li>
                 <li>
-                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen" [routerLink]="['/non-secure/privacy-policy']">Privacy Policy</a>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/non-secure/contact-us']">Conact Us</a>
+                    <hr>
+                </li>
+                <li>
+                    <a (click)="appSvc.isSideNavOpen = !appSvc.isSideNavOpen"
+                        [routerLink]="['/non-secure/privacy-policy']">Privacy Policy</a>
                     <hr>
                 </li>
                 <li *ngIf="isSecure">
                     <a (click)="signOut()">Sign out</a>
                     <hr>
                 </li>
-                <li > 
+                <li>
                     <hr>
                 </li>
             </ul>

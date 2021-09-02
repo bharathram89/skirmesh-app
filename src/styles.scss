@@ -52,6 +52,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     height: auto !important; /* real browsers */
     background-color: #2b1f07;
     min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   
   .card-header {

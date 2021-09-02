@@ -12,15 +12,13 @@ export class UserServiceService {
   signedIn:boolean =false;
 
   userType;
-  userData: BehaviorSubject<any>;
+  userData: BehaviorSubject<any> = new BehaviorSubject(null);
 
   isField:boolean=false;
 
   fieldProfileID;
-  fieldProfile;
-    token;
+  fieldProfile: BehaviorSubject<any> = new BehaviorSubject(null);
   constructor(
-    private tokenSvc  : TokenStorageService,
     private secAPIsvc : SecureAPIService
   ) {
     // this.signedIn     = new BehaviorSubject(false);
@@ -34,19 +32,10 @@ export class UserServiceService {
             this.fieldProfile.next(userData.user.fieldProfile);
         }
         this.userData.next(userData.user);
+    }
 
-        if (userData.user.marshal_field_id) {
-
-    //   this.token = tokenSvc.getvToken();
-            // If they are a Marshal, they don't get to be a field,
-            // but we have to set the profile data for management purposes
-            this.secAPIsvc.getFieldProfileFromAPI(this.tokenSvc.getToken(), userData.user.marshal_field_id).subscribe(
-                fp => {
-                    this.fieldProfile = new BehaviorSubject(fp);
-                }
-            )
-
-        }
+    setFieldProfile(fieldProfile) {
+        this.fieldProfile.next(fieldProfile);
     }
 
     getFieldProfileID(){
