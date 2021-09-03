@@ -1,24 +1,42 @@
 // https://www.shutterstock.com/image-photo/two-special-forces-soldiers-men-holding-402474256
-.home_container{
-  @media screen and (min-width: 768px) {
-    min-height: 70vh;   
-  }
-  @media screen and (max-width: 768px) {
-    min-height: 100vh;  
-    margin-left: 5vh;  
-    margin-right: 5vh;  
-  }  
-  margin:5px;
-}
-.leaderboard{
+// .home_container{
+//   @media screen and (min-width: 768px) {
+//     min-height: 70vh;   
+//   }
+//   @media screen and (max-width: 768px) {
+//     min-height: 100vh;  
+//     margin-left: 5vh;  
+//     margin-right: 5vh;  
+//   }  
+//   margin:5px;
+// }
+.p-5{
   @media screen and (min-width: 768px) { 
-    max-width: 40vh;
+    margin-top: 5em;
+  } 
   }
-  // @media screen and (min-width: 1200px) {  
-  //   align-items: right;
-  // }
-  :not(.mobileApp){ 
+.welcome {
+  font-weight: 700;
+  text-align: center;
+  font-size: 40px;
+  font-family: Hack, sans-serif;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #000, #fff, #000);
+  letter-spacing: 5px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: shine 5s linear infinite;
+  position: relative;
+}
 
+@keyframes shine {
+  0% {
+    background-position-x: -500%;
   }
-  // transform: skew(28deg, 0deg);  
+  100% {
+    background-position-x: 500%;
+  }
 }
