@@ -140,7 +140,10 @@ export class ProfileComponent implements OnInit {
             if (userData.fieldProfile) {
 
               this.isField = true;
-
+              this.secAPIsvc.getUserListFromAPI(this.userToken).subscribe(
+                data => this.playerList = data
+            )
+              this.getFieldMarshals();
               this.currentVals.profile = userData.fieldProfile.profile ? userData.fieldProfile.profile : 'Describe your Field!';
               this.currentVals.fieldName = userData.callSign ? userData.callSign : 'Your Field Name';
               this.currentVals.fieldProfileID = userData.fieldProfile.id;
@@ -162,6 +165,9 @@ export class ProfileComponent implements OnInit {
 
             this.currentVals.userID = userData.id;
 
+            if ( this.userData?.marshal_field_id) {
+              this.isFieldMarshal = true;
+            }
           })
 
 
@@ -177,7 +183,6 @@ export class ProfileComponent implements OnInit {
 
         if (this.isField) {
 
-          this.getFieldMarshals();
 
           this.currentVals.profile = this.userData.fieldProfile.profile ?  this.userData.fieldProfile.profile : 'Describe your Field!';
           this.currentVals.fieldName =  this.userData.callSign ?  this.userData.callSign : 'Your Field Name';
@@ -186,9 +191,6 @@ export class ProfileComponent implements OnInit {
         }
 
         else {
-          if ( this.userData?.marshal_field_id) {
-              this.isFieldMarshal = true;
-          }
 
           this.connectedRfids =  this.userData?.rfids;
           this.currentVals.bio =  this.userData?.playerProfile.outfit ?  this.userData?.playerProfile.outfit : 'Tell us about your loadout!';
@@ -455,7 +457,7 @@ export class ProfileComponent implements OnInit {
 
       if (!this.isField) {return}
 
-      this.secAPIsvc.getFieldMarshals(this.tokenSvc.getToken()).subscribe(
+      this.secAPIsvc.getFieldMarshals(this.userToken).subscribe(
           resp => {
               console.log(resp);
               this.fieldMarshalList = resp;
@@ -479,7 +481,7 @@ export class ProfileComponent implements OnInit {
           return
       }
 
-      this.secAPIsvc.addFieldMarshal(this.tokenSvc.getToken(), this.playerSelectedForMarshal.id).subscribe(
+      this.secAPIsvc.addFieldMarshal(this.userToken, this.playerSelectedForMarshal.id).subscribe(
           resp => this.fieldMarshalList.push(this.playerSelectedForMarshal),
           err => {},
           () => {}
@@ -494,7 +496,7 @@ export class ProfileComponent implements OnInit {
 
       if (indx != -1) {
 
-          this.secAPIsvc.deleteFieldMarshal(this.tokenSvc.getToken(), marshal.id).subscribe(
+          this.secAPIsvc.deleteFieldMarshal(this.userToken, marshal.id).subscribe(
               resp => this.fieldMarshalList.splice(indx,1),
               err => {},
               () => {}
