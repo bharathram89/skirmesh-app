@@ -11,7 +11,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from 'src/service/app.service';
 // import *  as  rank from './rank.json'
 // actionIDs associated with specific actions
-
 const CAPTURE = 2;
 const ASSIST = 3;
 
